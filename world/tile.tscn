@@ -2,7 +2,7 @@
 
 [ext_resource type="Texture2D" uid="uid://c2jmky1u16cef" path="res://assets/tiles/grass.png" id="1_mvuo3"]
 [ext_resource type="Script" path="res://world/tile.gd" id="2_twet5"]
-[ext_resource type="FontFile" uid="uid://cswhpni417lfj" path="res://assets/rainyhearts.ttf" id="3_a30bo"]
+[ext_resource type="FontFile" path="res://assets/rainyhearts.ttf" id="3_a30bo"]
 
 [node name="tile" type="Sprite2D"]
 texture = ExtResource("1_mvuo3")

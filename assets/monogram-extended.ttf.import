@@ -2,13 +2,13 @@
 
 importer="font_data_dynamic"
 type="FontFile"
-uid="uid://cswhpni417lfj"
-path="res://.godot/imported/rainyhearts.ttf-9f069a2e917b7bfe0257d0e6e5a21d2e.fontdata"
+uid="uid://dnejlqr6sbicq"
+path="res://.godot/imported/monogram-extended.ttf-a06bfb1607082ba941baaf6170765532.fontdata"
 
 [deps]
 
-source_file="res://assets/rainyhearts.ttf"
-dest_files=["res://.godot/imported/rainyhearts.ttf-9f069a2e917b7bfe0257d0e6e5a21d2e.fontdata"]
+source_file="res://assets/monogram-extended.ttf"
+dest_files=["res://.godot/imported/monogram-extended.ttf-a06bfb1607082ba941baaf6170765532.fontdata"]
 
 [params]
 
