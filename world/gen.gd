@@ -94,6 +94,9 @@ func set_team_start():
 	sorted_tiles[0].set_team(1)
 	sorted_tiles[1].set_team(2)
 	sorted_tiles[2].set_team(3)
+	sorted_tiles[0].set_borders(Constants.FULL_BORDERS)
+	sorted_tiles[1].set_borders(Constants.FULL_BORDERS)
+	sorted_tiles[2].set_borders(Constants.FULL_BORDERS)
 		
 func count_neighbors(cell):
 	var total = 0;

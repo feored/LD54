@@ -14,4 +14,22 @@ const LAYER_P2 = 3
 const LAYER_P3 = 4
 
 const NO_TEAM = 0
-const TEAM_COLORS = [0xffffffff, 0xff776eff, 0x6effff, 0xfdff6eff]
+const TEAM_COLORS = [0x000000ff, 0xff776eff, 0x6effff, 0xfdff6eff]
+
+const NO_BORDERS = {
+	TileSet.CELL_NEIGHBOR_RIGHT_SIDE: false,
+	TileSet.CELL_NEIGHBOR_BOTTOM_LEFT_SIDE: false,
+	TileSet.CELL_NEIGHBOR_BOTTOM_RIGHT_SIDE: false,
+	TileSet.CELL_NEIGHBOR_LEFT_SIDE: false,
+	TileSet.CELL_NEIGHBOR_TOP_LEFT_SIDE: false,
+	TileSet.CELL_NEIGHBOR_TOP_RIGHT_SIDE: false
+}
+
+const FULL_BORDERS = {
+	TileSet.CELL_NEIGHBOR_RIGHT_SIDE: true,
+	TileSet.CELL_NEIGHBOR_BOTTOM_LEFT_SIDE: true,
+	TileSet.CELL_NEIGHBOR_BOTTOM_RIGHT_SIDE: true,
+	TileSet.CELL_NEIGHBOR_LEFT_SIDE: true,
+	TileSet.CELL_NEIGHBOR_TOP_LEFT_SIDE: true,
+	TileSet.CELL_NEIGHBOR_TOP_RIGHT_SIDE: true
+}

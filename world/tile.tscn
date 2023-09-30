@@ -1,8 +1,14 @@
-[gd_scene load_steps=4 format=3 uid="uid://d2tu4itgwxsmx"]
+[gd_scene load_steps=10 format=3 uid="uid://d2tu4itgwxsmx"]
 
 [ext_resource type="Texture2D" uid="uid://c2jmky1u16cef" path="res://assets/tiles/grass.png" id="1_mvuo3"]
 [ext_resource type="Script" path="res://world/tile.gd" id="2_twet5"]
 [ext_resource type="Theme" uid="uid://3t61g0061mea" path="res://assets/theme.tres" id="3_b2ili"]
+[ext_resource type="Texture2D" uid="uid://bvs77v2s4itrk" path="res://assets/tiles/southeast.png" id="4_do4eg"]
+[ext_resource type="Texture2D" uid="uid://bgixgnfsvo7b8" path="res://assets/tiles/west.png" id="4_ngai6"]
+[ext_resource type="Texture2D" uid="uid://lscvgckqsnqh" path="res://assets/tiles/northwest.png" id="5_bmtdw"]
+[ext_resource type="Texture2D" uid="uid://b7hnvo0cyyf8t" path="res://assets/tiles/southwest.png" id="5_sao3d"]
+[ext_resource type="Texture2D" uid="uid://ce2xmckrhuymw" path="res://assets/tiles/east.png" id="6_knshb"]
+[ext_resource type="Texture2D" uid="uid://dskvw8n0ialxq" path="res://assets/tiles/northeast.png" id="7_gg2ky"]
 
 [node name="tile" type="Sprite2D"]
 texture = ExtResource("1_mvuo3")
@@ -15,3 +21,29 @@ offset_bottom = 23.0
 theme = ExtResource("3_b2ili")
 theme_override_font_sizes/font_size = 16
 text = "test"
+
+[node name="border" type="Node2D" parent="."]
+
+[node name="southeast" type="Sprite2D" parent="border"]
+visible = false
+texture = ExtResource("4_do4eg")
+
+[node name="southwest" type="Sprite2D" parent="border"]
+visible = false
+texture = ExtResource("5_sao3d")
+
+[node name="east" type="Sprite2D" parent="border"]
+visible = false
+texture = ExtResource("6_knshb")
+
+[node name="northeast" type="Sprite2D" parent="border"]
+visible = false
+texture = ExtResource("7_gg2ky")
+
+[node name="west" type="Sprite2D" parent="border"]
+visible = false
+texture = ExtResource("4_ngai6")
+
+[node name="northwest" type="Sprite2D" parent="border"]
+visible = false
+texture = ExtResource("5_bmtdw")
