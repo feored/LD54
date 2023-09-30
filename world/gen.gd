@@ -4,6 +4,7 @@ extends TileMap
 
 var tile = preload("res://world/tile.tscn")
 var tiles = {}
+var regions = {}
 
 func spawn_cell(coords, team):
 	if tiles.has(coords):
@@ -18,13 +19,13 @@ func spawn_cell(coords, team):
 func _ready():
 	tile_water();
 	const n_tiles_max = Constants.WORLD_BOUNDS.x * Constants.WORLD_BOUNDS.y * 4
-	const n_tiles_min = round(n_tiles_max * 0.15);
+	const n_tiles_target = round(n_tiles_max * 0.25);
 	spawn_cell(Constants.WORLD_CENTER, Constants.NO_TEAM);
 	var used_cells_coords = self.tiles.keys();
-	while ((used_cells_coords.size() < n_tiles_min)):
+	while ((used_cells_coords.size() < n_tiles_target)):
 		var cell_coords = used_cells_coords[randi() % used_cells_coords.size()]
 		var neighbor = self.get_neighbor_cell(cell_coords, Utils.choose_random_direction());
-		if (Utils.is_in_world(neighbor) && ! self.tiles.has(neighbor)):
+		if (Utils.is_in_world(neighbor) and not self.tiles.has(neighbor)):
 			spawn_cell(neighbor, Constants.NO_TEAM)
 			used_cells_coords = self.tiles.keys();
 	set_team_start()
@@ -43,8 +44,8 @@ func coords_to_pos(coords):
 	return self.map_to_local(coords)
 
 func tile_water():
-	for i in range(-Constants.WORLD_BOUNDS.x, Constants.WORLD_BOUNDS.x):
-		for j in range(-Constants.WORLD_BOUNDS.y, Constants.WORLD_BOUNDS.y):
+	for i in range(-Constants.WORLD_CAMERA_BOUNDS.x, Constants.WORLD_CAMERA_BOUNDS.x):
+		for j in range(-Constants.WORLD_CAMERA_BOUNDS.y, Constants.WORLD_CAMERA_BOUNDS.y):
 			self.set_cell(0, Vector2i(Constants.WORLD_CENTER.x + i, Constants.WORLD_CENTER.y + j), 0, Vector2i(0, 0), 0)
 
 func set_team_start():
