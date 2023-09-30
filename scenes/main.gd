@@ -11,9 +11,15 @@ var turn = 0;
 var teams = [1, 2, 3];
 var inspect_mode = false;
 
+var actions_history = []
+var bots = []
+
 # Called when the node enters the scene tree for the first time.
 func _ready():
-	pass
+	self.world.init_world()
+	for i in range(1,4):
+		self.bots.append(DumbBot.new(i))
+		self.world.add_team(i)
 
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
@@ -35,9 +41,17 @@ func _input(event):
 
 func _on_turn_button_pressed():
 	next_turn()
+	
+	bots_play()
+	await get_tree().create_timer(Constants.TURN_TIME).timeout
 	generate_units(self.teams[self.turn])
 	update_display()
 	world.generate_disaster()
+
+func bots_play():
+	var bot_action = self.bots[self.turn].play_turn(self.world)
+	apply_action(bot_action)
+	self.actions_history.append(bot_action)
 
 func _on_inspect_button_toggled(pressed: bool):
 	inspect_mode = pressed;
@@ -49,21 +63,7 @@ func on_tile_clicked(new_clicked_tile):
 		return
 	var current_team = self.teams[self.turn]
 	if (clicked_tile != null and clicked_tile.team == current_team):
-		if (new_clicked_tile.team == current_team):
-			if (clicked_tile.units > 1):
-				new_clicked_tile.set_units(new_clicked_tile.units +  clicked_tile.units -1)
-				clicked_tile.set_units(1)
-			else:
-				print("Error: cannot reinforce " + str(new_clicked_tile.coords) + "(" + str(new_clicked_tile.units) + 
-				"units). Not enough units currently selected on " + str(clicked_tile.coords) + "( " + str(clicked_tile.units) + " units).")
-		else:
-			if (new_clicked_tile.units >= clicked_tile.units - 1): # 1 unit always needs to stay and defend
-				print("Error: cannot attack " + str(new_clicked_tile.coords) + "(" + str(new_clicked_tile.units) + 
-				"units). Not enough units currently selected on " + str(clicked_tile.coords) + "( " + str(clicked_tile.units) + " units).")
-			else:
-				new_clicked_tile.set_team(current_team)
-				new_clicked_tile.set_units(clicked_tile.units - new_clicked_tile.units - 1)
-				clicked_tile.set_units(1)
+		self.world.move_units(clicked_tile, new_clicked_tile)
 	clicked_tile = new_clicked_tile
 	update_display()
 
@@ -77,8 +77,7 @@ func update_display():
 
 func next_turn():
 	self.turn = (self.turn + 1) % (self.teams.size())
-	while (!tiles_left(self.teams[turn])):
-		self.turn = (self.turn + 1) % (self.teams.size())
+	
 
 func tiles_left(team):
 	for coord in world.tiles:
@@ -90,3 +89,10 @@ func generate_units(team):
 	for tile in world.tiles:
 		if world.tiles[tile].team == team:
 			world.tiles[tile].set_units(world.tiles[tile].units + 1)
+
+
+func apply_action(action : Action):
+	if action.action == Constants.Action.NONE:
+		return
+	if action.action == Constants.Action.MOVE:
+		self.world.move_units(action.tile_from, action.tile_target)

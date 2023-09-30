@@ -44,6 +44,7 @@ func update_cell():
 	for b in self.borders.keys():
 		self.border_objects[b].visible = self.borders[b]
 	units_label.set_text(str(self.units))
+	self.self_modulate = Constants.TEAM_COLORS[self.team]
 
 func set_team(new_team: int):
 	self.team = new_team

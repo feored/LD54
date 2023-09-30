@@ -8,14 +8,20 @@ const WORLD_CAMERA_BOUNDS = Vector2i(25, 20)
 const TILE_GRASS = 1
 const TILE_WATER = 0
 
-const LAYER_WATER = 0
-const LAYER_GRASS = 1
-const LAYER_P1 = 2
-const LAYER_P2 = 3
-const LAYER_P3 = 4
-
+enum Layer { WATER, GRASS, P1, P2, P3 }
 const NO_TEAM = 0
-const TEAM_COLORS = [0x000000ff, 0xff776eff, 0x6effff, 0xfdff6eff]
+const TEAM_COLORS = [0xffffffff, 0xff776eff, 0x6effff, 0xfdff6eff]
+
+const TURN_TIME = 0.25
+
+const NEIGHBORS = [
+	TileSet.CELL_NEIGHBOR_RIGHT_SIDE,
+	TileSet.CELL_NEIGHBOR_BOTTOM_LEFT_SIDE,
+	TileSet.CELL_NEIGHBOR_BOTTOM_RIGHT_SIDE,
+	TileSet.CELL_NEIGHBOR_LEFT_SIDE,
+	TileSet.CELL_NEIGHBOR_TOP_LEFT_SIDE,
+	TileSet.CELL_NEIGHBOR_TOP_RIGHT_SIDE
+]
 
 const NO_BORDERS = {
 	TileSet.CELL_NEIGHBOR_RIGHT_SIDE: false,
@@ -34,3 +40,5 @@ const FULL_BORDERS = {
 	TileSet.CELL_NEIGHBOR_TOP_LEFT_SIDE: true,
 	TileSet.CELL_NEIGHBOR_TOP_RIGHT_SIDE: true
 }
+
+enum Action { NONE, MOVE }

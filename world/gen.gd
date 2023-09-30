@@ -17,6 +17,9 @@ func spawn_cell(coords, team):
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
+	pass
+
+func init_world():
 	tile_water();
 	const n_tiles_max = Constants.WORLD_BOUNDS.x * Constants.WORLD_BOUNDS.y * 4
 	const n_tiles_target = round(n_tiles_max * 0.25);
@@ -28,7 +31,6 @@ func _ready():
 		if (Utils.is_in_world(neighbor) and not self.tiles.has(neighbor)):
 			spawn_cell(neighbor, Constants.NO_TEAM)
 			used_cells_coords = self.tiles.keys();
-	set_team_start()
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(_delta):
@@ -48,15 +50,27 @@ func tile_water():
 		for j in range(-Constants.WORLD_CAMERA_BOUNDS.y, Constants.WORLD_CAMERA_BOUNDS.y):
 			self.set_cell(0, Vector2i(Constants.WORLD_CENTER.x + i, Constants.WORLD_CENTER.y + j), 0, Vector2i(0, 0), 0)
 
-func set_team_start():
-	var sorted_tiles = tiles.values()
+func sort_most_neighbors():
+	var sorted_tiles = self.tiles.values()
 	sorted_tiles.sort_custom(func(a, b): return count_neighbors(a) > count_neighbors(b))
-	sorted_tiles[0].set_team(1)
-	sorted_tiles[1].set_team(2)
-	sorted_tiles[2].set_team(3)
-	sorted_tiles[0].set_borders(Constants.FULL_BORDERS)
-	sorted_tiles[1].set_borders(Constants.FULL_BORDERS)
-	sorted_tiles[2].set_borders(Constants.FULL_BORDERS)
+	return sorted_tiles
+
+func sort_least_neighbors():
+	var sorted_tiles = self.tiles.values()
+	sorted_tiles.sort_custom(func(a, b): return count_neighbors(a) < count_neighbors(b))
+	return sorted_tiles
+
+func add_team(team_id : int):
+	var least_neighbors = self.sort_least_neighbors()
+	## find first tile with no team
+	var tile_found = null
+	for tile_val in least_neighbors:
+		if (tile_val.team == Constants.NO_TEAM):
+			tile_found = tile_val
+			break
+	
+	tile_found.set_team(team_id)
+	tile_found.set_borders(Constants.FULL_BORDERS)
 		
 func count_neighbors(cell):
 	var total = 0;
@@ -76,3 +90,24 @@ func pick_random_tile():
 func generate_disaster():
 	# only sinking tiles for now
 	delete_cell(pick_random_tile().coords)
+
+func move_units(tile_from : Vector2i, tile_to: Vector2i):
+	if not self.tiles.has(tile_from):
+		print("Error: invalid tile coordinates", tile_from)
+		return
+	if not self.tiles.has(tile_to):
+		print("Error: invalid tile coordinates", tile_to)
+		return
+	if self.tiles[tile_from].units <= 1:
+		print("Error: not enough units to move:", tiles[tile_from].units)
+	var moved_units = tiles[tile_from].units - 1
+	if tiles[tile_from].team == tiles[tile_to].team:
+		tiles[tile_from].set_units(1)
+		tiles[tile_to].set_units( tiles[tile_to].units + moved_units)
+	else:
+		tiles[tile_from].set_units(1)
+		if tiles[tile_to].units >= moved_units:
+			tiles[tile_to].set_units(tiles[tile_to].units - moved_units)
+		else:
+			tiles[tile_to].set_units(moved_units - tiles[tile_to].units)
+			tiles[tile_to].team = tiles[tile_from].team
