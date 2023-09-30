@@ -2,7 +2,7 @@
 
 [ext_resource type="Texture2D" uid="uid://c2jmky1u16cef" path="res://assets/tiles/grass.png" id="1_mvuo3"]
 [ext_resource type="Script" path="res://world/tile.gd" id="2_twet5"]
-[ext_resource type="FontFile" path="res://assets/rainyhearts.ttf" id="3_a30bo"]
+[ext_resource type="Theme" uid="uid://3t61g0061mea" path="res://assets/theme.tres" id="3_b2ili"]
 
 [node name="tile" type="Sprite2D"]
 texture = ExtResource("1_mvuo3")
@@ -12,6 +12,6 @@ script = ExtResource("2_twet5")
 visible = false
 offset_right = 40.0
 offset_bottom = 23.0
-theme_override_fonts/font = ExtResource("3_a30bo")
+theme = ExtResource("3_b2ili")
 theme_override_font_sizes/font_size = 16
 text = "test"
