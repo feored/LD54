@@ -33,25 +33,19 @@ vertical_alignment = 1
 [node name="border" type="Node2D" parent="."]
 
 [node name="southeast" type="Sprite2D" parent="border"]
-visible = false
 texture = ExtResource("4_do4eg")
 
 [node name="southwest" type="Sprite2D" parent="border"]
-visible = false
 texture = ExtResource("5_sao3d")
 
 [node name="east" type="Sprite2D" parent="border"]
-visible = false
 texture = ExtResource("6_knshb")
 
 [node name="northeast" type="Sprite2D" parent="border"]
-visible = false
 texture = ExtResource("7_gg2ky")
 
 [node name="west" type="Sprite2D" parent="border"]
-visible = false
 texture = ExtResource("4_ngai6")
 
 [node name="northwest" type="Sprite2D" parent="border"]
-visible = false
 texture = ExtResource("5_bmtdw")

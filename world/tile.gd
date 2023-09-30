@@ -19,6 +19,7 @@ var tile_type: int = Constants.TILE_GRASS
 var units: int = 0
 var init_position: Vector2 = Vector2(0, 0)
 var borders = Constants.NO_BORDERS.duplicate()
+var region: int = Constants.NO_REGION
 
 func init_cell(
 	init_coords: Vector2,
@@ -42,7 +43,7 @@ func _ready():
 func update_cell():
 	self.border.modulate = Constants.TEAM_COLORS[team]
 	for b in self.borders.keys():
-		self.border_objects[b].visible = self.borders[b]
+		self.border_objects[b].modulate = Color.hex(0xffffffff) if self.borders[b] else Color.hex(0x3aa25dff)
 	units_label.set_text(str(self.units))
 	self.self_modulate = Constants.TEAM_COLORS[self.team]
 
@@ -60,4 +61,8 @@ func set_single_border(border_changed: int , value: bool):
 
 func set_units(new_units):
 	self.units = new_units
+	self.update_cell()
+
+func set_region(new_region):
+	self.region = new_region
 	self.update_cell()

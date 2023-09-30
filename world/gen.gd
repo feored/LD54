@@ -20,21 +20,70 @@ func _ready():
 	pass
 
 func init_world():
-	tile_water();
-	const n_tiles_max = Constants.WORLD_BOUNDS.x * Constants.WORLD_BOUNDS.y * 4
-	const n_tiles_target = round(n_tiles_max * 0.25);
-	spawn_cell(Constants.WORLD_CENTER, Constants.NO_TEAM);
-	var used_cells_coords = self.tiles.keys();
-	while ((used_cells_coords.size() < n_tiles_target)):
-		var cell_coords = used_cells_coords[randi() % used_cells_coords.size()]
-		var neighbor = self.get_neighbor_cell(cell_coords, Utils.choose_random_direction());
-		if (Utils.is_in_world(neighbor) and not self.tiles.has(neighbor)):
-			spawn_cell(neighbor, Constants.NO_TEAM)
-			used_cells_coords = self.tiles.keys();
+	tile_water()
+	generate_island()
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(_delta):
 	pass
+
+func generate_island():
+	const n_tiles_max = Constants.WORLD_BOUNDS.x * Constants.WORLD_BOUNDS.y * 4
+	const n_tiles_target = round(n_tiles_max * 0.25)
+	spawn_cell(Constants.WORLD_CENTER, Constants.NO_TEAM)
+	var used_cells_coords = self.tiles.keys()
+	while ((used_cells_coords.size() < n_tiles_target)):
+		var cell_coords = used_cells_coords[randi() % used_cells_coords.size()]
+		var neighbor = self.get_neighbor_cell(cell_coords, Utils.choose_random_direction())
+		if (Utils.is_in_world(neighbor) and not self.tiles.has(neighbor)):
+			spawn_cell(neighbor, Constants.NO_TEAM)
+			used_cells_coords = self.tiles.keys()
+	generate_regions()
+	apply_borders()
+
+func generate_regions():
+	var n_tiles = self.tiles.values().size()
+	var n_regions = 10
+	var tiles_shuffled = self.tiles.values().duplicate(true)
+	tiles_shuffled.shuffle()
+	var region_locks = {}
+	for i in range(n_regions):
+		var region_start = tiles_shuffled.pop_back()
+		regions[i] = {region_start.coords: region_start}
+		self.tiles[region_start.coords].set_region(i)
+		region_locks[i] = false
+	var current_region = 0
+	while (tiles_shuffled.size() > 0):
+		if (region_locks[current_region] or is_region_locked(current_region)):
+			region_locks[current_region] = true
+			current_region = (current_region + 1) % n_regions
+		for random_tile in tiles_shuffled:
+			for neighbor in self.get_surrounding_cells(random_tile.coords):
+				if (self.tiles.has(neighbor) and self.tiles[neighbor].region == current_region):
+						tiles_shuffled.erase(random_tile)
+						self.tiles[random_tile.coords].set_region(current_region)
+						self.regions[current_region][random_tile.coords] = self.tiles[random_tile.coords]
+						current_region = (current_region + 1) % n_regions
+
+func is_region_locked(current_region):
+	for cell in regions[current_region]:
+		var neighbors = self.get_surrounding_cells(cell)
+		for neighbor in neighbors:
+			if (self.tiles.has(neighbor) and self.tiles[neighbor].region == Constants.NO_REGION):
+				return false
+	return true
+
+func apply_borders():
+	for tile_coords in self.tiles:
+		var tile_obj = self.tiles[tile_coords]
+		for neighbor_direction in Constants.NEIGHBORS:
+			var neighbor = self.get_neighbor_cell(tile_coords, neighbor_direction)
+			if (self.tiles.has(neighbor)):
+				if(tile_obj.region != self.tiles[neighbor].region):
+					tile_obj.set_single_border(neighbor_direction, true)
+			else:
+				tile_obj.set_single_border(neighbor_direction, true)
+
 
 func get_real_pos(pos):
 	return Vector2(pos.x + camera.position.x, pos.y + camera.position.y)
@@ -72,7 +121,7 @@ func add_team(team_id : int):
 	tile_found.set_team(team_id)
 	tile_found.set_borders(Constants.FULL_BORDERS)
 		
-func count_neighbors(cell):
+func count_neighbors(cell: Tile):
 	var total = 0;
 	for neighbor in self.get_surrounding_cells(cell.coords):
 		if (self.get_cell_source_id(1, neighbor) == -1):
@@ -83,13 +132,9 @@ func delete_cell(coords: Vector2i):
 	self.tiles[coords].queue_free()
 	self.tiles.erase(coords)
 
-func pick_random_tile():
-	var keys = self.tiles.keys()
-	return self.tiles[keys[randi() % keys.size()]]
-
 func generate_disaster():
 	# only sinking tiles for now
-	delete_cell(pick_random_tile().coords)
+	delete_cell(Utils.pick_random_tile(self.tiles).coords)
 
 func move_units(tile_from : Vector2i, tile_to: Vector2i):
 	if not self.tiles.has(tile_from):

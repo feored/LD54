@@ -41,4 +41,6 @@ const FULL_BORDERS = {
 	TileSet.CELL_NEIGHBOR_TOP_RIGHT_SIDE: true
 }
 
+const NO_REGION = -99
+
 enum Action { NONE, MOVE }

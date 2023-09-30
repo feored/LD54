@@ -36,3 +36,7 @@ func is_in_world(cell):
 	and cell.x < Constants.WORLD_BOUNDS.x + Constants.WORLD_CENTER.x \
 	and cell.y > -Constants.WORLD_BOUNDS.y + Constants.WORLD_CENTER.y \
 	and cell.y < Constants.WORLD_BOUNDS.y + Constants.WORLD_CENTER.y
+
+func pick_random_tile(tiles_dict):
+	var keys = tiles_dict.keys()
+	return tiles_dict[keys[randi() % keys.size()]]
