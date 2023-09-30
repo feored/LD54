@@ -3,7 +3,7 @@ extends Camera2D
 const edge = 24
 const step = 2
 
-const limit = 48
+const limit = 72
 
 @onready var viewport_size = get_viewport().content_scale_size
 

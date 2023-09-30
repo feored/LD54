@@ -43,6 +43,15 @@ sources/0 = SubResource("TileSetAtlasSource_syxq1")
 [node name="TileMap" type="TileMap" parent="."]
 tile_set = SubResource("TileSet_hs0yf")
 format = 2
+layer_0/name = "Water"
+layer_0/z_index = -999
+layer_1/name = "Land"
+layer_1/enabled = true
+layer_1/modulate = Color(1, 1, 1, 1)
+layer_1/y_sort_enabled = false
+layer_1/y_sort_origin = 0
+layer_1/z_index = 0
+layer_1/tile_data = PackedInt32Array()
 script = ExtResource("1_bg6dg")
 
 [node name="Camera2D" type="Camera2D" parent="TileMap"]
