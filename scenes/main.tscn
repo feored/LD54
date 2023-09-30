@@ -139,3 +139,23 @@ text = "Team"
 unique_name_in_owner = true
 layout_mode = 2
 theme = SubResource("Theme_pqbx7")
+
+[node name="Turn" type="HBoxContainer" parent="UI/CanvasLayer/PanelContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="Label2" type="Label" parent="UI/CanvasLayer/PanelContainer/VBoxContainer/Turn"]
+layout_mode = 2
+text = "Turn"
+
+[node name="TurnLabel" type="Label" parent="UI/CanvasLayer/PanelContainer/VBoxContainer/Turn"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "
+"
+
+[node name="TurnButton" type="Button" parent="UI/CanvasLayer/PanelContainer/VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Turn"
+
+[connection signal="pressed" from="UI/CanvasLayer/PanelContainer/VBoxContainer/TurnButton" to="TileMap" method="_on_turn_button_pressed"]
