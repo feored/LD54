@@ -23,7 +23,13 @@ use_texture_padding = false
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_7xr4p"]
 texture = ExtResource("2_mnyeh")
 texture_region_size = Vector2i(24, 24)
+0:0/next_alternative_id = 4
 0:0/0 = 0
+0:0/1 = 1
+0:0/2 = 2
+0:0/2/modulate = Color(0.721014, 0.555474, 1.92523e-07, 1)
+0:0/3 = 3
+0:0/3/modulate = Color(0.490196, 0.121569, 0.65098, 1)
 
 [sub_resource type="TileSet" id="TileSet_hs0yf"]
 tile_shape = 3
@@ -81,5 +87,16 @@ layout_mode = 2
 text = "Units"
 
 [node name="Units" type="Label" parent="UI/CanvasLayer/PanelContainer/VBoxContainer/Units"]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="Team" type="HBoxContainer" parent="UI/CanvasLayer/PanelContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="Label2" type="Label" parent="UI/CanvasLayer/PanelContainer/VBoxContainer/Team"]
+layout_mode = 2
+text = "Team"
+
+[node name="TeamLabel" type="Label" parent="UI/CanvasLayer/PanelContainer/VBoxContainer/Team"]
 unique_name_in_owner = true
 layout_mode = 2
