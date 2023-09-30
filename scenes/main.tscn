@@ -1,6 +1,7 @@
-[gd_scene load_steps=11 format=3 uid="uid://ceoqtlfuehsvd"]
+[gd_scene load_steps=12 format=3 uid="uid://ceoqtlfuehsvd"]
 
 [ext_resource type="Script" path="res://world/gen.gd" id="1_bg6dg"]
+[ext_resource type="Script" path="res://scenes/main.gd" id="1_osaxm"]
 [ext_resource type="Texture2D" uid="uid://c2jmky1u16cef" path="res://assets/tiles/grass.png" id="2_mnyeh"]
 [ext_resource type="Script" path="res://scenes/camera/Camera2D.gd" id="3_x3nk1"]
 [ext_resource type="Texture2D" uid="uid://b7uk1y1hmnqo5" path="res://assets/tiles/water.png" id="5_2ncmi"]
@@ -44,8 +45,10 @@ sources/0 = SubResource("TileSetAtlasSource_syxq1")
 /fonts/font = ExtResource("5_cmyqo")
 
 [node name="Main" type="Node2D"]
+script = ExtResource("1_osaxm")
 
-[node name="TileMap" type="TileMap" parent="."]
+[node name="World" type="TileMap" parent="."]
+unique_name_in_owner = true
 tile_set = SubResource("TileSet_hs0yf")
 format = 2
 layer_0/name = "Water"
@@ -80,7 +83,7 @@ layer_4/z_index = 0
 layer_4/tile_data = PackedInt32Array()
 script = ExtResource("1_bg6dg")
 
-[node name="Camera2D" type="Camera2D" parent="TileMap"]
+[node name="Camera2D" type="Camera2D" parent="World"]
 visible = false
 anchor_mode = 0
 position_smoothing_enabled = true
@@ -158,4 +161,9 @@ unique_name_in_owner = true
 layout_mode = 2
 text = "Turn"
 
-[connection signal="pressed" from="UI/CanvasLayer/PanelContainer/VBoxContainer/TurnButton" to="TileMap" method="_on_turn_button_pressed"]
+[node name="InspectButton" type="CheckButton" parent="UI/CanvasLayer/PanelContainer/VBoxContainer"]
+layout_mode = 2
+text = "Inspect"
+
+[connection signal="pressed" from="UI/CanvasLayer/PanelContainer/VBoxContainer/TurnButton" to="." method="_on_turn_button_pressed"]
+[connection signal="toggled" from="UI/CanvasLayer/PanelContainer/VBoxContainer/InspectButton" to="." method="_on_inspect_button_toggled"]

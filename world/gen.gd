@@ -1,16 +1,9 @@
 extends TileMap
 
 @onready var camera = $Camera2D
-@onready var coordsLabel = $"%Coordinates"
-@onready var unitsLabel = $"%Units"
-@onready var teamLabel = $"%TeamLabel"
-@onready var turnLabel = $"%TurnLabel"
 
-var clicked_tile = null
 var tile = preload("res://world/tile.tscn")
 var tiles = {}
-var turn = 1;
-var teams = [1, 2, 3];
 
 func spawn_cell(coords, team):
 	if tiles.has(coords):
@@ -39,23 +32,6 @@ func _ready():
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(_delta):
 	pass
-
-
-func _input(event):
-	if event is InputEventMouseButton:
-		if event.button_index == MOUSE_BUTTON_LEFT and event.pressed:
-			# var new_tile = tile.new(global_pos_to_coords(event.position), 1)
-			# self.update_cell(new_tile)
-			var coords_clicked = global_pos_to_coords(event.position)
-			if self.tiles.has(coords_clicked):
-				clicked_tile = self.tiles[coords_clicked]
-				coordsLabel.text = str(clicked_tile.coords)
-				unitsLabel.text = str(clicked_tile.units)
-				teamLabel.text = str(clicked_tile.team)
-		if event.button_index == MOUSE_BUTTON_RIGHT and event.pressed:
-			# var new_tile = tile.new(global_pos_to_coords(event.position), 1, 0)
-			self.set_cell(1, global_pos_to_coords(event.position), -1, Vector2i(0,0), 0)
-			# self.update_cell(new_tile)
 
 func get_real_pos(pos):
 	return Vector2(pos.x + camera.position.x, pos.y + camera.position.y)
@@ -88,36 +64,14 @@ func count_neighbors(cell):
 			total += 1
 	return total
 
-func _on_turn_button_pressed():
-	turnLabel.text = str(self.teams[self.turn])
-	generate_units(self.teams[self.turn])
-	generate_disaster()
-	next_turn()
-
-func next_turn():
-	self.turn = (self.turn + 1) % (self.teams.size())
-	while (!tiles_left(self.teams[turn])):
-		self.turn = (self.turn + 1) % (self.teams.size())
-
-func tiles_left(team):
-	for coord in self.tiles:
-		if (self.tiles[coord].team == team):
-			return true
-	return false
-
-func generate_units(team):
-	for tile in self.tiles:
-		if self.tiles[tile].team == team:
-			self.tiles[tile].units += 1
-
-func generate_disaster():
-	# only sinking tiles for now
-	delete_cell(pick_random_tile().coords)
+func delete_cell(coords: Vector2i):
+	self.tiles[coords].queue_free()
+	self.tiles.erase(coords)
 
 func pick_random_tile():
 	var keys = self.tiles.keys()
 	return self.tiles[keys[randi() % keys.size()]]
 
-func delete_cell(coords: Vector2i):
-	self.tiles[coords].queue_free()
-	self.tiles.erase(coords)
+func generate_disaster():
+	# only sinking tiles for now
+	delete_cell(pick_random_tile().coords)
