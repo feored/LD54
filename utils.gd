@@ -15,3 +15,21 @@ func team_to_layer(team):
 			return Constants.LAYER_P3
 		_:
 			return Constants.LAYER_GRASS
+
+func choose_random_direction():
+	match (randi() % 6):
+		0:
+			return TileSet.CELL_NEIGHBOR_RIGHT_SIDE;
+		1:
+			return TileSet.CELL_NEIGHBOR_BOTTOM_LEFT_SIDE;
+		2:
+			return TileSet.CELL_NEIGHBOR_LEFT_SIDE;
+		3:
+			return TileSet.CELL_NEIGHBOR_TOP_LEFT_SIDE;
+		4:
+			return TileSet.CELL_NEIGHBOR_TOP_RIGHT_SIDE;
+		5:
+			return TileSet.CELL_NEIGHBOR_BOTTOM_RIGHT_SIDE;
+
+func is_in_world(cell):
+	return cell.x > -Constants.WORLD_BOUNDS.x && cell.x < Constants.WORLD_BOUNDS.x && cell.y > -Constants.WORLD_BOUNDS.y && cell.y < Constants.WORLD_BOUNDS.y
