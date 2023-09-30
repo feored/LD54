@@ -33,7 +33,6 @@ func _ready():
 			spawn_cell(neighbor, Constants.NO_TEAM)
 			used_cells_coords = self.tiles.keys();
 	set_team_start()
-	spawn_cell(Constants.WORLD_CENTER, 0);
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(_delta):
