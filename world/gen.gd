@@ -6,15 +6,17 @@ extends TileMap
 @onready var teamLabel = $"%TeamLabel"
 
 var clicked_tile = null
-var tile = load("res://world/tile.gd")
+var tile = preload("res://world/tile.tscn")
 var tiles = {}
 
-
-func update_cell(changed_tile):
-	tiles[changed_tile.coords] = changed_tile
-	var alt = changed_tile.team if changed_tile.tile_type == 1 else 0
-	self.set_cell(changed_tile.tile_type, changed_tile.coords, changed_tile.tile_type, Vector2i(0, 0), alt)
-
+func spawn_cell(coords, team):
+	if tiles.has(coords):
+		print("Error: cell already exists at " + str(coords))
+		return
+	var new_tile = tile.instantiate()
+	new_tile.init_cell(coords, coords_to_pos(coords), Constants.TILE_GRASS, team)
+	self.add_child(new_tile)
+	tiles[coords] = new_tile
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
@@ -22,15 +24,16 @@ func _ready():
 	const n_tiles_max = Constants.WORLD_BOUNDS.x * Constants.WORLD_BOUNDS.y * 4
 	const n_tiles_min = round(n_tiles_max * 0.15);
 	const n_tiles_target = int(round(n_tiles_max * 0.66));
-	update_cell(tile.new(Constants.WORLD_CENTER, 1, 1));
-	var used_cells_coords = self.get_used_cells(1);
+	spawn_cell(Constants.WORLD_CENTER, Constants.NO_TEAM);
+	var used_cells_coords = self.tiles.keys();
 	while ((used_cells_coords.size() < n_tiles_min)): # || (randi() % n_tiles_max) < n_tiles_target):
 		var cell_coords = used_cells_coords[randi() % used_cells_coords.size()]
 		var neighbor = self.get_neighbor_cell(cell_coords, choose_random_direction());
 		if (is_in_world(neighbor) && self.get_cell_source_id(1, neighbor) == -1):
-			update_cell(tile.new(neighbor, 1, 1));
-			used_cells_coords = self.get_used_cells(1);
+			spawn_cell(neighbor, Constants.NO_TEAM)
+			used_cells_coords = self.tiles.keys();
 	set_team_start()
+	spawn_cell(Constants.WORLD_CENTER, 0);
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(_delta):
@@ -48,9 +51,6 @@ func _input(event):
 				coordsLabel.text = str(clicked_tile.coords)
 				unitsLabel.text = str(clicked_tile.units)
 				teamLabel.text = str(clicked_tile.team)
-			else:
-				print(coords_clicked)
-				print(self.tiles.keys())
 		if event.button_index == MOUSE_BUTTON_RIGHT and event.pressed:
 			# var new_tile = tile.new(global_pos_to_coords(event.position), 1, 0)
 			self.set_cell(1, global_pos_to_coords(event.position), -1, Vector2i(0,0), 0);
@@ -62,6 +62,9 @@ func get_real_pos(pos):
 
 func global_pos_to_coords(pos):
 	return self.local_to_map(self.to_local(get_real_pos(pos)))
+
+func coords_to_pos(coords):
+	return self.map_to_local(coords)
 
 func choose_random_direction():
 	var rand = randi() % 6;
@@ -89,9 +92,9 @@ func tile_water():
 func set_team_start():
 	var sorted_tiles = tiles.values();
 	sorted_tiles.sort_custom(func(a, b): return count_neighbors(a) > count_neighbors(b))
-	update_cell(tile.new(sorted_tiles[0].coords, 1, 1));
-	update_cell(tile.new(sorted_tiles[1].coords, 1, 2));
-	update_cell(tile.new(sorted_tiles[2].coords, 1, 3));
+	sorted_tiles[0].set_team(1)
+	sorted_tiles[1].set_team(2)
+	sorted_tiles[2].set_team(3)
 		
 func count_neighbors(cell):
 	var total = 0;
