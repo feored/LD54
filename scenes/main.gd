@@ -51,8 +51,8 @@ func on_tile_clicked(new_clicked_tile):
 	if (clicked_tile != null && clicked_tile.team == current_team):
 		if (new_clicked_tile.team == current_team):
 			if (clicked_tile.units > 1):
-				new_clicked_tile.units += clicked_tile.units -1
-				clicked_tile.units = 1
+				new_clicked_tile.set_units(new_clicked_tile.units +  clicked_tile.units -1)
+				clicked_tile.set_units(1)
 			else:
 				print("Error: cannot reinforce " + str(new_clicked_tile.coords) + "(" + str(new_clicked_tile.units) + 
 				"units). Not enough units currently selected on " + str(clicked_tile.coords) + "( " + str(clicked_tile.units) + " units).")
@@ -62,16 +62,17 @@ func on_tile_clicked(new_clicked_tile):
 				"units). Not enough units currently selected on " + str(clicked_tile.coords) + "( " + str(clicked_tile.units) + " units).")
 			else:
 				new_clicked_tile.set_team(current_team)
-				new_clicked_tile.units = clicked_tile.units - new_clicked_tile.units - 1
-				clicked_tile.units = 1
+				new_clicked_tile.set_units(clicked_tile.units - new_clicked_tile.units - 1)
+				clicked_tile.set_units(1)
 	clicked_tile = new_clicked_tile
 	update_display()
 
 
 func update_display():
-	coordsLabel.text = str(clicked_tile.coords)
-	unitsLabel.text = str(clicked_tile.units)
-	teamLabel.text = str(clicked_tile.team)
+	if (clicked_tile != null):
+		coordsLabel.text = str(clicked_tile.coords)
+		unitsLabel.text = str(clicked_tile.units)
+		teamLabel.text = str(clicked_tile.team)
 	turnLabel.text = str(self.teams[self.turn])
 
 func next_turn():
@@ -88,4 +89,4 @@ func tiles_left(team):
 func generate_units(team):
 	for tile in world.tiles:
 		if world.tiles[tile].team == team:
-			world.tiles[tile].units += 1
+			world.tiles[tile].set_units(world.tiles[tile].units + 1)
