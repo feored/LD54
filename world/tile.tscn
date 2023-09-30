@@ -1,0 +1,57 @@
+[gd_scene load_steps=4 format=3 uid="uid://sv40mrsexma0"]
+
+[ext_resource type="Texture2D" uid="uid://c2jmky1u16cef" path="res://assets/tiles/grass.png" id="1_mvuo3"]
+[ext_resource type="FontFile" uid="uid://cswhpni417lfj" path="res://assets/rainyhearts.ttf" id="3_a30bo"]
+
+[sub_resource type="GDScript" id="GDScript_dtmk2"]
+script/source = "extends Sprite2D
+
+const WATER_TILE_PNG = preload(\"res://assets/tiles/water.png\")
+const GRASS_TILE_PNG = preload(\"res://assets/tiles/grass.png\")
+
+enum { WATER_TILE, GRASS_TILE }
+
+var tile_type
+
+var coords = Vector3(0, 0, 0)
+
+@onready var label = $Label
+
+
+func set_gfx(tile_type):
+	if tile_type == WATER_TILE:
+		self.texture = WATER_TILE_PNG
+	elif tile_type == GRASS_TILE:
+		self.texture = GRASS_TILE_PNG
+	else:
+		print(\"Invalid tile type\")
+
+
+func init(tile_type = WATER_TILE, coords = Vector3(0, 0, 0)):
+	self.set_gfx(tile_type)
+	self.coords = coords
+	self.position = Utils.coords_to_pos(coords)
+	label.set_text(str(coords))
+
+
+# Called when the node enters the scene tree for the first time.
+func _ready():
+	self.init(WATER_TILE)
+
+
+# Called every frame. 'delta' is the elapsed time since the previous frame.
+func _process(delta):
+	pass
+"
+
+[node name="tile" type="Sprite2D"]
+texture = ExtResource("1_mvuo3")
+script = SubResource("GDScript_dtmk2")
+
+[node name="Label" type="Label" parent="."]
+visible = false
+offset_right = 40.0
+offset_bottom = 23.0
+theme_override_fonts/font = ExtResource("3_a30bo")
+theme_override_font_sizes/font_size = 16
+text = "test"
