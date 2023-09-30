@@ -48,7 +48,7 @@ func on_tile_clicked(new_clicked_tile):
 		update_display()
 		return
 	var current_team = self.teams[self.turn]
-	if (clicked_tile != null && clicked_tile.team == current_team):
+	if (clicked_tile != null and clicked_tile.team == current_team):
 		if (new_clicked_tile.team == current_team):
 			if (clicked_tile.units > 1):
 				new_clicked_tile.set_units(new_clicked_tile.units +  clicked_tile.units -1)

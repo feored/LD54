@@ -32,4 +32,7 @@ func choose_random_direction():
 			return TileSet.CELL_NEIGHBOR_BOTTOM_RIGHT_SIDE;
 
 func is_in_world(cell):
-	return cell.x > -Constants.WORLD_BOUNDS.x && cell.x < Constants.WORLD_BOUNDS.x && cell.y > -Constants.WORLD_BOUNDS.y && cell.y < Constants.WORLD_BOUNDS.y
+	return cell.x > -Constants.WORLD_BOUNDS.x + Constants.WORLD_CENTER.x \
+	and cell.x < Constants.WORLD_BOUNDS.x + Constants.WORLD_CENTER.x \
+	and cell.y > -Constants.WORLD_BOUNDS.y + Constants.WORLD_CENTER.y \
+	and cell.y < Constants.WORLD_BOUNDS.y + Constants.WORLD_CENTER.y
