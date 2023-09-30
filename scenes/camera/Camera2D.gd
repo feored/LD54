@@ -9,7 +9,7 @@ const limit = 48
 
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
-func _process(delta):
+func _process(_delta):
 	var local_mouse_pos = get_local_mouse_position()
 	if local_mouse_pos.x < edge and position.x > -limit:
 		position.x -= step

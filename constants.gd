@@ -1,12 +1,8 @@
 extends Node
 
-const TILE_SIZE = 12
+const TILE_SIZE = 24
+const WORLD_CENTER = Vector2(512 / 24 / 2, 288 / 24 / 2)
+const WORLD_BOUNDS = Vector2(20, 12)
 
-const f0 = sqrt(3.0)
-const f1 = sqrt(3.0) / 2.0
-const f2 = 0.0
-const f3 = 3.0 / 2.0
-const b0 = sqrt(3.0) / 3.0
-const b1 = -1.0 / 3.0
-const b2 = 0.0
-const b3 = 2.0 / 3.0
+const TILE_GRASS = 1
+const TILE_WATER = 0

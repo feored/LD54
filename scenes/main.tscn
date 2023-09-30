@@ -5,11 +5,6 @@
 [ext_resource type="Script" path="res://scenes/camera/Camera2D.gd" id="3_x3nk1"]
 [ext_resource type="Texture2D" uid="uid://b7uk1y1hmnqo5" path="res://assets/tiles/water.png" id="5_2ncmi"]
 
-[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_7xr4p"]
-texture = ExtResource("2_mnyeh")
-texture_region_size = Vector2i(24, 24)
-0:0/0 = 0
-
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_syxq1"]
 texture = ExtResource("5_2ncmi")
 texture_region_size = Vector2i(24, 24)
@@ -25,21 +20,66 @@ use_texture_padding = false
 0:0/animation_frame_7/duration = 1.0
 0:0/0 = 0
 
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_7xr4p"]
+texture = ExtResource("2_mnyeh")
+texture_region_size = Vector2i(24, 24)
+0:0/0 = 0
+
 [sub_resource type="TileSet" id="TileSet_hs0yf"]
 tile_shape = 3
 tile_layout = 2
 tile_size = Vector2i(24, 24)
 sources/1 = SubResource("TileSetAtlasSource_7xr4p")
-sources/2 = SubResource("TileSetAtlasSource_syxq1")
+sources/0 = SubResource("TileSetAtlasSource_syxq1")
 
 [node name="Main" type="Node2D"]
-
-[node name="Camera2D" type="Camera2D" parent="."]
-anchor_mode = 0
-position_smoothing_enabled = true
-script = ExtResource("3_x3nk1")
 
 [node name="TileMap" type="TileMap" parent="."]
 tile_set = SubResource("TileSet_hs0yf")
 format = 2
 script = ExtResource("1_bg6dg")
+
+[node name="Camera2D" type="Camera2D" parent="TileMap"]
+visible = false
+anchor_mode = 0
+position_smoothing_enabled = true
+script = ExtResource("3_x3nk1")
+
+[node name="UI" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="CanvasLayer" type="CanvasLayer" parent="UI"]
+
+[node name="PanelContainer" type="PanelContainer" parent="UI/CanvasLayer"]
+offset_right = 104.0
+offset_bottom = 26.0
+
+[node name="VBoxContainer" type="VBoxContainer" parent="UI/CanvasLayer/PanelContainer"]
+layout_mode = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="UI/CanvasLayer/PanelContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="Label2" type="Label" parent="UI/CanvasLayer/PanelContainer/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+text = "Coordinates:"
+
+[node name="Coordinates" type="Label" parent="UI/CanvasLayer/PanelContainer/VBoxContainer/HBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="Units" type="HBoxContainer" parent="UI/CanvasLayer/PanelContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="Label2" type="Label" parent="UI/CanvasLayer/PanelContainer/VBoxContainer/Units"]
+layout_mode = 2
+text = "Units"
+
+[node name="Units" type="Label" parent="UI/CanvasLayer/PanelContainer/VBoxContainer/Units"]
+unique_name_in_owner = true
+layout_mode = 2
