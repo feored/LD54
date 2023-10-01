@@ -12,6 +12,15 @@ func play_turn(world):
 		for adjacent in world.adjacent_regions(region):
 			if world.regions[adjacent].team != self.team:
 				return Action.new(self.team, Constants.Action.MOVE, region, adjacent)
+	for region in owned_regions:
+		var landlocked = true
+		var neighbors = world.adjacent_regions(region)
+		for neighbor in neighbors:
+			if world.regions[neighbor].team != self.team:
+				landlocked = false
+				break
+		if landlocked:
+			return Action.new(self.team, Constants.Action.MOVE, region, neighbors[randi() % neighbors.size()])
 	return Action.new(self.team, Constants.Action.NONE)
 
 
