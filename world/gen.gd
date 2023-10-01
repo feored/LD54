@@ -26,13 +26,14 @@ func spawn_cell(coords, team):
 
 
 func init_world():
+	print("World center", Constants.WORLD_CENTER)
 	tile_water()
 	generate_island()
 
 
 func generate_island():
 	const n_tiles_max = Constants.WORLD_BOUNDS.x * Constants.WORLD_BOUNDS.y * 4
-	const n_tiles_target = round(n_tiles_max * 0.25)
+	const n_tiles_target = round(n_tiles_max * 0.4)
 	spawn_cell(Constants.WORLD_CENTER, Constants.NO_TEAM)
 	var used_cells_coords = self.tiles.keys()
 	while ((used_cells_coords.size() < n_tiles_target)):
@@ -51,10 +52,9 @@ func generate_regions():
 	
 	while tiles_shuffled.size() > 0:
 		var start = tiles_shuffled.pop_back()
-		self.tiles[start].set_region(current_region)
 		regions[current_region] = create_region(current_region)
-		regions[current_region].add_tile(start, self.tiles[start])
-		for i in range(Constants.TEAM_MAX_SIZE):
+		add_tile_to_region(start, current_region)
+		for i in range(Constants.REGION_MAX_SIZE):
 			var random_in_region = regions[current_region].random_in_region()
 			var neighbor_dirs = Constants.NEIGHBORS.duplicate()
 			neighbor_dirs.shuffle();
@@ -63,14 +63,17 @@ func generate_regions():
 				var neighbor = self.get_neighbor_cell(random_in_region, neighbor_dir)
 				if (self.tiles.has(neighbor) and self.tiles[neighbor].region == Constants.NO_REGION):
 					tiles_shuffled.erase(neighbor)
-					self.tiles[neighbor].set_region(current_region)
-					regions[current_region].add_tile(neighbor, self.tiles[neighbor])
+					add_tile_to_region(neighbor, current_region)
 					expanded = true
 					break
 			if not expanded:
 				break
 		region_update_label(regions[current_region])
 		current_region += 1
+
+func add_tile_to_region(tile_coords, region):
+	self.tiles[tile_coords].set_region(region)
+	regions[region].add_tile(tile_coords, self.tiles[tile_coords])
 
 func create_region(id: int):
 	var region = Region.new(id)
@@ -131,14 +134,51 @@ func count_neighbors(cell: Tile):
 	return total
 
 func delete_cell(coords: Vector2i):
+	self.regions[self.tiles[coords].region].tiles.erase(coords)
 	self.tiles[coords].queue_free()
 	self.tiles.erase(coords)
 
+func recalculate_region(region: int):
+	var region_tiles = self.regions[region].tiles.keys()
+	if (region_tiles.size() == 0):
+		self.regions[region].delete()
+		self.regions.erase(region)
+		return
+	self.regions[region].reset_tiles()
+	for tile_coords in region_tiles:
+		self.tiles[tile_coords].set_region(Constants.NO_REGION)
+	var region_to_expand = region
+	while (region_tiles.size() > 0):
+		expand_single_region_from_coords(region_to_expand, region_tiles)
+		if (region_tiles.size() > 0):
+			region_to_expand = self.regions.keys().max() + 1
+			self.regions[region_to_expand] = create_region(region_to_expand)
+	self.apply_borders()
 
+func expand_single_region_from_coords(region: int, region_tiles: Array):
+	var new_center = region_tiles.pop_back()
+	add_tile_to_region(new_center, region)
+	var added = true
+	while added:
+		added = false
+		for tile_coords in region_tiles:
+			for neighbor in self.get_surrounding_cells(tile_coords):
+				if (self.tiles.has(neighbor) and self.tiles[neighbor].region == region):
+					add_tile_to_region(tile_coords, region)
+					added = true
+					region_tiles.erase(tile_coords)
+					break
+			if added:
+				break
+	region_update_label(self.regions[region])
 	
 func generate_disaster():
 	# only sinking tiles for now
-	delete_cell(Utils.pick_random_tile(self.tiles).coords)
+	var deleted_cell = Utils.pick_tile_to_sink(self.tiles.values())
+	print("Deleting cell at", deleted_cell.coords, " with distance ", Utils.distance_from_center(deleted_cell))
+	var deleted_cell_region = deleted_cell.region
+	delete_cell(deleted_cell.coords)
+	recalculate_region(deleted_cell_region)
 
 func move_units(region_from : int, region_to: int):
 	if not self.regions.has(region_from):
@@ -149,6 +189,10 @@ func move_units(region_from : int, region_to: int):
 		return
 	if self.regions[region_from].units <= 1:
 		print("Error: not enough units to move:", regions[region_from].units)
+		return
+	if not region_to in self.adjacent_regions(region_from):
+		print("Error: regions are not adjacent")
+		return
 	var moved_units = regions[region_from].units - 1
 	if regions[region_from].team == regions[region_to].team:
 		regions[region_from].set_units(1)

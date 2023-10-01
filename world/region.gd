@@ -62,3 +62,12 @@ func center_tile():
 			closest_tile = t
 			closest_distance = distance
 	return closest_tile.coords
+
+
+func select_region(show: bool):
+	for t in self.tiles.values():
+		t.select_tile(show)
+
+
+func reset_tiles():
+	self.tiles.clear()

@@ -17,6 +17,7 @@ var tile_type: int = Constants.TILE_GRASS
 var init_position: Vector2 = Vector2(0, 0)
 var borders = Constants.NO_BORDERS.duplicate()
 var region: int = Constants.NO_REGION
+var tween = null
 
 func init_cell(
 	init_coords: Vector2,
@@ -59,3 +60,10 @@ func set_single_border(border_changed: int , value: bool):
 func set_region(new_region):
 	self.region = new_region
 	self.update_cell()
+
+func set_selected(selected: bool):
+	if selected:
+		self.tween = create_tween().bind_node(self).set_trans(Tween.TRANS_ELASTIC).set_loops()
+		self.tween.tween_property($Sprite, "modulate", Color.WHITE, 1)
+	else:
+		self.tween.kill()
