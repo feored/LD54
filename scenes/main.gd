@@ -15,6 +15,7 @@ var player_team_index = 0
 
 var actions_history = []
 var bots = {}
+var regions_used = {}
 
 
 func to_team_id(team_id):
@@ -31,6 +32,7 @@ func _ready():
 		self.teams.append(team_id)
 		self.bots[team_id] = DumbBot.new(team_id)
 		self.world.add_team(team_id)
+	generate_units(self.teams[0])
 
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
@@ -93,7 +95,6 @@ func check_teams_on_islands(teams_alive):
 				winner = team
 				winning_units = units_per_team[team]
 		print("No more possible moves! ", winner, " won with ", winning_units, " units!")
-		get_tree().quit()
 
 func get_teams_alive():
 	var teams_alive = []
@@ -103,9 +104,13 @@ func get_teams_alive():
 	return teams_alive
 
 func bots_play():
-	var bot_action = self.bots[to_team_id(self.turn)].play_turn(self.world)
-	apply_action(bot_action)
-	self.actions_history.append(bot_action)
+	var bot_action = null
+	var bot = self.bots[to_team_id(self.turn)]
+	while bot_action == null or bot_action.action != Constants.Action.NONE:
+		bot_action = bot.play_turn(self.world, self.regions_used)
+		apply_action(bot_action)
+		self.actions_history.append(bot_action)
+		await get_tree().create_timer(Constants.TURN_TIME).timeout
 
 func _on_inspect_button_toggled(pressed: bool):
 	inspect_mode = pressed;
@@ -115,16 +120,20 @@ func on_tile_clicked(new_clicked_tile):
 		clicked_tile = new_clicked_tile;
 		update_display()
 		return
-	if (self.turn == self.player_team_index and clicked_tile != null and clicked_tile.team == self.teams[player_team_index]):
+	if (self.turn == self.player_team_index and clicked_tile != null and clicked_tile.team == self.teams[player_team_index] and clicked_tile.region != new_clicked_tile.region):
+		var moved = self.world.move_units(clicked_tile.region, new_clicked_tile.region)
 		self.world.regions[clicked_tile.region].set_selected(false)
-		self.world.move_units(clicked_tile.region, new_clicked_tile.region)
+		self.regions_used[clicked_tile.region] = moved
 		clicked_tile = null
 	else:
-		clicked_tile = new_clicked_tile
-		if (clicked_tile.team == self.teams[self.player_team_index]):
-			self.world.regions[clicked_tile.region].set_selected(true)
+		if self.regions_used.has(new_clicked_tile.region) and self.regions_used[new_clicked_tile.region]:
+			print("Error: this region has already been used this turn", new_clicked_tile.region)
 		else:
-			clicked_tile = null
+			if (new_clicked_tile.team == self.teams[self.player_team_index]):
+				clicked_tile = new_clicked_tile
+				self.world.regions[clicked_tile.region].set_selected(true)
+			else:
+				clicked_tile = null
 	update_display()
 
 
@@ -139,6 +148,7 @@ func update_display():
 func next_turn():
 	self.turn = (self.turn + 1) % (self.teams.size())
 	self.teamTurnRect.color = Constants.TEAM_COLORS[to_team_id(self.turn)]
+	self.regions_used.clear()
 	if not regions_left(self.teams[self.turn]):
 		next_turn()
 	
@@ -154,9 +164,8 @@ func generate_units(team):
 		if world.regions[region].team == team:
 			world.regions[region].generate_units()
 
-
 func apply_action(action : Action):
 	if action.action == Constants.Action.NONE:
 		return
 	if action.action == Constants.Action.MOVE:
-		self.world.move_units(action.region_from, action.region_target)
+		self.regions_used[action.region_from] = self.world.move_units(action.region_from, action.region_target)

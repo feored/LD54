@@ -181,16 +181,16 @@ func generate_disaster():
 func move_units(region_from : int, region_to: int):
 	if not self.regions.has(region_from):
 		print("Error: invalid region trying to move", region_from)
-		return
+		return false
 	if not self.regions.has(region_to):
 		print("Error: invalid region trying to move to", region_to)
-		return
+		return false
 	if self.regions[region_from].units <= 1:
 		print("Error: not enough units to move:", regions[region_from].units)
-		return
+		return false
 	if not region_to in self.adjacent_regions(region_from):
 		print("Error: regions are not adjacent")
-		return
+		return false
 	var moved_units = regions[region_from].units - 1
 	if regions[region_from].team == regions[region_to].team:
 		regions[region_from].set_units(1)
@@ -202,6 +202,7 @@ func move_units(region_from : int, region_to: int):
 		else:
 			regions[region_to].set_units(moved_units - regions[region_to].units)
 			regions[region_to].set_team(regions[region_from].team)
+	return true
 
 
 # Called when the node enters the scene tree for the first time.

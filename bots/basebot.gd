@@ -5,7 +5,7 @@ class_name BaseBot
 var team = 0
 
 
-func play_turn(_world):
+func play_turn(_world, _regions_used):
 	pass
 
 
