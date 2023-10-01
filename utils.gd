@@ -4,7 +4,8 @@ extends Node
 func _ready():
 	randomize()
 
-
+func wait(time):
+	await get_tree().create_timer(time).timeout
 func team_to_layer(team):
 	match team:
 		1:

@@ -134,6 +134,8 @@ func count_neighbors(cell: Tile):
 	return total
 
 func delete_cell(coords: Vector2i):
+	self.camera.move_bounded(self.coords_to_pos(coords) - Vector2(self.camera.viewport_size/2))
+	await Utils.wait(Constants.TURN_TIME)
 	self.regions[self.tiles[coords].region].tiles.erase(coords)
 	self.tiles[coords].queue_free()
 	self.tiles.erase(coords)
@@ -176,7 +178,7 @@ func generate_disaster():
 	# only sinking tiles for now
 	var deleted_cell = Utils.pick_tile_to_sink(self.tiles.values())
 	var deleted_cell_region = deleted_cell.region
-	delete_cell(deleted_cell.coords)
+	await delete_cell(deleted_cell.coords)
 	recalculate_region(deleted_cell_region)
 
 func move_units(region_from : int, region_to: int):

@@ -20,3 +20,14 @@ func _process(_delta):
 	elif local_mouse_pos.y > viewport_size.y - edge	and position.y < limit:
 		position.y += step
 	
+
+func move_bounded(target):
+	if target.x > limit:
+		target.x = limit
+	elif target.x < -limit:
+		target.x = -limit
+	if target.y > limit:
+		target.y = limit
+	elif target.y < -limit:
+		target.y = -limit
+	self.position = target

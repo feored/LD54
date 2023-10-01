@@ -135,14 +135,18 @@ func next_turn():
 	self.world.clear_regions_used()
 	check_win_condition()
 	generate_units(teams[self.turn])
-	world.generate_disaster()
+	await turn_events()
 	if not regions_left(self.teams[self.turn]):
 		next_turn()
 	elif (self.turn != self.player_team_index):
 		await get_tree().create_timer(Constants.TURN_TIME).timeout
 		await bots_play()
 		next_turn()
-	
+
+func turn_events():
+	##var camera_pos = self.world.camera.position
+	await world.generate_disaster()
+	##self.world.camera.position = camera_pos
 
 
 func regions_left(team):
