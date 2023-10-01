@@ -56,15 +56,7 @@ func _input(event):
 
 func _on_turn_button_pressed():
 	next_turn()
-	check_win_condition()
-	generate_units(teams[self.turn])
-	update_display()
-	world.generate_disaster()
-	if (self.turn != self.player_team_index):
-		await get_tree().create_timer(Constants.TURN_TIME).timeout
-		bots_play()
-		await get_tree().create_timer(Constants.TURN_TIME).timeout
-		_on_turn_button_pressed()
+	
 	
 func check_win_condition():
 	var teams_alive = get_teams_alive()
@@ -151,7 +143,15 @@ func next_turn():
 	for region in regions_used:
 		self.world.regions[region].set_used(false)
 	self.regions_used.clear()
+	check_win_condition()
+	generate_units(teams[self.turn])
+	update_display()
+	world.generate_disaster()
 	if not regions_left(self.teams[self.turn]):
+		next_turn()
+	elif (self.turn != self.player_team_index):
+		await get_tree().create_timer(Constants.TURN_TIME).timeout
+		await bots_play()
 		next_turn()
 	
 
