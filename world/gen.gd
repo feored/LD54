@@ -134,8 +134,7 @@ func count_neighbors(cell: Tile):
 	return total
 
 func delete_cell(coords: Vector2i):
-	self.camera.move_bounded(self.coords_to_pos(coords) - Vector2(self.camera.viewport_size/2))
-	await Utils.wait(Constants.TURN_TIME)
+	await self.camera.move_bounded(self.coords_to_pos(coords) - Vector2(self.camera.viewport_size/2))
 	self.regions[self.tiles[coords].region].tiles.erase(coords)
 	self.tiles[coords].queue_free()
 	self.tiles.erase(coords)
@@ -190,6 +189,9 @@ func move_units(region_from : int, region_to: int):
 		print("Error: not enough units to move:", regions[region_from].units)
 	if not region_to in self.adjacent_regions(region_from):
 		print("Error: regions are not adjacent")
+
+	# success
+	await camera.move_bounded(self.coords_to_pos(self.regions[region_from].center_tile()) - Vector2(self.camera.viewport_size/2))
 	var moved_units = regions[region_from].units - 1
 	if regions[region_from].team == regions[region_to].team:
 		regions[region_from].set_units(1)

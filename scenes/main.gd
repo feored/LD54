@@ -94,7 +94,7 @@ func bots_play():
 	var bot = self.bots[to_team_id(self.turn)]
 	while bot_action == null or bot_action.action != Constants.Action.NONE:
 		bot_action = bot.play_turn(self.world)
-		apply_action(bot_action)
+		await apply_action(bot_action)
 		self.actions_history.append(bot_action)
 		await get_tree().create_timer(Constants.TURN_TIME).timeout
 
@@ -146,7 +146,7 @@ func next_turn():
 func turn_events():
 	##var camera_pos = self.world.camera.position
 	await world.generate_disaster()
-	##self.world.camera.position = camera_pos
+	#self.world.camera.position = camera_pos
 
 
 func regions_left(team):
@@ -164,4 +164,4 @@ func apply_action(action : Action):
 	if action.action == Constants.Action.NONE:
 		return
 	if action.action == Constants.Action.MOVE:
-		self.world.move_units(action.region_from, action.region_target)
+		await self.world.move_units(action.region_from, action.region_target)

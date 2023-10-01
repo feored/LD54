@@ -31,3 +31,4 @@ func move_bounded(target):
 	elif target.y < -limit:
 		target.y = -limit
 	self.position = target
+	await Utils.wait(Constants.TURN_TIME)
