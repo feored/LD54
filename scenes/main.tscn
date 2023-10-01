@@ -84,11 +84,16 @@ layer_4/z_index = 0
 layer_4/tile_data = PackedInt32Array()
 script = ExtResource("1_bg6dg")
 
-[node name="Camera2D" type="Camera2D" parent="World"]
+[node name="MainCamera" type="Camera2D" parent="World"]
+unique_name_in_owner = true
 visible = false
 anchor_mode = 0
 position_smoothing_enabled = true
 script = ExtResource("3_x3nk1")
+
+[node name="RegionLabels" type="CanvasLayer" parent="World"]
+unique_name_in_owner = true
+follow_viewport_enabled = true
 
 [node name="UI" type="Control" parent="."]
 layout_mode = 3
