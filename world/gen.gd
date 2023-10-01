@@ -202,7 +202,7 @@ func move_units(region_from : int, region_to: int):
 		else:
 			regions[region_to].set_units(moved_units - regions[region_to].units)
 			regions[region_to].set_team(regions[region_from].team)
-	return true
+	self.regions[region_from].set_used(true)
 
 
 # Called when the node enters the scene tree for the first time.

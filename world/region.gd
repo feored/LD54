@@ -69,5 +69,10 @@ func set_selected(show: bool):
 		t.set_selected(show)
 
 
+func set_used(is_used: bool):
+	for t in self.tiles.values():
+		t.set_barred(is_used)
+
+
 func reset_tiles():
 	self.tiles.clear()

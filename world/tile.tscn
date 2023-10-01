@@ -2,34 +2,17 @@
 
 [ext_resource type="Texture2D" uid="uid://c2jmky1u16cef" path="res://assets/tiles/grass.png" id="1_mvuo3"]
 [ext_resource type="Script" path="res://world/tile.gd" id="2_twet5"]
-[ext_resource type="Theme" uid="uid://3t61g0061mea" path="res://assets/theme.tres" id="3_b2ili"]
 [ext_resource type="Texture2D" uid="uid://bvs77v2s4itrk" path="res://assets/tiles/southeast.png" id="4_do4eg"]
 [ext_resource type="Texture2D" uid="uid://bgixgnfsvo7b8" path="res://assets/tiles/west.png" id="4_ngai6"]
 [ext_resource type="Texture2D" uid="uid://lscvgckqsnqh" path="res://assets/tiles/northwest.png" id="5_bmtdw"]
 [ext_resource type="Texture2D" uid="uid://b7hnvo0cyyf8t" path="res://assets/tiles/southwest.png" id="5_sao3d"]
 [ext_resource type="Texture2D" uid="uid://ce2xmckrhuymw" path="res://assets/tiles/east.png" id="6_knshb"]
 [ext_resource type="Texture2D" uid="uid://dskvw8n0ialxq" path="res://assets/tiles/northeast.png" id="7_gg2ky"]
+[ext_resource type="Texture2D" uid="uid://bw3yv7wot470b" path="res://assets/tiles/barred.png" id="9_lgyl4"]
 
 [node name="tile" type="Sprite2D"]
 texture = ExtResource("1_mvuo3")
 script = ExtResource("2_twet5")
-
-[node name="Label" type="Label" parent="."]
-visible = false
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_left = -12.0
-offset_top = -12.0
-offset_right = -12.0
-offset_bottom = -12.0
-grow_horizontal = 2
-grow_vertical = 2
-theme = ExtResource("3_b2ili")
-theme_override_font_sizes/font_size = 16
-text = "99"
-horizontal_alignment = 1
-vertical_alignment = 1
 
 [node name="southeast" type="Sprite2D" parent="."]
 texture = ExtResource("4_do4eg")
@@ -48,3 +31,8 @@ texture = ExtResource("4_ngai6")
 
 [node name="northwest" type="Sprite2D" parent="."]
 texture = ExtResource("5_bmtdw")
+
+[node name="barred" type="Sprite2D" parent="."]
+visible = false
+self_modulate = Color(1, 1, 1, 0.498039)
+texture = ExtResource("9_lgyl4")

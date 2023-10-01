@@ -148,6 +148,8 @@ func update_display():
 func next_turn():
 	self.turn = (self.turn + 1) % (self.teams.size())
 	self.teamTurnRect.color = Constants.TEAM_COLORS[to_team_id(self.turn)]
+	for region in regions_used:
+		self.world.regions[region].set_used(false)
 	self.regions_used.clear()
 	if not regions_left(self.teams[self.turn]):
 		next_turn()

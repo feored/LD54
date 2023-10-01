@@ -10,6 +10,7 @@ class_name Tile
 	TileSet.CELL_NEIGHBOR_TOP_LEFT_SIDE: $northwest,
 	TileSet.CELL_NEIGHBOR_TOP_RIGHT_SIDE: $northeast
 }
+@onready var barred = $barred
 
 var coords: Vector2i = Vector2i(0, 0)
 var team = 0
@@ -67,7 +68,8 @@ func set_region(new_region):
 	self.region = new_region
 	self.update_cell()
 
-
+func set_barred(barred_val:bool):
+	self.barred.visible = barred_val
 
 func set_selected(selected: bool):
 	if selected:
