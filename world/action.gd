@@ -3,12 +3,17 @@ class_name Action
 
 var team: int = 0
 var action: int = Constants.Action.NONE
-var tile_from: Vector2i = Vector2i.ZERO
-var tile_target: Vector2i = Vector2i.ZERO
+var region_from: int = Constants.NO_REGION
+var region_target: int = Constants.NO_REGION
 
 
-func _init(team, action, tile_from = Vector2i.ZERO, tile_target = Vector2i.ZERO):
-	self.team = team
-	self.action = action
-	self.tile_from = tile_from
-	self.tile_target = tile_target
+func _init(
+	init_team,
+	init_action,
+	init_region_from = Constants.NO_REGION,
+	init_region_target = Constants.NO_REGION
+):
+	self.team = init_team
+	self.action = init_action
+	self.region_from = init_region_from
+	self.region_target = init_region_target

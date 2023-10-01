@@ -8,6 +8,8 @@ const WORLD_CAMERA_BOUNDS = Vector2i(25, 20)
 const TILE_GRASS = 1
 const TILE_WATER = 0
 
+const BLENDING_MODULATE_ALPHA = 0.5
+
 enum Layer { WATER, GRASS, P1, P2, P3 }
 const NO_TEAM = 0
 const TEAM_MAX_SIZE = 6

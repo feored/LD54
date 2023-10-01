@@ -2,7 +2,6 @@ extends Node2D
 
 @onready var world = $"%World"
 @onready var coordsLabel = $"%Coordinates"
-@onready var unitsLabel = $"%Units"
 @onready var teamLabel = $"%TeamLabel"
 @onready var turnLabel = $"%TurnLabel"
 @onready var regionLabel = $"%RegionLabel"
@@ -72,7 +71,6 @@ func on_tile_clicked(new_clicked_tile):
 func update_display():
 	if (clicked_tile != null):
 		coordsLabel.text = str(clicked_tile.coords)
-		unitsLabel.text = str(clicked_tile.units)
 		teamLabel.text = str(clicked_tile.team)
 		regionLabel.text = str(clicked_tile.region)
 	turnLabel.text = str(self.teams[self.turn])
@@ -88,13 +86,13 @@ func tiles_left(team):
 	return false
 
 func generate_units(team):
-	for tile in world.tiles:
-		if world.tiles[tile].team == team:
-			world.tiles[tile].set_units(world.tiles[tile].units + 1)
+	for region in world.regions:
+		if world.regions[region].team == team:
+			world.regions[region].generate_units()
 
 
 func apply_action(action : Action):
 	if action.action == Constants.Action.NONE:
 		return
 	if action.action == Constants.Action.MOVE:
-		self.world.move_units(action.tile_from, action.tile_target)
+		self.world.move_units(action.region_from, action.region_target)

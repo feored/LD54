@@ -140,26 +140,26 @@ func generate_disaster():
 	# only sinking tiles for now
 	delete_cell(Utils.pick_random_tile(self.tiles).coords)
 
-func move_units(tile_from : Vector2i, tile_to: Vector2i):
-	if not self.tiles.has(tile_from):
-		print("Error: invalid tile coordinates", tile_from)
+func move_units(region_from : int, region_to: int):
+	if not self.regions.has(region_from):
+		print("Error: invalid region trying to move", region_from)
 		return
-	if not self.tiles.has(tile_to):
-		print("Error: invalid tile coordinates", tile_to)
+	if not self.regions.has(region_to):
+		print("Error: invalid region trying to move to", region_to)
 		return
-	if self.tiles[tile_from].units <= 1:
-		print("Error: not enough units to move:", tiles[tile_from].units)
-	var moved_units = tiles[tile_from].units - 1
-	if tiles[tile_from].team == tiles[tile_to].team:
-		tiles[tile_from].set_units(1)
-		tiles[tile_to].set_units( tiles[tile_to].units + moved_units)
+	if self.regions[region_from].units <= 1:
+		print("Error: not enough units to move:", regions[region_from].units)
+	var moved_units = regions[region_from].units - 1
+	if regions[region_from].team == regions[region_to].team:
+		regions[region_from].set_units(1)
+		regions[region_to].set_units( regions[region_to].units + moved_units)
 	else:
-		tiles[tile_from].set_units(1)
-		if tiles[tile_to].units >= moved_units:
-			tiles[tile_to].set_units(tiles[tile_to].units - moved_units)
+		regions[region_from].set_units(1)
+		if regions[region_to].units >= moved_units:
+			regions[region_to].set_units(regions[region_to].units - moved_units)
 		else:
-			tiles[tile_to].set_units(moved_units - tiles[tile_to].units)
-			tiles[tile_to].team = tiles[tile_from].team
+			regions[region_to].set_units(moved_units - regions[region_to].units)
+			regions[region_to].set_team(regions[region_from].team)
 
 
 # Called when the node enters the scene tree for the first time.
@@ -179,3 +179,12 @@ func global_pos_to_coords(pos):
 func coords_to_pos(coords):
 	return self.map_to_local(coords)
 
+func adjacent_regions(region_id : int):
+	var adjacent = []
+	for t in regions[region_id].tiles:
+		for neighbor in self.get_surrounding_cells(t):
+			if self.tiles.has(neighbor):
+				var neighbor_region = self.tiles[neighbor].region
+				if not adjacent.has(neighbor_region):
+					adjacent.append(neighbor_region)
+	return adjacent

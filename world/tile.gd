@@ -41,8 +41,8 @@ func update_cell():
 	for b in self.borders.keys():
 		self.border_objects[b].modulate = Constants.TEAM_COLORS[team] if self.borders[b] else Color.hex(0x3aa25dff)
 	var lighter_color = Color(Constants.TEAM_COLORS[self.team])
-	lighter_color.a = 0.25
-	self.modulate = self.modulate.blend(lighter_color)
+	lighter_color.a = Constants.BLENDING_MODULATE_ALPHA
+	self.modulate = Color.hex(0xffffffff).blend(lighter_color)
 
 func set_team(new_team: int):
 	self.team = new_team
