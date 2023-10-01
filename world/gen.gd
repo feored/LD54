@@ -42,36 +42,65 @@ func generate_island():
 	apply_borders()
 
 func generate_regions():
-	var n_tiles = self.tiles.values().size()
-	var n_regions = 10
-	var tiles_shuffled = self.tiles.values().duplicate(true)
-	tiles_shuffled.shuffle()
-	var region_locks = {}
-	for i in range(n_regions):
-		var region_start = tiles_shuffled.pop_back()
-		regions[i] = {region_start.coords: region_start}
-		self.tiles[region_start.coords].set_region(i)
-		region_locks[i] = false
 	var current_region = 0
-	while (tiles_shuffled.size() > 0):
-		if (region_locks[current_region] or is_region_locked(current_region)):
-			region_locks[current_region] = true
-			current_region = (current_region + 1) % n_regions
-		for random_tile in tiles_shuffled:
-			for neighbor in self.get_surrounding_cells(random_tile.coords):
-				if (self.tiles.has(neighbor) and self.tiles[neighbor].region == current_region):
-						tiles_shuffled.erase(random_tile)
-						self.tiles[random_tile.coords].set_region(current_region)
-						self.regions[current_region][random_tile.coords] = self.tiles[random_tile.coords]
-						current_region = (current_region + 1) % n_regions
+	var tiles_shuffled = self.tiles.keys()
+	tiles_shuffled.shuffle()
+	
+	while tiles_shuffled.size() > 0:
+		var start = tiles_shuffled.pop_back()
+		self.tiles[start].set_region(current_region)
+		regions[current_region] = Region.new(current_region)
+		regions[current_region].add_tile(start, self.tiles[start])
+		for i in range(10):
+			var random_in_region = regions[current_region].random_in_region()
+			var neighbor_dirs = Constants.NEIGHBORS.duplicate()
+			neighbor_dirs.shuffle();
+			var expanded = false
+			for neighbor_dir in neighbor_dirs:
+				var neighbor = self.get_neighbor_cell(random_in_region, neighbor_dir)
+				if (self.tiles.has(neighbor) and self.tiles[neighbor].region == Constants.NO_REGION):
+					tiles_shuffled.erase(neighbor)
+					self.tiles[neighbor].set_region(current_region)
+					regions[current_region].add_tile(neighbor, self.tiles[neighbor])
+					expanded = true
+					break
+			if not expanded:
+				break
+		current_region += 1
+	
+			
+		
+# func generate_regions():
+# 	var n_tiles = self.tiles.values().size()
+# 	var n_regions = 10
+# 	var tiles_shuffled = self.tiles.values().duplicate(true)
+# 	tiles_shuffled.shuffle()
+# 	var region_locks = {}
+# 	for i in range(n_regions):
+# 		var region_start = tiles_shuffled.pop_back()
+# 		regions[i] = {region_start.coords: region_start}
+# 		self.tiles[region_start.coords].set_region(i)
+# 		region_locks[i] = false
+# 	var current_region = 0
+# 	while (tiles_shuffled.size() > 0):
+# 		if (region_locks[current_region] or is_region_locked(current_region)):
+# 			region_locks[current_region] = true
+# 			current_region = (current_region + 1) % n_regions
+# 		for random_tile in tiles_shuffled:
+# 			for neighbor in self.get_surrounding_cells(random_tile.coords):
+# 				if (self.tiles.has(neighbor) and self.tiles[neighbor].region == current_region):
+# 						tiles_shuffled.erase(random_tile)
+# 						self.tiles[random_tile.coords].set_region(current_region)
+# 						self.regions[current_region][random_tile.coords] = self.tiles[random_tile.coords]
+# 						current_region = (current_region + 1) % n_regions
 
-func is_region_locked(current_region):
-	for cell in regions[current_region]:
-		var neighbors = self.get_surrounding_cells(cell)
-		for neighbor in neighbors:
-			if (self.tiles.has(neighbor) and self.tiles[neighbor].region == Constants.NO_REGION):
-				return false
-	return true
+# func is_region_locked(current_region):
+# 	for cell in regions[current_region]:
+# 		var neighbors = self.get_surrounding_cells(cell)
+# 		for neighbor in neighbors:
+# 			if (self.tiles.has(neighbor) and self.tiles[neighbor].region == Constants.NO_REGION):
+# 				return false
+# 	return true
 
 func apply_borders():
 	for tile_coords in self.tiles:
@@ -110,21 +139,21 @@ func sort_least_neighbors():
 	return sorted_tiles
 
 func add_team(team_id : int):
-	var least_neighbors = self.sort_least_neighbors()
+	#var least_neighbors = self.sort_least_neighbors()
 	## find first tile with no team
-	var tile_found = null
-	for tile_val in least_neighbors:
-		if (tile_val.team == Constants.NO_TEAM):
-			tile_found = tile_val
-			break
-	
-	tile_found.set_team(team_id)
-	tile_found.set_borders(Constants.FULL_BORDERS)
+
+	# var tile_found = null
+	# for tile_val in least_neighbors:
+	# 	if (tile_val.team == Constants.NO_TEAM):
+	# 		tile_found = tile_val
+	# 		break
+	regions[team_id].set_team(team_id)
+	regions[team_id].set_team(team_id)
 		
 func count_neighbors(cell: Tile):
 	var total = 0;
 	for neighbor in self.get_surrounding_cells(cell.coords):
-		if (self.get_cell_source_id(1, neighbor) == -1):
+		if (self.tiles.has(neighbor)):
 			total += 1
 	return total
 
@@ -156,3 +185,24 @@ func move_units(tile_from : Vector2i, tile_to: Vector2i):
 		else:
 			tiles[tile_to].set_units(moved_units - tiles[tile_to].units)
 			tiles[tile_to].team = tiles[tile_from].team
+
+
+class Region:
+	var id: int = Constants.NO_REGION
+	var team: int = Constants.NO_TEAM
+	var tiles: Dictionary = {}
+
+	func _init(id):
+		self.id = id
+
+	func set_team(team):
+		self.team = team
+		for tile in tiles.values():
+			tile.set_team(team)
+	
+	func add_tile(coords, tileObj):
+		self.tiles[coords] = tileObj
+
+	func random_in_region():
+		return self.tiles.keys()[randi() % self.tiles.size()]
+

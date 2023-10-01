@@ -5,6 +5,7 @@ extends Node2D
 @onready var unitsLabel = $"%Units"
 @onready var teamLabel = $"%TeamLabel"
 @onready var turnLabel = $"%TurnLabel"
+@onready var regionLabel = $"%RegionLabel"
 
 var clicked_tile = null
 var turn = 0;
@@ -73,6 +74,7 @@ func update_display():
 		coordsLabel.text = str(clicked_tile.coords)
 		unitsLabel.text = str(clicked_tile.units)
 		teamLabel.text = str(clicked_tile.team)
+		regionLabel.text = str(clicked_tile.region)
 	turnLabel.text = str(self.teams[self.turn])
 
 func next_turn():

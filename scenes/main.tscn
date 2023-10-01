@@ -157,6 +157,19 @@ layout_mode = 2
 text = "
 "
 
+[node name="Region" type="HBoxContainer" parent="UI/CanvasLayer/PanelContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="Label2" type="Label" parent="UI/CanvasLayer/PanelContainer/VBoxContainer/Region"]
+layout_mode = 2
+text = "Region"
+
+[node name="RegionLabel" type="Label" parent="UI/CanvasLayer/PanelContainer/VBoxContainer/Region"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "
+"
+
 [node name="TurnButton" type="Button" parent="UI/CanvasLayer/PanelContainer/VBoxContainer"]
 unique_name_in_owner = true
 layout_mode = 2

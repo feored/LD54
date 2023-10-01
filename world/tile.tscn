@@ -15,6 +15,7 @@ texture = ExtResource("1_mvuo3")
 script = ExtResource("2_twet5")
 
 [node name="Label" type="Label" parent="."]
+visible = false
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -30,22 +31,20 @@ text = "99"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="border" type="Node2D" parent="."]
-
-[node name="southeast" type="Sprite2D" parent="border"]
+[node name="southeast" type="Sprite2D" parent="."]
 texture = ExtResource("4_do4eg")
 
-[node name="southwest" type="Sprite2D" parent="border"]
+[node name="southwest" type="Sprite2D" parent="."]
 texture = ExtResource("5_sao3d")
 
-[node name="east" type="Sprite2D" parent="border"]
+[node name="east" type="Sprite2D" parent="."]
 texture = ExtResource("6_knshb")
 
-[node name="northeast" type="Sprite2D" parent="border"]
+[node name="northeast" type="Sprite2D" parent="."]
 texture = ExtResource("7_gg2ky")
 
-[node name="west" type="Sprite2D" parent="border"]
+[node name="west" type="Sprite2D" parent="."]
 texture = ExtResource("4_ngai6")
 
-[node name="northwest" type="Sprite2D" parent="border"]
+[node name="northwest" type="Sprite2D" parent="."]
 texture = ExtResource("5_bmtdw")

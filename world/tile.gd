@@ -2,21 +2,18 @@ extends Node
 
 class_name Tile
 
-@onready var units_label = $Label
-@onready var border = $border
 @onready var border_objects = {
-	TileSet.CELL_NEIGHBOR_RIGHT_SIDE: $border/east,
-	TileSet.CELL_NEIGHBOR_BOTTOM_LEFT_SIDE: $border/southwest,
-	TileSet.CELL_NEIGHBOR_BOTTOM_RIGHT_SIDE: $border/southeast,
-	TileSet.CELL_NEIGHBOR_LEFT_SIDE: $border/west,
-	TileSet.CELL_NEIGHBOR_TOP_LEFT_SIDE: $border/northwest,
-	TileSet.CELL_NEIGHBOR_TOP_RIGHT_SIDE: $border/northeast
+	TileSet.CELL_NEIGHBOR_RIGHT_SIDE: $east,
+	TileSet.CELL_NEIGHBOR_BOTTOM_LEFT_SIDE: $southwest,
+	TileSet.CELL_NEIGHBOR_BOTTOM_RIGHT_SIDE: $southeast,
+	TileSet.CELL_NEIGHBOR_LEFT_SIDE: $west,
+	TileSet.CELL_NEIGHBOR_TOP_LEFT_SIDE: $northwest,
+	TileSet.CELL_NEIGHBOR_TOP_RIGHT_SIDE: $northeast
 }
 
 var coords: Vector2i = Vector2i(0, 0)
 var team = 0
 var tile_type: int = Constants.TILE_GRASS
-var units: int = 0
 var init_position: Vector2 = Vector2(0, 0)
 var borders = Constants.NO_BORDERS.duplicate()
 var region: int = Constants.NO_REGION
@@ -41,11 +38,11 @@ func _ready():
 
 
 func update_cell():
-	self.border.modulate = Constants.TEAM_COLORS[team]
 	for b in self.borders.keys():
-		self.border_objects[b].modulate = Color.hex(0xffffffff) if self.borders[b] else Color.hex(0x3aa25dff)
-	units_label.set_text(str(self.units))
-	self.self_modulate = Constants.TEAM_COLORS[self.team]
+		self.border_objects[b].modulate = Constants.TEAM_COLORS[team] if self.borders[b] else Color.hex(0x3aa25dff)
+	var lighter_color = Color(Constants.TEAM_COLORS[self.team])
+	lighter_color.a = 0.25
+	self.modulate = self.modulate.blend(lighter_color)
 
 func set_team(new_team: int):
 	self.team = new_team
@@ -57,10 +54,6 @@ func set_borders(new_borders: Dictionary):
 
 func set_single_border(border_changed: int , value: bool):
 	self.borders[border_changed] = value
-	self.update_cell()
-
-func set_units(new_units):
-	self.units = new_units
 	self.update_cell()
 
 func set_region(new_region):

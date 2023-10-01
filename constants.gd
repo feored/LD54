@@ -10,7 +10,7 @@ const TILE_WATER = 0
 
 enum Layer { WATER, GRASS, P1, P2, P3 }
 const NO_TEAM = 0
-const TEAM_COLORS = [0xffffffff, 0xff776eff, 0x6effff, 0xfdff6eff]
+const TEAM_COLORS = [0xffffffff, 0xff776eff, 0x6effff, 0xe803fcff]
 
 const TURN_TIME = 0.25
 
