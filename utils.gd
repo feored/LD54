@@ -42,18 +42,34 @@ func pick_random_tile(tiles_dict):
 	var keys = tiles_dict.keys()
 	return tiles_dict[keys[randi() % keys.size()]]
 
-func pick_tile_to_sink(tiles: Array):
-	tiles.sort_custom(func(a,b): return distance_from_center(a) - \
+func pick_tile_to_sink(regions: Array):
+	regions.sort_custom(func(a,b): return distance_from_center(a) - \
 		distance_from_center(b) < 0)
-	var n = tiles.size()
+	var n = regions.size()
 	var total = n*(n-1)/2
 	var random = [randi() % total, randi() % total].max()
 	var running_total = 0
 	for i in range(n):
 		running_total += i
 		if running_total >= random:
-			return tiles[i]
+			return pick_random_tile(regions[i].tiles)
 
-func distance_from_center(tile):
-	return abs(tile.coords.x - Constants.WORLD_CENTER.x) + \
-		abs(tile.coords.y - Constants.WORLD_CENTER.y)
+func distance_from_center(region):
+	var center_tile = region.center_tile()
+	var mod = 1
+	if region.items.has(Constants.ItemEffectPhase.SINK):
+		mod = region.items[Constants.ItemEffectPhase.SINK].modifier
+	return mod * abs(center_tile.x - Constants.WORLD_CENTER.x) + \
+		abs(center_tile.y - Constants.WORLD_CENTER.y)
+
+func generate_random_item(region):
+	var item_effect = Constants.ItemEffectPhase.values()[(randi() % (Constants.ItemEffectPhase.size() - 1)) + 1]
+	region.items[item_effect] = create_item_with_effect(item_effect)
+	print("Created Item with effect ", item_effect, " on region ", region.id)
+
+func create_item_with_effect(item_effect):
+	match item_effect:
+		Constants.ItemEffectPhase.UNIT_GENERATION:
+			return UnitBoost.new()
+		Constants.ItemEffectPhase.SINK:
+			return ProximityShrine.new()

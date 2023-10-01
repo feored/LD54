@@ -16,6 +16,7 @@ playtest with fast game and lots of tiles sinking:
 general ideas:
     * bonuses on tiles for protecting against sinking, or boost unit generation
     * neutral tiles that spawn with defenders can give you items to use on your tiles regions with said bonuses, or on ennemy tiles for attack!
-    * dumb bot to move units around when region is landlocked by other owned regions
+        * boost region unit productivity
+        * protect neighbor regions from sinking tiles
     * new bot with greedy pathfinding algorithm that focuses on tiles randomly
     

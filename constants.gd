@@ -59,3 +59,5 @@ const FULL_BORDERS = {
 const NO_REGION = -99
 
 enum Action { NONE, MOVE }
+
+enum ItemEffectPhase { NONE, UNIT_GENERATION, SINK }

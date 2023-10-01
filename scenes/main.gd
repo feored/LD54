@@ -45,7 +45,7 @@ func _input(event):
 			if event.button_index == MOUSE_BUTTON_RIGHT and event.pressed:
 				world.set_cell(1, world.global_pos_to_coords(event.position), -1, Vector2i(0,0), 0)
 				var region_clicked = world.tiles[coords_clicked].region
-				world.delete_cell(coords_clicked)
+				await world.delete_cell(coords_clicked)
 				world.recalculate_region(region_clicked)
 
 func _on_turn_button_pressed():
@@ -131,12 +131,16 @@ func on_tile_clicked(new_clicked_tile):
 
 func next_turn():
 	self.turn = (self.turn + 1) % (self.teams.size())
-	self.teamTurnRect.color = Constants.TEAM_COLORS[to_team_id(self.turn)]
+	var team_id = to_team_id(self.turn)
+	self.teamTurnRect.color = Constants.TEAM_COLORS[team_id]
 	self.world.clear_regions_used()
 	check_win_condition()
 	generate_units(teams[self.turn])
 	await turn_events()
-	if not regions_left(self.teams[self.turn]):
+	for region in self.world.regions.values():
+		if region.team == team_id:
+			region.update_items_durations()
+	if not regions_left(team_id):
 		next_turn()
 	elif (self.turn != self.player_team_index):
 		await get_tree().create_timer(Constants.TURN_TIME).timeout

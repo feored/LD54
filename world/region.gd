@@ -6,6 +6,7 @@ var team: int = Constants.NO_TEAM
 var tiles: Dictionary = {}
 var units = 0
 var label = null
+var items: Dictionary = {}
 
 
 func _init(id):
@@ -40,7 +41,10 @@ func random_in_region():
 
 
 func generate_units():
-	self.units += self.tiles.size()
+	var mod = 1
+	if self.items.has(Constants.ItemEffectPhase.UNIT_GENERATION):
+		mod = self.items[Constants.ItemEffectPhase.UNIT_GENERATION].modifier
+	self.units += self.tiles.size() * mod
 	update_display()
 
 
@@ -76,3 +80,11 @@ func set_used(is_used: bool):
 
 func reset_tiles():
 	self.tiles.clear()
+
+func update_items_durations():
+	for effect in self.items:
+		var item = self.items[effect]
+		item.duration -=1
+		if item.duration <= 0:
+			print("Item with effect  ", effect ,"on region ", self.id, " expired.")
+			self.items.erase(item)

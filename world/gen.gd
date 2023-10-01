@@ -13,7 +13,7 @@ var tile = preload("res://world/tile.tscn")
 var tiles = {}
 var regions = {}
 var regions_used = []
-
+var items_activated = true
 
 func spawn_cell(coords, team):
 	if tiles.has(coords):
@@ -175,7 +175,7 @@ func expand_single_region_from_coords(region: int, region_tiles: Array):
 	
 func generate_disaster():
 	# only sinking tiles for now
-	var deleted_cell = Utils.pick_tile_to_sink(self.tiles.values())
+	var deleted_cell = Utils.pick_tile_to_sink(self.regions.values())
 	var deleted_cell_region = deleted_cell.region
 	await delete_cell(deleted_cell.coords)
 	recalculate_region(deleted_cell_region)
@@ -183,12 +183,16 @@ func generate_disaster():
 func move_units(region_from : int, region_to: int):
 	if not self.regions.has(region_from):
 		print("Error: invalid region trying to move", region_from)
+		return
 	if not self.regions.has(region_to):
 		print("Error: invalid region trying to move to", region_to)
+		return
 	if self.regions[region_from].units <= 1:
 		print("Error: not enough units to move:", regions[region_from].units)
+		return
 	if not region_to in self.adjacent_regions(region_from):
 		print("Error: regions are not adjacent")
+		return
 
 	# success
 	await camera.move_bounded(self.coords_to_pos(self.regions[region_from].center_tile()) - Vector2(self.camera.viewport_size/2))
@@ -204,6 +208,9 @@ func move_units(region_from : int, region_to: int):
 			self.regions_used.append(region_from)
 			return
 		else:
+			# temporary way to generate items. Items go stay in that tile
+			if items_activated and regions[region_to].team == Constants.NO_TEAM and randi()%100 < 50:
+				Utils.generate_random_item(regions[region_to])
 			regions[region_to].set_units(moved_units - regions[region_to].units)
 			regions[region_to].set_team(regions[region_from].team)
 	self.regions[region_from].set_used(true)
