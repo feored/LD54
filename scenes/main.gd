@@ -115,10 +115,15 @@ func on_tile_clicked(new_clicked_tile):
 		update_display()
 		return
 	if (self.turn == self.player_team_index and clicked_tile != null and clicked_tile.team == self.teams[player_team_index]):
+		self.world.regions[clicked_tile.region].set_selected(false)
 		self.world.move_units(clicked_tile.region, new_clicked_tile.region)
 		clicked_tile = null
 	else:
 		clicked_tile = new_clicked_tile
+		if (clicked_tile.team == self.teams[self.player_team_index]):
+			self.world.regions[clicked_tile.region].set_selected(true)
+		else:
+			clicked_tile = null
 	update_display()
 
 
