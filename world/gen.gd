@@ -26,7 +26,6 @@ func spawn_cell(coords, team):
 
 
 func init_world():
-	print("World center", Constants.WORLD_CENTER)
 	tile_water()
 	generate_island()
 
@@ -175,7 +174,6 @@ func expand_single_region_from_coords(region: int, region_tiles: Array):
 func generate_disaster():
 	# only sinking tiles for now
 	var deleted_cell = Utils.pick_tile_to_sink(self.tiles.values())
-	print("Deleting cell at", deleted_cell.coords, " with distance ", Utils.distance_from_center(deleted_cell))
 	var deleted_cell_region = deleted_cell.region
 	delete_cell(deleted_cell.coords)
 	recalculate_region(deleted_cell_region)

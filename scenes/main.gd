@@ -86,12 +86,12 @@ func check_teams_on_islands(teams_alive):
 		for team in teams_alive:
 			units_per_team[team] = 0
 			for region in self.world.regions:
-				if region.team == team:
-					units_per_team[team] += region.units
+				if self.world.regions[region].team == team:
+					units_per_team[team] += self.world.regions[region].units
 			if units_per_team[team] > winning_units:
 				winner = team
 				winning_units = units_per_team[team]
-		print("No more possible moves! ", winner, " won with", winning_units, " !")
+		print("No more possible moves! ", winner, " won with ", winning_units, " units!")
 		get_tree().quit()
 
 func get_teams_alive():
@@ -102,7 +102,7 @@ func get_teams_alive():
 	return teams_alive
 
 func bots_play():
-	var bot_action = self.bots[self.turn].play_turn(self.world)
+	var bot_action = self.bots[to_team_id(self.turn)].play_turn(self.world)
 	apply_action(bot_action)
 	self.actions_history.append(bot_action)
 
