@@ -5,6 +5,7 @@ extends Node2D
 @onready var teamLabel = $"%TeamLabel"
 @onready var turnLabel = $"%TurnLabel"
 @onready var regionLabel = $"%RegionLabel"
+@onready var teamTurnRect = $"%TeamTurn"
 
 var clicked_tile = null
 var teams = []
@@ -128,6 +129,7 @@ func on_tile_clicked(new_clicked_tile):
 
 
 func update_display():
+	print(clicked_tile)
 	if (clicked_tile != null):
 		coordsLabel.text = str(clicked_tile.coords)
 		teamLabel.text = str(clicked_tile.team)
@@ -136,6 +138,7 @@ func update_display():
 
 func next_turn():
 	self.turn = (self.turn + 1) % (self.teams.size())
+	self.teamTurnRect.color = Constants.TEAM_COLORS[to_team_id(self.turn)]
 	if not regions_left(self.teams[self.turn]):
 		next_turn()
 	

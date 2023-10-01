@@ -118,12 +118,14 @@ layout_mode = 2
 
 [node name="Label2" type="Label" parent="UI/CanvasLayer/PanelContainer/VBoxContainer/HBoxContainer"]
 layout_mode = 2
-text = "Coordinates:"
+text = "Turn:"
 
-[node name="Coordinates" type="Label" parent="UI/CanvasLayer/PanelContainer/VBoxContainer/HBoxContainer"]
+[node name="TeamTurn" type="ColorRect" parent="UI/CanvasLayer/PanelContainer/VBoxContainer/HBoxContainer"]
 unique_name_in_owner = true
+custom_minimum_size = Vector2(20, 0)
 layout_mode = 2
-theme = SubResource("Theme_pqbx7")
+size_flags_horizontal = 6
+size_flags_stretch_ratio = 0.0
 
 [node name="Units" type="HBoxContainer" parent="UI/CanvasLayer/PanelContainer/VBoxContainer"]
 layout_mode = 2
@@ -183,6 +185,18 @@ text = "Turn"
 [node name="InspectButton" type="CheckButton" parent="UI/CanvasLayer/PanelContainer/VBoxContainer"]
 layout_mode = 2
 text = "Inspect"
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="UI/CanvasLayer/PanelContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="Label2" type="Label" parent="UI/CanvasLayer/PanelContainer/VBoxContainer/HBoxContainer2"]
+layout_mode = 2
+text = "Coordinates:"
+
+[node name="Coordinates" type="Label" parent="UI/CanvasLayer/PanelContainer/VBoxContainer/HBoxContainer2"]
+unique_name_in_owner = true
+layout_mode = 2
+theme = SubResource("Theme_pqbx7")
 
 [connection signal="pressed" from="UI/CanvasLayer/PanelContainer/VBoxContainer/TurnButton" to="." method="_on_turn_button_pressed"]
 [connection signal="toggled" from="UI/CanvasLayer/PanelContainer/VBoxContainer/InspectButton" to="." method="_on_inspect_button_toggled"]

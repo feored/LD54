@@ -24,7 +24,7 @@ const TEAM_COLORS = [
 	0x696969ff,  # grey
 ]
 
-const TURN_TIME = 0.25
+const TURN_TIME = 0.5
 
 const MIN_TEAMS = 2  ## including player
 const MAX_TEAMS = 7
