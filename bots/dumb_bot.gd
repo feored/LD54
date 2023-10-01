@@ -20,13 +20,15 @@ func play_turn(world):
 				landlocked = false
 				break
 		if landlocked:
-			return Action.new(self.team, Constants.Action.MOVE, region, neighbors[randi() % neighbors.size()])
+			for neighbor in neighbors:
+				if neighbor not in world.regions_used:
+					return Action.new(self.team, Constants.Action.MOVE, region, neighbor)
 	return Action.new(self.team, Constants.Action.NONE)
 
 
 func can_use_region(world, region):
 	return (
-		(not region in world.regions_used)
+		(region not in world.regions_used)
 		and world.regions[region].team == team
 		and world.regions[region].units > 1
 	)

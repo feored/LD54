@@ -200,6 +200,9 @@ func move_units(region_from : int, region_to: int):
 		regions[region_from].set_units(1)
 		if regions[region_to].units >= moved_units:
 			regions[region_to].set_units(regions[region_to].units - moved_units)
+			self.regions[region_from].set_used(true)
+			self.regions_used.append(region_from)
+			return
 		else:
 			regions[region_to].set_units(moved_units - regions[region_to].units)
 			regions[region_to].set_team(regions[region_from].team)
