@@ -1,22 +1,16 @@
 extends Node2D
 
 @onready var world = $"%World"
-@onready var coordsLabel = $"%Coordinates"
-@onready var teamLabel = $"%TeamLabel"
-@onready var turnLabel = $"%TurnLabel"
-@onready var regionLabel = $"%RegionLabel"
 @onready var teamTurnRect = $"%TeamTurn"
 
-var clicked_tile = null
+var selected_region = null
 var teams = []
 var turn = 0
-var inspect_mode = false
 var player_team_index = 0
 
 var actions_history = []
 var bots = {}
-var regions_used = {}
-
+var regions_used = []
 
 func to_team_id(team_id):
 	return team_id + 1
@@ -99,53 +93,48 @@ func bots_play():
 	var bot_action = null
 	var bot = self.bots[to_team_id(self.turn)]
 	while bot_action == null or bot_action.action != Constants.Action.NONE:
-		bot_action = bot.play_turn(self.world, self.regions_used)
+		bot_action = bot.play_turn(self.world)
 		apply_action(bot_action)
 		self.actions_history.append(bot_action)
 		await get_tree().create_timer(Constants.TURN_TIME).timeout
 
-func _on_inspect_button_toggled(pressed: bool):
-	inspect_mode = pressed;
+func clear_selected_region():
+	if selected_region != null:
+		self.world.regions[selected_region].set_selected(false)
+		self.selected_region = null
+	
 
 func on_tile_clicked(new_clicked_tile):
-	if (inspect_mode):
-		clicked_tile = new_clicked_tile;
-		update_display()
+	if !(self.turn == self.player_team_index):
+		clear_selected_region()
 		return
-	if (self.turn == self.player_team_index and clicked_tile != null and clicked_tile.team == self.teams[player_team_index] and clicked_tile.region != new_clicked_tile.region):
-		var moved = self.world.move_units(clicked_tile.region, new_clicked_tile.region)
-		self.world.regions[clicked_tile.region].set_selected(false)
-		self.regions_used[clicked_tile.region] = moved
-		clicked_tile = null
+	if new_clicked_tile.region in self.world.regions_used:
+		clear_selected_region()
+		return
+	if selected_region != null and new_clicked_tile.region == selected_region:
+		clear_selected_region()
+		return
+	if selected_region == null:
+		if new_clicked_tile.team == self.teams[self.player_team_index]:
+			self.selected_region = new_clicked_tile.region
+			self.world.regions[selected_region].set_selected(true)
 	else:
-		if self.regions_used.has(new_clicked_tile.region) and self.regions_used[new_clicked_tile.region]:
-			print("Error: this region has already been used this turn", new_clicked_tile.region)
+		if new_clicked_tile.region not in self.world.adjacent_regions(self.selected_region):
+			clear_selected_region()
+			return
 		else:
-			if (new_clicked_tile.team == self.teams[self.player_team_index]):
-				clicked_tile = new_clicked_tile
-				self.world.regions[clicked_tile.region].set_selected(true)
-			else:
-				clicked_tile = null
-	update_display()
-
-
-func update_display():
-	print(clicked_tile)
-	if (clicked_tile != null):
-		coordsLabel.text = str(clicked_tile.coords)
-		teamLabel.text = str(clicked_tile.team)
-		regionLabel.text = str(clicked_tile.region)
-	turnLabel.text = str(teams[self.turn])
+			var move = Action.new(self.teams[self.player_team_index], Constants.Action.MOVE, selected_region, new_clicked_tile.region )
+			actions_history.append(move)
+			self.apply_action(move)
+			clear_selected_region()
+	
 
 func next_turn():
 	self.turn = (self.turn + 1) % (self.teams.size())
 	self.teamTurnRect.color = Constants.TEAM_COLORS[to_team_id(self.turn)]
-	for region in regions_used:
-		self.world.regions[region].set_used(false)
-	self.regions_used.clear()
+	self.world.clear_regions_used()
 	check_win_condition()
 	generate_units(teams[self.turn])
-	update_display()
 	world.generate_disaster()
 	if not regions_left(self.teams[self.turn]):
 		next_turn()
@@ -154,6 +143,7 @@ func next_turn():
 		await bots_play()
 		next_turn()
 	
+
 
 func regions_left(team):
 	for region in world.regions:
@@ -170,4 +160,4 @@ func apply_action(action : Action):
 	if action.action == Constants.Action.NONE:
 		return
 	if action.action == Constants.Action.MOVE:
-		self.regions_used[action.region_from] = self.world.move_units(action.region_from, action.region_target)
+		self.world.move_units(action.region_from, action.region_target)

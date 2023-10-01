@@ -12,6 +12,7 @@ var tile = preload("res://world/tile.tscn")
 
 var tiles = {}
 var regions = {}
+var regions_used = []
 
 
 func spawn_cell(coords, team):
@@ -181,16 +182,12 @@ func generate_disaster():
 func move_units(region_from : int, region_to: int):
 	if not self.regions.has(region_from):
 		print("Error: invalid region trying to move", region_from)
-		return false
 	if not self.regions.has(region_to):
 		print("Error: invalid region trying to move to", region_to)
-		return false
 	if self.regions[region_from].units <= 1:
 		print("Error: not enough units to move:", regions[region_from].units)
-		return false
 	if not region_to in self.adjacent_regions(region_from):
 		print("Error: regions are not adjacent")
-		return false
 	var moved_units = regions[region_from].units - 1
 	if regions[region_from].team == regions[region_to].team:
 		regions[region_from].set_units(1)
@@ -203,7 +200,9 @@ func move_units(region_from : int, region_to: int):
 			regions[region_to].set_units(moved_units - regions[region_to].units)
 			regions[region_to].set_team(regions[region_from].team)
 	self.regions[region_from].set_used(true)
-
+	self.regions[region_to].set_used(true)
+	self.regions_used.append(region_from)
+	self.regions_used.append(region_to)
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
@@ -231,3 +230,8 @@ func adjacent_regions(region_id : int):
 				if not adjacent.has(neighbor_region):
 					adjacent.append(neighbor_region)
 	return adjacent
+
+func clear_regions_used():
+	for region in regions_used:
+		regions[region].set_used(false)
+	regions_used.clear()
