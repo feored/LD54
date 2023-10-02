@@ -15,7 +15,8 @@ func init(new_color, is_active):
 
 func set_color(new_color):
 	self.color = new_color
-	rect.color = self.color
+	self.color.a = 0.7
+	rect.color = Color.WHITE.blend(self.color)
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(_delta):
 	pass

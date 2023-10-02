@@ -24,6 +24,17 @@ const TEAM_COLORS = [
 	0x696969ff,  # grey
 ]
 
+const TEAM_NAMES = [
+	"Neutral",
+	"Blue Country",
+	"Orange Kingdom",
+	"Pink Empire",
+	"Yellow Protectorate",
+	"Red Republic",
+	"Green Federation",
+	"Grey Coalition"
+]
+
 const TURN_TIME = 0.5
 
 const MIN_TEAMS = 2  ## including player

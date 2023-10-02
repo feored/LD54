@@ -1,4 +1,4 @@
-[gd_scene load_steps=12 format=3 uid="uid://ceoqtlfuehsvd"]
+[gd_scene load_steps=14 format=3 uid="uid://ceoqtlfuehsvd"]
 
 [ext_resource type="Script" path="res://world/gen.gd" id="1_bg6dg"]
 [ext_resource type="Script" path="res://scenes/main.gd" id="1_osaxm"]
@@ -7,6 +7,7 @@
 [ext_resource type="Texture2D" uid="uid://b7uk1y1hmnqo5" path="res://assets/tiles/water.png" id="5_2ncmi"]
 [ext_resource type="Theme" uid="uid://3t61g0061mea" path="res://assets/theme.tres" id="5_5yrco"]
 [ext_resource type="Script" path="res://scenes/CloudGenerator.gd" id="7_10s8g"]
+[ext_resource type="Script" path="res://ui/Message.gd" id="7_y3mfw"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_syxq1"]
 texture = ExtResource("5_2ncmi")
@@ -43,7 +44,9 @@ sources/1 = SubResource("TileSetAtlasSource_7xr4p")
 sources/0 = SubResource("TileSetAtlasSource_syxq1")
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_wp2ga"]
-bg_color = Color(0, 0, 0, 1)
+bg_color = Color(0.0784314, 0.0745098, 0.0588235, 1)
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_u2eju"]
 
 [node name="Main" type="Node2D"]
 script = ExtResource("1_osaxm")
@@ -87,8 +90,16 @@ script = ExtResource("1_bg6dg")
 [node name="MainCamera" type="Camera2D" parent="World"]
 unique_name_in_owner = true
 anchor_mode = 0
+limit_left = -100000
+limit_top = -100000
+limit_right = 100000
+limit_bottom = 100000
 position_smoothing_enabled = true
 position_smoothing_speed = 3.0
+drag_left_margin = 0.9
+drag_top_margin = 0.9
+drag_right_margin = 0.9
+drag_bottom_margin = 0.9
 script = ExtResource("3_x3nk1")
 
 [node name="RegionLabels" type="CanvasLayer" parent="World"]
@@ -111,36 +122,57 @@ anchors_preset = 12
 anchor_top = 1.0
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_top = -41.0
+offset_top = -31.0
 grow_horizontal = 2
 grow_vertical = 0
 theme = ExtResource("5_5yrco")
 theme_override_styles/panel = SubResource("StyleBoxFlat_wp2ga")
 
-[node name="HBoxContainer" type="HBoxContainer" parent="UI/CanvasLayer/PanelContainer"]
+[node name="MarginContainer" type="MarginContainer" parent="UI/CanvasLayer/PanelContainer"]
 layout_mode = 2
-size_flags_horizontal = 0
+theme_override_constants/margin_left = 5
+theme_override_constants/margin_top = 5
+theme_override_constants/margin_right = 5
+theme_override_constants/margin_bottom = 5
 
-[node name="VBoxContainer" type="VBoxContainer" parent="UI/CanvasLayer/PanelContainer/HBoxContainer"]
+[node name="HBoxContainer" type="HBoxContainer" parent="UI/CanvasLayer/PanelContainer/MarginContainer"]
 layout_mode = 2
 
-[node name="TurnLabel" type="Label" parent="UI/CanvasLayer/PanelContainer/HBoxContainer/VBoxContainer"]
+[node name="HBoxContainer" type="HBoxContainer" parent="UI/CanvasLayer/PanelContainer/MarginContainer/HBoxContainer"]
 layout_mode = 2
-text = "Turn"
+size_flags_horizontal = 3
+
+[node name="VBoxContainer" type="VBoxContainer" parent="UI/CanvasLayer/PanelContainer/MarginContainer/HBoxContainer/HBoxContainer"]
+layout_mode = 2
+
+[node name="TurnLabel" type="Label" parent="UI/CanvasLayer/PanelContainer/MarginContainer/HBoxContainer/HBoxContainer/VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Turn 0"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="TurnContainer" type="HBoxContainer" parent="UI/CanvasLayer/PanelContainer/HBoxContainer/VBoxContainer"]
+[node name="TurnContainer" type="HBoxContainer" parent="UI/CanvasLayer/PanelContainer/MarginContainer/HBoxContainer/HBoxContainer/VBoxContainer"]
 unique_name_in_owner = true
 layout_mode = 2
 
-[node name="TurnButton" type="Button" parent="UI/CanvasLayer/PanelContainer"]
+[node name="Message" type="Label" parent="UI/CanvasLayer/PanelContainer/MarginContainer/HBoxContainer/HBoxContainer"]
 unique_name_in_owner = true
 layout_mode = 2
-size_flags_horizontal = 8
+size_flags_horizontal = 3
+horizontal_alignment = 1
+vertical_alignment = 1
+autowrap_mode = 3
+script = ExtResource("7_y3mfw")
+
+[node name="TurnButton" type="Button" parent="UI/CanvasLayer/PanelContainer/MarginContainer/HBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 0
+theme_override_styles/focus = SubResource("StyleBoxEmpty_u2eju")
 text = "End Turn"
 
 [node name="CloudGenerator" type="Node2D" parent="."]
 script = ExtResource("7_10s8g")
 
-[connection signal="pressed" from="UI/CanvasLayer/PanelContainer/TurnButton" to="." method="_on_turn_button_pressed"]
+[connection signal="pressed" from="UI/CanvasLayer/PanelContainer/MarginContainer/HBoxContainer/TurnButton" to="." method="_on_turn_button_pressed"]

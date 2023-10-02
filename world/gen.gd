@@ -4,6 +4,7 @@ extends TileMap
 @onready var camera = $"%MainCamera"
 @onready var regionLabelsParent = $"%RegionLabels"
 @onready var world = $"%World"
+@onready var messager = $"%Message"
 
 
 var regionLabelPrefab = preload("res://world/region_label.tscn")
@@ -134,7 +135,8 @@ func count_neighbors(cell: Tile):
 	return total
 
 func delete_cell(coords: Vector2i):
-	await self.camera.move_bounded(self.coords_to_pos(coords) - Vector2(self.camera.viewport_size/2))
+	self.messager.set_message("A patch of land sinks somewhere...")
+	await self.camera.move_bounded(self.coords_to_pos(coords))
 	self.regions[self.tiles[coords].region].tiles.erase(coords)
 	self.tiles[coords].queue_free()
 	self.tiles.erase(coords)
@@ -180,7 +182,8 @@ func generate_disaster():
 	await delete_cell(deleted_cell.coords)
 	recalculate_region(deleted_cell_region)
 
-func move_units(region_from : int, region_to: int, ignore_camera = false):
+func move_units(region_from : int, region_to: int, team: int):
+	var is_player = team == 1
 	if not self.regions.has(region_from):
 		print("Error: invalid region trying to move", region_from)
 	if not self.regions.has(region_to):
@@ -191,9 +194,16 @@ func move_units(region_from : int, region_to: int, ignore_camera = false):
 		print("Error: regions are not adjacent")
 
 	# success
-	if not ignore_camera:
-		await camera.move_bounded(self.coords_to_pos(self.regions[region_from].center_tile()) - Vector2(self.camera.viewport_size/2))
 	var moved_units = regions[region_from].units - 1
+	if not is_player:
+		var team_name = Constants.TEAM_NAMES[team]
+		if region_from == region_to:
+			self.messager.set_message("%s is moving %s troops to a friendly neighboring region..." % [team_name, moved_units])
+		else:
+			var enemy_team_name = Constants.TEAM_NAMES[self.regions[region_to].team] 
+			self.messager.set_message("%s is attacking a neighboring %s region with %s troops!" % [team_name, enemy_team_name, moved_units])
+		await camera.move_bounded(self.coords_to_pos(self.regions[region_from].center_tile()))
+	
 	if regions[region_from].team == regions[region_to].team:
 		regions[region_from].set_units(1)
 		regions[region_to].set_units( regions[region_to].units + moved_units)
@@ -211,7 +221,7 @@ func move_units(region_from : int, region_to: int, ignore_camera = false):
 	self.regions[region_to].set_used(true)
 	self.regions_used.append(region_from)
 	self.regions_used.append(region_to)
-	if not ignore_camera:
+	if not is_player:
 		await Utils.wait(Constants.TURN_TIME)
 
 # Called when the node enters the scene tree for the first time.

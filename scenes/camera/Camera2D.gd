@@ -26,15 +26,15 @@ func _process(_delta):
 	
 
 func move_bounded(target):
-	if target.x > limit:
-		target.x = limit
-	elif target.x < -limit:
-		target.x = -limit
-	if target.y > limit:
-		target.y = limit
-	elif target.y < -limit:
-		target.y = -limit
-	self.position = target
-	while abs((target - self.position).length_squared()) > 0.1:
-		pass
-	await Utils.wait(Constants.TURN_TIME)
+	# if target.x > limit:
+	# 	target.x = limit
+	# elif target.x < -limit:
+	# 	target.x = -limit
+	# if target.y > limit:
+	# 	target.y = limit
+	# elif target.y < -limit:
+	# 	target.y = -limit
+	self.position = target - Vector2(self.viewport_size/2)
+	var arrived_center = target
+	while abs((arrived_center - get_screen_center_position()).length_squared()) > 1:
+		await Utils.wait(0.1)

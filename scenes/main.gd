@@ -4,6 +4,8 @@ var turnIndicatorPrefab = preload("res://ui/turn_indicator.tscn")
 
 @onready var world = $"%World"
 @onready var turnContainer = $"%TurnContainer"
+@onready var turnLabel = $"%TurnLabel"
+@onready var messager = $"%Message"
 
 var selected_region = null
 var teams = []
@@ -62,7 +64,7 @@ func _on_turn_button_pressed():
 	await next_turn()
 	
 func check_global_turn_over():
-	return self.turn == self.teams[self.player_team_index]
+	return self.turn == self.teams.size() - 1
 
 func check_win_condition():
 	var teams_alive = get_teams_alive()
@@ -152,14 +154,14 @@ func next_turn():
 	self.world.clear_regions_used()
 	check_win_condition()
 	generate_units(teams[self.turn])
-	await turn_events()
 	if not regions_left(self.teams[self.turn]):
 		await next_turn()
 	elif (self.turn != self.player_team_index):
-		await Utils.wait(Constants.TURN_TIME)
 		await bots_play()
+		await Utils.wait(Constants.TURN_TIME)
 		await next_turn()
 	Settings.input_locked = false
+	self.turnLabel.set_text("Turn: " + str(self.global_turn))
 	
 
 func turn_events():
@@ -182,4 +184,4 @@ func apply_action(action : Action):
 	if action.action == Constants.Action.NONE:
 		return
 	if action.action == Constants.Action.MOVE:
-		await self.world.move_units(action.region_from, action.region_target, action.team == self.teams[self.player_team_index])
+		await self.world.move_units(action.region_from, action.region_to, action.team)
