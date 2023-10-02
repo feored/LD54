@@ -170,6 +170,7 @@ func _unhandled_input(event):
 		handle_editor_input(event)
 		return
 	if event.is_action_pressed("escmenu"):
+		
 		if escMenu == null:
 			escMenu = escMenuPrefab.instantiate()
 			self.add_child(escMenu)

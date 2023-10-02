@@ -23,3 +23,8 @@ func _on_resume_button_pressed():
 func delete():
 	get_tree().paused = false
 	self.queue_free()
+
+
+func _unhandled_input(event):
+	if event.is_action_pressed("escmenu"):
+		self.delete()
