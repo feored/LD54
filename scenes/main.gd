@@ -70,6 +70,7 @@ func _ready():
 			self.SelectionUI.visible = false
 			self.MapEditorUI.visible = false
 			self.load_scenario()
+			self.add_teams()
 			self.start_game()
 	
 
@@ -79,6 +80,16 @@ func update_sacrifices_display():
 func gen_world():
 	self.world.clear_island()
 	self.world.generate_island()
+
+func add_teams_scenario():
+	self.bots.clear()
+	for t in self.turn_indicators:
+		t.queue_free()
+	self.turn_indicators.clear()
+	for team_id in teams:
+		self.bots[team_id] = DumbBot.new(team_id)
+		self.create_turn_indicator(team_id)
+		self.sacrifices_available[team_id] = 0
 
 func add_teams():
 	self.world.reset_regions_team()

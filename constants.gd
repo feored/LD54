@@ -84,7 +84,7 @@ const SINK_GRACE_PERIOD = 1
 const scenarios = [
 	{
 		"title": "Humble Beginnings",
-		"description": "Neptune means to teach you that you must sink or be sank.",
+		"description": "Neptune means to teach you that you must sink or be sunk.",
 		"path": "cross.json"
 	},
 	{
