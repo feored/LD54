@@ -7,10 +7,12 @@ var selected_region = null
 var teams = []
 var turn = 0
 var player_team_index = 0
+var global_turn = 0
 
 var actions_history = []
 var bots = {}
 var regions_used = []
+
 
 func to_team_id(team_id):
 	return team_id + 1
@@ -34,24 +36,25 @@ func _process(_delta):
 	pass
 
 func _input(event):
+	if Settings.input_locked:
+		return
 	if event is InputEventMouseButton:
 		var coords_clicked = world.global_pos_to_coords(event.position)
 		if world.tiles.has(coords_clicked):
 			if event.button_index == MOUSE_BUTTON_LEFT and event.pressed:
-				# var new_tile = tile.new(global_pos_to_coords(event.position), 1)
-				# self.update_cell(new_tile)
-				
-					on_tile_clicked(world.tiles[coords_clicked])
-			if event.button_index == MOUSE_BUTTON_RIGHT and event.pressed:
-				world.set_cell(1, world.global_pos_to_coords(event.position), -1, Vector2i(0,0), 0)
-				var region_clicked = world.tiles[coords_clicked].region
-				world.delete_cell(coords_clicked)
-				world.recalculate_region(region_clicked)
+				on_tile_clicked(world.tiles[coords_clicked])
+			# if event.button_index == MOUSE_BUTTON_RIGHT and event.pressed:
+			# 	world.set_cell(1, world.global_pos_to_coords(event.position), -1, Vector2i(0,0), 0)
+			# 	var region_clicked = world.tiles[coords_clicked].region
+			# 	world.delete_cell(coords_clicked)
+			# 	world.recalculate_region(region_clicked)
 
 func _on_turn_button_pressed():
-	next_turn()
+	await next_turn()
 	
-	
+func check_global_turn_over():
+	return self.turn == self.teams[self.player_team_index]
+
 func check_win_condition():
 	var teams_alive = get_teams_alive()
 	check_last_team_alive(teams_alive)
@@ -96,7 +99,7 @@ func bots_play():
 		bot_action = bot.play_turn(self.world)
 		await apply_action(bot_action)
 		self.actions_history.append(bot_action)
-		await get_tree().create_timer(Constants.TURN_TIME).timeout
+		await Utils.wait(Constants.TURN_TIME)
 
 func clear_selected_region():
 	if selected_region != null:
@@ -130,6 +133,10 @@ func on_tile_clicked(new_clicked_tile):
 	
 
 func next_turn():
+	Settings.input_locked = true
+	if check_global_turn_over():
+		self.global_turn += 1
+		await turn_events()
 	self.turn = (self.turn + 1) % (self.teams.size())
 	self.teamTurnRect.color = Constants.TEAM_COLORS[to_team_id(self.turn)]
 	self.world.clear_regions_used()
@@ -137,16 +144,17 @@ func next_turn():
 	generate_units(teams[self.turn])
 	await turn_events()
 	if not regions_left(self.teams[self.turn]):
-		next_turn()
+		await next_turn()
 	elif (self.turn != self.player_team_index):
-		await get_tree().create_timer(Constants.TURN_TIME).timeout
+		await Utils.wait(Constants.TURN_TIME)
 		await bots_play()
-		next_turn()
+		await next_turn()
+	Settings.input_locked = false
+	
 
 func turn_events():
-	##var camera_pos = self.world.camera.position
 	await world.generate_disaster()
-	#self.world.camera.position = camera_pos
+	await Utils.wait(Constants.TURN_TIME)
 
 
 func regions_left(team):
@@ -164,4 +172,4 @@ func apply_action(action : Action):
 	if action.action == Constants.Action.NONE:
 		return
 	if action.action == Constants.Action.MOVE:
-		await self.world.move_units(action.region_from, action.region_target)
+		await self.world.move_units(action.region_from, action.region_target, action.team == self.teams[self.player_team_index])

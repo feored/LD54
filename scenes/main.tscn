@@ -1,4 +1,4 @@
-[gd_scene load_steps=10 format=3 uid="uid://ceoqtlfuehsvd"]
+[gd_scene load_steps=11 format=3 uid="uid://ceoqtlfuehsvd"]
 
 [ext_resource type="Script" path="res://world/gen.gd" id="1_bg6dg"]
 [ext_resource type="Script" path="res://scenes/main.gd" id="1_osaxm"]
@@ -6,6 +6,7 @@
 [ext_resource type="Script" path="res://scenes/camera/Camera2D.gd" id="3_x3nk1"]
 [ext_resource type="Texture2D" uid="uid://b7uk1y1hmnqo5" path="res://assets/tiles/water.png" id="5_2ncmi"]
 [ext_resource type="Theme" uid="uid://3t61g0061mea" path="res://assets/theme.tres" id="5_5yrco"]
+[ext_resource type="Script" path="res://scenes/CloudGenerator.gd" id="7_10s8g"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_syxq1"]
 texture = ExtResource("5_2ncmi")
@@ -85,6 +86,7 @@ unique_name_in_owner = true
 visible = false
 anchor_mode = 0
 position_smoothing_enabled = true
+position_smoothing_speed = 3.0
 script = ExtResource("3_x3nk1")
 
 [node name="RegionLabels" type="CanvasLayer" parent="World"]
@@ -127,5 +129,8 @@ size_flags_stretch_ratio = 0.0
 unique_name_in_owner = true
 layout_mode = 2
 text = "Turn"
+
+[node name="CloudGenerator" type="Node2D" parent="."]
+script = ExtResource("7_10s8g")
 
 [connection signal="pressed" from="UI/CanvasLayer/PanelContainer/VBoxContainer/TurnButton" to="." method="_on_turn_button_pressed"]

@@ -3,13 +3,17 @@ extends Camera2D
 const edge = 24
 const step = 2
 
-const limit = 24*4
+const limit = 24*8
+
 
 @onready var viewport_size = get_viewport().content_scale_size
 
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(_delta):
+	if Settings.input_locked:
+
+		return
 	var local_mouse_pos = get_local_mouse_position()
 	if local_mouse_pos.x < edge and position.x > -limit:
 		position.x -= step
@@ -31,4 +35,6 @@ func move_bounded(target):
 	elif target.y < -limit:
 		target.y = -limit
 	self.position = target
+	while abs((target - self.position).length_squared()) > 0.1:
+		pass
 	await Utils.wait(Constants.TURN_TIME)

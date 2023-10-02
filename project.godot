@@ -19,6 +19,7 @@ config/icon="res://icon.svg"
 
 Constants="*res://constants.gd"
 Utils="*res://utils.gd"
+Settings="*res://settings.gd"
 
 [display]
 

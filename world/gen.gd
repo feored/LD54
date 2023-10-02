@@ -180,7 +180,7 @@ func generate_disaster():
 	await delete_cell(deleted_cell.coords)
 	recalculate_region(deleted_cell_region)
 
-func move_units(region_from : int, region_to: int):
+func move_units(region_from : int, region_to: int, ignore_camera = false):
 	if not self.regions.has(region_from):
 		print("Error: invalid region trying to move", region_from)
 	if not self.regions.has(region_to):
@@ -191,7 +191,8 @@ func move_units(region_from : int, region_to: int):
 		print("Error: regions are not adjacent")
 
 	# success
-	await camera.move_bounded(self.coords_to_pos(self.regions[region_from].center_tile()) - Vector2(self.camera.viewport_size/2))
+	if not ignore_camera:
+		await camera.move_bounded(self.coords_to_pos(self.regions[region_from].center_tile()) - Vector2(self.camera.viewport_size/2))
 	var moved_units = regions[region_from].units - 1
 	if regions[region_from].team == regions[region_to].team:
 		regions[region_from].set_units(1)
@@ -210,6 +211,8 @@ func move_units(region_from : int, region_to: int):
 	self.regions[region_to].set_used(true)
 	self.regions_used.append(region_from)
 	self.regions_used.append(region_to)
+	if not ignore_camera:
+		await Utils.wait(Constants.TURN_TIME)
 
 # Called when the node enters the scene tree for the first time.
 func _ready():

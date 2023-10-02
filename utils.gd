@@ -1,8 +1,10 @@
 extends Node
 
+var rng : RandomNumberGenerator
 
 func _ready():
-	randomize()
+	rng = RandomNumberGenerator.new()
+	rng.randomize()
 
 func wait(time):
 	await get_tree().create_timer(time).timeout
