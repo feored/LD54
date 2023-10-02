@@ -97,9 +97,10 @@ uppercase = true
 
 [node name="PlayBtn" type="Button" parent="CanvasLayer/Control/CenterContainer/VBoxContainer"]
 layout_mode = 2
-text = "Play"
+text = "Play Random Map"
 
 [node name="InstructionsBtn" type="Button" parent="CanvasLayer/Control/CenterContainer/VBoxContainer"]
+visible = false
 layout_mode = 2
 text = "How To Play"
 
