@@ -108,7 +108,6 @@ func add_team(team_id : int):
 	# 		tile_found = tile_val
 	# 		break
 	regions[team_id].set_team(team_id)
-	regions[team_id].set_team(team_id)
 		
 func count_neighbors(cell: Tile):
 	var total = 0;
@@ -192,3 +191,7 @@ func adjacent_regions(region_id : int):
 				if not adjacent.has(neighbor_region):
 					adjacent.append(neighbor_region)
 	return adjacent
+
+
+func _on_play_btn_pressed():
+	get_tree().change_scene_to_file("res://scenes/main.tscn")

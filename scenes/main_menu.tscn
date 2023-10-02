@@ -95,10 +95,12 @@ horizontal_alignment = 1
 vertical_alignment = 1
 uppercase = true
 
-[node name="Button" type="Button" parent="CanvasLayer/Control/CenterContainer/VBoxContainer"]
+[node name="PlayBtn" type="Button" parent="CanvasLayer/Control/CenterContainer/VBoxContainer"]
 layout_mode = 2
 text = "Play"
 
-[node name="Button2" type="Button" parent="CanvasLayer/Control/CenterContainer/VBoxContainer"]
+[node name="InstructionsBtn" type="Button" parent="CanvasLayer/Control/CenterContainer/VBoxContainer"]
 layout_mode = 2
 text = "How To Play"
+
+[connection signal="pressed" from="CanvasLayer/Control/CenterContainer/VBoxContainer/PlayBtn" to="MenuWorld" method="_on_play_btn_pressed"]

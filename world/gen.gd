@@ -29,7 +29,15 @@ func spawn_cell(coords, team):
 
 func init_world():
 	tile_water()
-	generate_island()
+
+func clear_island():
+	for tile_obj in self.tiles.values():
+		tile_obj.queue_free()
+	self.tiles.clear()
+	for region in self.regions:
+		self.regions[region].delete()
+	self.regions.clear()
+	self.regions_used.clear()
 
 
 func generate_island():
@@ -79,6 +87,7 @@ func add_tile_to_region(tile_coords, region):
 func create_region(id: int):
 	var region = Region.new(id)
 	var regionLabel = regionLabelPrefab.instantiate()
+	self.add_child(region)
 	regionLabelsParent.add_child(regionLabel)	
 	region.label = regionLabel
 	return region
@@ -116,16 +125,8 @@ func sort_least_neighbors():
 	return sorted_tiles
 
 func add_team(team_id : int):
-	#var least_neighbors = self.sort_least_neighbors()
-	## find first tile with no team
-
-	# var tile_found = null
-	# for tile_val in least_neighbors:
-	# 	if (tile_val.team == Constants.NO_TEAM):
-	# 		tile_found = tile_val
-	# 		break
-	regions[team_id].set_team(team_id)
-	regions[team_id].set_team(team_id)
+	var random_region = regions[Utils.rng.randi() % self.regions.size()]
+	random_region.set_team(team_id)
 		
 func count_neighbors(cell: Tile):
 	var total = 0;
@@ -144,8 +145,9 @@ func delete_cell(coords: Vector2i):
 func recalculate_region(region: int):
 	var region_tiles = self.regions[region].tiles.keys()
 	if (region_tiles.size() == 0):
-		self.regions[region].delete()
+		var r = self.regions[region]
 		self.regions.erase(region)
+		r.delete()
 		return
 	self.regions[region].reset_tiles()
 	for tile_coords in region_tiles:
@@ -183,7 +185,6 @@ func generate_disaster():
 	recalculate_region(deleted_cell_region)
 
 func move_units(region_from : int, region_to: int, team: int):
-	print("ATTACKING TEAM:", team)
 	var is_player = team == 1
 	if not self.regions.has(region_from):
 		print("Error: invalid region trying to move", region_from)

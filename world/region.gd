@@ -9,20 +9,26 @@ var label = null
 
 
 func _init(id):
+	self.units = 0
 	self.id = id
 
 
 func _ready():
-	update_display()
+	self.units = 0
 
 
 func delete():
+	for tile in self.tiles.values():
+		if tile != null:
+			tile.queue_free()
+	self.tiles.clear()
 	if label != null:
 		self.label.queue_free()
 	self.queue_free()
 
 
 func update_display():
+	#print("Region " + str(self.id) + " has " + str(self.units) + " units")
 	self.label.set_text(str(self.units))
 
 

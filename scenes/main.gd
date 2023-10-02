@@ -2,6 +2,8 @@ extends Node2D
 
 var turnIndicatorPrefab = preload("res://ui/turn_indicator.tscn")
 
+@onready var UI = $"%UI"
+@onready var SelectionUI = $"%SelectionUI"
 @onready var world = $"%World"
 @onready var turnContainer = $"%TurnContainer"
 @onready var turnLabel = $"%TurnLabel"
@@ -15,10 +17,11 @@ var global_turn = 0
 
 var actions_history = []
 var bots = {}
-var regions_used = []
 
 var turn_indicators = []
+var selected_team_num = 7
 
+var game_started = false
 
 func to_team_id(team_id):
 	return team_id + 1
@@ -26,14 +29,34 @@ func to_team_id(team_id):
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	self.world.init_world()
-	var teams_num = randi_range(Constants.MIN_TEAMS, Constants.MAX_TEAMS)
-	for i in range(0, teams_num):
+	self.gen_world()
+
+func gen_world():
+	self.world.clear_island()
+	self.world.generate_island()
+	self.add_teams()
+	for r in self.world.regions.values():
+		r.units = 0
+	for t in self.teams:
+		generate_units(t)
+
+func add_teams():
+	self.teams.clear()
+	self.bots.clear()
+	for t in self.turn_indicators:
+		t.queue_free()
+	self.turn_indicators.clear()
+	for i in range(0, self.selected_team_num):
 		var team_id = to_team_id(i)
 		self.teams.append(team_id)
 		self.bots[team_id] = DumbBot.new(team_id)
 		self.world.add_team(team_id)
 		self.create_turn_indicator(team_id)
-	generate_units(self.teams[0])
+
+func start_game():
+	self.game_started = true
+	self.SelectionUI.visible = false
+	self.UI.visible = true
 
 
 func create_turn_indicator(team_id):
@@ -47,7 +70,7 @@ func _process(_delta):
 	pass
 
 func _input(event):
-	if Settings.input_locked:
+	if Settings.input_locked or !game_started:
 		return
 	if event is InputEventMouseButton:
 		var coords_clicked = world.global_pos_to_coords(event.position)
@@ -185,3 +208,15 @@ func apply_action(action : Action):
 		return
 	if action.action == Constants.Action.MOVE:
 		await self.world.move_units(action.region_from, action.region_to, action.team)
+
+
+func _on_team_num_value_changed(value:float):
+	self.selected_team_num = int(value)
+
+
+func _on_generate_btn_pressed():
+	self.gen_world()
+
+
+func _on_play_btn_pressed():
+	self.start_game()

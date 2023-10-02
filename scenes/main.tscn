@@ -71,18 +71,15 @@ script = ExtResource("3_x3nk1")
 unique_name_in_owner = true
 follow_viewport_enabled = true
 
-[node name="UI" type="Control" parent="."]
-layout_mode = 3
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
+[node name="CloudGenerator" type="Node2D" parent="."]
+script = ExtResource("7_10s8g")
 
-[node name="CanvasLayer" type="CanvasLayer" parent="UI"]
+[node name="UI" type="CanvasLayer" parent="."]
+unique_name_in_owner = true
 layer = 2
+visible = false
 
-[node name="PanelContainer" type="PanelContainer" parent="UI/CanvasLayer"]
+[node name="PanelContainer" type="PanelContainer" parent="UI"]
 anchors_preset = 12
 anchor_top = 1.0
 anchor_right = 1.0
@@ -93,35 +90,35 @@ grow_vertical = 0
 theme = ExtResource("5_5yrco")
 theme_override_styles/panel = SubResource("StyleBoxFlat_wp2ga")
 
-[node name="MarginContainer" type="MarginContainer" parent="UI/CanvasLayer/PanelContainer"]
+[node name="MarginContainer" type="MarginContainer" parent="UI/PanelContainer"]
 layout_mode = 2
 theme_override_constants/margin_left = 5
 theme_override_constants/margin_top = 5
 theme_override_constants/margin_right = 5
 theme_override_constants/margin_bottom = 5
 
-[node name="HBoxContainer" type="HBoxContainer" parent="UI/CanvasLayer/PanelContainer/MarginContainer"]
+[node name="HBoxContainer" type="HBoxContainer" parent="UI/PanelContainer/MarginContainer"]
 layout_mode = 2
 
-[node name="HBoxContainer" type="HBoxContainer" parent="UI/CanvasLayer/PanelContainer/MarginContainer/HBoxContainer"]
+[node name="HBoxContainer" type="HBoxContainer" parent="UI/PanelContainer/MarginContainer/HBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="VBoxContainer" type="VBoxContainer" parent="UI/CanvasLayer/PanelContainer/MarginContainer/HBoxContainer/HBoxContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="UI/PanelContainer/MarginContainer/HBoxContainer/HBoxContainer"]
 layout_mode = 2
 
-[node name="TurnLabel" type="Label" parent="UI/CanvasLayer/PanelContainer/MarginContainer/HBoxContainer/HBoxContainer/VBoxContainer"]
+[node name="TurnLabel" type="Label" parent="UI/PanelContainer/MarginContainer/HBoxContainer/HBoxContainer/VBoxContainer"]
 unique_name_in_owner = true
 layout_mode = 2
 text = "Turn 0"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="TurnContainer" type="HBoxContainer" parent="UI/CanvasLayer/PanelContainer/MarginContainer/HBoxContainer/HBoxContainer/VBoxContainer"]
+[node name="TurnContainer" type="HBoxContainer" parent="UI/PanelContainer/MarginContainer/HBoxContainer/HBoxContainer/VBoxContainer"]
 unique_name_in_owner = true
 layout_mode = 2
 
-[node name="Message" type="Label" parent="UI/CanvasLayer/PanelContainer/MarginContainer/HBoxContainer/HBoxContainer"]
+[node name="Message" type="Label" parent="UI/PanelContainer/MarginContainer/HBoxContainer/HBoxContainer"]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
@@ -130,14 +127,65 @@ vertical_alignment = 1
 autowrap_mode = 3
 script = ExtResource("7_y3mfw")
 
-[node name="TurnButton" type="Button" parent="UI/CanvasLayer/PanelContainer/MarginContainer/HBoxContainer"]
+[node name="TurnButton" type="Button" parent="UI/PanelContainer/MarginContainer/HBoxContainer"]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 0
 theme_override_styles/focus = SubResource("StyleBoxEmpty_u2eju")
 text = "End Turn"
 
-[node name="CloudGenerator" type="Node2D" parent="."]
-script = ExtResource("7_10s8g")
+[node name="SelectionUI" type="CanvasLayer" parent="."]
+unique_name_in_owner = true
 
-[connection signal="pressed" from="UI/CanvasLayer/PanelContainer/MarginContainer/HBoxContainer/TurnButton" to="." method="_on_turn_button_pressed"]
+[node name="PanelContainer" type="PanelContainer" parent="SelectionUI"]
+anchors_preset = 12
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -31.0
+grow_horizontal = 2
+grow_vertical = 0
+theme = ExtResource("5_5yrco")
+theme_override_styles/panel = SubResource("StyleBoxFlat_wp2ga")
+
+[node name="MarginContainer" type="MarginContainer" parent="SelectionUI/PanelContainer"]
+layout_mode = 2
+theme_override_constants/margin_left = 5
+theme_override_constants/margin_top = 5
+theme_override_constants/margin_right = 5
+theme_override_constants/margin_bottom = 5
+
+[node name="HBoxContainer" type="HBoxContainer" parent="SelectionUI/PanelContainer/MarginContainer"]
+layout_mode = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="SelectionUI/PanelContainer/MarginContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Label" type="Label" parent="SelectionUI/PanelContainer/MarginContainer/HBoxContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 1
+text = "Players: "
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="TeamNum" type="SpinBox" parent="SelectionUI/PanelContainer/MarginContainer/HBoxContainer/HBoxContainer"]
+layout_mode = 2
+min_value = 2.0
+max_value = 7.0
+value = 7.0
+rounded = true
+alignment = 1
+
+[node name="GenerateBtn" type="Button" parent="SelectionUI/PanelContainer/MarginContainer/HBoxContainer/HBoxContainer"]
+layout_mode = 2
+text = "Generate another map"
+
+[node name="PlayBtn" type="Button" parent="SelectionUI/PanelContainer/MarginContainer/HBoxContainer"]
+layout_mode = 2
+text = "Play this map"
+
+[connection signal="pressed" from="UI/PanelContainer/MarginContainer/HBoxContainer/TurnButton" to="." method="_on_turn_button_pressed"]
+[connection signal="value_changed" from="SelectionUI/PanelContainer/MarginContainer/HBoxContainer/HBoxContainer/TeamNum" to="." method="_on_team_num_value_changed"]
+[connection signal="pressed" from="SelectionUI/PanelContainer/MarginContainer/HBoxContainer/HBoxContainer/GenerateBtn" to="." method="_on_generate_btn_pressed"]
+[connection signal="pressed" from="SelectionUI/PanelContainer/MarginContainer/HBoxContainer/PlayBtn" to="." method="_on_play_btn_pressed"]
