@@ -253,9 +253,9 @@ func move_units(region_from : int, region_to: int, team: int):
 			regions[region_to].set_units(moved_units - regions[region_to].units)
 			regions[region_to].set_team(regions[region_from].team)
 	self.regions[region_from].set_used(true)
-	self.regions[region_to].set_used(true)
+	# self.regions[region_to].set_used(true)
 	self.regions_used.append(region_from)
-	self.regions_used.append(region_to)
+	# self.regions_used.append(region_to)
 	if not is_player:
 		await Utils.wait(Constants.TURN_TIME)
 
@@ -282,7 +282,7 @@ func adjacent_regions(region_id : int):
 		for neighbor in self.get_surrounding_cells(t):
 			if self.tiles.has(neighbor):
 				var neighbor_region = self.tiles[neighbor].region
-				if not adjacent.has(neighbor_region):
+				if neighbor_region != region_id and not adjacent.has(neighbor_region):
 					adjacent.append(neighbor_region)
 	return adjacent
 

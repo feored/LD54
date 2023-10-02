@@ -10,7 +10,11 @@ func play_turn(world):
 	owned_regions.shuffle()
 	for region in owned_regions:
 		for adjacent in world.adjacent_regions(region):
-			if world.regions[adjacent].team != self.team:
+			if world.regions[adjacent].team != Constants.NO_TEAM and world.regions[adjacent].team != self.team:
+				return Action.new(self.team, Constants.Action.MOVE, region, adjacent)
+	for region in owned_regions:
+		for adjacent in world.adjacent_regions(region):
+			if world.regions[adjacent].team == Constants.NO_TEAM:
 				return Action.new(self.team, Constants.Action.MOVE, region, adjacent)
 	for region in owned_regions:
 		var landlocked = true

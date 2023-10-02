@@ -186,7 +186,7 @@ func adjacent_regions(region_id : int):
 		for neighbor in self.get_surrounding_cells(t):
 			if self.tiles.has(neighbor):
 				var neighbor_region = self.tiles[neighbor].region
-				if not adjacent.has(neighbor_region):
+				if neighbor_region != region_id and not adjacent.has(neighbor_region):
 					adjacent.append(neighbor_region)
 	return adjacent
 
