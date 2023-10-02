@@ -41,7 +41,7 @@ func clear_island():
 
 func generate_island():
 	const n_tiles_max = Constants.WORLD_BOUNDS.x * Constants.WORLD_BOUNDS.y * 4
-	var n_tiles_target = round(n_tiles_max * Utils.rng.randf_range(0.25, 0.5))
+	var n_tiles_target = round(n_tiles_max * 0.1)# Utils.rng.randf_range(0.25, 0.5))
 	spawn_cell(Constants.WORLD_CENTER, Constants.NO_TEAM)
 	var used_cells_coords = self.tiles.keys()
 	while ((used_cells_coords.size() < n_tiles_target)):

@@ -2,6 +2,7 @@ extends Node2D
 
 var turnIndicatorPrefab = preload("res://ui/turn_indicator.tscn")
 var escMenuPrefab = preload("res://scenes/esc_menu.tscn")
+var gameOverScreenPrefab = preload("res://scenes/game_over_screen.tscn")
 
 @onready var UI = $"%UI"
 @onready var SelectionUI = $"%SelectionUI"
@@ -15,7 +16,7 @@ var escMenuPrefab = preload("res://scenes/esc_menu.tscn")
 
 var is_sacrificing = false
 var sacrifice_used = false
-
+var eliminated_teams = []
 
 var selected_region = null
 var teams = []
@@ -35,6 +36,8 @@ var escMenu = null
 var sacrifices_available = {}
 var sacrifice_hovered_tile = Constants.NULL_COORDS
 
+var spectating = false
+
 func to_team_id(team_id):
 	return team_id + 1
 
@@ -44,6 +47,7 @@ func _ready():
 	SelectionUI.visible = true
 	self.world.init_world()
 	self.gen_world()
+	Settings.input_locked = false
 
 func update_sacrifices_display():
 	self.sacrificeLabel.set_text(str(sacrifices_available[self.teams[self.player_team_index]]))
@@ -149,13 +153,24 @@ func check_global_turn_over():
 	return self.turn == self.teams.size() - 1
 
 func check_win_condition():
+	for team in self.teams:
+		if not regions_left(team) and team not in eliminated_teams:
+			eliminated_teams.append(team)
+			messager.set_message(Constants.TEAM_NAMES[team] + " has been wiped from the island!")
 	var teams_alive = get_teams_alive()
-	check_last_team_alive(teams_alive)
-	check_teams_on_islands(teams_alive)
+	if self.teams[self.player_team_index] not in teams_alive and teams_alive.size() > 1 and not spectating:
+		var game_won = self.teams[self.player_team_index] in teams_alive
+		var gameOverScreen = gameOverScreenPrefab.instantiate()
+		gameOverScreen.init(game_won, self, true)
+		self.add_child(gameOverScreen)
+	elif teams_alive.size() < 2:
+		var game_won = self.teams[self.player_team_index] in teams_alive
+		var gameOverScreen = gameOverScreenPrefab.instantiate()
+		gameOverScreen.init(game_won, self, false)
+		self.add_child(gameOverScreen)
+		return
+	#check_teams_on_islands(teams_alive)
 
-func check_last_team_alive(teams_alive):
-	if teams_alive.size() == 1:
-		print("Player " + str(teams_alive[0]) + " won!")
 
 func check_teams_on_islands(teams_alive):
 	var all_teams_on_islands = true
@@ -176,7 +191,6 @@ func check_teams_on_islands(teams_alive):
 			if units_per_team[team] > winning_units:
 				winner = team
 				winning_units = units_per_team[team]
-		print("No more possible moves! ", winner, " won with ", winning_units, " units!")
 
 func get_teams_alive():
 	var teams_alive = []

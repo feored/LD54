@@ -1,0 +1,62 @@
+[gd_scene load_steps=3 format=3 uid="uid://dsh71e5oqgdqk"]
+
+[ext_resource type="Script" path="res://ui/GameOverScreen.gd" id="1_rquqj"]
+[ext_resource type="Theme" uid="uid://3t61g0061mea" path="res://assets/theme.tres" id="2_mrh18"]
+
+[node name="GameOverScreen" type="CanvasLayer"]
+process_mode = 3
+layer = 50
+script = ExtResource("1_rquqj")
+
+[node name="PanelContainer" type="PanelContainer" parent="."]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("2_mrh18")
+
+[node name="CenterContainer" type="CenterContainer" parent="PanelContainer"]
+layout_mode = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="PanelContainer/CenterContainer"]
+layout_mode = 2
+theme_override_constants/separation = 24
+
+[node name="VBoxContainer" type="VBoxContainer" parent="PanelContainer/CenterContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="SuccessLabel" type="Label" parent="PanelContainer/CenterContainer/VBoxContainer/VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 3
+theme_override_font_sizes/font_size = 32
+text = "Victory!"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="SuccessTaglineLabel" type="Label" parent="PanelContainer/CenterContainer/VBoxContainer/VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Neptune is pleased with you."
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="ScenarioText" type="RichTextLabel" parent="PanelContainer/CenterContainer/VBoxContainer"]
+visible = false
+layout_mode = 2
+bbcode_enabled = true
+fit_content = true
+
+[node name="Spectate" type="Button" parent="PanelContainer/CenterContainer/VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Spectate to the End"
+
+[node name="MenuButton" type="Button" parent="PanelContainer/CenterContainer/VBoxContainer"]
+layout_mode = 2
+text = "Main Menu"
+
+[connection signal="pressed" from="PanelContainer/CenterContainer/VBoxContainer/Spectate" to="." method="_on_spectate_pressed"]
+[connection signal="pressed" from="PanelContainer/CenterContainer/VBoxContainer/MenuButton" to="." method="_on_menu_button_pressed"]
