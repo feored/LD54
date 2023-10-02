@@ -75,7 +75,7 @@ func create_turn_indicator(team_id):
 func _process(_delta):
 	pass
 
-func _input(event):
+func _unhandled_input(event):
 	if event.is_action_pressed("escmenu"):
 		if escMenu == null:
 			escMenu = escMenuPrefab.instantiate()

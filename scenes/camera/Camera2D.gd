@@ -16,21 +16,20 @@ func _process(_delta):
 
 func move():
 	var local_mouse_pos = get_local_mouse_position()
-	if local_mouse_pos.x < start_position.x and position.x > -limit:
-		position.x -= step
-	elif local_mouse_pos.x > start_position.x	and position.x < limit:
+	if local_mouse_pos.x < start_position.x and position.x < limit:
 		position.x += step
-	if local_mouse_pos.y < start_position.y  and position.y > -limit:
-		position.y -= step
-	elif local_mouse_pos.y > start_position.y	and position.y < limit:
+	if local_mouse_pos.x > start_position.x and position.x > -limit:
+		position.x -= step
+	if local_mouse_pos.y < start_position.y and position.y < limit:
 		position.y += step
+	if local_mouse_pos.y > start_position.y and position.y > -limit:
+		position.y -= step
 
-func _input(event):
+func _unhandled_input(event):
 	if Settings.input_locked:
 		return
 	if event is InputEventMouseButton:
 		if event.button_index == MOUSE_BUTTON_LEFT:
-			print(event.button_index, event.pressed)
 			if event.pressed:
 				start_position = get_local_mouse_position()
 			else:
@@ -38,6 +37,7 @@ func _input(event):
 	elif event is InputEventMouseMotion:
 		if start_position != Vector2.ZERO:
 			move()
+			start_position = get_local_mouse_position()
 
 func move_bounded(target, precision = 1):
 	self.position = target - Vector2(self.viewport_size/2)
