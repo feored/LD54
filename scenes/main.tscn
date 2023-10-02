@@ -1,4 +1,4 @@
-[gd_scene load_steps=11 format=3 uid="uid://ceoqtlfuehsvd"]
+[gd_scene load_steps=12 format=3 uid="uid://ceoqtlfuehsvd"]
 
 [ext_resource type="Script" path="res://world/gen.gd" id="1_bg6dg"]
 [ext_resource type="Script" path="res://scenes/main.gd" id="1_osaxm"]
@@ -42,6 +42,9 @@ tile_size = Vector2i(24, 24)
 sources/1 = SubResource("TileSetAtlasSource_7xr4p")
 sources/0 = SubResource("TileSetAtlasSource_syxq1")
 
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_wp2ga"]
+bg_color = Color(0, 0, 0, 1)
+
 [node name="Main" type="Node2D"]
 script = ExtResource("1_osaxm")
 
@@ -83,7 +86,6 @@ script = ExtResource("1_bg6dg")
 
 [node name="MainCamera" type="Camera2D" parent="World"]
 unique_name_in_owner = true
-visible = false
 anchor_mode = 0
 position_smoothing_enabled = true
 position_smoothing_speed = 3.0
@@ -102,35 +104,43 @@ grow_horizontal = 2
 grow_vertical = 2
 
 [node name="CanvasLayer" type="CanvasLayer" parent="UI"]
+layer = 2
 
 [node name="PanelContainer" type="PanelContainer" parent="UI/CanvasLayer"]
-offset_right = 104.0
-offset_bottom = 26.0
+anchors_preset = 12
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -41.0
+grow_horizontal = 2
+grow_vertical = 0
 theme = ExtResource("5_5yrco")
+theme_override_styles/panel = SubResource("StyleBoxFlat_wp2ga")
 
-[node name="VBoxContainer" type="VBoxContainer" parent="UI/CanvasLayer/PanelContainer"]
+[node name="HBoxContainer" type="HBoxContainer" parent="UI/CanvasLayer/PanelContainer"]
+layout_mode = 2
+size_flags_horizontal = 0
+
+[node name="VBoxContainer" type="VBoxContainer" parent="UI/CanvasLayer/PanelContainer/HBoxContainer"]
 layout_mode = 2
 
-[node name="HBoxContainer" type="HBoxContainer" parent="UI/CanvasLayer/PanelContainer/VBoxContainer"]
-layout_mode = 2
-
-[node name="Label2" type="Label" parent="UI/CanvasLayer/PanelContainer/VBoxContainer/HBoxContainer"]
-layout_mode = 2
-text = "Turn:"
-
-[node name="TeamTurn" type="ColorRect" parent="UI/CanvasLayer/PanelContainer/VBoxContainer/HBoxContainer"]
-unique_name_in_owner = true
-custom_minimum_size = Vector2(20, 0)
-layout_mode = 2
-size_flags_horizontal = 6
-size_flags_stretch_ratio = 0.0
-
-[node name="TurnButton" type="Button" parent="UI/CanvasLayer/PanelContainer/VBoxContainer"]
-unique_name_in_owner = true
+[node name="TurnLabel" type="Label" parent="UI/CanvasLayer/PanelContainer/HBoxContainer/VBoxContainer"]
 layout_mode = 2
 text = "Turn"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="TurnContainer" type="HBoxContainer" parent="UI/CanvasLayer/PanelContainer/HBoxContainer/VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="TurnButton" type="Button" parent="UI/CanvasLayer/PanelContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 8
+text = "End Turn"
 
 [node name="CloudGenerator" type="Node2D" parent="."]
 script = ExtResource("7_10s8g")
 
-[connection signal="pressed" from="UI/CanvasLayer/PanelContainer/VBoxContainer/TurnButton" to="." method="_on_turn_button_pressed"]
+[connection signal="pressed" from="UI/CanvasLayer/PanelContainer/TurnButton" to="." method="_on_turn_button_pressed"]

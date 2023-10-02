@@ -1,7 +1,9 @@
 extends Node2D
 
+var turnIndicatorPrefab = preload("res://ui/turn_indicator.tscn")
+
 @onready var world = $"%World"
-@onready var teamTurnRect = $"%TeamTurn"
+@onready var turnContainer = $"%TurnContainer"
 
 var selected_region = null
 var teams = []
@@ -13,6 +15,8 @@ var actions_history = []
 var bots = {}
 var regions_used = []
 
+var turn_indicators = []
+
 
 func to_team_id(team_id):
 	return team_id + 1
@@ -21,15 +25,20 @@ func to_team_id(team_id):
 func _ready():
 	self.world.init_world()
 	var teams_num = randi_range(Constants.MIN_TEAMS, Constants.MAX_TEAMS)
-	self.teams.append(to_team_id(0))
-	self.world.add_team(to_team_id(0))
-	for i in range(1, teams_num):
+	for i in range(0, teams_num):
 		var team_id = to_team_id(i)
 		self.teams.append(team_id)
 		self.bots[team_id] = DumbBot.new(team_id)
 		self.world.add_team(team_id)
+		self.create_turn_indicator(team_id)
 	generate_units(self.teams[0])
 
+
+func create_turn_indicator(team_id):
+	var turnIndicator = turnIndicatorPrefab.instantiate()
+	turnIndicator.init(Color.hex(Constants.TEAM_COLORS[team_id]), false if team_id > 1 else true)
+	turnContainer.add_child(turnIndicator)
+	self.turn_indicators.append(turnIndicator)
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(_delta):
@@ -138,7 +147,8 @@ func next_turn():
 		self.global_turn += 1
 		await turn_events()
 	self.turn = (self.turn + 1) % (self.teams.size())
-	self.teamTurnRect.color = Constants.TEAM_COLORS[to_team_id(self.turn)]
+	for i in range(self.teams.size()):
+		self.turn_indicators[i].set_active(self.turn == i)
 	self.world.clear_regions_used()
 	check_win_condition()
 	generate_units(teams[self.turn])
