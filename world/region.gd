@@ -45,6 +45,7 @@ func set_team(team):
 
 
 func add_tile(coords, tileObj):
+	tileObj.region = self.id
 	self.tiles[coords] = tileObj
 
 
