@@ -424,6 +424,8 @@ func load_regions(regions):
 		region.set_units(saved_region.units)
 		self.world.regions[region_id] = region
 		self.world.region_update_label(region)
+		if region.team != Constants.NO_TEAM:
+			region.generate_units()
 
 func _on_load_btn_pressed():
 	load_saved_game()
@@ -464,3 +466,6 @@ func _on_place_team_btn_pressed():
 
 func _on_save_btn_pressed():
 	save()
+
+func _on_center_btn_pressed():
+	await self.world.camera.move_bounded(self.world.coords_to_pos(Vector2i(0, 0)), 5)
