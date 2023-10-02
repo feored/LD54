@@ -257,7 +257,7 @@ text = "Make Team"
 [node name="PlaceTeamNum" type="SpinBox" parent="MapEditorUI/PanelContainer/MarginContainer/HBoxContainer/HBoxContainer"]
 layout_mode = 2
 min_value = 1.0
-max_value = 6.0
+max_value = 7.0
 value = 1.0
 rounded = true
 alignment = 1
@@ -293,6 +293,10 @@ text = "Load Saved Map"
 layout_mode = 2
 text = "Play Map"
 
+[node name="CenterBtn" type="Button" parent="MapEditorUI/PanelContainer/MarginContainer/HBoxContainer/HBoxContainer2"]
+layout_mode = 2
+text = "Center"
+
 [connection signal="pressed" from="UI/Panel/MarginContainer/HBoxContainer/HBoxContainer/SacrificeContainer/SacrificeButton" to="." method="_on_sacrifice_button_pressed"]
 [connection signal="pressed" from="UI/Panel/MarginContainer/HBoxContainer/TurnButton" to="." method="_on_turn_button_pressed"]
 [connection signal="pressed" from="UI/Panel/MarginContainer/HBoxContainer/SaveButton" to="." method="_on_save_button_pressed"]
@@ -309,3 +313,4 @@ text = "Play Map"
 [connection signal="pressed" from="MapEditorUI/PanelContainer/MarginContainer/HBoxContainer/HBoxContainer2/SaveBtn" to="." method="_on_save_btn_pressed"]
 [connection signal="pressed" from="MapEditorUI/PanelContainer/MarginContainer/HBoxContainer/HBoxContainer2/LoadBtn" to="." method="_on_load_btn_pressed"]
 [connection signal="pressed" from="MapEditorUI/PanelContainer/MarginContainer/HBoxContainer/HBoxContainer2/PlayBtn" to="." method="_on_play_btn_pressed"]
+[connection signal="pressed" from="MapEditorUI/PanelContainer/MarginContainer/HBoxContainer/HBoxContainer2/CenterBtn" to="." method="_on_center_btn_pressed"]
