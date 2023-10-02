@@ -197,9 +197,7 @@ func generate_disaster():
 		var is_single = Utils.rng.randi() % 2
 		if is_single:
 			var deleted_cell = Utils.pick_tile_to_sink(self.tiles.values())
-			var deleted_cell_region = deleted_cell.region
-			await delete_cell(deleted_cell.coords)
-			recalculate_region(deleted_cell_region)
+			await sink_tile(deleted_cell.coords)
 			disasters_dealt += 1
 		else:
 			var num_to_sink = min(randi() % 5, self.tiles.size())

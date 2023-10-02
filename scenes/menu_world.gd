@@ -118,7 +118,7 @@ func count_neighbors(cell: Tile):
 
 func delete_cell(coords: Vector2i):
 	self.regions[self.tiles[coords].region].tiles.erase(coords)
-	self.tiles[coords].queue_free()
+	self.tiles[coords].delete()
 	self.tiles.erase(coords)
 
 func recalculate_region(region: int):
