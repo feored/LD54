@@ -2,6 +2,7 @@ extends Node
 
 class_name Tile
 
+@onready var animation_player = $AnimationPlayer
 @onready var border_objects = {
 	TileSet.CELL_NEIGHBOR_RIGHT_SIDE: $east,
 	TileSet.CELL_NEIGHBOR_BOTTOM_LEFT_SIDE: $southwest,
@@ -41,8 +42,6 @@ func init_cell(
 func _ready():
 	self.position = init_position
 	self.update_cell()
-	
-
 
 func update_cell():
 	for b in self.borders.keys():
@@ -51,6 +50,9 @@ func update_cell():
 	team_color.a = Constants.BLENDING_MODULATE_ALPHA
 	self.lighter_color = Color.hex(0xffffffff).blend(team_color)
 	self.modulate = self.lighter_color
+
+func delete():
+	animation_player.play("sink")
 
 func set_team(new_team: int):
 	self.team = new_team

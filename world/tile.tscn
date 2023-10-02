@@ -1,4 +1,4 @@
-[gd_scene load_steps=10 format=3 uid="uid://d2tu4itgwxsmx"]
+[gd_scene load_steps=12 format=3 uid="uid://d2tu4itgwxsmx"]
 
 [ext_resource type="Texture2D" uid="uid://c2jmky1u16cef" path="res://assets/tiles/grass.png" id="1_mvuo3"]
 [ext_resource type="Script" path="res://world/tile.gd" id="2_twet5"]
@@ -9,6 +9,40 @@
 [ext_resource type="Texture2D" uid="uid://ce2xmckrhuymw" path="res://assets/tiles/east.png" id="6_knshb"]
 [ext_resource type="Texture2D" uid="uid://dskvw8n0ialxq" path="res://assets/tiles/northeast.png" id="7_gg2ky"]
 [ext_resource type="Texture2D" uid="uid://bw3yv7wot470b" path="res://assets/tiles/barred.png" id="9_lgyl4"]
+
+[sub_resource type="Animation" id="Animation_824x5"]
+resource_name = "sink"
+tracks/0/type = "method"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(1),
+"transitions": PackedFloat32Array(1),
+"values": [{
+"args": [],
+"method": &"queue_free"
+}]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath(".:offset")
+tracks/1/interp = 0
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1, 1, 1),
+"update": 0,
+"values": [Vector2(1, 0), Vector2(-1, 0), Vector2(1, 0), Vector2(-1, 0), Vector2(0, -1), Vector2(1, 1), Vector2(0, 0), Vector2(0, 0), Vector2(0, -1)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_j2aig"]
+_data = {
+"sink": SubResource("Animation_824x5")
+}
 
 [node name="tile" type="Sprite2D"]
 texture = ExtResource("1_mvuo3")
@@ -36,3 +70,8 @@ texture = ExtResource("5_bmtdw")
 visible = false
 self_modulate = Color(1, 1, 1, 0.498039)
 texture = ExtResource("9_lgyl4")
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+libraries = {
+"": SubResource("AnimationLibrary_j2aig")
+}

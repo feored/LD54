@@ -145,7 +145,7 @@ func delete_cell(coords: Vector2i):
 	self.messager.set_message("A patch of land sinks somewhere...")
 	await self.camera.move_bounded(self.coords_to_pos(coords), 5)
 	self.regions[self.tiles[coords].region].tiles.erase(coords)
-	self.tiles[coords].queue_free()
+	self.tiles[coords].delete()
 	self.tiles.erase(coords)
 	
 

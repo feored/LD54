@@ -163,13 +163,11 @@ func generate_disaster():
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	self.init_world()
-	print("world initialized")
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):
 	elapsed += delta
 	if tiles.size() > 0 and elapsed > Constants.MENU_WAIT_TIME:
-		print(tiles.size())
 		await self.generate_disaster()
 		elapsed = 0
 
