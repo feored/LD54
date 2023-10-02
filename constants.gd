@@ -102,5 +102,11 @@ const scenarios = [
 		"title": "A Tale of Two Cities",
 		"description": "A fragile bridge connects two prosperous lands.",
 		"path": "two_halves.json"
-	}
+	},
+	{
+		"title": "The Trident",
+		"description": "It seems Neptune has started to run out of ideas to test your skills.",
+		"path": "trident.json"
+	},
+	{"title": "Pacman", "description": "Uh...Neptune's favorite game?", "path": "pacman.json"},
 ]

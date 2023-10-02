@@ -70,7 +70,7 @@ func _ready():
 			self.SelectionUI.visible = false
 			self.MapEditorUI.visible = false
 			self.load_scenario()
-			self.add_teams()
+			self.add_teams_scenario()
 			self.start_game()
 	
 
