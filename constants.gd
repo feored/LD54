@@ -94,7 +94,13 @@ const scenarios = [
 	},
 	{
 		"title": "Not Poseidon",
-		"description": "Neptune wants you to conquer his native land.",
+		"description": "Neptune wants you to conquer a land dear to him.",
 		"path": "italy.json"
 	},
+	{"title": "The Loop", "description": "All paths lead to Rome.", "path": "loop.json"},
+	{
+		"title": "A Tale of Two Cities",
+		"description": "A fragile bridge connects two prosperous lands.",
+		"path": "two_halves.json"
+	}
 ]

@@ -59,6 +59,7 @@ func _ready():
 			SelectionUI.visible = true
 			MapEditorUI.visible = false
 			self.gen_world()
+			self.add_teams()
 			self.start_game()
 		Constants.GameMode.MapEditor:
 			UI.visible = false
@@ -99,7 +100,6 @@ func start_game():
 	self.SelectionUI.visible = false
 	self.MapEditorUI.visible = false
 	self.UI.visible = true
-	self.add_teams()
 	for r in self.world.regions.values():
 		r.units = 0
 	for t in self.teams:
