@@ -2,19 +2,13 @@ extends TileMap
 
 
 @onready var camera = $"%MainCamera"
-@onready var regionLabelsParent = $"%RegionLabels"
-@onready var world = $"%World"
-@onready var messager = $"%Message"
 
-
-var regionLabelPrefab = preload("res://world/region_label.tscn")
 var tile = preload("res://world/tile.tscn")
-
 
 var tiles = {}
 var regions = {}
-var regions_used = []
 
+var elapsed = 0
 
 func spawn_cell(coords, team):
 	if tiles.has(coords):
@@ -24,7 +18,6 @@ func spawn_cell(coords, team):
 	new_tile.init_cell(coords, self.coords_to_pos(coords), Constants.TILE_GRASS, team)
 	self.add_child(new_tile)
 	tiles[coords] = new_tile
-
 
 
 func init_world():
@@ -69,7 +62,6 @@ func generate_regions():
 					break
 			if not expanded:
 				break
-		region_update_label(regions[current_region])
 		current_region += 1
 
 func add_tile_to_region(tile_coords, region):
@@ -78,9 +70,6 @@ func add_tile_to_region(tile_coords, region):
 
 func create_region(id: int):
 	var region = Region.new(id)
-	var regionLabel = regionLabelPrefab.instantiate()
-	regionLabelsParent.add_child(regionLabel)	
-	region.label = regionLabel
 	return region
 
 func apply_borders():
@@ -93,12 +82,6 @@ func apply_borders():
 					tile_obj.set_single_border(neighbor_direction, true)
 			else:
 				tile_obj.set_single_border(neighbor_direction, true)
-
-
-func region_update_label(region: Region):
-	region.label.position = self.coords_to_pos(region.center_tile()) - Vector2(30, 20)/2 ## size of the label
-	region.update_display()
-
 	
 func tile_water():
 	for i in range(-Constants.WORLD_CAMERA_BOUNDS.x, Constants.WORLD_CAMERA_BOUNDS.x):
@@ -135,8 +118,6 @@ func count_neighbors(cell: Tile):
 	return total
 
 func delete_cell(coords: Vector2i):
-	self.messager.set_message("A patch of land sinks somewhere...")
-	await self.camera.move_bounded(self.coords_to_pos(coords))
 	self.regions[self.tiles[coords].region].tiles.erase(coords)
 	self.tiles[coords].queue_free()
 	self.tiles.erase(coords)
@@ -173,7 +154,6 @@ func expand_single_region_from_coords(region: int, region_tiles: Array):
 					break
 			if added:
 				break
-	region_update_label(self.regions[region])
 	
 func generate_disaster():
 	# only sinking tiles for now
@@ -181,57 +161,18 @@ func generate_disaster():
 	var deleted_cell_region = deleted_cell.region
 	await delete_cell(deleted_cell.coords)
 	recalculate_region(deleted_cell_region)
-
-func move_units(region_from : int, region_to: int, team: int):
-	print("ATTACKING TEAM:", team)
-	var is_player = team == 1
-	if not self.regions.has(region_from):
-		print("Error: invalid region trying to move", region_from)
-	if not self.regions.has(region_to):
-		print("Error: invalid region trying to move to", region_to)
-	if self.regions[region_from].units <= 1:
-		print("Error: not enough units to move:", regions[region_from].units)
-	if not region_to in self.adjacent_regions(region_from):
-		print("Error: regions are not adjacent")
-
-	# success
-	var moved_units = regions[region_from].units - 1
-	if not is_player:
-		var team_name = Constants.TEAM_NAMES[team]
-		if region_from == region_to:
-			self.messager.set_message("%s is moving %s troops to a friendly neighboring region..." % [team_name, moved_units])
-		else:
-			var enemy_team_name = Constants.TEAM_NAMES[self.regions[region_to].team] 
-			self.messager.set_message("%s is attacking a neighboring %s region with %s troops!" % [team_name, enemy_team_name, moved_units])
-		await camera.move_bounded(self.coords_to_pos(self.regions[region_from].center_tile()))
-	
-	if regions[region_from].team == regions[region_to].team:
-		regions[region_from].set_units(1)
-		regions[region_to].set_units( regions[region_to].units + moved_units)
-	else:
-		regions[region_from].set_units(1)
-		if regions[region_to].units >= moved_units:
-			regions[region_to].set_units(regions[region_to].units - moved_units)
-			self.regions[region_from].set_used(true)
-			self.regions_used.append(region_from)
-			return
-		else:
-			regions[region_to].set_units(moved_units - regions[region_to].units)
-			regions[region_to].set_team(regions[region_from].team)
-	self.regions[region_from].set_used(true)
-	self.regions[region_to].set_used(true)
-	self.regions_used.append(region_from)
-	self.regions_used.append(region_to)
-	if not is_player:
-		await Utils.wait(Constants.TURN_TIME)
-
 # Called when the node enters the scene tree for the first time.
 func _ready():
-	pass
+	self.init_world()
+	print("world initialized")
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
-func _process(_delta):
-	pass
+func _process(delta):
+	elapsed += delta
+	if tiles.size() > 0 and elapsed > Constants.MENU_WAIT_TIME:
+		print(tiles.size())
+		await self.generate_disaster()
+		elapsed = 0
 
 func get_real_pos(pos):
 	return Vector2(pos.x + camera.position.x, pos.y + camera.position.y)
@@ -251,8 +192,3 @@ func adjacent_regions(region_id : int):
 				if not adjacent.has(neighbor_region):
 					adjacent.append(neighbor_region)
 	return adjacent
-
-func clear_regions_used():
-	for region in regions_used:
-		regions[region].set_used(false)
-	regions_used.clear()

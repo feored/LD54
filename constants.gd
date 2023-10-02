@@ -11,6 +11,7 @@ const TILE_WATER = 0
 const BLENDING_MODULATE_ALPHA = 0.6
 
 enum Layer { WATER, GRASS, P1, P2, P3 }
+
 const NO_TEAM = 0
 const REGION_MAX_SIZE = 6
 const TEAM_COLORS = [
@@ -36,6 +37,7 @@ const TEAM_NAMES = [
 ]
 
 const TURN_TIME = 0.5
+const MENU_WAIT_TIME = 1
 
 const MIN_TEAMS = 2  ## including player
 const MAX_TEAMS = 7

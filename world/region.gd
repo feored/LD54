@@ -17,7 +17,8 @@ func _ready():
 
 
 func delete():
-	self.label.queue_free()
+	if label != null:
+		self.label.queue_free()
 	self.queue_free()
 
 

@@ -45,6 +45,8 @@ func pick_random_tile(tiles_dict):
 	return tiles_dict[keys[randi() % keys.size()]]
 
 func pick_tile_to_sink(tiles: Array):
+	if tiles.size() == 1:
+		return tiles[0]
 	tiles.sort_custom(func(a,b): return distance_from_center(a) - \
 		distance_from_center(b) < 0)
 	var n = tiles.size()

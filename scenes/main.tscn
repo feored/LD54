@@ -1,47 +1,12 @@
-[gd_scene load_steps=14 format=3 uid="uid://ceoqtlfuehsvd"]
+[gd_scene load_steps=10 format=3 uid="uid://ceoqtlfuehsvd"]
 
 [ext_resource type="Script" path="res://world/gen.gd" id="1_bg6dg"]
 [ext_resource type="Script" path="res://scenes/main.gd" id="1_osaxm"]
-[ext_resource type="Texture2D" uid="uid://c2jmky1u16cef" path="res://assets/tiles/grass.png" id="2_mnyeh"]
+[ext_resource type="TileSet" uid="uid://dswtp6vpo8tyt" path="res://scenes/tileset.tres" id="2_s0l6b"]
 [ext_resource type="Script" path="res://scenes/camera/Camera2D.gd" id="3_x3nk1"]
-[ext_resource type="Texture2D" uid="uid://b7uk1y1hmnqo5" path="res://assets/tiles/water.png" id="5_2ncmi"]
 [ext_resource type="Theme" uid="uid://3t61g0061mea" path="res://assets/theme.tres" id="5_5yrco"]
 [ext_resource type="Script" path="res://scenes/CloudGenerator.gd" id="7_10s8g"]
 [ext_resource type="Script" path="res://ui/Message.gd" id="7_y3mfw"]
-
-[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_syxq1"]
-texture = ExtResource("5_2ncmi")
-texture_region_size = Vector2i(24, 24)
-use_texture_padding = false
-0:0/animation_columns = 8
-0:0/animation_speed = 3.0
-0:0/animation_frame_0/duration = 1.0
-0:0/animation_frame_1/duration = 1.0
-0:0/animation_frame_2/duration = 1.0
-0:0/animation_frame_3/duration = 1.0
-0:0/animation_frame_4/duration = 1.0
-0:0/animation_frame_5/duration = 1.0
-0:0/animation_frame_6/duration = 1.0
-0:0/animation_frame_7/duration = 1.0
-0:0/0 = 0
-
-[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_7xr4p"]
-texture = ExtResource("2_mnyeh")
-texture_region_size = Vector2i(24, 24)
-0:0/next_alternative_id = 4
-0:0/0 = 0
-0:0/1 = 1
-0:0/2 = 2
-0:0/2/modulate = Color(0.721014, 0.555474, 1.92523e-07, 1)
-0:0/3 = 3
-0:0/3/modulate = Color(0.490196, 0.121569, 0.65098, 1)
-
-[sub_resource type="TileSet" id="TileSet_hs0yf"]
-tile_shape = 3
-tile_layout = 2
-tile_size = Vector2i(24, 24)
-sources/1 = SubResource("TileSetAtlasSource_7xr4p")
-sources/0 = SubResource("TileSetAtlasSource_syxq1")
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_wp2ga"]
 bg_color = Color(0.0784314, 0.0745098, 0.0588235, 1)
@@ -53,7 +18,7 @@ script = ExtResource("1_osaxm")
 
 [node name="World" type="TileMap" parent="."]
 unique_name_in_owner = true
-tile_set = SubResource("TileSet_hs0yf")
+tile_set = ExtResource("2_s0l6b")
 format = 2
 layer_0/name = "Water"
 layer_0/z_index = -999
