@@ -15,7 +15,6 @@ var tiles = {}
 var regions = {}
 var regions_used = []
 
-
 func spawn_cell(coords, team):
 	if tiles.has(coords):
 		print("Error: cell already exists at " + str(coords))
@@ -141,8 +140,16 @@ func get_tile_group_center_position(coords_group: Array):
 		total += self.coords_to_pos(c)
 	return total / coords_group.size()
 
-func delete_cell(coords: Vector2i):
-	self.messager.set_message("A patch of land sinks somewhere...")
+func delete_cell(coords: Vector2i, action = null):
+	if action != null:
+		var team_name = Constants.TEAM_NAMES[action.team]
+		if action.team == self.tiles[coords].team:
+			self.messager.set_message("%s sacrifices their own land to curry favor from the gods..." % team_name)
+		else:
+			var enemy_team_name = Constants.TEAM_NAMES[self.tiles[coords].team]
+			self.messager.set_message("%s begs the gods to strike down the land of %s..." % [team_name, enemy_team_name])
+	else:
+		self.messager.set_message("A patch of land sinks somewhere...")
 	await self.camera.move_bounded(self.coords_to_pos(coords), 5)
 	self.regions[self.tiles[coords].region].tiles.erase(coords)
 	self.tiles[coords].delete()
@@ -189,6 +196,11 @@ func sink_tile(coords):
 	await delete_cell(coords)
 	recalculate_region(deleted_cell_region)
 
+func sacrifice_tile(coords, action):
+	var deleted_cell_region = self.tiles[coords].region
+	await delete_cell(coords, action)
+	recalculate_region(deleted_cell_region)
+	
 func generate_disaster():
 	# only sinking tiles for now
 	var total_disasters = min(int(self.tiles.size() / 10.0), 10)
@@ -234,7 +246,7 @@ func move_units(region_from : int, region_to: int, team: int):
 			self.messager.set_message("%s is moving %s troops to a friendly neighboring region..." % [team_name, moved_units])
 		else:
 			var enemy_team_name = Constants.TEAM_NAMES[self.regions[region_to].team] 
-			self.messager.set_message("%s is attacking a neighboring %s region with %s troops!" % [team_name, enemy_team_name, moved_units])
+			self.messager.set_message("%s is attacking %s with %s troops!" % [team_name, enemy_team_name, moved_units])
 		await self.camera.move_bounded(self.coords_to_pos(self.regions[region_from].center_tile()))
 	
 	if regions[region_from].team == regions[region_to].team:

@@ -10,6 +10,11 @@ var escMenuPrefab = preload("res://scenes/esc_menu.tscn")
 @onready var turnLabel = $"%TurnLabel"
 @onready var messager = $"%Message"
 @onready var endTurnButton = $"%TurnButton"
+@onready var sacrificeButton = $"%SacrificeButton"
+@onready var sacrificeLabel = $"%SacrificeLabel"
+
+var is_sacrificing = false
+var sacrifice_used = false
 
 
 var selected_region = null
@@ -27,6 +32,9 @@ var selected_team_num = 7
 var game_started = false
 var escMenu = null
 
+var sacrifices_available = {}
+var sacrifice_hovered_tile = Constants.NULL_COORDS
+
 func to_team_id(team_id):
 	return team_id + 1
 
@@ -36,6 +44,9 @@ func _ready():
 	SelectionUI.visible = true
 	self.world.init_world()
 	self.gen_world()
+
+func update_sacrifices_display():
+	self.sacrificeLabel.set_text(str(sacrifices_available[self.teams[self.player_team_index]]))
 
 func gen_world():
 	self.world.clear_island()
@@ -58,6 +69,7 @@ func add_teams():
 		self.bots[team_id] = DumbBot.new(team_id)
 		self.world.add_team(team_id)
 		self.create_turn_indicator(team_id)
+		self.sacrifices_available[team_id] = 0
 
 func start_game():
 	self.game_started = true
@@ -75,6 +87,16 @@ func create_turn_indicator(team_id):
 func _process(_delta):
 	pass
 
+func clear_sacrifice():
+	self.is_sacrificing = false
+	self.world.tiles[sacrifice_hovered_tile].set_highlight(Constants.Highlight.None)
+	self.sacrifice_hovered_tile = Constants.NULL_COORDS
+
+func sacrifice_tile(coords):
+	var sink_action = Action.new(self.teams[self.player_team_index], Constants.Action.SACRIFICE, 0, 0, coords )
+	actions_history.append(sink_action)
+	self.apply_action(sink_action)
+
 func _unhandled_input(event):
 	if event.is_action_pressed("escmenu"):
 		if escMenu == null:
@@ -86,9 +108,38 @@ func _unhandled_input(event):
 		if Settings.input_locked or !game_started:
 			return
 		var coords_clicked = world.global_pos_to_coords(event.position)
-		if world.tiles.has(coords_clicked):
+		if is_sacrificing and event.button_index == MOUSE_BUTTON_LEFT and event.pressed:
+			if not world.tiles.has(coords_clicked):
+				clear_sacrifice()
+			else:
+				if world.tiles[coords_clicked].team == self.teams[self.player_team_index]:
+					self.sacrifices_available[self.teams[self.player_team_index]] += 1
+					self.update_sacrifices_display()
+					self.sacrifice_used = true
+					self.sacrificeButton.disabled = true
+					self.clear_sacrifice()
+					sacrifice_tile(coords_clicked)
+				elif self.sacrifices_available[self.teams[self.player_team_index]] > 0:
+					self.sacrifices_available[self.teams[self.player_team_index]] -= 1
+					self.update_sacrifices_display()
+					self.sacrifice_used = true
+					self.sacrificeButton.disabled = true
+					self.clear_sacrifice()
+					sacrifice_tile(coords_clicked)
+		elif world.tiles.has(coords_clicked):
 			if event.button_index == MOUSE_BUTTON_LEFT and event.pressed:
 				on_tile_clicked(world.tiles[coords_clicked])
+	elif event is InputEventMouseMotion and is_sacrificing:
+		var coords_clicked = world.global_pos_to_coords(event.position)
+		if coords_clicked != self.sacrifice_hovered_tile and self.sacrifice_hovered_tile != Constants.NULL_COORDS:
+			world.tiles[sacrifice_hovered_tile].set_highlight(Constants.Highlight.None)
+		if world.tiles.has(coords_clicked):
+			self.sacrifice_hovered_tile = coords_clicked
+			if world.tiles[coords_clicked].team == self.teams[self.player_team_index] or sacrifices_available[self.teams[self.player_team_index]] > 0:
+				self.world.tiles[coords_clicked].set_highlight(Constants.Highlight.Green)
+			else:
+				self.world.tiles[coords_clicked].set_highlight(Constants.Highlight.Red)
+
 
 func _on_turn_button_pressed():
 	self.endTurnButton.disabled = true
@@ -192,6 +243,8 @@ func next_turn():
 		await bots_play()
 		await Utils.wait(Constants.TURN_TIME)
 		await next_turn()
+	else:
+		self.sacrificeButton.disabled = false
 	Settings.input_locked = false
 	self.endTurnButton.disabled = false
 	self.turnLabel.set_text("Turn: " + str(self.global_turn))
@@ -214,11 +267,15 @@ func generate_units(team):
 			world.regions[region].generate_units()
 
 func apply_action(action : Action):
-	if action.action == Constants.Action.NONE:
-		return
-	if action.action == Constants.Action.MOVE:
-		await self.world.move_units(action.region_from, action.region_to, action.team)
-
+	match action.action:
+		Constants.Action.MOVE:
+					await self.world.move_units(action.region_from, action.region_to, action.team)
+		Constants.Action.SACRIFICE:
+			await self.world.sacrifice_tile(action.tile, action)
+		Constants.Action.NONE:
+			pass
+		_:
+			print("Unknown action: ", action.action)
 
 func _on_team_num_value_changed(value:float):
 	self.selected_team_num = int(value)
@@ -231,3 +288,7 @@ func _on_generate_btn_pressed():
 
 func _on_play_btn_pressed():
 	self.start_game()
+
+
+func _on_sacrifice_button_pressed():
+	self.is_sacrificing = true

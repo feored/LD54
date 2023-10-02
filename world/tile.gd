@@ -73,6 +73,17 @@ func set_region(new_region):
 func set_barred(barred_val:bool):
 	self.barred.visible = barred_val
 
+func set_highlight(highlight: int):
+	match highlight:
+		Constants.Highlight.Red:
+			self.modulate = Color.hex(0xff0000ff)
+		Constants.Highlight.Green:
+			self.modulate = Color.hex(0x00ff00ff)
+		Constants.Highlight.None:
+			self.modulate = self.lighter_color
+		_:
+			self.modulate = self.lighter_color
+
 func set_selected(selected: bool):
 	if selected:
 		self.tween = self.create_tween().set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_IN).set_loops()

@@ -1,5 +1,6 @@
 extends Node
 
+const NULL_COORDS = Vector2i(-9999, -9999)
 const TILE_SIZE = 24
 const WORLD_CENTER = Vector2i(512 / 24 / 2, 288 / 24 / 2)
 const WORLD_BOUNDS = Vector2i(15, 10)
@@ -36,6 +37,8 @@ const TEAM_NAMES = [
 	"Grey Coalition"
 ]
 
+enum Highlight { Red, Green, None }
+
 const TURN_TIME = 0.2
 const MENU_WAIT_TIME = 1
 
@@ -71,4 +74,4 @@ const FULL_BORDERS = {
 
 const NO_REGION = -99
 
-enum Action { NONE, MOVE }
+enum Action { NONE, MOVE, SACRIFICE }
