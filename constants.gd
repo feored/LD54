@@ -36,7 +36,7 @@ const TEAM_NAMES = [
 	"Grey Coalition"
 ]
 
-const TURN_TIME = 0.5
+const TURN_TIME = 0.2
 const MENU_WAIT_TIME = 1
 
 const MIN_TEAMS = 2  ## including player

@@ -230,7 +230,7 @@ func move_units(region_from : int, region_to: int, team: int):
 	var moved_units = regions[region_from].units - 1
 	if not is_player:
 		var team_name = Constants.TEAM_NAMES[team]
-		if region_from == region_to:
+		if self.regions[region_from].team == self.regions[region_to].team:
 			self.messager.set_message("%s is moving %s troops to a friendly neighboring region..." % [team_name, moved_units])
 		else:
 			var enemy_team_name = Constants.TEAM_NAMES[self.regions[region_to].team] 
