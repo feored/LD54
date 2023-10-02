@@ -163,10 +163,6 @@ size_flags_horizontal = 0
 theme_override_styles/focus = SubResource("StyleBoxEmpty_u2eju")
 text = "End Turn"
 
-[node name="SaveButton" type="Button" parent="UI/Panel/MarginContainer/HBoxContainer"]
-layout_mode = 2
-text = "Save"
-
 [node name="SelectionUI" type="CanvasLayer" parent="."]
 unique_name_in_owner = true
 
@@ -299,7 +295,6 @@ text = "Center"
 
 [connection signal="pressed" from="UI/Panel/MarginContainer/HBoxContainer/HBoxContainer/SacrificeContainer/SacrificeButton" to="." method="_on_sacrifice_button_pressed"]
 [connection signal="pressed" from="UI/Panel/MarginContainer/HBoxContainer/TurnButton" to="." method="_on_turn_button_pressed"]
-[connection signal="pressed" from="UI/Panel/MarginContainer/HBoxContainer/SaveButton" to="." method="_on_save_button_pressed"]
 [connection signal="value_changed" from="SelectionUI/PanelContainer/MarginContainer/HBoxContainer/HBoxContainer/TeamNum" to="." method="_on_team_num_value_changed"]
 [connection signal="pressed" from="SelectionUI/PanelContainer/MarginContainer/HBoxContainer/HBoxContainer/GenerateBtn" to="." method="_on_generate_btn_pressed"]
 [connection signal="pressed" from="SelectionUI/PanelContainer/MarginContainer/HBoxContainer/LoadBtn" to="." method="_on_load_btn_pressed"]

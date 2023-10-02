@@ -393,8 +393,8 @@ func load_saved_game():
 	load_regions(saved_state.regions)
 
 
-func load_scenario(scenario = "savegame.json"):
-	var save_game = FileAccess.open("res://maps/" + scenario, FileAccess.READ)
+func load_scenario():
+	var save_game = FileAccess.open("res://maps/" + Settings.current_map, FileAccess.READ)
 	var saved_state = JSON.parse_string(save_game.get_line())
 	save_game.close()
 	self.world.clear_island()

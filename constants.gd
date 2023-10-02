@@ -82,5 +82,19 @@ enum Action { NONE, MOVE, SACRIFICE }
 const SINK_GRACE_PERIOD = 1
 
 const scenarios = [
-	{"title": "Humble Beginnings", "description": "it is what it is", "path": "savegame.json"}
+	{
+		"title": "Humble Beginnings",
+		"description": "Neptune means to teach you that you must sink or be sank.",
+		"path": "cross.json"
+	},
+	{
+		"title": "Stars Align",
+		"description": "This land must have been shaped by the gods.",
+		"path": "sort_of_a_star.json"
+	},
+	{
+		"title": "Not Poseidon",
+		"description": "Neptune wants you to conquer his native land.",
+		"path": "italy.json"
+	},
 ]
