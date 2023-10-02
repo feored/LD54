@@ -58,6 +58,8 @@ func pick_tile_to_sink(tiles: Array):
 		if running_total >= random:
 			return tiles[i]
 
+
 func distance_from_center(tile):
 	return abs(tile.coords.x - Constants.WORLD_CENTER.x) + \
 		abs(tile.coords.y - Constants.WORLD_CENTER.y)
+

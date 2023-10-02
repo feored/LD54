@@ -77,11 +77,6 @@ func _input(event):
 		if world.tiles.has(coords_clicked):
 			if event.button_index == MOUSE_BUTTON_LEFT and event.pressed:
 				on_tile_clicked(world.tiles[coords_clicked])
-			# if event.button_index == MOUSE_BUTTON_RIGHT and event.pressed:
-			# 	world.set_cell(1, world.global_pos_to_coords(event.position), -1, Vector2i(0,0), 0)
-			# 	var region_clicked = world.tiles[coords_clicked].region
-			# 	world.delete_cell(coords_clicked)
-			# 	world.recalculate_region(region_clicked)
 
 func _on_turn_button_pressed():
 	await next_turn()
@@ -134,6 +129,7 @@ func bots_play():
 		await apply_action(bot_action)
 		self.actions_history.append(bot_action)
 		await Utils.wait(Constants.TURN_TIME)
+	self.world.clear_regions_used()
 
 func clear_selected_region():
 	if selected_region != null:
@@ -167,6 +163,7 @@ func on_tile_clicked(new_clicked_tile):
 	
 
 func next_turn():
+	self.world.clear_regions_used()
 	Settings.input_locked = true
 	if check_global_turn_over():
 		self.global_turn += 1
@@ -174,7 +171,6 @@ func next_turn():
 	self.turn = (self.turn + 1) % (self.teams.size())
 	for i in range(self.teams.size()):
 		self.turn_indicators[i].set_active(self.turn == i)
-	self.world.clear_regions_used()
 	check_win_condition()
 	generate_units(teams[self.turn])
 	if not regions_left(self.teams[self.turn]):
@@ -212,6 +208,7 @@ func apply_action(action : Action):
 
 func _on_team_num_value_changed(value:float):
 	self.selected_team_num = int(value)
+	self.gen_world()
 
 
 func _on_generate_btn_pressed():

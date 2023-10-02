@@ -25,7 +25,7 @@ func _process(_delta):
 		position.y += step
 	
 
-func move_bounded(target):
+func move_bounded(target, precision = 1):
 	# if target.x > limit:
 	# 	target.x = limit
 	# elif target.x < -limit:
@@ -36,5 +36,5 @@ func move_bounded(target):
 	# 	target.y = -limit
 	self.position = target - Vector2(self.viewport_size/2)
 	var arrived_center = target
-	while abs((arrived_center - get_screen_center_position()).length_squared()) > 1:
+	while abs((arrived_center - get_screen_center_position()).length_squared()) > precision:
 		await Utils.wait(0.1)
