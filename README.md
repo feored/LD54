@@ -1,21 +1,25 @@
-# LD54
+# LD54 - Neptune's Wake
+
+Sink or be sunk.
+
+Strategically dispatch your units to acquire more territory, reinforce lands at risk of invasion or sacrifice parts of your empire for Neptune's glory !
 
 
-Font: [Monogram](https://datagoblin.itch.io/monogram)
 
-playtest with slow game:
-    * ramp up tile disappearing
-    * option to merge regions for faster travel
-    * game was more fun when it was faster imo
 
-playtest with fast game and lots of tiles sinking:
-    * promising but needs to be VERY aggressive to have an effect - 10+
-    * better if very fast then slow down as we go
-    * games with just 2-3 teams are not very fun
+## How to play:
 
-general ideas:
-    * bonuses on tiles for protecting against sinking, or boost unit generation
-    * neutral tiles that spawn with defenders can give you items to use on your tiles regions with said bonuses, or on ennemy tiles for attack!
-    * dumb bot to move units around when region is landlocked by other owned regions
-    * new bot with greedy pathfinding algorithm that focuses on tiles randomly
-    
+**You are the blue player.**
+
+You can invade an enemy territory or reinforce land you own by clicking one of your regions, then a neighboring region. One unit will stay behind to defend the region.
+
+Regions that have sent units somewhere become unavailable for the duration of the turn.
+
+You can also sacrifice your own tiles to Neptune's glory. This will increase your sacrifice counter by one, which you can then use to sink an enemy's tile. You can only sacrifice or sink one tile per turn.
+
+Each turn, units of every owned region will increase by that region's size.
+
+Click "End turn" to pass, press escape for a pause menu and to go back to the main menu.
+
+Play through our selected scenarios or random maps generated on the fly.
+
