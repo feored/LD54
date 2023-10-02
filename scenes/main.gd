@@ -198,7 +198,7 @@ func next_turn():
 	
 
 func turn_events():
-	await world.generate_disaster()
+	await world.generate_disaster(self.global_turn)
 	await Utils.wait(Constants.TURN_TIME)
 
 

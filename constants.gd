@@ -72,3 +72,5 @@ const FULL_BORDERS = {
 const NO_REGION = -99
 
 enum Action { NONE, MOVE }
+
+const SINK_GRACE_PERIOD = 1
