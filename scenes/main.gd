@@ -8,6 +8,8 @@ var turnIndicatorPrefab = preload("res://ui/turn_indicator.tscn")
 @onready var turnContainer = $"%TurnContainer"
 @onready var turnLabel = $"%TurnLabel"
 @onready var messager = $"%Message"
+@onready var endTurnButton = $"%TurnButton"
+
 
 var selected_region = null
 var teams = []
@@ -79,6 +81,7 @@ func _input(event):
 				on_tile_clicked(world.tiles[coords_clicked])
 
 func _on_turn_button_pressed():
+	self.endTurnButton.disabled = true
 	await next_turn()
 	
 func check_global_turn_over():
@@ -180,6 +183,7 @@ func next_turn():
 		await Utils.wait(Constants.TURN_TIME)
 		await next_turn()
 	Settings.input_locked = false
+	self.endTurnButton.disabled = false
 	self.turnLabel.set_text("Turn: " + str(self.global_turn))
 	
 
