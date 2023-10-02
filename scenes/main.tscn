@@ -222,6 +222,77 @@ text = "Load saved map"
 layout_mode = 2
 text = "Play this map"
 
+[node name="MapEditorUI" type="CanvasLayer" parent="."]
+unique_name_in_owner = true
+
+[node name="PanelContainer" type="PanelContainer" parent="MapEditorUI"]
+anchors_preset = 12
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -31.0
+grow_horizontal = 2
+grow_vertical = 0
+theme = ExtResource("5_5yrco")
+theme_override_styles/panel = SubResource("StyleBoxFlat_wp2ga")
+
+[node name="MarginContainer" type="MarginContainer" parent="MapEditorUI/PanelContainer"]
+layout_mode = 2
+theme_override_constants/margin_left = 5
+theme_override_constants/margin_top = 5
+theme_override_constants/margin_right = 5
+theme_override_constants/margin_bottom = 5
+
+[node name="HBoxContainer" type="GridContainer" parent="MapEditorUI/PanelContainer/MarginContainer"]
+layout_mode = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="MapEditorUI/PanelContainer/MarginContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="PlaceTeamBtn" type="Button" parent="MapEditorUI/PanelContainer/MarginContainer/HBoxContainer/HBoxContainer"]
+layout_mode = 2
+text = "Make Team"
+
+[node name="PlaceTeamNum" type="SpinBox" parent="MapEditorUI/PanelContainer/MarginContainer/HBoxContainer/HBoxContainer"]
+layout_mode = 2
+min_value = 1.0
+max_value = 6.0
+value = 1.0
+rounded = true
+alignment = 1
+
+[node name="DrawBtn" type="Button" parent="MapEditorUI/PanelContainer/MarginContainer/HBoxContainer/HBoxContainer"]
+layout_mode = 2
+text = "Draw Tile"
+
+[node name="EraseBtn" type="Button" parent="MapEditorUI/PanelContainer/MarginContainer/HBoxContainer/HBoxContainer"]
+layout_mode = 2
+text = "Erase Tile"
+
+[node name="ResetBtn" type="Button" parent="MapEditorUI/PanelContainer/MarginContainer/HBoxContainer/HBoxContainer"]
+layout_mode = 2
+text = "Reset Island"
+
+[node name="RegionsBtn" type="Button" parent="MapEditorUI/PanelContainer/MarginContainer/HBoxContainer/HBoxContainer"]
+layout_mode = 2
+text = "Generate Regions"
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="MapEditorUI/PanelContainer/MarginContainer/HBoxContainer"]
+layout_mode = 2
+
+[node name="SaveBtn" type="Button" parent="MapEditorUI/PanelContainer/MarginContainer/HBoxContainer/HBoxContainer2"]
+layout_mode = 2
+text = "Save Map"
+
+[node name="LoadBtn" type="Button" parent="MapEditorUI/PanelContainer/MarginContainer/HBoxContainer/HBoxContainer2"]
+layout_mode = 2
+text = "Load Saved Map"
+
+[node name="PlayBtn" type="Button" parent="MapEditorUI/PanelContainer/MarginContainer/HBoxContainer/HBoxContainer2"]
+layout_mode = 2
+text = "Play Map"
+
 [connection signal="pressed" from="UI/Panel/MarginContainer/HBoxContainer/HBoxContainer/SacrificeContainer/SacrificeButton" to="." method="_on_sacrifice_button_pressed"]
 [connection signal="pressed" from="UI/Panel/MarginContainer/HBoxContainer/TurnButton" to="." method="_on_turn_button_pressed"]
 [connection signal="pressed" from="UI/Panel/MarginContainer/HBoxContainer/SaveButton" to="." method="_on_save_button_pressed"]
@@ -229,3 +300,12 @@ text = "Play this map"
 [connection signal="pressed" from="SelectionUI/PanelContainer/MarginContainer/HBoxContainer/HBoxContainer/GenerateBtn" to="." method="_on_generate_btn_pressed"]
 [connection signal="pressed" from="SelectionUI/PanelContainer/MarginContainer/HBoxContainer/LoadBtn" to="." method="_on_load_btn_pressed"]
 [connection signal="pressed" from="SelectionUI/PanelContainer/MarginContainer/HBoxContainer/PlayBtn" to="." method="_on_play_btn_pressed"]
+[connection signal="pressed" from="MapEditorUI/PanelContainer/MarginContainer/HBoxContainer/HBoxContainer/PlaceTeamBtn" to="." method="_on_place_team_btn_pressed"]
+[connection signal="value_changed" from="MapEditorUI/PanelContainer/MarginContainer/HBoxContainer/HBoxContainer/PlaceTeamNum" to="." method="_on_place_team_num_value_changed"]
+[connection signal="pressed" from="MapEditorUI/PanelContainer/MarginContainer/HBoxContainer/HBoxContainer/DrawBtn" to="." method="_on_draw_btn_pressed"]
+[connection signal="pressed" from="MapEditorUI/PanelContainer/MarginContainer/HBoxContainer/HBoxContainer/EraseBtn" to="." method="_on_erase_btn_pressed"]
+[connection signal="pressed" from="MapEditorUI/PanelContainer/MarginContainer/HBoxContainer/HBoxContainer/ResetBtn" to="." method="_on_reset_btn_pressed"]
+[connection signal="pressed" from="MapEditorUI/PanelContainer/MarginContainer/HBoxContainer/HBoxContainer/RegionsBtn" to="." method="_on_regions_btn_pressed"]
+[connection signal="pressed" from="MapEditorUI/PanelContainer/MarginContainer/HBoxContainer/HBoxContainer2/SaveBtn" to="." method="_on_save_btn_pressed"]
+[connection signal="pressed" from="MapEditorUI/PanelContainer/MarginContainer/HBoxContainer/HBoxContainer2/LoadBtn" to="." method="_on_load_btn_pressed"]
+[connection signal="pressed" from="MapEditorUI/PanelContainer/MarginContainer/HBoxContainer/HBoxContainer2/PlayBtn" to="." method="_on_play_btn_pressed"]

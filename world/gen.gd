@@ -24,10 +24,27 @@ func spawn_cell(coords, team):
 	self.add_child(new_tile)
 	tiles[coords] = new_tile
 
-
+func remove_cell(coords):
+	var region = self.tiles[coords].region
+	if region != Constants.NO_REGION:
+		self.regions[region].tiles.erase(coords)
+	self.tiles[coords].delete() # queue_free?
+	self.tiles.erase(coords)
+	if region != Constants.NO_REGION:
+		recalculate_region(region)
 
 func init_world():
 	tile_water()
+
+
+func clear_regions_mapeditor():
+	for region in self.regions:
+		self.regions[region].delete_no_tiles()
+	self.regions.clear()
+	self.regions_used.clear()
+	for tile_obj in self.tiles.values():
+		tile_obj.region = Constants.NO_REGION
+	self.apply_borders()
 
 func clear_island():
 	for tile_obj in self.tiles.values():
@@ -155,6 +172,8 @@ func delete_cell(coords_array: Array, action = null):
 		self.regions[self.tiles[coords].region].tiles.erase(coords)
 		self.tiles[coords].delete()
 		self.tiles.erase(coords)
+
+
 	
 
 func recalculate_region(region: int):

@@ -38,6 +38,8 @@ const TEAM_NAMES = [
 	"Grey Coalition"
 ]
 
+enum GameMode { Play, MapEditor }
+
 enum Highlight { Red, Green, None }
 
 const TURN_TIME = 0.2

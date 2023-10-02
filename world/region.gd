@@ -27,6 +27,13 @@ func delete():
 	self.queue_free()
 
 
+func delete_no_tiles():
+	self.tiles.clear()
+	if label != null:
+		self.label.queue_free()
+	self.queue_free()
+
+
 func update_display():
 	self.label.set_text(str(self.units))
 
@@ -83,13 +90,9 @@ func set_used(is_used: bool):
 func reset_tiles():
 	self.tiles.clear()
 
+
 func get_save_data():
-	var saved_state = {
-		"id": self.id,
-		"team": self.team,
-		"tiles": [],
-		"units": self.units
-	}
+	var saved_state = {"id": self.id, "team": self.team, "tiles": [], "units": self.units}
 	for coords in self.tiles:
 		saved_state.tiles.append(var_to_str(coords))
 	return saved_state
