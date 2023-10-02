@@ -81,9 +81,10 @@ grow_vertical = 2
 
 [node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer/Control/CenterContainer"]
 layout_mode = 2
-theme_override_constants/separation = 50
+theme_override_constants/separation = 25
 
 [node name="Label" type="Label" parent="CanvasLayer/Control/CenterContainer/VBoxContainer"]
+custom_minimum_size = Vector2(512, 0)
 layout_mode = 2
 theme = ExtResource("4_qy1gp")
 theme_override_colors/font_color = Color(0.611765, 0.8, 1, 1)
@@ -95,13 +96,50 @@ horizontal_alignment = 1
 vertical_alignment = 1
 uppercase = true
 
-[node name="PlayBtn" type="Button" parent="CanvasLayer/Control/CenterContainer/VBoxContainer"]
+[node name="ButtonContainer" type="CenterContainer" parent="CanvasLayer/Control/CenterContainer/VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="buttons" type="VBoxContainer" parent="CanvasLayer/Control/CenterContainer/VBoxContainer/ButtonContainer"]
+layout_mode = 2
+theme_override_constants/separation = 25
+
+[node name="PlayScenarioBtn" type="Button" parent="CanvasLayer/Control/CenterContainer/VBoxContainer/ButtonContainer/buttons"]
+layout_mode = 2
+text = "Play Scenario"
+
+[node name="PlayBtn" type="Button" parent="CanvasLayer/Control/CenterContainer/VBoxContainer/ButtonContainer/buttons"]
 layout_mode = 2
 text = "Play Random Map"
 
-[node name="InstructionsBtn" type="Button" parent="CanvasLayer/Control/CenterContainer/VBoxContainer"]
+[node name="InstructionsBtn" type="Button" parent="CanvasLayer/Control/CenterContainer/VBoxContainer/ButtonContainer/buttons"]
 visible = false
 layout_mode = 2
 text = "How To Play"
 
-[connection signal="pressed" from="CanvasLayer/Control/CenterContainer/VBoxContainer/PlayBtn" to="MenuWorld" method="_on_play_btn_pressed"]
+[node name="ScenariosContainer" type="CenterContainer" parent="CanvasLayer/Control/CenterContainer/VBoxContainer"]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+
+[node name="ScrollContainer2" type="ScrollContainer" parent="CanvasLayer/Control/CenterContainer/VBoxContainer/ScenariosContainer"]
+custom_minimum_size = Vector2(400, 160)
+layout_mode = 2
+
+[node name="AllScenarios" type="GridContainer" parent="CanvasLayer/Control/CenterContainer/VBoxContainer/ScenariosContainer/ScrollContainer2"]
+unique_name_in_owner = true
+layout_mode = 2
+columns = 3
+
+[node name="CenterContainer" type="CenterContainer" parent="CanvasLayer/Control/CenterContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="ReturnButton" type="Button" parent="CanvasLayer/Control/CenterContainer/VBoxContainer/CenterContainer"]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+text = "Return"
+
+[connection signal="pressed" from="CanvasLayer/Control/CenterContainer/VBoxContainer/ButtonContainer/buttons/PlayScenarioBtn" to="MenuWorld" method="_on_play_scenario_btn_pressed"]
+[connection signal="pressed" from="CanvasLayer/Control/CenterContainer/VBoxContainer/ButtonContainer/buttons/PlayBtn" to="MenuWorld" method="_on_play_btn_pressed"]
+[connection signal="pressed" from="CanvasLayer/Control/CenterContainer/VBoxContainer/CenterContainer/ReturnButton" to="MenuWorld" method="_on_return_button_pressed"]

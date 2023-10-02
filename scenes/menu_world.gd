@@ -2,8 +2,13 @@ extends TileMap
 
 
 @onready var camera = $"%MainCamera"
+@onready var allScenarios = $"%AllScenarios"
+@onready var buttonContainer = $"%ButtonContainer"
+@onready var scenariosContainer = $"%ScenariosContainer"
+@onready var returnButton =	$"%ReturnButton"
 
 var tile = preload("res://world/tile.tscn")
+var scenarioPrefab = preload("res://ui/scenario.tscn")
 
 var tiles = {}
 var regions = {}
@@ -161,8 +166,14 @@ func generate_disaster():
 	await delete_cell(deleted_cell.coords)
 	recalculate_region(deleted_cell_region)
 # Called when the node enters the scene tree for the first time.
+
 func _ready():
 	self.init_world()
+	for scenario in Constants.scenarios:
+		var scenario_obj = scenarioPrefab.instantiate()
+		scenario_obj.init(scenario)
+		allScenarios.add_child(scenario_obj)
+
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):
@@ -193,3 +204,15 @@ func adjacent_regions(region_id : int):
 
 func _on_play_btn_pressed():
 	get_tree().change_scene_to_file("res://scenes/main.tscn")
+
+
+func _on_play_scenario_btn_pressed():
+	self.buttonContainer.visible = false
+	self.scenariosContainer.visible = true
+	self.returnButton.visible = true
+
+
+func _on_return_button_pressed():
+	self.scenariosContainer.visible = false
+	self.buttonContainer.visible = true
+	self.returnButton.visible = false

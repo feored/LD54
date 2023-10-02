@@ -38,7 +38,7 @@ const TEAM_NAMES = [
 	"Grey Coalition"
 ]
 
-enum GameMode { Play, MapEditor }
+enum GameMode { Play, MapEditor, Scenario }
 
 enum Highlight { Red, Green, None }
 
@@ -80,3 +80,7 @@ const NO_REGION = -99
 enum Action { NONE, MOVE, SACRIFICE }
 
 const SINK_GRACE_PERIOD = 1
+
+const scenarios = [
+	{"title": "Humble Beginnings", "description": "it is what it is", "path": "savegame.json"}
+]

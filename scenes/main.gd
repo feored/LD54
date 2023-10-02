@@ -53,15 +53,22 @@ func to_team_id(team_id):
 func _ready():
 	Settings.input_locked = false
 	self.world.init_world()
-	if Settings.game_mode == Constants.GameMode.Play:
-		UI.visible = false
-		SelectionUI.visible = true
-		MapEditorUI.visible = false
-		self.gen_world()
-	else:
-		UI.visible = false
-		SelectionUI.visible = false
-		MapEditorUI.visible = true
+	match Settings.game_mode:
+		Constants.GameMode.Play:
+			UI.visible = false
+			SelectionUI.visible = true
+			MapEditorUI.visible = false
+			self.gen_world()
+		Constants.GameMode.MapEditor:
+			UI.visible = false
+			SelectionUI.visible = false
+			MapEditorUI.visible = true
+		Constants.GameMode.Scenario:
+			self.UI.visible = true
+			self.SelectionUI.visible = false
+			self.MapEditorUI.visible = false
+			self.load_scenario()
+			self.start_game()
 	
 
 func update_sacrifices_display():
@@ -70,11 +77,6 @@ func update_sacrifices_display():
 func gen_world():
 	self.world.clear_island()
 	self.world.generate_island()
-	self.add_teams()
-	for r in self.world.regions.values():
-		r.units = 0
-	for t in self.teams:
-		generate_units(t)
 
 func add_teams():
 	self.world.reset_regions_team()
@@ -94,7 +96,13 @@ func add_teams():
 func start_game():
 	self.game_started = true
 	self.SelectionUI.visible = false
+	self.MapEditorUI.visible = false
 	self.UI.visible = true
+	self.add_teams()
+	for r in self.world.regions.values():
+		r.units = 0
+	for t in self.teams:
+		generate_units(t)
 
 
 func create_turn_indicator(team_id):
@@ -353,9 +361,8 @@ func _on_generate_btn_pressed():
 
 
 func _on_play_btn_pressed():
-	MapEditorUI.visible = false
-	UI.visible = true
 	self.start_game()
+	
 
 
 func _on_sacrifice_button_pressed():
@@ -385,6 +392,15 @@ func load_saved_game():
 	load_tiles(saved_state.tiles)
 	load_regions(saved_state.regions)
 
+
+func load_scenario(scenario = "savegame.json"):
+	var save_game = FileAccess.open("res://maps/" + scenario, FileAccess.READ)
+	var saved_state = JSON.parse_string(save_game.get_line())
+	save_game.close()
+	self.world.clear_island()
+	self.teams = saved_state.teams
+	load_tiles(saved_state.tiles)
+	load_regions(saved_state.regions)
 
 
 func load_tiles(tiles):
