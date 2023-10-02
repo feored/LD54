@@ -22,7 +22,7 @@ const TEAM_COLORS = [
 	0xffea00ff,  # yellow
 	0xff0000ff,  # red
 	0x0bfc03ff,  # green
-	0x696969ff,  # grey
+	0x393939ff,  # grey
 ]
 
 const TEAM_NAMES = [

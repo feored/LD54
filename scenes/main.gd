@@ -32,6 +32,8 @@ func to_team_id(team_id):
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
+	UI.visible = false
+	SelectionUI.visible = true
 	self.world.init_world()
 	self.gen_world()
 
