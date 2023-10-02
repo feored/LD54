@@ -41,7 +41,7 @@ func clear_island():
 
 func generate_island():
 	const n_tiles_max = Constants.WORLD_BOUNDS.x * Constants.WORLD_BOUNDS.y * 4
-	var n_tiles_target = round(n_tiles_max * 0.1)# Utils.rng.randf_range(0.25, 0.5))
+	var n_tiles_target = round(n_tiles_max * Utils.rng.randf_range(0.1, 0.5))
 	spawn_cell(Constants.WORLD_CENTER, Constants.NO_TEAM)
 	var used_cells_coords = self.tiles.keys()
 	while ((used_cells_coords.size() < n_tiles_target)):
@@ -209,7 +209,7 @@ func sink_tile(coords):
 func generate_disaster(global_turn):
 	# only sinking tiles for now
 	var n = self.tiles.size()
-	var total_disasters = min(n, global_turn * min(int(n / 10.0), 10))
+	var total_disasters = min(n, global_turn * int(n / 10.0))
 	if (global_turn <= Constants.SINK_GRACE_PERIOD):
 		total_disasters = 0
 	var disasters_dealt = 0
