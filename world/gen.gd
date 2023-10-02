@@ -140,29 +140,30 @@ func get_tile_group_center_position(coords_group: Array):
 		total += self.coords_to_pos(c)
 	return total / coords_group.size()
 
-func delete_cell(coords: Vector2i, action = null):
+func delete_cell(coords_array: Array, action = null):
 	if action != null:
 		var team_name = Constants.TEAM_NAMES[action.team]
-		if action.team == self.tiles[coords].team:
+		if action.team == self.tiles[coords_array[0]].team:
 			self.messager.set_message("%s sacrifices their own land to curry favor from the gods..." % team_name)
 		else:
-			var enemy_team_name = Constants.TEAM_NAMES[self.tiles[coords].team]
+			var enemy_team_name = Constants.TEAM_NAMES[self.tiles[coords_array[0]].team]
 			self.messager.set_message("%s begs the gods to strike down the land of %s..." % [team_name, enemy_team_name])
 	else:
 		self.messager.set_message("A patch of land sinks somewhere...")
-	await self.camera.move_bounded(self.coords_to_pos(coords), 5)
-	self.regions[self.tiles[coords].region].tiles.erase(coords)
-	self.tiles[coords].delete()
-	self.tiles.erase(coords)
+	await self.camera.move_bounded(self.coords_to_pos(coords_array[0]), 5)
+	for coords in coords_array:
+		self.regions[self.tiles[coords].region].tiles.erase(coords)
+		self.tiles[coords].delete()
+		self.tiles.erase(coords)
 	
 
 func recalculate_region(region: int):
-	var region_tiles = self.regions[region].tiles.keys()
-	if (region_tiles.size() == 0):
+	if (self.regions[region].tiles.size() == 0):
 		var r = self.regions[region]
 		self.regions.erase(region)
 		r.delete()
 		return
+	var region_tiles = self.regions[region].tiles.keys()
 	self.regions[region].reset_tiles()
 	for tile_coords in region_tiles:
 		self.tiles[tile_coords].set_region(Constants.NO_REGION)
@@ -191,40 +192,45 @@ func expand_single_region_from_coords(region: int, region_tiles: Array):
 				break
 	region_update_label(self.regions[region])
 
-func sink_tile(coords):
-	var deleted_cell_region = self.tiles[coords].region
-	await delete_cell(coords)
-	recalculate_region(deleted_cell_region)
-
 func sacrifice_tile(coords, action):
 	var deleted_cell_region = self.tiles[coords].region
-	await delete_cell(coords, action)
+	await delete_cell([coords], action)
 	recalculate_region(deleted_cell_region)
-	
-func generate_disaster():
+
+func sink_tile(coords):
+	var regions_impacted = []
+	for coord in coords:
+		regions_impacted.append(self.tiles[coord].region)
+	await delete_cell(coords)
+	for region in regions_impacted:
+		if self.regions.has(region):
+			recalculate_region(region)
+
+func generate_disaster(global_turn):
 	# only sinking tiles for now
-	var total_disasters = min(int(self.tiles.size() / 10.0), 10)
+	var n = self.tiles.size()
+	var total_disasters = min(n, global_turn * min(int(n / 10.0), 10))
+	if (global_turn <= Constants.SINK_GRACE_PERIOD):
+		total_disasters = 0
 	var disasters_dealt = 0
 	while disasters_dealt < total_disasters and self.tiles.size() > 1:
-		var is_single = Utils.rng.randi() % 2
-		if is_single:
-			var deleted_cell = Utils.pick_tile_to_sink(self.tiles.values())
-			await sink_tile(deleted_cell.coords)
+		var num_to_sink = min(total_disasters - disasters_dealt, total_disasters / 5)
+		var cur_cell = Utils.pick_tile_to_sink(self.tiles.values()).coords
+		var tiles_to_delete = [cur_cell]
+		disasters_dealt += 1
+		for i in range(1, num_to_sink):
+			# await sink_tile(cur_cell)
+			var neighbors = []
+			for potential_neighbor in self.get_surrounding_cells(cur_cell):
+				if self.tiles.has(potential_neighbor) and potential_neighbor not in tiles_to_delete:
+					neighbors.append(potential_neighbor)
+			if neighbors.size() < 1:
+				break
+			neighbors.shuffle()
+			cur_cell = neighbors[0]
+			tiles_to_delete.append(cur_cell)
 			disasters_dealt += 1
-		else:
-			var num_to_sink = min(randi() % 5, self.tiles.size())
-			var cur_cell = Utils.pick_tile_to_sink(self.tiles.values()).coords
-			for i in range(num_to_sink):
-				await sink_tile(cur_cell)
-				var neighbors = []
-				for potential_neighbor in self.get_surrounding_cells(cur_cell):
-					if self.tiles.has(potential_neighbor):
-						neighbors.append(potential_neighbor)
-				if neighbors.size() < 1:
-					break
-				neighbors.shuffle()
-				cur_cell = neighbors[0]
-				disasters_dealt += 1
+		await sink_tile(tiles_to_delete)
 		await Utils.wait(Constants.TURN_TIME)
 
 func move_units(region_from : int, region_to: int, team: int):
@@ -246,8 +252,8 @@ func move_units(region_from : int, region_to: int, team: int):
 			self.messager.set_message("%s is moving %s troops to a friendly neighboring region..." % [team_name, moved_units])
 		else:
 			var enemy_team_name = Constants.TEAM_NAMES[self.regions[region_to].team] 
-			self.messager.set_message("%s is attacking %s with %s troops!" % [team_name, enemy_team_name, moved_units])
-		await self.camera.move_bounded(self.coords_to_pos(self.regions[region_from].center_tile()))
+			self.messager.set_message("%s is attacking a neighboring %s region with %s troops!" % [team_name, enemy_team_name, moved_units])
+		await self.camera.move_bounded(self.coords_to_pos(self.regions[region_from].center_tile()), 5)
 	
 	if regions[region_from].team == regions[region_to].team:
 		regions[region_from].set_units(1)

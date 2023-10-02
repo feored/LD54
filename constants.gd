@@ -1,6 +1,7 @@
 extends Node
 
 const NULL_COORDS = Vector2i(-9999, -9999)
+const NULL_POS = Vector2(-9999, -9999)
 const TILE_SIZE = 24
 const WORLD_CENTER = Vector2i(512 / 24 / 2, 288 / 24 / 2)
 const WORLD_BOUNDS = Vector2i(15, 10)
@@ -75,3 +76,5 @@ const FULL_BORDERS = {
 const NO_REGION = -99
 
 enum Action { NONE, MOVE, SACRIFICE }
+
+const SINK_GRACE_PERIOD = 1

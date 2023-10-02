@@ -220,10 +220,14 @@ func on_tile_clicked(new_clicked_tile):
 			clear_selected_region()
 			return
 		else:
-			var move = Action.new(self.teams[self.player_team_index], Constants.Action.MOVE, selected_region, new_clicked_tile.region )
-			actions_history.append(move)
-			self.apply_action(move)
+			if self.world.regions[selected_region].units > 1:
+				var move = Action.new(self.teams[self.player_team_index], Constants.Action.MOVE, selected_region, new_clicked_tile.region )
+				actions_history.append(move)
+				self.apply_action(move)
+			else:
+				messager.set_message("My lord, we cannot leave this region undefended!")
 			clear_selected_region()
+			
 	
 
 func next_turn():
@@ -251,7 +255,7 @@ func next_turn():
 	
 
 func turn_events():
-	await world.generate_disaster()
+	await world.generate_disaster(self.global_turn)
 	await Utils.wait(Constants.TURN_TIME)
 
 

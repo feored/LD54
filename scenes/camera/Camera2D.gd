@@ -7,7 +7,8 @@ const limit = 24*8
 
 
 @onready var viewport_size = get_viewport().content_scale_size
-var start_position = Vector2.ZERO
+var start_position = Constants.NULL_POS
+var is_dragging = false
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(_delta):
@@ -33,11 +34,13 @@ func _unhandled_input(event):
 			if event.pressed:
 				start_position = get_local_mouse_position()
 			else:
-				start_position = Vector2.ZERO
+				start_position = Constants.NULL_POS
+				is_dragging = false
 	elif event is InputEventMouseMotion:
-		if start_position != Vector2.ZERO:
+		if start_position != Constants.NULL_POS:
 			move()
 			start_position = get_local_mouse_position()
+			is_dragging = true
 
 func move_bounded(target, precision = 1):
 	self.position = target - Vector2(self.viewport_size/2)
