@@ -124,8 +124,12 @@ func sort_least_neighbors():
 	return sorted_tiles
 
 func add_team(team_id : int):
-	var random_region = regions[Utils.rng.randi() % self.regions.size()]
-	random_region.set_team(team_id)
+	var foundRegion = false
+	while not foundRegion:
+		var random_region = regions[Utils.rng.randi() % self.regions.size()]
+		if random_region.team == Constants.NO_TEAM:
+			random_region.set_team(team_id)
+			foundRegion = true
 		
 func count_neighbors(cell: Tile):
 	var total = 0;
@@ -307,15 +311,6 @@ func clear_regions_used():
 		regions[region].set_used(false)
 	regions_used.clear()
 
-func reset():
-	for coords in self.tiles:
-		self.regions[self.tiles[coords].region].tiles.erase(coords)
-		self.tiles.erase(coords)
-	for region in self.regions:
-		self.regions[region].delete()
-		self.regions.erase(region)
-	self.regions_used = []
-
 func add_tile(coords, team, borders):
 	if self.tiles.has(coords):
 		print("Error: cell already exists at " + str(coords))
@@ -324,3 +319,7 @@ func add_tile(coords, team, borders):
 	new_tile.init_cell(coords, self.coords_to_pos(coords), Constants.TILE_GRASS, team, borders)
 	self.add_child(new_tile)
 	tiles[coords] = new_tile
+
+func reset_regions_team():
+	for region in self.regions:
+		self.regions[region].set_team(Constants.NO_TEAM)

@@ -62,6 +62,7 @@ func gen_world():
 		generate_units(t)
 
 func add_teams():
+	self.world.reset_regions_team()
 	self.teams.clear()
 	self.bots.clear()
 	for t in self.turn_indicators:
@@ -298,7 +299,7 @@ func apply_action(action : Action):
 
 func _on_team_num_value_changed(value:float):
 	self.selected_team_num = int(value)
-	self.gen_world()
+	self.add_teams()
 
 
 func _on_generate_btn_pressed():
