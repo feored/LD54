@@ -1,6 +1,7 @@
 extends Node2D
 
 var turnIndicatorPrefab = preload("res://ui/turn_indicator.tscn")
+var escMenuPrefab = preload("res://scenes/esc_menu.tscn")
 
 @onready var UI = $"%UI"
 @onready var SelectionUI = $"%SelectionUI"
@@ -24,6 +25,7 @@ var turn_indicators = []
 var selected_team_num = 7
 
 var game_started = false
+var escMenu = null
 
 func to_team_id(team_id):
 	return team_id + 1
@@ -72,9 +74,15 @@ func _process(_delta):
 	pass
 
 func _input(event):
-	if Settings.input_locked or !game_started:
-		return
-	if event is InputEventMouseButton:
+	if event.is_action_pressed("escmenu"):
+		if escMenu == null:
+			escMenu = escMenuPrefab.instantiate()
+			self.add_child(escMenu)
+		else:
+			escMenu.delete()
+	elif event is InputEventMouseButton:
+		if Settings.input_locked or !game_started:
+			return
 		var coords_clicked = world.global_pos_to_coords(event.position)
 		if world.tiles.has(coords_clicked):
 			if event.button_index == MOUSE_BUTTON_LEFT and event.pressed:
