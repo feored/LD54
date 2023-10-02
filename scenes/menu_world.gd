@@ -161,7 +161,7 @@ func expand_single_region_from_coords(region: int, region_tiles: Array):
 	
 func generate_disaster():
 	# only sinking tiles for now
-	var deleted_cell = Utils.pick_tile_to_sink(self.tiles.values())
+	var deleted_cell = Utils.pick_tile_to_sink(self.tiles.values(), self)
 	var deleted_cell_region = deleted_cell.region
 	await delete_cell(deleted_cell.coords)
 	recalculate_region(deleted_cell_region)

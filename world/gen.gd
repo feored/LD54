@@ -238,7 +238,7 @@ func generate_disaster(global_turn):
 	var disasters_dealt = 0
 	while disasters_dealt < total_disasters and self.tiles.size() > 1:
 		var num_to_sink = min(total_disasters - disasters_dealt, total_disasters / 5)
-		var cur_cell = Utils.pick_tile_to_sink(self.tiles.values()).coords
+		var cur_cell = Utils.pick_tile_to_sink(self.tiles.values(), self).coords
 		var tiles_to_delete = [cur_cell]
 		disasters_dealt += 1
 		for i in range(1, num_to_sink):
