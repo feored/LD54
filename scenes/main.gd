@@ -254,7 +254,8 @@ func next_turn():
 	for i in range(self.teams.size()):
 		self.turn_indicators[i].set_active(self.turn == i)
 	check_win_condition()
-	generate_units(teams[self.turn])
+	if global_turn > 0:
+		generate_units(teams[self.turn])
 	if not regions_left(self.teams[self.turn]):
 		await next_turn()
 	elif (self.turn != self.player_team_index):
