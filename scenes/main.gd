@@ -59,6 +59,7 @@ func _ready():
 			SelectionUI.visible = true
 			MapEditorUI.visible = false
 			self.gen_world()
+			self.start_game()
 		Constants.GameMode.MapEditor:
 			UI.visible = false
 			SelectionUI.visible = false

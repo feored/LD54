@@ -203,6 +203,7 @@ func adjacent_regions(region_id : int):
 
 
 func _on_play_btn_pressed():
+	Settings.game_mode = Constants.GameMode.Play
 	get_tree().change_scene_to_file("res://scenes/main.tscn")
 
 
