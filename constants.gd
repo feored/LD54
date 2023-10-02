@@ -109,4 +109,9 @@ const scenarios = [
 		"path": "trident.json"
 	},
 	{"title": "Pacman", "description": "Uh...Neptune's favorite game?", "path": "pacman.json"},
+	{
+		"title": "4 Islands",
+		"description": "An isolated empire is doomed to decay",
+		"path": "4_islands.json"
+	}
 ]

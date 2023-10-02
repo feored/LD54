@@ -87,7 +87,7 @@ func add_teams_scenario():
 		t.queue_free()
 	self.turn_indicators.clear()
 	for team_id in teams:
-		self.bots[team_id] = DumbBot.new(team_id)
+		self.bots[int(team_id)] = DumbBot.new(team_id)
 		self.create_turn_indicator(team_id)
 		self.sacrifices_available[team_id] = 0
 
