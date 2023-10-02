@@ -306,3 +306,21 @@ func clear_regions_used():
 	for region in regions_used:
 		regions[region].set_used(false)
 	regions_used.clear()
+
+func reset():
+	for coords in self.tiles:
+		self.regions[self.tiles[coords].region].tiles.erase(coords)
+		self.tiles.erase(coords)
+	for region in self.regions:
+		self.regions[region].delete()
+		self.regions.erase(region)
+	self.regions_used = []
+
+func add_tile(coords, team, borders):
+	if self.tiles.has(coords):
+		print("Error: cell already exists at " + str(coords))
+		return
+	var new_tile = tile.instantiate()
+	new_tile.init_cell(coords, self.coords_to_pos(coords), Constants.TILE_GRASS, team, borders)
+	self.add_child(new_tile)
+	tiles[coords] = new_tile

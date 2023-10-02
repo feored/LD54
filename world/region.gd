@@ -28,7 +28,6 @@ func delete():
 
 
 func update_display():
-	#print("Region " + str(self.id) + " has " + str(self.units) + " units")
 	self.label.set_text(str(self.units))
 
 
@@ -83,3 +82,14 @@ func set_used(is_used: bool):
 
 func reset_tiles():
 	self.tiles.clear()
+
+func get_save_data():
+	var saved_state = {
+		"id": self.id,
+		"team": self.team,
+		"tiles": [],
+		"units": self.units
+	}
+	for coords in self.tiles:
+		saved_state.tiles.append(var_to_str(coords))
+	return saved_state

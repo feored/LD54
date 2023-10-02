@@ -311,3 +311,57 @@ func _on_play_btn_pressed():
 
 func _on_sacrifice_button_pressed():
 	self.is_sacrificing = true
+
+func save():
+	var saved_state = {
+		"teams": self.teams,
+		"tiles": {},
+		"regions": {}
+	}
+	for coords in self.world.tiles:
+		saved_state.tiles[var_to_str(coords)] = self.world.tiles[coords].get_save_data()
+	for region in self.world.regions:
+		saved_state.regions[region] = self.world.regions[region].get_save_data()
+	var save_game = FileAccess.open("user://savegame.json", FileAccess.WRITE)
+	save_game.store_line(JSON.stringify(saved_state))
+	save_game.close()
+
+
+func load_saved_game():
+	var save_game = FileAccess.open("user://savegame.json", FileAccess.READ)
+	var saved_state = JSON.parse_string(save_game.get_line())
+	save_game.close()
+	self.world.clear_island()
+	self.teams = saved_state.teams
+	load_tiles(saved_state.tiles)
+	load_regions(saved_state.regions)
+
+
+
+func load_tiles(tiles):
+	for coords_string in tiles:
+		var parsed_tile = tiles[coords_string]
+		var coords = str_to_var(coords_string)
+		var borders = {}
+		for border_str in parsed_tile.borders:
+			borders[int(border_str)] = parsed_tile.borders[border_str]
+		self.world.add_tile(coords, parsed_tile.team, borders)
+
+func load_regions(regions):
+	for region_id_str in regions:
+		var saved_region = regions[region_id_str]
+		var region_id = int(region_id_str)
+		var region = self.world.create_region(region_id)
+		for coords_str in saved_region.tiles:
+			var coords = str_to_var(coords_str)
+			region.add_tile(coords, self.world.tiles[coords])
+		region.set_team(saved_region.team)
+		region.set_units(saved_region.units)
+		self.world.regions[region_id] = region
+		self.world.region_update_label(region)
+
+func _on_save_button_pressed():
+	save()
+
+func _on_load_btn_pressed():
+	load_saved_game()

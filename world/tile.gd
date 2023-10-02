@@ -92,3 +92,11 @@ func set_selected(selected: bool):
 	else:
 		self.modulate = self.lighter_color
 		self.tween.kill()
+
+func get_save_data():
+	return {
+		"coords": var_to_str(self.coords),
+		"team": self.team,
+		"borders": self.borders,
+		"region": self.region
+	}
