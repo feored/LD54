@@ -42,7 +42,7 @@ enum GameMode { Play, MapEditor, Scenario }
 
 enum Highlight { Red, Green, None }
 
-const TURN_TIME = 0.2
+const TURN_TIME = 0.3
 const MENU_WAIT_TIME = 1
 
 const MIN_TEAMS = 2  ## including player

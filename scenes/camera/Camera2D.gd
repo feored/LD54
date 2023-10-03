@@ -1,7 +1,7 @@
 extends Camera2D
 
 const edge = 24
-const step = 2
+const step = 5
 
 const limit = 24*8
 
