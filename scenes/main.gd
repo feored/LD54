@@ -60,7 +60,6 @@ func _ready():
 			MapEditorUI.visible = false
 			self.gen_world()
 			self.add_teams()
-			self.start_game()
 		Constants.GameMode.MapEditor:
 			UI.visible = false
 			SelectionUI.visible = false
@@ -80,6 +79,7 @@ func update_sacrifices_display():
 func gen_world():
 	self.world.clear_island()
 	self.world.generate_island()
+	self.add_teams()
 
 func add_teams_scenario():
 	self.bots.clear()

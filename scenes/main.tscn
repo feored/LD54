@@ -210,16 +210,13 @@ alignment = 1
 layout_mode = 2
 text = "Generate another map"
 
-[node name="LoadBtn" type="Button" parent="SelectionUI/PanelContainer/MarginContainer/HBoxContainer"]
-layout_mode = 2
-text = "Load saved map"
-
 [node name="PlayBtn" type="Button" parent="SelectionUI/PanelContainer/MarginContainer/HBoxContainer"]
 layout_mode = 2
 text = "Play this map"
 
 [node name="MapEditorUI" type="CanvasLayer" parent="."]
 unique_name_in_owner = true
+visible = false
 
 [node name="PanelContainer" type="PanelContainer" parent="MapEditorUI"]
 anchors_preset = 12
@@ -297,7 +294,6 @@ text = "Center"
 [connection signal="pressed" from="UI/Panel/MarginContainer/HBoxContainer/TurnButton" to="." method="_on_turn_button_pressed"]
 [connection signal="value_changed" from="SelectionUI/PanelContainer/MarginContainer/HBoxContainer/HBoxContainer/TeamNum" to="." method="_on_team_num_value_changed"]
 [connection signal="pressed" from="SelectionUI/PanelContainer/MarginContainer/HBoxContainer/HBoxContainer/GenerateBtn" to="." method="_on_generate_btn_pressed"]
-[connection signal="pressed" from="SelectionUI/PanelContainer/MarginContainer/HBoxContainer/LoadBtn" to="." method="_on_load_btn_pressed"]
 [connection signal="pressed" from="SelectionUI/PanelContainer/MarginContainer/HBoxContainer/PlayBtn" to="." method="_on_play_btn_pressed"]
 [connection signal="pressed" from="MapEditorUI/PanelContainer/MarginContainer/HBoxContainer/HBoxContainer/PlaceTeamBtn" to="." method="_on_place_team_btn_pressed"]
 [connection signal="value_changed" from="MapEditorUI/PanelContainer/MarginContainer/HBoxContainer/HBoxContainer/PlaceTeamNum" to="." method="_on_place_team_num_value_changed"]
