@@ -129,7 +129,8 @@ func _process(_delta):
 
 func clear_sacrifice():
 	self.is_sacrificing = false
-	self.world.tiles[sacrifice_hovered_tile].set_highlight(Constants.Highlight.None)
+	if sacrifice_hovered_tile in self.world.tiles:
+		self.world.tiles[sacrifice_hovered_tile].set_highlight(Constants.Highlight.None)
 	self.sacrifice_hovered_tile = Constants.NULL_COORDS
 
 func sacrifice_tile(coords):
@@ -327,6 +328,7 @@ func next_turn():
 	if not regions_left(self.teams[self.turn]):
 		await next_turn()
 	elif (self.turn != self.player_team_index):
+		self.sacrificeButton.disabled = true
 		await bots_play()
 		await Utils.wait(Constants.TURN_TIME)
 		await next_turn()
