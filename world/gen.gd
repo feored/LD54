@@ -232,7 +232,8 @@ func sink_tile(coords):
 func generate_disaster(global_turn):
 	# only sinking tiles for now
 	var n = self.tiles.size()
-	var total_disasters = min(n, global_turn * int(n / 10.0))
+	var total_disasters = min(n, int(global_turn * n / 10.0))
+	print("Total disasters: ", total_disasters)
 	if (global_turn <= Constants.SINK_GRACE_PERIOD):
 		total_disasters = 0
 	var disasters_dealt = 0

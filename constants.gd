@@ -88,9 +88,9 @@ const scenarios = [
 		"path": "cross.json"
 	},
 	{
-		"title": "Stars Align",
-		"description": "This land must have been shaped by the gods.",
-		"path": "sort_of_a_star.json"
+		"title": "The Trident",
+		"description": "Neptune wants to test your ability to conquer an island with a single chokepoint.",
+		"path": "trident.json"
 	},
 	{
 		"title": "Not Poseidon",
@@ -104,9 +104,9 @@ const scenarios = [
 		"path": "two_halves.json"
 	},
 	{
-		"title": "The Trident",
-		"description": "It seems Neptune has started to run out of ideas to test your skills.",
-		"path": "trident.json"
+		"title": "Stars Align",
+		"description": "This land must have been shaped by the gods.",
+		"path": "sort_of_a_star.json"
 	},
 	{"title": "Pacman", "description": "Uh...Neptune's favorite game?", "path": "pacman.json"},
 	{
