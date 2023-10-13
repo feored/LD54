@@ -17,9 +17,9 @@ config/icon="res://assets/icon.png"
 
 [autoload]
 
-Constants="*res://constants.gd"
-Utils="*res://utils.gd"
-Settings="*res://settings.gd"
+Constants="*res://scripts/constants.gd"
+Utils="*res://scripts/utils.gd"
+Settings="*res://scripts/settings.gd"
 
 [display]
 
