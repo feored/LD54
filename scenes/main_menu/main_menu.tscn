@@ -40,22 +40,9 @@ grow_vertical = 2
 layout_mode = 2
 theme_override_constants/separation = 25
 
-[node name="Label" type="Label" parent="CanvasLayer/Control/CenterContainer/VBoxContainer"]
-visible = false
-custom_minimum_size = Vector2(512, 0)
-layout_mode = 2
-theme = ExtResource("4_qy1gp")
-theme_override_colors/font_color = Color(0.611765, 0.8, 1, 1)
-theme_override_colors/font_shadow_color = Color(1, 1, 1, 1)
-theme_override_constants/shadow_outline_size = 10
-theme_override_font_sizes/font_size = 48
-text = "Neptune's Wake"
-horizontal_alignment = 1
-vertical_alignment = 1
-uppercase = true
-
 [node name="Logo" type="TextureRect" parent="CanvasLayer/Control/CenterContainer/VBoxContainer"]
 unique_name_in_owner = true
+visible = false
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
