@@ -1,6 +1,6 @@
 [gd_scene load_steps=3 format=3 uid="uid://co1w33vityobb"]
 
-[ext_resource type="Script" path="res://ui/turn_indicator.gd" id="1_qxx5q"]
+[ext_resource type="Script" path="res://ui/turn_indicator/turn_indicator.gd" id="1_qxx5q"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_4t141"]
 bg_color = Color(1, 1, 1, 1)

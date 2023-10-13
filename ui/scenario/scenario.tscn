@@ -1,14 +1,14 @@
 [gd_scene load_steps=3 format=3 uid="uid://s2ktop7med2h"]
 
-[ext_resource type="Theme" uid="uid://3t61g0061mea" path="res://assets/theme.tres" id="1_v0fql"]
-[ext_resource type="Script" path="res://ui/scenario.gd" id="2_w842f"]
+[ext_resource type="Theme" uid="uid://3t61g0061mea" path="res://assets/theme.tres" id="1_3inkm"]
+[ext_resource type="Script" path="res://ui/scenario/scenario.gd" id="2_533ss"]
 
 [node name="PanelContainer" type="PanelContainer"]
 custom_minimum_size = Vector2(128, 0)
 offset_right = 128.0
 offset_bottom = 71.0
-theme = ExtResource("1_v0fql")
-script = ExtResource("2_w842f")
+theme = ExtResource("1_3inkm")
+script = ExtResource("2_533ss")
 
 [node name="MarginContainer" type="MarginContainer" parent="."]
 layout_mode = 2

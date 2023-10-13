@@ -1,21 +1,47 @@
 extends Node
 
-const NULL_COORDS = Vector2i(-9999, -9999)
-const NULL_POS = Vector2(-9999, -9999)
+## World constants
 const TILE_SIZE = 24
 const WORLD_CENTER = Vector2i(512 / 24 / 2, 288 / 24 / 2)
 const WORLD_BOUNDS = Vector2i(15, 10)
 const WORLD_CAMERA_BOUNDS = Vector2i(35, 25)
+const NEIGHBORS = [
+	TileSet.CELL_NEIGHBOR_RIGHT_SIDE,
+	TileSet.CELL_NEIGHBOR_BOTTOM_LEFT_SIDE,
+	TileSet.CELL_NEIGHBOR_BOTTOM_RIGHT_SIDE,
+	TileSet.CELL_NEIGHBOR_LEFT_SIDE,
+	TileSet.CELL_NEIGHBOR_TOP_LEFT_SIDE,
+	TileSet.CELL_NEIGHBOR_TOP_RIGHT_SIDE
+]
 
-const TILE_GRASS = 1
-const TILE_WATER = 0
+const NO_BORDERS = {
+	TileSet.CELL_NEIGHBOR_RIGHT_SIDE: false,
+	TileSet.CELL_NEIGHBOR_BOTTOM_LEFT_SIDE: false,
+	TileSet.CELL_NEIGHBOR_BOTTOM_RIGHT_SIDE: false,
+	TileSet.CELL_NEIGHBOR_LEFT_SIDE: false,
+	TileSet.CELL_NEIGHBOR_TOP_LEFT_SIDE: false,
+	TileSet.CELL_NEIGHBOR_TOP_RIGHT_SIDE: false
+}
 
+## Game constants
+const REGION_MAX_SIZE = 6
+const SINK_GRACE_PERIOD = 1
+const MIN_TEAMS = 2  ## including player
+const MAX_TEAMS = 7
 const BLENDING_MODULATE_ALPHA = 0.6
 
-enum Layer { WATER, GRASS, P1, P2, P3 }
+## Null values
+const NULL_COORDS = Vector2i(-9999, -9999)
+const NULL_POS = Vector2(-9999, -9999)
+const NULL_REGION = -9999
+const NULL_TEAM = 0
 
-const NO_TEAM = 0
-const REGION_MAX_SIZE = 6
+## Game enums
+enum GameMode { Play, MapEditor, Scenario }
+enum Highlight { Red, Green, None }
+enum Action { None, Move, Sacrifice }
+
+## Teams
 const TEAM_COLORS = [
 	0xffffffff,  # no team
 	0x180fbdff,  # blue
@@ -38,49 +64,11 @@ const TEAM_NAMES = [
 	"Grey Coalition"
 ]
 
-enum GameMode { Play, MapEditor, Scenario }
-
-enum Highlight { Red, Green, None }
-
+## Timers
 const TURN_TIME = 0.3
 const MENU_WAIT_TIME = 1
 
-const MIN_TEAMS = 2  ## including player
-const MAX_TEAMS = 7
-
-const NEIGHBORS = [
-	TileSet.CELL_NEIGHBOR_RIGHT_SIDE,
-	TileSet.CELL_NEIGHBOR_BOTTOM_LEFT_SIDE,
-	TileSet.CELL_NEIGHBOR_BOTTOM_RIGHT_SIDE,
-	TileSet.CELL_NEIGHBOR_LEFT_SIDE,
-	TileSet.CELL_NEIGHBOR_TOP_LEFT_SIDE,
-	TileSet.CELL_NEIGHBOR_TOP_RIGHT_SIDE
-]
-
-const NO_BORDERS = {
-	TileSet.CELL_NEIGHBOR_RIGHT_SIDE: false,
-	TileSet.CELL_NEIGHBOR_BOTTOM_LEFT_SIDE: false,
-	TileSet.CELL_NEIGHBOR_BOTTOM_RIGHT_SIDE: false,
-	TileSet.CELL_NEIGHBOR_LEFT_SIDE: false,
-	TileSet.CELL_NEIGHBOR_TOP_LEFT_SIDE: false,
-	TileSet.CELL_NEIGHBOR_TOP_RIGHT_SIDE: false
-}
-
-const FULL_BORDERS = {
-	TileSet.CELL_NEIGHBOR_RIGHT_SIDE: true,
-	TileSet.CELL_NEIGHBOR_BOTTOM_LEFT_SIDE: true,
-	TileSet.CELL_NEIGHBOR_BOTTOM_RIGHT_SIDE: true,
-	TileSet.CELL_NEIGHBOR_LEFT_SIDE: true,
-	TileSet.CELL_NEIGHBOR_TOP_LEFT_SIDE: true,
-	TileSet.CELL_NEIGHBOR_TOP_RIGHT_SIDE: true
-}
-
-const NO_REGION = -99
-
-enum Action { NONE, MOVE, SACRIFICE }
-
-const SINK_GRACE_PERIOD = 1
-
+## Scenarios
 const scenarios = [
 	{
 		"title": "Humble Beginnings",
@@ -89,7 +77,8 @@ const scenarios = [
 	},
 	{
 		"title": "The Trident",
-		"description": "Neptune wants to test your ability to conquer an island with a single chokepoint.",
+		"description":
+		"Neptune wants to test your ability to conquer an island with a single chokepoint.",
 		"path": "trident.json"
 	},
 	{

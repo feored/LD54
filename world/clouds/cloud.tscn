@@ -1,19 +1,19 @@
 [gd_scene load_steps=3 format=3 uid="uid://466mjj4wbed0"]
 
-[ext_resource type="Texture2D" uid="uid://baoq7p6das0s3" path="res://assets/clouds/cloud_2.png" id="1_d4k68"]
-[ext_resource type="Script" path="res://world/cloud.gd" id="2_e5vbj"]
+[ext_resource type="Texture2D" uid="uid://baoq7p6das0s3" path="res://assets/clouds/cloud_2.png" id="1_hpx3l"]
+[ext_resource type="Script" path="res://world/clouds/cloud.gd" id="2_7sf5u"]
 
 [node name="Cloud" type="Sprite2D"]
 self_modulate = Color(1, 1, 1, 0.878431)
 light_mask = 0
 z_index = 10
-texture = ExtResource("1_d4k68")
-script = ExtResource("2_e5vbj")
+texture = ExtResource("1_hpx3l")
+script = ExtResource("2_7sf5u")
 
 [node name="Shadow" type="Sprite2D" parent="."]
 self_modulate = Color(0, 0, 0, 0.352941)
 z_index = 1
 z_as_relative = false
 scale = Vector2(1.25, 1.25)
-texture = ExtResource("1_d4k68")
+texture = ExtResource("1_hpx3l")
 offset = Vector2(0, 50)

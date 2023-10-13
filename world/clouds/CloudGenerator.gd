@@ -1,5 +1,5 @@
 extends Node2D
-var cloudPrefab = preload("res://world/cloud.tscn")
+var cloudPrefab = preload("res://world/clouds/cloud.tscn")
 
 const cloud_textures = [
 	preload("res://assets/clouds/cloud_1.png"),

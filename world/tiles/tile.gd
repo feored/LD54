@@ -15,29 +15,29 @@ class_name Tile
 
 var coords: Vector2i = Vector2i(0, 0)
 var team = 0
-var tile_type: int = Constants.TILE_GRASS
 var init_position: Vector2 = Vector2(0, 0)
 var borders = Constants.NO_BORDERS.duplicate()
-var region: int = Constants.NO_REGION
+var region: int = Constants.NULL_REGION
 var tween = null
 var lighter_color
 var blink_state = 0
+var delete_callable = null
 
 func init_cell(
 	init_coords: Vector2,
 	init_pos: Vector2,
-	init_tile_type: int,
 	init_team: int,
-	init_borders: Dictionary = Constants.NO_BORDERS.duplicate()
+	init_borders: Dictionary = Constants.NO_BORDERS.duplicate(),
+	init_delete_callable = null
 ):
 	self.coords = init_coords
-	self.tile_type = init_tile_type
 	self.team = init_team
 	self.init_position = init_pos
 	self.borders = init_borders
 	var team_color = Color(Constants.TEAM_COLORS[self.team])
 	team_color.a = Constants.BLENDING_MODULATE_ALPHA
 	self.lighter_color = Color.hex(0xffffffff).blend(team_color)
+	self.delete_callable = init_delete_callable
 
 func _ready():
 	self.position = init_position
@@ -53,6 +53,10 @@ func update_cell():
 
 func delete():
 	animation_player.play("sink")
+
+func delete_from_world():
+	self.delete_callable.call(self.coords)
+	self.queue_free()
 
 func set_team(new_team: int):
 	self.team = new_team

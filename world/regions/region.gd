@@ -1,16 +1,16 @@
 extends Node
 class_name Region
 
-var id: int = Constants.NO_REGION
-var team: int = Constants.NO_TEAM
+var id: int = Constants.NULL_REGION
+var team: int = Constants.NULL_TEAM
 var tiles: Dictionary = {}
 var units = 0
 var label = null
 
 
-func _init(id):
+func _init(init_id):
 	self.units = 0
-	self.id = id
+	self.id = init_id
 
 
 func _ready():
@@ -38,8 +38,8 @@ func update_display():
 	self.label.set_text(str(self.units))
 
 
-func set_team(team):
-	self.team = team
+func set_team(init_team):
+	self.team = init_team
 	for tile in tiles.values():
 		tile.set_team(team)
 
@@ -58,8 +58,8 @@ func generate_units():
 	update_display()
 
 
-func set_units(units):
-	self.units = units
+func set_units(init_units):
+	self.units = init_units
 	update_display()
 
 

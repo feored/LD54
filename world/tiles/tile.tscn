@@ -1,14 +1,14 @@
 [gd_scene load_steps=12 format=3 uid="uid://d2tu4itgwxsmx"]
 
-[ext_resource type="Texture2D" uid="uid://c2jmky1u16cef" path="res://assets/tiles/grass.png" id="1_mvuo3"]
-[ext_resource type="Script" path="res://world/tile.gd" id="2_twet5"]
-[ext_resource type="Texture2D" uid="uid://bvs77v2s4itrk" path="res://assets/tiles/southeast.png" id="4_do4eg"]
-[ext_resource type="Texture2D" uid="uid://bgixgnfsvo7b8" path="res://assets/tiles/west.png" id="4_ngai6"]
-[ext_resource type="Texture2D" uid="uid://lscvgckqsnqh" path="res://assets/tiles/northwest.png" id="5_bmtdw"]
-[ext_resource type="Texture2D" uid="uid://b7hnvo0cyyf8t" path="res://assets/tiles/southwest.png" id="5_sao3d"]
-[ext_resource type="Texture2D" uid="uid://ce2xmckrhuymw" path="res://assets/tiles/east.png" id="6_knshb"]
-[ext_resource type="Texture2D" uid="uid://dskvw8n0ialxq" path="res://assets/tiles/northeast.png" id="7_gg2ky"]
-[ext_resource type="Texture2D" uid="uid://bw3yv7wot470b" path="res://assets/tiles/barred.png" id="9_lgyl4"]
+[ext_resource type="Texture2D" uid="uid://c2jmky1u16cef" path="res://assets/tiles/grass.png" id="1_ritjv"]
+[ext_resource type="Script" path="res://world/tiles/tile.gd" id="2_m7fn7"]
+[ext_resource type="Texture2D" uid="uid://bvs77v2s4itrk" path="res://assets/tiles/southeast.png" id="3_7ni8f"]
+[ext_resource type="Texture2D" uid="uid://b7hnvo0cyyf8t" path="res://assets/tiles/southwest.png" id="4_mnixl"]
+[ext_resource type="Texture2D" uid="uid://ce2xmckrhuymw" path="res://assets/tiles/east.png" id="5_fyxxv"]
+[ext_resource type="Texture2D" uid="uid://dskvw8n0ialxq" path="res://assets/tiles/northeast.png" id="6_krmdv"]
+[ext_resource type="Texture2D" uid="uid://bgixgnfsvo7b8" path="res://assets/tiles/west.png" id="7_j7cmw"]
+[ext_resource type="Texture2D" uid="uid://lscvgckqsnqh" path="res://assets/tiles/northwest.png" id="8_rltnp"]
+[ext_resource type="Texture2D" uid="uid://bw3yv7wot470b" path="res://assets/tiles/barred.png" id="9_0qenw"]
 
 [sub_resource type="Animation" id="Animation_824x5"]
 resource_name = "sink"
@@ -23,7 +23,7 @@ tracks/0/keys = {
 "transitions": PackedFloat32Array(1),
 "values": [{
 "args": [],
-"method": &"queue_free"
+"method": &"delete_from_world"
 }]
 }
 tracks/1/type = "value"
@@ -45,31 +45,31 @@ _data = {
 }
 
 [node name="tile" type="Sprite2D"]
-texture = ExtResource("1_mvuo3")
-script = ExtResource("2_twet5")
+texture = ExtResource("1_ritjv")
+script = ExtResource("2_m7fn7")
 
 [node name="southeast" type="Sprite2D" parent="."]
-texture = ExtResource("4_do4eg")
+texture = ExtResource("3_7ni8f")
 
 [node name="southwest" type="Sprite2D" parent="."]
-texture = ExtResource("5_sao3d")
+texture = ExtResource("4_mnixl")
 
 [node name="east" type="Sprite2D" parent="."]
-texture = ExtResource("6_knshb")
+texture = ExtResource("5_fyxxv")
 
 [node name="northeast" type="Sprite2D" parent="."]
-texture = ExtResource("7_gg2ky")
+texture = ExtResource("6_krmdv")
 
 [node name="west" type="Sprite2D" parent="."]
-texture = ExtResource("4_ngai6")
+texture = ExtResource("7_j7cmw")
 
 [node name="northwest" type="Sprite2D" parent="."]
-texture = ExtResource("5_bmtdw")
+texture = ExtResource("8_rltnp")
 
 [node name="barred" type="Sprite2D" parent="."]
 visible = false
 self_modulate = Color(1, 1, 1, 0.498039)
-texture = ExtResource("9_lgyl4")
+texture = ExtResource("9_0qenw")
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
 libraries = {

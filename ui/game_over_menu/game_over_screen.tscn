@@ -1,6 +1,6 @@
 [gd_scene load_steps=3 format=3 uid="uid://dsh71e5oqgdqk"]
 
-[ext_resource type="Script" path="res://ui/GameOverScreen.gd" id="1_rquqj"]
+[ext_resource type="Script" path="res://ui/game_over_menu/GameOverScreen.gd" id="1_rquqj"]
 [ext_resource type="Theme" uid="uid://3t61g0061mea" path="res://assets/theme.tres" id="2_mrh18"]
 
 [node name="GameOverScreen" type="CanvasLayer"]

@@ -1,16 +1,16 @@
 extends Node2D
 
-var turnIndicatorPrefab = preload("res://ui/turn_indicator.tscn")
-var escMenuPrefab = preload("res://scenes/esc_menu.tscn")
-var gameOverScreenPrefab = preload("res://scenes/game_over_screen.tscn")
+var turnIndicatorPrefab = preload("res://ui/turn_indicator/turn_indicator.tscn")
+var escMenuPrefab = preload("res://ui/esc_menu/esc_menu.tscn")
+var gameOverScreenPrefab = preload("res://ui/game_over_menu/game_over_screen.tscn")
 
 @onready var UI = $"%UI"
 @onready var SelectionUI = $"%SelectionUI"
 @onready var MapEditorUI = $"%MapEditorUI"
-@onready var world = $"%World"
+@onready var world = $"World"
 @onready var turnContainer = $"%TurnContainer"
 @onready var turnLabel = $"%TurnLabel"
-@onready var messager = $"%Message"
+@onready var messenger = $"%Message"
 @onready var endTurnButton = $"%TurnButton"
 @onready var sacrificeButton = $"%SacrificeButton"
 @onready var sacrificeLabel = $"%SacrificeLabel"
@@ -52,14 +52,13 @@ func to_team_id(team_id):
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	Settings.input_locked = false
-	self.world.init_world()
+	self.world.init(Callable(self.messenger, "set_message"))
 	match Settings.game_mode:
 		Constants.GameMode.Play:
 			UI.visible = false
 			SelectionUI.visible = true
 			MapEditorUI.visible = false
 			self.gen_world()
-			self.add_teams()
 		Constants.GameMode.MapEditor:
 			UI.visible = false
 			SelectionUI.visible = false
@@ -134,7 +133,7 @@ func clear_sacrifice():
 	self.sacrifice_hovered_tile = Constants.NULL_COORDS
 
 func sacrifice_tile(coords):
-	var sink_action = Action.new(self.teams[self.player_team_index], Constants.Action.SACRIFICE, 0, 0, coords )
+	var sink_action = Action.new(self.teams[self.player_team_index], Constants.Action.Sacrifice, 0, 0, coords )
 	actions_history.append(sink_action)
 	self.apply_action(sink_action)
 
@@ -225,7 +224,7 @@ func check_win_condition():
 	for team in self.teams:
 		if not regions_left(team) and team not in eliminated_teams:
 			eliminated_teams.append(team)
-			messager.set_message(Constants.TEAM_NAMES[team] + " has been wiped from the island!")
+			messenger.set_message(Constants.TEAM_NAMES[team] + " has been wiped from the island!")
 	var teams_alive = get_teams_alive()
 	if self.teams[self.player_team_index] not in teams_alive and teams_alive.size() > 1 and not spectating:
 		var game_won = self.teams[self.player_team_index] in teams_alive
@@ -271,7 +270,7 @@ func get_teams_alive():
 func bots_play():
 	var bot_action = null
 	var bot = self.bots[to_team_id(self.turn)]
-	while bot_action == null or bot_action.action != Constants.Action.NONE:
+	while bot_action == null or bot_action.action != Constants.Action.None:
 		bot_action = bot.play_turn(self.world)
 		await apply_action(bot_action)
 		self.actions_history.append(bot_action)
@@ -304,11 +303,11 @@ func on_tile_clicked(new_clicked_tile):
 			return
 		else:
 			if self.world.regions[selected_region].units > 1:
-				var move = Action.new(self.teams[self.player_team_index], Constants.Action.MOVE, selected_region, new_clicked_tile.region )
+				var move = Action.new(self.teams[self.player_team_index], Constants.Action.Move, selected_region, new_clicked_tile.region )
 				actions_history.append(move)
 				self.apply_action(move)
 			else:
-				messager.set_message("My lord, we cannot leave this region undefended!")
+				messenger.set_message("My lord, we cannot leave this region undefended!")
 			clear_selected_region()
 			
 	
@@ -357,11 +356,11 @@ func generate_units(team):
 
 func apply_action(action : Action):
 	match action.action:
-		Constants.Action.MOVE:
+		Constants.Action.Move:
 					await self.world.move_units(action.region_from, action.region_to, action.team)
-		Constants.Action.SACRIFICE:
+		Constants.Action.Sacrifice:
 			await self.world.sacrifice_tile(action.tile, action)
-		Constants.Action.NONE:
+		Constants.Action.None:
 			pass
 		_:
 			print("Unknown action: ", action.action)
@@ -425,7 +424,7 @@ func load_tiles(tiles):
 		var borders = {}
 		for border_str in parsed_tile.borders:
 			borders[int(border_str)] = parsed_tile.borders[border_str]
-		self.world.add_tile(coords, parsed_tile.team, borders)
+		self.world.spawn_cell(coords, parsed_tile.team, borders)
 
 func load_regions(regions):
 	for region_id_str in regions:
@@ -439,7 +438,7 @@ func load_regions(regions):
 		region.set_units(saved_region.units)
 		self.world.regions[region_id] = region
 		self.world.region_update_label(region)
-		if region.team != Constants.NO_TEAM:
+		if region.team != Constants.NULL_TEAM:
 			region.generate_units()
 
 func _on_load_btn_pressed():

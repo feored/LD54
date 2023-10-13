@@ -1,0 +1,62 @@
+[gd_scene load_steps=5 format=3 uid="uid://b8opucxucl032"]
+
+[ext_resource type="TileSet" uid="uid://dswtp6vpo8tyt" path="res://world/tiles/tileset.tres" id="1_tacgr"]
+[ext_resource type="Script" path="res://world/camera/Camera2D.gd" id="2_cguu5"]
+[ext_resource type="Script" path="res://world/world.gd" id="2_priir"]
+[ext_resource type="Script" path="res://world/clouds/CloudGenerator.gd" id="3_55hig"]
+
+[node name="World" type="TileMap"]
+tile_set = ExtResource("1_tacgr")
+format = 2
+layer_0/name = "Water"
+layer_0/z_index = -999
+layer_1/name = "Land"
+layer_1/enabled = true
+layer_1/modulate = Color(1, 1, 1, 1)
+layer_1/y_sort_enabled = false
+layer_1/y_sort_origin = 0
+layer_1/z_index = 0
+layer_1/tile_data = PackedInt32Array()
+layer_2/name = "P1"
+layer_2/enabled = true
+layer_2/modulate = Color(0.662745, 0, 0.811765, 1)
+layer_2/y_sort_enabled = false
+layer_2/y_sort_origin = 0
+layer_2/z_index = 0
+layer_2/tile_data = PackedInt32Array()
+layer_3/name = "P2"
+layer_3/enabled = true
+layer_3/modulate = Color(0, 0.498039, 0.752941, 1)
+layer_3/y_sort_enabled = false
+layer_3/y_sort_origin = 0
+layer_3/z_index = 0
+layer_3/tile_data = PackedInt32Array()
+layer_4/name = "P3"
+layer_4/enabled = true
+layer_4/modulate = Color(0.32549, 0.45098, 0, 1)
+layer_4/y_sort_enabled = false
+layer_4/y_sort_origin = 0
+layer_4/z_index = 0
+layer_4/tile_data = PackedInt32Array()
+script = ExtResource("2_priir")
+
+[node name="MainCamera" type="Camera2D" parent="."]
+unique_name_in_owner = true
+anchor_mode = 0
+limit_left = -100000
+limit_top = -100000
+limit_right = 100000
+limit_bottom = 100000
+position_smoothing_enabled = true
+drag_left_margin = 0.9
+drag_top_margin = 0.9
+drag_right_margin = 0.9
+drag_bottom_margin = 0.9
+script = ExtResource("2_cguu5")
+
+[node name="RegionLabels" type="CanvasLayer" parent="."]
+unique_name_in_owner = true
+follow_viewport_enabled = true
+
+[node name="CloudGenerator" type="Node2D" parent="."]
+script = ExtResource("3_55hig")

@@ -1,11 +1,8 @@
-[gd_scene load_steps=12 format=3 uid="uid://ceoqtlfuehsvd"]
+[gd_scene load_steps=9 format=3 uid="uid://ceoqtlfuehsvd"]
 
-[ext_resource type="Script" path="res://world/gen.gd" id="1_bg6dg"]
-[ext_resource type="Script" path="res://scenes/main.gd" id="1_osaxm"]
-[ext_resource type="TileSet" uid="uid://dswtp6vpo8tyt" path="res://scenes/tileset.tres" id="2_s0l6b"]
-[ext_resource type="Script" path="res://scenes/camera/Camera2D.gd" id="3_x3nk1"]
+[ext_resource type="Script" path="res://scenes/main/main.gd" id="1_osaxm"]
+[ext_resource type="PackedScene" uid="uid://b8opucxucl032" path="res://world/world.tscn" id="2_unfjm"]
 [ext_resource type="Theme" uid="uid://3t61g0061mea" path="res://assets/theme.tres" id="5_5yrco"]
-[ext_resource type="Script" path="res://scenes/CloudGenerator.gd" id="7_10s8g"]
 [ext_resource type="Script" path="res://ui/Message.gd" id="7_y3mfw"]
 [ext_resource type="Texture2D" uid="uid://bxqvi5615lj3b" path="res://assets/trident.png" id="8_gw5hb"]
 
@@ -19,62 +16,7 @@ bg_color = Color(0.0784314, 0.0745098, 0.0588235, 1)
 [node name="Main" type="Node2D"]
 script = ExtResource("1_osaxm")
 
-[node name="World" type="TileMap" parent="."]
-unique_name_in_owner = true
-tile_set = ExtResource("2_s0l6b")
-format = 2
-layer_0/name = "Water"
-layer_0/z_index = -999
-layer_1/name = "Land"
-layer_1/enabled = true
-layer_1/modulate = Color(1, 1, 1, 1)
-layer_1/y_sort_enabled = false
-layer_1/y_sort_origin = 0
-layer_1/z_index = 0
-layer_1/tile_data = PackedInt32Array()
-layer_2/name = "P1"
-layer_2/enabled = true
-layer_2/modulate = Color(0.662745, 0, 0.811765, 1)
-layer_2/y_sort_enabled = false
-layer_2/y_sort_origin = 0
-layer_2/z_index = 0
-layer_2/tile_data = PackedInt32Array()
-layer_3/name = "P2"
-layer_3/enabled = true
-layer_3/modulate = Color(0, 0.498039, 0.752941, 1)
-layer_3/y_sort_enabled = false
-layer_3/y_sort_origin = 0
-layer_3/z_index = 0
-layer_3/tile_data = PackedInt32Array()
-layer_4/name = "P3"
-layer_4/enabled = true
-layer_4/modulate = Color(0.32549, 0.45098, 0, 1)
-layer_4/y_sort_enabled = false
-layer_4/y_sort_origin = 0
-layer_4/z_index = 0
-layer_4/tile_data = PackedInt32Array()
-script = ExtResource("1_bg6dg")
-
-[node name="MainCamera" type="Camera2D" parent="World"]
-unique_name_in_owner = true
-anchor_mode = 0
-limit_left = -100000
-limit_top = -100000
-limit_right = 100000
-limit_bottom = 100000
-position_smoothing_enabled = true
-drag_left_margin = 0.9
-drag_top_margin = 0.9
-drag_right_margin = 0.9
-drag_bottom_margin = 0.9
-script = ExtResource("3_x3nk1")
-
-[node name="RegionLabels" type="CanvasLayer" parent="World"]
-unique_name_in_owner = true
-follow_viewport_enabled = true
-
-[node name="CloudGenerator" type="Node2D" parent="."]
-script = ExtResource("7_10s8g")
+[node name="World" parent="." instance=ExtResource("2_unfjm")]
 
 [node name="UI" type="CanvasLayer" parent="."]
 unique_name_in_owner = true

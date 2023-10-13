@@ -1,6 +1,6 @@
 [gd_scene load_steps=3 format=3 uid="uid://pu46mkcjdswb"]
 
-[ext_resource type="Script" path="res://ui/EscMenu.gd" id="1_m4juf"]
+[ext_resource type="Script" path="res://ui/esc_menu/EscMenu.gd" id="1_m4juf"]
 [ext_resource type="Theme" uid="uid://3t61g0061mea" path="res://assets/theme.tres" id="2_pn4ld"]
 
 [node name="EscMenu" type="CanvasLayer"]
