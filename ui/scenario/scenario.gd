@@ -23,7 +23,7 @@ func init(scenario):
 func _on_button_pressed():
 	Settings.game_mode = Constants.GameMode.Scenario
 	Settings.current_map = self.path
-	get_tree().change_scene_to_file("res://scenes/main/main.tscn")
+	await SceneTransition.change_scene("res://scenes/main/main.tscn")
 
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.

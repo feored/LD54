@@ -20,6 +20,7 @@ config/icon="res://assets/icon.png"
 Constants="*res://scripts/constants.gd"
 Utils="*res://scripts/utils.gd"
 Settings="*res://scripts/settings.gd"
+SceneTransition="*res://scenes/scene_transition.tscn"
 
 [display]
 

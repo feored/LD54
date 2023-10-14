@@ -59,7 +59,7 @@ func _process(_delta):
 
 func _on_play_btn_pressed():
 	Settings.game_mode = Constants.GameMode.Play
-	get_tree().change_scene_to_file("res://scenes/main/main.tscn")
+	await SceneTransition.change_scene("res://scenes/main/main.tscn")
 
 
 func _on_play_scenario_btn_pressed():
