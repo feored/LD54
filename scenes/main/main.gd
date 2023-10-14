@@ -482,4 +482,4 @@ func _on_save_btn_pressed():
 	save()
 
 func _on_center_btn_pressed():
-	await self.world.camera.move_bounded(self.world.coords_to_pos(Constants.WORLD_CENTER), 5)
+	await self.world.camera.move_smoothed(self.world.coords_to_pos(Constants.WORLD_CENTER), 5)

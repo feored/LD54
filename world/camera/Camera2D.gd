@@ -4,13 +4,18 @@ extends Camera2D
 var active = true
 
 const edge = 24
-const step = 5
 const limit = 24*8
 
 
 @onready var viewport_size = get_viewport().content_scale_size
 var start_position = Constants.NULL_POS
 var is_dragging = false
+
+
+
+func _ready():
+	self.position_smoothing_enabled = false
+	self.position_smoothing_speed = 5
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(_delta):
@@ -21,14 +26,17 @@ func move():
 	if not active:
 		return
 	var local_mouse_pos = get_local_mouse_position()
-	if local_mouse_pos.x < start_position.x and position.x < limit:
-		position.x += step
-	if local_mouse_pos.x > start_position.x and position.x > -limit:
-		position.x -= step
-	if local_mouse_pos.y < start_position.y and position.y < limit:
-		position.y += step
-	if local_mouse_pos.y > start_position.y and position.y > -limit:
-		position.y -= step
+	var new_position = position + (start_position - local_mouse_pos)
+	if new_position.x < -limit:
+		new_position.x = -limit
+	elif new_position.x > limit:
+		new_position.x = limit
+	if new_position.y < -limit:
+		new_position.y = -limit
+	elif new_position.y > limit:
+		new_position.y = limit
+	self.position = new_position
+	return local_mouse_pos
 
 func _unhandled_input(event):
 	if Settings.input_locked:
@@ -42,14 +50,15 @@ func _unhandled_input(event):
 				is_dragging = false
 	elif event is InputEventMouseMotion:
 		if start_position != Constants.NULL_POS:
-			move()
-			start_position = get_local_mouse_position()
+			start_position = move()
 			is_dragging = true
 
-func move_bounded(target, precision = 1):
+func move_smoothed(target, precision = 1):
 	if not active:
 		return
+	self.position_smoothing_enabled = true
 	self.position = target - Vector2(self.viewport_size/2)
 	var arrived_center = target
 	while abs((arrived_center - get_screen_center_position()).length_squared()) > precision:
 		await Utils.wait(0.1)
+	self.position_smoothing_enabled = false

@@ -171,7 +171,7 @@ func delete_cell(coords_array: Array, action = null):
 			self.messenger.call("%s begs the gods to strike down the land of %s..." % [team_name, enemy_team_name])
 	else:
 		self.messenger.call("A patch of land sinks somewhere...")
-	await self.camera.move_bounded(self.coords_to_pos(coords_array[0]), 5)
+	await self.camera.move_smoothed(self.coords_to_pos(coords_array[0]), 5)
 	for coords in coords_array:
 		await self.tiles[coords].delete()
 
@@ -280,7 +280,7 @@ func move_units(region_from : int, region_to: int, team: int):
 		else:
 			var enemy_team_name = Constants.TEAM_NAMES[self.regions[region_to].team] 
 			self.messenger.call("%s is attacking a neighboring %s region with %s troops!" % [team_name, enemy_team_name, moved_units])
-		await self.camera.move_bounded(self.coords_to_pos(self.regions[region_from].center_tile()), 5)
+		await self.camera.move_smoothed(self.coords_to_pos(self.regions[region_from].center_tile()), 5)
 	
 	if regions[region_from].team == regions[region_to].team:
 		regions[region_from].set_units(1)
