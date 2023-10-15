@@ -53,6 +53,7 @@ func to_team_id(team_id):
 func _ready():
 	Settings.input_locked = false
 	self.world.init(Callable(self.messenger, "set_message"))
+	Music.play_track(Music.Track.World)
 	match Settings.game_mode:
 		Constants.GameMode.Play:
 			UI.visible = false

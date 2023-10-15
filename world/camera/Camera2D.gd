@@ -15,12 +15,22 @@ var is_dragging = false
 
 func _ready():
 	self.position_smoothing_enabled = false
-	self.position_smoothing_speed = 5
+	self.position_smoothing_speed = Constants.CAMERA_SPEED
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
-func _process(_delta):
-	pass
+func _physics_process(_delta):
+	if not active or Settings.input_locked:
+		return
+	if Input.is_action_pressed("map_left"):
+		position = Vector2(position.x - Constants.CAMERA_SPEED/2, position.y)
+	elif Input.is_action_pressed("map_right"):
+		position = Vector2(position.x + Constants.CAMERA_SPEED/2, position.y)
+	if Input.is_action_pressed("map_up"):
+		position = Vector2(position.x, position.y  - Constants.CAMERA_SPEED/2)
+	elif Input.is_action_pressed("map_down"):
+		position = Vector2(position.x,  position.y + Constants.CAMERA_SPEED/2)
 	
+
 
 func move():
 	if not active:
@@ -52,6 +62,7 @@ func _unhandled_input(event):
 		if start_position != Constants.NULL_POS:
 			start_position = move()
 			is_dragging = true
+
 
 func move_smoothed(target, precision = 1):
 	if not active:

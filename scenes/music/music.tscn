@@ -1,0 +1,10 @@
+[gd_scene load_steps=3 format=3 uid="uid://d1s1bwqcw6xdk"]
+
+[ext_resource type="AudioStream" uid="uid://djgipihymu1df" path="res://assets/music/pirate_4.ogg" id="1_1nueb"]
+[ext_resource type="Script" path="res://scenes/music/music.gd" id="2_4a7we"]
+
+[node name="Music" type="AudioStreamPlayer"]
+process_mode = 3
+stream = ExtResource("1_1nueb")
+bus = &"Music"
+script = ExtResource("2_4a7we")

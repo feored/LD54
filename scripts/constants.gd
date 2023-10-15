@@ -29,6 +29,7 @@ const SINK_GRACE_PERIOD = 1
 const MIN_TEAMS = 2  ## including player
 const MAX_TEAMS = 7
 const BLENDING_MODULATE_ALPHA = 0.6
+const CAMERA_SPEED = 5
 
 ## Null values
 const NULL_COORDS = Vector2i(-9999, -9999)

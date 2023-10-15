@@ -12,6 +12,9 @@ colors = PackedColorArray(0, 0, 0, 1)
 gradient = SubResource("Gradient_a3was")
 width = 16
 
+[sub_resource type="Animation" id="Animation_am2pm"]
+length = 0.001
+
 [sub_resource type="Animation" id="Animation_sx5xy"]
 resource_name = "fade_out"
 length = 0.2
@@ -27,9 +30,6 @@ tracks/0/keys = {
 "update": 0,
 "values": [Color(1, 1, 1, 0), Color(1, 1, 1, 1)]
 }
-
-[sub_resource type="Animation" id="Animation_am2pm"]
-length = 0.001
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_lbgph"]
 _data = {
