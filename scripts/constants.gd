@@ -3,7 +3,7 @@ extends Node
 ## World constants
 const TILE_SIZE = 24
 const WORLD_CENTER = Vector2i(512 / 24 / 2, 288 / 24 / 2)
-const WORLD_BOUNDS = Vector2i(15, 10)
+const WORLD_BOUNDS = Vector2i(15, 15)
 const WORLD_CAMERA_BOUNDS = Vector2i(35, 25)
 const NEIGHBORS = [
 	TileSet.CELL_NEIGHBOR_RIGHT_SIDE,
@@ -30,6 +30,9 @@ const MIN_TEAMS = 2  ## including player
 const MAX_TEAMS = 7
 const BLENDING_MODULATE_ALPHA = 0.6
 const CAMERA_SPEED = 5
+const ISLAND_SIZE_DEFAULT = 0.25
+const ISLAND_SIZE_MIN = 0.1
+const ISLAND_SIZE_MAX = 0.5
 
 ## Null values
 const NULL_COORDS = Vector2i(-9999, -9999)

@@ -2,12 +2,17 @@ extends Node2D
 
 
 @onready var world = $"World"
+@onready var island_size_slider = $"%IslandSizeSlider"
 var teams = []
 var selected_team_num = 7
+var island_size = Constants.ISLAND_SIZE_DEFAULT
 
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
+	island_size_slider.min_value = Constants.ISLAND_SIZE_MIN
+	island_size_slider.max_value = Constants.ISLAND_SIZE_MAX
+	island_size_slider.value = island_size
 	self.world.init(Callable())
 	self.gen_world()
 
@@ -28,7 +33,7 @@ func add_teams():
 
 func gen_world():
 	self.world.clear_island()
-	self.world.generate_island()
+	self.world.generate_island(self.island_size)
 	self.add_teams()
 
 
@@ -53,3 +58,12 @@ func get_save_data():
 func _on_play_btn_pressed():
 	Settings.current_map = get_save_data()
 	await SceneTransition.change_scene(SceneTransition.SCENE_MAIN_GAME)
+
+
+func _on_island_size_slider_value_changed(value):
+	island_size = value
+
+
+func _on_island_size_slider_drag_ended(value_changed):
+	if value_changed:
+		self.gen_world()

@@ -234,8 +234,6 @@ func on_tile_clicked(new_clicked_tile):
 			else:
 				messenger.set_message("My lord, we cannot leave this region undefended!")
 			clear_selected_region()
-			
-	
 
 func next_turn():
 	self.world.clear_regions_used()
