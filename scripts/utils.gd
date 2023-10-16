@@ -87,3 +87,6 @@ func to_map_object(tiles, regions, teams):
 
 func to_team_id(team_id):
 	return team_id + 1
+
+func distance(a, b):
+	return abs(a.x - b.x) + abs(a.y - b.y)

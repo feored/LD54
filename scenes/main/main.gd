@@ -46,7 +46,7 @@ func _ready():
 	self.load_map()
 	self.add_teams()
 	self.start_game()
-	
+	self.world.camera.move_instant(self.world.map_to_local(closest_player_tile_coords()))
 
 func update_sacrifices_display():
 	self.sacrificeLabel.set_text(str(sacrifices_available[self.teams[self.player_team_index]]))
@@ -141,6 +141,22 @@ func _unhandled_input(event):
 func _on_turn_button_pressed():
 	self.endTurnButton.disabled = true
 	await next_turn()
+	self.world.camera.move_smoothed(self.world.map_to_local(closest_player_tile_coords()), 5)
+	self.endTurnButton.disabled = false
+
+func closest_player_tile_coords():
+	var closest_player_tile = Vector2i(100000, 100000)
+	var closest_tile_distance = 100000
+	var camera_tile = self.world.local_to_map(self.world.camera.position)
+	for region in self.world.regions:
+		if self.world.regions[region].team == self.teams[self.player_team_index]:
+			var center_tile = self.world.regions[region].center_tile()
+			var distance = Utils.distance(center_tile, camera_tile)
+			if distance < closest_tile_distance:
+				closest_player_tile = center_tile
+				closest_tile_distance = distance
+	return closest_player_tile
+	
 	
 func check_global_turn_over():
 	return self.turn == self.teams.size() - 1
@@ -258,7 +274,6 @@ func next_turn():
 	else:
 		self.sacrificeButton.disabled = false
 	Settings.input_locked = false
-	self.endTurnButton.disabled = false
 	self.turnLabel.set_text("Turn: " + str(self.global_turn))
 	
 

@@ -4,7 +4,7 @@ extends Node
 const TILE_SIZE = 24
 const WORLD_CENTER = Vector2i(512 / 24 / 2, 288 / 24 / 2)
 const WORLD_BOUNDS = Vector2i(15, 15)
-const WORLD_CAMERA_BOUNDS = Vector2i(35, 25)
+const WORLD_CAMERA_BOUNDS = Vector2i(40, 25)
 const NEIGHBORS = [
 	TileSet.CELL_NEIGHBOR_RIGHT_SIDE,
 	TileSet.CELL_NEIGHBOR_BOTTOM_LEFT_SIDE,

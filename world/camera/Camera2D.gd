@@ -3,8 +3,8 @@ extends Camera2D
 
 var active = true
 
-const edge = 24
-const limit = 24*8
+const LIMIT_X = 24*(Constants.WORLD_CAMERA_BOUNDS.x)-640
+const LIMIT_Y = 24*(Constants.WORLD_CAMERA_BOUNDS.y)-360
 
 
 @onready var viewport_size = get_viewport().content_scale_size
@@ -37,14 +37,14 @@ func move():
 		return
 	var local_mouse_pos = get_local_mouse_position()
 	var new_position = position + (start_position - local_mouse_pos)
-	if new_position.x < -limit:
-		new_position.x = -limit
-	elif new_position.x > limit:
-		new_position.x = limit
-	if new_position.y < -limit:
-		new_position.y = -limit
-	elif new_position.y > limit:
-		new_position.y = limit
+	if new_position.x < -LIMIT_X:
+		new_position.x = -LIMIT_X
+	elif new_position.x > LIMIT_X:
+		new_position.x = LIMIT_X
+	if new_position.y < -LIMIT_Y:
+		new_position.y = -LIMIT_Y
+	elif new_position.y > LIMIT_Y:
+		new_position.y = LIMIT_Y
 	self.position = new_position
 	return local_mouse_pos
 
@@ -62,6 +62,11 @@ func _unhandled_input(event):
 		if start_position != Constants.NULL_POS:
 			start_position = move()
 			is_dragging = true
+
+func move_instant(target):
+	if not active:
+		return
+	self.position = target - Vector2(self.viewport_size/2)
 
 
 func move_smoothed(target, precision = 1):
