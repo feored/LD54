@@ -1,9 +1,10 @@
-[gd_scene load_steps=6 format=3 uid="uid://b5xgrhsvxj453"]
+[gd_scene load_steps=7 format=3 uid="uid://b5xgrhsvxj453"]
 
 [ext_resource type="Script" path="res://scenes/main_menu/main_menu.gd" id="1_so4mp"]
 [ext_resource type="PackedScene" uid="uid://b8opucxucl032" path="res://world/world.tscn" id="2_lh8t0"]
 [ext_resource type="Theme" uid="uid://3t61g0061mea" path="res://assets/theme.tres" id="4_qy1gp"]
 [ext_resource type="Texture2D" uid="uid://vor8jw7uss6n" path="res://assets/logo.png" id="5_7qv43"]
+[ext_resource type="PackedScene" uid="uid://dj8sjte3quqjh" path="res://ui/settings_menu/settings_menu.tscn" id="5_xiaj1"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ers1e"]
 bg_color = Color(1, 1, 1, 1)
@@ -33,6 +34,10 @@ layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
+offset_left = 7.0
+offset_top = 16.0
+offset_right = 7.0
+offset_bottom = 16.0
 grow_horizontal = 2
 grow_vertical = 2
 
@@ -69,6 +74,10 @@ text = "Play Scenario"
 layout_mode = 2
 text = "Play Random Map"
 
+[node name="SettingsBtn" type="Button" parent="CanvasLayer/Control/CenterContainer/VBoxContainer/ButtonContainer/buttons"]
+layout_mode = 2
+text = "Settings"
+
 [node name="InstructionsBtn" type="Button" parent="CanvasLayer/Control/CenterContainer/VBoxContainer/ButtonContainer/buttons"]
 visible = false
 layout_mode = 2
@@ -88,15 +97,19 @@ unique_name_in_owner = true
 layout_mode = 2
 columns = 3
 
-[node name="CenterContainer" type="CenterContainer" parent="CanvasLayer/Control/CenterContainer/VBoxContainer"]
-layout_mode = 2
-
-[node name="ReturnButton" type="Button" parent="CanvasLayer/Control/CenterContainer/VBoxContainer/CenterContainer"]
+[node name="ReturnButton" type="Button" parent="CanvasLayer/Control/CenterContainer/VBoxContainer"]
 unique_name_in_owner = true
 visible = false
 layout_mode = 2
+size_flags_horizontal = 4
 text = "Return"
+
+[node name="SettingsContainer" parent="CanvasLayer/Control/CenterContainer/VBoxContainer" instance=ExtResource("5_xiaj1")]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
 
 [connection signal="pressed" from="CanvasLayer/Control/CenterContainer/VBoxContainer/ButtonContainer/buttons/PlayScenarioBtn" to="." method="_on_play_scenario_btn_pressed"]
 [connection signal="pressed" from="CanvasLayer/Control/CenterContainer/VBoxContainer/ButtonContainer/buttons/PlayBtn" to="." method="_on_play_btn_pressed"]
-[connection signal="pressed" from="CanvasLayer/Control/CenterContainer/VBoxContainer/CenterContainer/ReturnButton" to="." method="_on_return_button_pressed"]
+[connection signal="pressed" from="CanvasLayer/Control/CenterContainer/VBoxContainer/ButtonContainer/buttons/SettingsBtn" to="." method="_on_settings_btn_pressed"]
+[connection signal="pressed" from="CanvasLayer/Control/CenterContainer/VBoxContainer/ReturnButton" to="." method="_on_return_button_pressed"]

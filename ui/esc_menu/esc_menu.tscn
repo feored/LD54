@@ -1,7 +1,8 @@
-[gd_scene load_steps=3 format=3 uid="uid://pu46mkcjdswb"]
+[gd_scene load_steps=4 format=3 uid="uid://pu46mkcjdswb"]
 
 [ext_resource type="Script" path="res://ui/esc_menu/EscMenu.gd" id="1_m4juf"]
 [ext_resource type="Theme" uid="uid://3t61g0061mea" path="res://assets/theme.tres" id="2_pn4ld"]
+[ext_resource type="PackedScene" uid="uid://dj8sjte3quqjh" path="res://ui/settings_menu/settings_menu.tscn" id="3_iogc5"]
 
 [node name="EscMenu" type="CanvasLayer"]
 process_mode = 3
@@ -19,23 +20,37 @@ theme = ExtResource("2_pn4ld")
 [node name="CenterContainer" type="CenterContainer" parent="PanelContainer"]
 layout_mode = 2
 
-[node name="VBoxContainer" type="VBoxContainer" parent="PanelContainer/CenterContainer"]
+[node name="VBoxContainer2" type="VBoxContainer" parent="PanelContainer/CenterContainer"]
 layout_mode = 2
-theme_override_constants/separation = 24
 
-[node name="Label" type="Label" parent="PanelContainer/CenterContainer/VBoxContainer"]
+[node name="EscMenu" type="VBoxContainer" parent="PanelContainer/CenterContainer/VBoxContainer2"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_constants/separation = 20
+
+[node name="Label" type="Label" parent="PanelContainer/CenterContainer/VBoxContainer2/EscMenu"]
 layout_mode = 2
 text = "paused"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="ResumeButton" type="Button" parent="PanelContainer/CenterContainer/VBoxContainer"]
+[node name="ResumeButton" type="Button" parent="PanelContainer/CenterContainer/VBoxContainer2/EscMenu"]
 layout_mode = 2
 text = "Resume"
 
-[node name="MenuButton" type="Button" parent="PanelContainer/CenterContainer/VBoxContainer"]
+[node name="MenuButton" type="Button" parent="PanelContainer/CenterContainer/VBoxContainer2/EscMenu"]
 layout_mode = 2
 text = "Main Menu"
 
-[connection signal="pressed" from="PanelContainer/CenterContainer/VBoxContainer/ResumeButton" to="." method="_on_resume_button_pressed"]
-[connection signal="pressed" from="PanelContainer/CenterContainer/VBoxContainer/MenuButton" to="." method="_on_menu_button_pressed"]
+[node name="SettingsButton" type="Button" parent="PanelContainer/CenterContainer/VBoxContainer2/EscMenu"]
+layout_mode = 2
+text = "Settings"
+
+[node name="SettingsMenu" parent="PanelContainer/CenterContainer/VBoxContainer2" instance=ExtResource("3_iogc5")]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+
+[connection signal="pressed" from="PanelContainer/CenterContainer/VBoxContainer2/EscMenu/ResumeButton" to="." method="_on_resume_button_pressed"]
+[connection signal="pressed" from="PanelContainer/CenterContainer/VBoxContainer2/EscMenu/MenuButton" to="." method="_on_menu_button_pressed"]
+[connection signal="pressed" from="PanelContainer/CenterContainer/VBoxContainer2/EscMenu/SettingsButton" to="." method="_on_settings_button_pressed"]

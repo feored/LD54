@@ -67,9 +67,11 @@ func _unhandled_input(event):
 func move_smoothed(target, precision = 1):
 	if not active:
 		return
+	Settings.input_locked = true
 	self.position_smoothing_enabled = true
 	self.position = target - Vector2(self.viewport_size/2)
 	var arrived_center = target
 	while abs((arrived_center - get_screen_center_position()).length_squared()) > precision:
 		await Utils.wait(0.1)
 	self.position_smoothing_enabled = false
+	Settings.input_locked = false

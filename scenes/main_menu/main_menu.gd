@@ -8,11 +8,13 @@ var scenarioPrefab = preload("res://ui/scenario/scenario.tscn")
 @onready var buttonContainer = $"%ButtonContainer"
 @onready var scenariosContainer = $"%ScenariosContainer"
 @onready var returnButton =	$"%ReturnButton"
+@onready var settingsContainer = $"%SettingsContainer"
 @onready var logo = $"%Logo"
 
 enum State{
 	Main,
-	Scenario
+	Scenario,
+	Settings
 }
 
 var elapsed = 0
@@ -22,10 +24,13 @@ func _ready():
 	Music.play_track(Music.Track.Menu)
 
 	self.world.init(Callable(self, "no_message"))
-	self.world.regionLabelsParent.visible = false
+	self.world.regionLabelsParent.hide()
 	self.world.camera.active = false
 	self.world.clear_island()
 	self.world.generate_island()
+
+	settingsContainer.disappear = func():
+		self.show_state(State.Main)
 
 	for scenario in Constants.scenarios:
 		var scenario_obj = scenarioPrefab.instantiate()
@@ -39,15 +44,23 @@ func no_message(_message):
 func show_state(state):
 	match state:
 		State.Main:
-			self.buttonContainer.visible = true
-			self.scenariosContainer.visible = false
-			self.returnButton.visible = false
-			self.logo.visible = true
+			self.buttonContainer.show()
+			self.scenariosContainer.hide()
+			self.returnButton.hide()
+			self.settingsContainer.hide()
+			self.logo.show()
 		State.Scenario:
-			self.buttonContainer.visible = false
-			self.scenariosContainer.visible = true
-			self.returnButton.visible = true
-			self.logo.visible = false
+			self.buttonContainer.hide()
+			self.scenariosContainer.show()
+			self.returnButton.show()
+			self.settingsContainer.hide()
+			self.logo.hide()
+		State.Settings:
+			self.buttonContainer.hide()
+			self.scenariosContainer.hide()
+			self.returnButton.hide()
+			self.settingsContainer.show()
+			self.logo.hide()
 
 
 func sink():
@@ -69,3 +82,7 @@ func _on_play_scenario_btn_pressed():
 
 func _on_return_button_pressed():
 	self.show_state(State.Main)
+
+
+func _on_settings_btn_pressed():
+	show_state(State.Settings)
