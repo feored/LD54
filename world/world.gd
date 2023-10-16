@@ -172,8 +172,18 @@ func delete_cell(coords_array: Array, action = null):
 	else:
 		self.messenger.call("A patch of land sinks somewhere...")
 	await self.camera.move_smoothed(self.coords_to_pos(coords_array[0]), 5)
+	var delete_finished = 0
 	for coords in coords_array:
-		await self.tiles[coords].delete()
+		self.tiles[coords].delete()
+	var check_all_deleted = func():
+		for coords in coords_array:
+			if self.tiles.has(coords):
+				return false
+		return true
+	while not check_all_deleted.call():
+		await Utils.wait(0.1)
+		
+	
 
 func delete_cell_memory(coords : Vector2i):
 	if not self.tiles.has(coords):
@@ -200,6 +210,7 @@ func recalculate_region(region: int):
 		if (region_tiles.size() > 0):
 			region_to_expand = self.regions.keys().max() + 1
 			self.regions[region_to_expand] = create_region(region_to_expand)
+	region_update_label(self.regions[region])
 	self.apply_borders()
 
 func expand_single_region_from_coords(region: int, region_tiles: Array):

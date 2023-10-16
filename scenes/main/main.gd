@@ -236,6 +236,7 @@ func on_tile_clicked(new_clicked_tile):
 			clear_selected_region()
 
 func next_turn():
+	clear_selected_region()
 	self.world.clear_regions_used()
 	Settings.input_locked = true
 	if check_global_turn_over():

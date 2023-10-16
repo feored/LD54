@@ -53,6 +53,7 @@ func update_cell():
 
 func delete():
 	animation_player.play("sink")
+	await animation_player.animation_finished
 
 func delete_from_world():
 	self.delete_callable.call(self.coords)
