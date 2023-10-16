@@ -85,3 +85,8 @@ func _on_return_button_pressed():
 
 func _on_settings_btn_pressed():
 	show_state(State.Settings)
+
+
+func _on_quit_button_pressed():
+	get_tree().quit()
+

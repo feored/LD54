@@ -83,6 +83,10 @@ visible = false
 layout_mode = 2
 text = "How To Play"
 
+[node name="QuitButton" type="Button" parent="CanvasLayer/Control/CenterContainer/VBoxContainer/ButtonContainer/buttons"]
+layout_mode = 2
+text = "Quit"
+
 [node name="ScenariosContainer" type="CenterContainer" parent="CanvasLayer/Control/CenterContainer/VBoxContainer"]
 unique_name_in_owner = true
 visible = false
@@ -112,4 +116,5 @@ layout_mode = 2
 [connection signal="pressed" from="CanvasLayer/Control/CenterContainer/VBoxContainer/ButtonContainer/buttons/PlayScenarioBtn" to="." method="_on_play_scenario_btn_pressed"]
 [connection signal="pressed" from="CanvasLayer/Control/CenterContainer/VBoxContainer/ButtonContainer/buttons/PlayBtn" to="." method="_on_play_btn_pressed"]
 [connection signal="pressed" from="CanvasLayer/Control/CenterContainer/VBoxContainer/ButtonContainer/buttons/SettingsBtn" to="." method="_on_settings_btn_pressed"]
+[connection signal="pressed" from="CanvasLayer/Control/CenterContainer/VBoxContainer/ButtonContainer/buttons/QuitButton" to="." method="_on_quit_button_pressed"]
 [connection signal="pressed" from="CanvasLayer/Control/CenterContainer/VBoxContainer/ReturnButton" to="." method="_on_return_button_pressed"]
