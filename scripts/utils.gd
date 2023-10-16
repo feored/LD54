@@ -84,3 +84,6 @@ func to_map_object(tiles, regions, teams):
 		"tiles": tiles,
 		"regions": regions
 	}
+
+func to_team_id(team_id):
+	return team_id + 1

@@ -4,8 +4,6 @@ var turnIndicatorPrefab = preload("res://ui/turn_indicator/turn_indicator.tscn")
 var escMenuPrefab = preload("res://ui/esc_menu/esc_menu.tscn")
 var gameOverScreenPrefab = preload("res://ui/game_over_menu/game_over_screen.tscn")
 
-@onready var UI = $"%UI"
-@onready var SelectionUI = $"%SelectionUI"
 @onready var world = $"World"
 @onready var turnContainer = $"%TurnContainer"
 @onready var turnLabel = $"%TurnLabel"
@@ -28,7 +26,6 @@ var actions_history = []
 var bots = {}
 
 var turn_indicators = []
-var selected_team_num = 7
 
 var game_started = false
 var escMenu = null
@@ -39,36 +36,23 @@ var sacrifice_hovered_tile = Constants.NULL_COORDS
 var spectating = false
 
 
-func to_team_id(team_id):
-	return team_id + 1
+
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	Settings.input_locked = false
 	self.world.init(Callable(self.messenger, "set_message"))
 	Music.play_track(Music.Track.World)
-	# match Settings.game_mode:
-	# 	Constants.GameMode.Play:
-	# 		UI.visible = false
-	# 		SelectionUI.visible = true
-	# 		self.gen_world()
-		# Constants.GameMode.Scenario:
-	self.UI.visible = true
-	self.SelectionUI.visible = false
 	self.load_map()
-	self.add_teams_scenario()
+	self.add_teams()
 	self.start_game()
 	
 
 func update_sacrifices_display():
 	self.sacrificeLabel.set_text(str(sacrifices_available[self.teams[self.player_team_index]]))
 
-func gen_world():
-	self.world.clear_island()
-	self.world.generate_island()
-	self.add_teams()
 
-func add_teams_scenario():
+func add_teams():
 	self.bots.clear()
 	for t in self.turn_indicators:
 		t.queue_free()
@@ -78,25 +62,9 @@ func add_teams_scenario():
 		self.create_turn_indicator(team_id)
 		self.sacrifices_available[team_id] = 0
 
-func add_teams():
-	self.world.reset_regions_team()
-	self.teams.clear()
-	self.bots.clear()
-	for t in self.turn_indicators:
-		t.queue_free()
-	self.turn_indicators.clear()
-	for i in range(0, self.selected_team_num):
-		var team_id = to_team_id(i)
-		self.teams.append(team_id)
-		self.bots[team_id] = DumbBot.new(team_id)
-		self.world.add_team(team_id)
-		self.create_turn_indicator(team_id)
-		self.sacrifices_available[team_id] = 0
 
 func start_game():
 	self.game_started = true
-	self.SelectionUI.visible = false
-	self.UI.visible = true
 	for r in self.world.regions.values():
 		r.units = 0
 	for t in self.teams:
@@ -128,7 +96,6 @@ func sacrifice_tile(coords):
 
 func _unhandled_input(event):
 	if event.is_action_pressed("escmenu"):
-		
 		if escMenu == null:
 			escMenu = escMenuPrefab.instantiate()
 			self.add_child(escMenu)
@@ -227,7 +194,7 @@ func get_teams_alive():
 
 func bots_play():
 	var bot_action = null
-	var bot = self.bots[to_team_id(self.turn)]
+	var bot = self.bots[Utils.to_team_id(self.turn)]
 	while bot_action == null or bot_action.action != Constants.Action.None:
 		bot_action = bot.play_turn(self.world)
 		await apply_action(bot_action)
@@ -328,19 +295,6 @@ func load_map():
 	self.teams = Settings.current_map.teams
 	self.world.load_tiles(Settings.current_map.tiles)
 	self.world.load_regions(Settings.current_map.regions)
-
-func _on_team_num_value_changed(value:float):
-	self.selected_team_num = int(value)
-	self.add_teams()
-
-
-func _on_generate_btn_pressed():
-	self.gen_world()
-
-
-func _on_play_btn_pressed():
-	self.start_game()
-	
 
 func _on_sacrifice_button_pressed():
 	self.is_sacrificing = true

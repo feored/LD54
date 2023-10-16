@@ -72,8 +72,7 @@ func _process(_delta):
 	pass
 
 func _on_play_btn_pressed():
-	Settings.game_mode = Constants.GameMode.Play
-	await SceneTransition.change_scene(SceneTransition.SCENE_MAIN_GAME)
+	await SceneTransition.change_scene(SceneTransition.SCENE_MAP_GENERATOR)
 
 
 func _on_play_scenario_btn_pressed():

@@ -21,7 +21,7 @@ func init(scenario):
 
 
 func _on_button_pressed():
-	var save_game = FileAccess.open("res://maps/" + Settings.current_map, FileAccess.READ)
+	var save_game = FileAccess.open("res://maps/" + self.path, FileAccess.READ)
 	var saved_state = JSON.parse_string(save_game.get_line())
 	save_game.close()
 	Settings.current_map = saved_state
