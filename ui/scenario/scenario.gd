@@ -21,9 +21,11 @@ func init(scenario):
 
 
 func _on_button_pressed():
-	Settings.game_mode = Constants.GameMode.Scenario
-	Settings.current_map = self.path
-	await SceneTransition.change_scene("res://scenes/main/main.tscn")
+	var save_game = FileAccess.open("res://maps/" + Settings.current_map, FileAccess.READ)
+	var saved_state = JSON.parse_string(save_game.get_line())
+	save_game.close()
+	Settings.current_map = saved_state
+	await SceneTransition.change_scene(SceneTransition.SCENE_MAIN_GAME)
 
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.

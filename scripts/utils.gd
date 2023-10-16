@@ -77,3 +77,10 @@ func surrounding_cells(coords):
 		Vector2(coords.x - 1, coords.y - 1),
 		Vector2(coords.x + 1, coords.y + 1),
 	]
+
+func to_map_object(tiles, regions, teams):
+	return {
+		"teams": teams,
+		"tiles": tiles,
+		"regions": regions
+	}

@@ -1,5 +1,8 @@
 extends CanvasLayer
 
+const SCENE_MAIN_GAME = "res://scenes/main/main.tscn"
+const SCENE_MAIN_MENU = "res://scenes/main_menu/main_menu.tscn"
+
 @onready var animation_player = $AnimationPlayer
 # Called when the node enters the scene tree for the first time.
 func _ready():

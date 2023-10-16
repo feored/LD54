@@ -6,7 +6,6 @@ var gameOverScreenPrefab = preload("res://ui/game_over_menu/game_over_screen.tsc
 
 @onready var UI = $"%UI"
 @onready var SelectionUI = $"%SelectionUI"
-@onready var MapEditorUI = $"%MapEditorUI"
 @onready var world = $"World"
 @onready var turnContainer = $"%TurnContainer"
 @onready var turnLabel = $"%TurnLabel"
@@ -39,12 +38,6 @@ var sacrifice_hovered_tile = Constants.NULL_COORDS
 
 var spectating = false
 
-var is_drawing = false
-var is_erasing = false
-var is_placing_team = false
-
-var current_team_place = 1
-var highest_team_place = 1
 
 func to_team_id(team_id):
 	return team_id + 1
@@ -54,23 +47,17 @@ func _ready():
 	Settings.input_locked = false
 	self.world.init(Callable(self.messenger, "set_message"))
 	Music.play_track(Music.Track.World)
-	match Settings.game_mode:
-		Constants.GameMode.Play:
-			UI.visible = false
-			SelectionUI.visible = true
-			MapEditorUI.visible = false
-			self.gen_world()
-		Constants.GameMode.MapEditor:
-			UI.visible = false
-			SelectionUI.visible = false
-			MapEditorUI.visible = true
-		Constants.GameMode.Scenario:
-			self.UI.visible = true
-			self.SelectionUI.visible = false
-			self.MapEditorUI.visible = false
-			self.load_scenario()
-			self.add_teams_scenario()
-			self.start_game()
+	# match Settings.game_mode:
+	# 	Constants.GameMode.Play:
+	# 		UI.visible = false
+	# 		SelectionUI.visible = true
+	# 		self.gen_world()
+		# Constants.GameMode.Scenario:
+	self.UI.visible = true
+	self.SelectionUI.visible = false
+	self.load_map()
+	self.add_teams_scenario()
+	self.start_game()
 	
 
 func update_sacrifices_display():
@@ -109,7 +96,6 @@ func add_teams():
 func start_game():
 	self.game_started = true
 	self.SelectionUI.visible = false
-	self.MapEditorUI.visible = false
 	self.UI.visible = true
 	for r in self.world.regions.values():
 		r.units = 0
@@ -138,38 +124,9 @@ func sacrifice_tile(coords):
 	actions_history.append(sink_action)
 	self.apply_action(sink_action)
 
-func draw_or_erase_or_team(event):
-	var coords_clicked = world.global_pos_to_coords(event.position)
-	if is_drawing:
-		if !world.tiles.has(coords_clicked):
-			world.spawn_cell(coords_clicked, 0)
-	elif is_erasing:
-		if world.tiles.has(coords_clicked):
-			world.remove_cell(coords_clicked)
-	elif is_placing_team:
-		if world.tiles.has(coords_clicked):
-			var region = world.tiles[coords_clicked].region
-			self.world.regions[region].set_team(self.current_team_place)
-			if self.highest_team_place < self.current_team_place:
-				self.highest_team_place = self.current_team_place
-			self.teams.clear()
-			for i in range(1, self.highest_team_place+1):
-				self.teams.append(i)
-			self.is_placing_team = false
 
-func handle_editor_input(event):
-	if event is InputEventMouseButton:
-		if event.button_index == MOUSE_BUTTON_LEFT and event.pressed:
-			draw_or_erase_or_team(event)
-		if event.button_index == MOUSE_BUTTON_RIGHT and event.pressed:
-			is_drawing = false
-			is_erasing = false
-			is_placing_team = false
 
 func _unhandled_input(event):
-	if Settings.game_mode == Constants.GameMode.MapEditor:
-		handle_editor_input(event)
-		return
 	if event.is_action_pressed("escmenu"):
 		
 		if escMenu == null:
@@ -366,6 +323,12 @@ func apply_action(action : Action):
 		_:
 			print("Unknown action: ", action.action)
 
+func load_map():
+	self.world.clear_island()
+	self.teams = Settings.current_map.teams
+	self.world.load_tiles(Settings.current_map.tiles)
+	self.world.load_regions(Settings.current_map.regions)
+
 func _on_team_num_value_changed(value:float):
 	self.selected_team_num = int(value)
 	self.add_teams()
@@ -379,108 +342,6 @@ func _on_play_btn_pressed():
 	self.start_game()
 	
 
-
 func _on_sacrifice_button_pressed():
 	self.is_sacrificing = true
 
-func save():
-	var saved_state = {
-		"teams": self.teams,
-		"tiles": {},
-		"regions": {}
-	}
-	for coords in self.world.tiles:
-		saved_state.tiles[var_to_str(coords)] = self.world.tiles[coords].get_save_data()
-	for region in self.world.regions:
-		saved_state.regions[region] = self.world.regions[region].get_save_data()
-	var save_game = FileAccess.open("user://savegame.json", FileAccess.WRITE)
-	save_game.store_line(JSON.stringify(saved_state))
-	save_game.close()
-
-
-func load_saved_game():
-	var save_game = FileAccess.open("user://savegame.json", FileAccess.READ)
-	var saved_state = JSON.parse_string(save_game.get_line())
-	save_game.close()
-	self.world.clear_island()
-	self.teams = saved_state.teams
-	load_tiles(saved_state.tiles)
-	load_regions(saved_state.regions)
-
-
-func load_scenario():
-	var save_game = FileAccess.open("res://maps/" + Settings.current_map, FileAccess.READ)
-	var saved_state = JSON.parse_string(save_game.get_line())
-	save_game.close()
-	self.world.clear_island()
-	self.teams = saved_state.teams
-	load_tiles(saved_state.tiles)
-	load_regions(saved_state.regions)
-
-
-func load_tiles(tiles):
-	for coords_string in tiles:
-		var parsed_tile = tiles[coords_string]
-		var coords = str_to_var(coords_string)
-		var borders = {}
-		for border_str in parsed_tile.borders:
-			borders[int(border_str)] = parsed_tile.borders[border_str]
-		self.world.spawn_cell(coords, parsed_tile.team, borders)
-
-func load_regions(regions):
-	for region_id_str in regions:
-		var saved_region = regions[region_id_str]
-		var region_id = int(region_id_str)
-		var region = self.world.create_region(region_id)
-		for coords_str in saved_region.tiles:
-			var coords = str_to_var(coords_str)
-			region.add_tile(coords, self.world.tiles[coords])
-		region.set_team(saved_region.team)
-		region.set_units(saved_region.units)
-		self.world.regions[region_id] = region
-		self.world.region_update_label(region)
-		if region.team != Constants.NULL_TEAM:
-			region.generate_units()
-
-func _on_load_btn_pressed():
-	load_saved_game()
-
-
-func _on_reset_btn_pressed():
-	self.world.clear_island()
-
-
-func _on_erase_btn_pressed():
-	self.is_erasing = true
-	self.is_drawing = false
-	self.is_placing_team = false
-
-func _on_draw_btn_pressed():
-	self.is_drawing = true
-	self.is_erasing = false
-	self.is_placing_team = false
-	
-func _on_regions_btn_pressed():
-	var tiles = self.world.tiles.keys().duplicate()
-	self.world.clear_island()
-	for t in tiles:
-		self.world.spawn_cell(t, 0)
-	self.world.generate_regions()
-	self.world.apply_borders()
-
-
-func _on_place_team_num_value_changed(value):
-	current_team_place = int(value)
-
-
-func _on_place_team_btn_pressed():
-	self.is_drawing = false
-	self.is_erasing = false
-	self.is_placing_team = true
-
-
-func _on_save_btn_pressed():
-	save()
-
-func _on_center_btn_pressed():
-	await self.world.camera.move_smoothed(self.world.coords_to_pos(Constants.WORLD_CENTER), 5)

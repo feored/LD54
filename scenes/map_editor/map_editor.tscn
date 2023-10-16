@@ -1,0 +1,128 @@
+[gd_scene load_steps=7 format=3 uid="uid://jphqct536elm"]
+
+[ext_resource type="Script" path="res://scenes/map_editor/map_editor.gd" id="1_fr50u"]
+[ext_resource type="PackedScene" uid="uid://b8opucxucl032" path="res://world/world.tscn" id="1_w0dbr"]
+[ext_resource type="Theme" uid="uid://3t61g0061mea" path="res://assets/theme.tres" id="2_kvbud"]
+
+[sub_resource type="Gradient" id="Gradient_kdtfb"]
+interpolation_mode = 1
+offsets = PackedFloat32Array(0, 0.697531)
+colors = PackedColorArray(0, 0, 0, 1, 1, 1, 1, 0)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_mdxak"]
+gradient = SubResource("Gradient_kdtfb")
+width = 8
+height = 8
+fill = 1
+fill_from = Vector2(0.5, 0.5)
+fill_to = Vector2(1, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_qs8ko"]
+bg_color = Color(0.0784314, 0.0745098, 0.0588235, 1)
+
+[node name="MapEditor" type="Node2D"]
+script = ExtResource("1_fr50u")
+
+[node name="Center" type="Sprite2D" parent="."]
+unique_name_in_owner = true
+z_index = 3000
+z_as_relative = false
+texture = SubResource("GradientTexture2D_mdxak")
+
+[node name="World" parent="." instance=ExtResource("1_w0dbr")]
+
+[node name="MapEditorUI" type="CanvasLayer" parent="."]
+
+[node name="PanelContainer" type="PanelContainer" parent="MapEditorUI"]
+anchors_preset = 12
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -31.0
+grow_horizontal = 2
+grow_vertical = 0
+theme = ExtResource("2_kvbud")
+theme_override_styles/panel = SubResource("StyleBoxFlat_qs8ko")
+
+[node name="MarginContainer" type="MarginContainer" parent="MapEditorUI/PanelContainer"]
+layout_mode = 2
+theme_override_constants/margin_left = 5
+theme_override_constants/margin_top = 5
+theme_override_constants/margin_right = 5
+theme_override_constants/margin_bottom = 5
+
+[node name="HBoxContainer" type="GridContainer" parent="MapEditorUI/PanelContainer/MarginContainer"]
+layout_mode = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="MapEditorUI/PanelContainer/MarginContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="PlaceTeamBtn" type="Button" parent="MapEditorUI/PanelContainer/MarginContainer/HBoxContainer/HBoxContainer"]
+layout_mode = 2
+text = "Make Team"
+
+[node name="PlaceTeamNum" type="SpinBox" parent="MapEditorUI/PanelContainer/MarginContainer/HBoxContainer/HBoxContainer"]
+layout_mode = 2
+min_value = 1.0
+max_value = 7.0
+value = 1.0
+rounded = true
+alignment = 1
+
+[node name="DrawBtn" type="Button" parent="MapEditorUI/PanelContainer/MarginContainer/HBoxContainer/HBoxContainer"]
+layout_mode = 2
+text = "Draw Tile"
+
+[node name="EraseBtn" type="Button" parent="MapEditorUI/PanelContainer/MarginContainer/HBoxContainer/HBoxContainer"]
+layout_mode = 2
+text = "Erase Tile"
+
+[node name="RegionsBtn" type="Button" parent="MapEditorUI/PanelContainer/MarginContainer/HBoxContainer/HBoxContainer"]
+layout_mode = 2
+text = "Generate Regions"
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="MapEditorUI/PanelContainer/MarginContainer/HBoxContainer"]
+layout_mode = 2
+
+[node name="PlayBtn" type="Button" parent="MapEditorUI/PanelContainer/MarginContainer/HBoxContainer/HBoxContainer2"]
+layout_mode = 2
+text = "Play Map"
+
+[node name="SaveBtn" type="Button" parent="MapEditorUI/PanelContainer/MarginContainer/HBoxContainer/HBoxContainer2"]
+layout_mode = 2
+text = "Save Map"
+
+[node name="LoadBtn" type="Button" parent="MapEditorUI/PanelContainer/MarginContainer/HBoxContainer/HBoxContainer2"]
+layout_mode = 2
+text = "Load Saved Map"
+
+[node name="CenterBtn" type="Button" parent="MapEditorUI/PanelContainer/MarginContainer/HBoxContainer/HBoxContainer2"]
+layout_mode = 2
+text = "Center"
+
+[node name="ResetBtn" type="Button" parent="MapEditorUI"]
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -102.0
+offset_top = -56.0
+grow_horizontal = 0
+grow_vertical = 0
+size_flags_horizontal = 8
+theme = ExtResource("2_kvbud")
+theme_override_colors/font_color = Color(0.792157, 0, 0, 1)
+text = "Reset Island"
+
+[connection signal="pressed" from="MapEditorUI/PanelContainer/MarginContainer/HBoxContainer/HBoxContainer/PlaceTeamBtn" to="." method="_on_place_team_btn_pressed"]
+[connection signal="value_changed" from="MapEditorUI/PanelContainer/MarginContainer/HBoxContainer/HBoxContainer/PlaceTeamNum" to="." method="_on_place_team_num_value_changed"]
+[connection signal="pressed" from="MapEditorUI/PanelContainer/MarginContainer/HBoxContainer/HBoxContainer/DrawBtn" to="." method="_on_draw_btn_pressed"]
+[connection signal="pressed" from="MapEditorUI/PanelContainer/MarginContainer/HBoxContainer/HBoxContainer/EraseBtn" to="." method="_on_erase_btn_pressed"]
+[connection signal="pressed" from="MapEditorUI/PanelContainer/MarginContainer/HBoxContainer/HBoxContainer/RegionsBtn" to="." method="_on_regions_btn_pressed"]
+[connection signal="pressed" from="MapEditorUI/PanelContainer/MarginContainer/HBoxContainer/HBoxContainer2/PlayBtn" to="." method="_on_play_btn_pressed"]
+[connection signal="pressed" from="MapEditorUI/PanelContainer/MarginContainer/HBoxContainer/HBoxContainer2/SaveBtn" to="." method="_on_save_btn_pressed"]
+[connection signal="pressed" from="MapEditorUI/PanelContainer/MarginContainer/HBoxContainer/HBoxContainer2/LoadBtn" to="." method="_on_load_btn_pressed"]
+[connection signal="pressed" from="MapEditorUI/PanelContainer/MarginContainer/HBoxContainer/HBoxContainer2/CenterBtn" to="." method="_on_center_btn_pressed"]
+[connection signal="pressed" from="MapEditorUI/ResetBtn" to="." method="_on_reset_btn_pressed"]

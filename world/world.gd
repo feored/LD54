@@ -338,3 +338,30 @@ func clear_regions_used():
 func reset_regions_team():
 	for region in self.regions:
 		self.regions[region].set_team(Constants.NULL_TEAM)
+
+
+
+func load_tiles(new_tiles):
+	for coords_string in new_tiles:
+		var parsed_tile = new_tiles[coords_string]
+		var coords = str_to_var(coords_string)
+		var borders = {}
+		for border_str in parsed_tile.borders:
+			borders[int(border_str)] = parsed_tile.borders[border_str]
+		self.spawn_cell(coords, parsed_tile.team, borders)
+
+func load_regions(new_regions):
+	for region_id_str in new_regions:
+		var saved_region = new_regions[region_id_str]
+		var region_id = int(region_id_str)
+		var region = self.create_region(region_id)
+		for coords_str in saved_region.tiles:
+			var coords = str_to_var(coords_str)
+			region.add_tile(coords, self.tiles[coords])
+		region.set_team(saved_region.team)
+		region.set_units(saved_region.units)
+		self.regions[region_id] = region
+		self.region_update_label(region)
+		if region.team != Constants.NULL_TEAM:
+			region.generate_units()
+			

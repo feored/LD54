@@ -5,7 +5,7 @@ const SETTING_NAMES = {
 	Setting.FullScreen: "full_screen",
 	Setting.MasterVolume: "master_volume",
 	Setting.MusicVolume: "music_volume",
-	Setting.SfxVolume: "sfx_volume"
+	Setting.SfxVolume: "sfx_volume",
 }
 
 const DEFAULT_SECTION = "settings"
@@ -14,17 +14,15 @@ const DEFAULT_CONFIG = {
 	Setting.FullScreen: false, Setting.MasterVolume: 1, Setting.MusicVolume: 1, Setting.SfxVolume: 1
 }
 
-var settings = null
-
 @onready var audio_bus = {
 	"Master": AudioServer.get_bus_index("Master"),
 	"Music": AudioServer.get_bus_index("Music"),
 	"SFX": AudioServer.get_bus_index("SFX"),
 }
 
+var settings = null
 var input_locked: bool = false
-var game_mode: int = Constants.GameMode.MapEditor  #Constants.GameMode.Play
-var current_map = ""
+var current_map = null
 
 
 func _ready():

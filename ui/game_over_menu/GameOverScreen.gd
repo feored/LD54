@@ -37,7 +37,7 @@ func _process(delta):
 
 func _on_menu_button_pressed():
 	get_tree().paused = false
-	await SceneTransition.change_scene("res://scenes/main_menu/main_menu.tscn")
+	await SceneTransition.change_scene(SceneTransition.SCENE_MAIN_MENU)
 
 
 func _on_spectate_pressed():
