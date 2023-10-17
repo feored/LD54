@@ -13,7 +13,9 @@ var gameOverScreenPrefab = preload("res://ui/game_over_menu/game_over_screen.tsc
 @onready var sacrificeLabel = $"%SacrificeLabel"
 
 var is_sacrificing = false
-var sacrifice_used = false
+var sacrifices_available = 0
+
+
 var eliminated_teams = []
 
 var selected_region = null
@@ -30,7 +32,7 @@ var turn_indicators = []
 var game_started = false
 var escMenu = null
 
-var sacrifices_available = {}
+
 var sacrifice_hovered_tile = Constants.NULL_COORDS
 
 var spectating = false
@@ -50,7 +52,7 @@ func _ready():
 	self.world.camera.move_instant(self.world.map_to_local(closest_player_tile_coords()))
 
 func update_sacrifices_display():
-	self.sacrificeLabel.set_text(str(sacrifices_available[self.teams[self.player_team_index]]))
+	self.sacrificeLabel.set_text(str(sacrifices_available))
 
 
 func add_teams():
@@ -61,7 +63,6 @@ func add_teams():
 	for team_id in teams:
 		self.bots[int(team_id)] = DumbBot.new(team_id)
 		self.create_turn_indicator(team_id)
-		self.sacrifices_available[team_id] = 0
 
 
 func start_game():
@@ -105,6 +106,9 @@ func _unhandled_input(event):
 	elif event is InputEventMouseButton:
 		if Settings.input_locked or !game_started:
 			return
+		if event.button_index == MOUSE_BUTTON_RIGHT and event.pressed:
+			clear_selected_region()
+			clear_sacrifice()
 		var coords_clicked = world.global_pos_to_coords(event.position)
 		if is_sacrificing and event.button_index == MOUSE_BUTTON_LEFT and event.pressed:
 			if not world.tiles.has(coords_clicked):
@@ -112,19 +116,20 @@ func _unhandled_input(event):
 				clear_sacrifice()
 			else:
 				if world.tiles[coords_clicked].team == self.teams[self.player_team_index]:
-					self.sacrifices_available[self.teams[self.player_team_index]] += 1
+					self.sacrifices_available += 1
 					self.update_sacrifices_display()
-					self.sacrifice_used = true
 					self.sacrificeButton.disabled = true
 					self.clear_sacrifice()
 					sacrifice_tile(coords_clicked)
-				elif self.sacrifices_available[self.teams[self.player_team_index]] > 0:
-					self.sacrifices_available[self.teams[self.player_team_index]] -= 1
+				elif self.sacrifices_available > 0:
+					self.sacrifices_available -= 1
 					self.update_sacrifices_display()
-					self.sacrifice_used = true
 					self.sacrificeButton.disabled = true
 					self.clear_sacrifice()
 					sacrifice_tile(coords_clicked)
+				else:
+					messenger.set_message("You must acquire more favor from Neptune first, my lord.")
+					clear_sacrifice()
 		elif world.tiles.has(coords_clicked):
 			if event.button_index == MOUSE_BUTTON_LEFT and event.pressed:
 				on_tile_clicked(world.tiles[coords_clicked])
@@ -134,7 +139,7 @@ func _unhandled_input(event):
 			world.tiles[sacrifice_hovered_tile].set_highlight(Constants.Highlight.None)
 		if world.tiles.has(coords_clicked):
 			self.sacrifice_hovered_tile = coords_clicked
-			if world.tiles[coords_clicked].team == self.teams[self.player_team_index] or sacrifices_available[self.teams[self.player_team_index]] > 0:
+			if world.tiles[coords_clicked].team == self.teams[self.player_team_index] or sacrifices_available > 0:
 				self.world.tiles[coords_clicked].set_highlight(Constants.Highlight.Green)
 			else:
 				self.world.tiles[coords_clicked].set_highlight(Constants.Highlight.Red)

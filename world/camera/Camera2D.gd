@@ -55,23 +55,25 @@ func _unhandled_input(event):
 		if event.button_index == MOUSE_BUTTON_LEFT:
 			if event.pressed:
 				start_position = get_local_mouse_position()
+				is_dragging = true
 			else:
 				start_position = Constants.NULL_POS
 				is_dragging = false
-	elif event is InputEventMouseMotion:
+	elif event is InputEventMouseMotion and is_dragging:
 		if start_position != Constants.NULL_POS:
 			start_position = move()
-			is_dragging = true
 
 func move_instant(target):
 	if not active:
 		return
+	is_dragging = false
 	self.position = target - Vector2(self.viewport_size/2)
 
 
 func move_smoothed(target, precision = 1):
 	if not active:
 		return
+	is_dragging = false
 	Settings.input_locked = true
 	self.position_smoothing_enabled = true
 	self.position = target - Vector2(self.viewport_size/2)
