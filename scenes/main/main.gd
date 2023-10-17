@@ -43,6 +43,7 @@ func _ready():
 	Settings.input_locked = false
 	self.world.init(Callable(self.messenger, "set_message"))
 	Music.play_track(Music.Track.World)
+	Sfx.enable_track(Sfx.Track.Boom)
 	self.load_map()
 	self.add_teams()
 	self.start_game()
@@ -107,6 +108,7 @@ func _unhandled_input(event):
 		var coords_clicked = world.global_pos_to_coords(event.position)
 		if is_sacrificing and event.button_index == MOUSE_BUTTON_LEFT and event.pressed:
 			if not world.tiles.has(coords_clicked):
+				Sfx.play(Sfx.Track.Cancel)
 				clear_sacrifice()
 			else:
 				if world.tiles[coords_clicked].team == self.teams[self.player_team_index]:
@@ -222,6 +224,7 @@ func clear_selected_region():
 	if selected_region != null:
 		self.world.regions[selected_region].set_selected(false)
 		self.selected_region = null
+		Sfx.play(Sfx.Track.Cancel)
 	
 
 func on_tile_clicked(new_clicked_tile):
@@ -238,6 +241,7 @@ func on_tile_clicked(new_clicked_tile):
 		if new_clicked_tile.team == self.teams[self.player_team_index]:
 			self.selected_region = new_clicked_tile.region
 			self.world.regions[selected_region].set_selected(true)
+			Sfx.play(Sfx.Track.Select)
 	else:
 		if new_clicked_tile.region not in self.world.adjacent_regions(self.selected_region):
 			clear_selected_region()

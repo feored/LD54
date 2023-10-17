@@ -57,6 +57,7 @@ func delete():
 
 func delete_from_world():
 	self.delete_callable.call(self.coords)
+	Sfx.play(Sfx.Track.Boom)
 	self.queue_free()
 
 func set_team(new_team: int):

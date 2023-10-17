@@ -22,6 +22,7 @@ var elapsed = 0
 func _ready():
 	self.show_state(State.Main)
 	Music.play_track(Music.Track.Menu)
+	Sfx.disable_track(Sfx.Track.Boom)
 
 	self.world.init(Callable(self, "no_message"))
 	self.world.regionLabelsParent.hide()
