@@ -2,6 +2,8 @@ extends Node
 
 class_name Tile
 
+const CRACKED_TEXTURE = preload("res://assets/tiles/grass_cracked.png")
+
 @onready var animation_player = $AnimationPlayer
 @onready var border_objects = {
 	TileSet.CELL_NEIGHBOR_RIGHT_SIDE: $east,
@@ -22,6 +24,7 @@ var tween = null
 var lighter_color
 var blink_state = 0
 var delete_callable = null
+var marked = false
 
 func init_cell(
 	init_coords: Vector2,
@@ -106,3 +109,8 @@ func get_save_data():
 		"borders": self.borders,
 		"region": self.region
 	}
+
+func mark():
+	self.marked = true
+	self.texture = CRACKED_TEXTURE
+	

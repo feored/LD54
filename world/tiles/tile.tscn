@@ -1,4 +1,4 @@
-[gd_scene load_steps=12 format=3 uid="uid://d2tu4itgwxsmx"]
+[gd_scene load_steps=13 format=3 uid="uid://d2tu4itgwxsmx"]
 
 [ext_resource type="Texture2D" uid="uid://c2jmky1u16cef" path="res://assets/tiles/grass.png" id="1_ritjv"]
 [ext_resource type="Script" path="res://world/tiles/tile.gd" id="2_m7fn7"]
@@ -8,7 +8,7 @@
 [ext_resource type="Texture2D" uid="uid://dskvw8n0ialxq" path="res://assets/tiles/northeast.png" id="6_krmdv"]
 [ext_resource type="Texture2D" uid="uid://bgixgnfsvo7b8" path="res://assets/tiles/west.png" id="7_j7cmw"]
 [ext_resource type="Texture2D" uid="uid://lscvgckqsnqh" path="res://assets/tiles/northwest.png" id="8_rltnp"]
-[ext_resource type="Texture2D" uid="uid://bw3yv7wot470b" path="res://assets/tiles/barred.png" id="9_0qenw"]
+[ext_resource type="Texture2D" uid="uid://cp2ykpdtmxnwf" path="res://assets/tiles/barred_2.png" id="9_220g0"]
 
 [sub_resource type="Animation" id="Animation_824x5"]
 resource_name = "sink"
@@ -33,14 +33,31 @@ tracks/1/path = NodePath(".:offset")
 tracks/1/interp = 0
 tracks/1/loop_wrap = true
 tracks/1/keys = {
-"times": PackedFloat32Array(0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9),
-"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1, 1, 1),
+"times": PackedFloat32Array(0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1, 1, 1, 1),
 "update": 0,
-"values": [Vector2(1, 0), Vector2(-1, 0), Vector2(1, 0), Vector2(-1, 0), Vector2(0, -1), Vector2(1, 1), Vector2(0, 0), Vector2(0, 0), Vector2(0, -1)]
+"values": [Vector2(0, 0), Vector2(1, 0), Vector2(-1, 0), Vector2(1, 0), Vector2(-1, 0), Vector2(0, -1), Vector2(1, 1), Vector2(0, 0), Vector2(0, 0), Vector2(0, -1)]
+}
+
+[sub_resource type="Animation" id="Animation_1xy5g"]
+resource_name = "quake"
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:offset")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1),
+"update": 0,
+"values": [Vector2(0, 0), Vector2(0, 1), Vector2(0, -1), Vector2(-1, 1), Vector2(1, -1), Vector2(-1, 1), Vector2(-1, 1), Vector2(1, 0), Vector2(-1, 0), Vector2(1, 1), Vector2(0, 1)]
 }
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_j2aig"]
 _data = {
+"quake": SubResource("Animation_1xy5g"),
 "sink": SubResource("Animation_824x5")
 }
 
@@ -69,7 +86,7 @@ texture = ExtResource("8_rltnp")
 [node name="barred" type="Sprite2D" parent="."]
 visible = false
 self_modulate = Color(1, 1, 1, 0.498039)
-texture = ExtResource("9_0qenw")
+texture = ExtResource("9_220g0")
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
 libraries = {

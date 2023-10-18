@@ -244,32 +244,31 @@ func sink_tiles(coords):
 		if self.regions.has(region):
 			recalculate_region(region)
 
-func generate_disaster(global_turn):
+func mark_tiles(global_turn):
 	# only sinking tiles for now
 	var n = self.tiles.size()
-	var total_disasters = min(n, int(global_turn * n / 10.0))
-	print("Total disasters: ", total_disasters)
+	var tiles_to_mark = min(n - 1, int(global_turn * n / 10.0))
 	if (global_turn <= Constants.SINK_GRACE_PERIOD):
-		total_disasters = 0
-	var disasters_dealt = 0
-	while disasters_dealt < total_disasters and self.tiles.size() > 1:
-		var num_to_sink = min(total_disasters - disasters_dealt, total_disasters / 5)
-		var cur_cell = Utils.pick_tile_to_sink(self.tiles.keys())
-		var tiles_to_delete = [cur_cell]
-		disasters_dealt += 1
-		for i in range(1, num_to_sink):
-			var neighbors = []
-			for potential_neighbor in self.get_surrounding_cells(cur_cell):
-				if self.tiles.has(potential_neighbor) and potential_neighbor not in tiles_to_delete:
-					neighbors.append(potential_neighbor)
-			if neighbors.size() < 1:
-				break
-			neighbors.shuffle()
-			cur_cell = neighbors[0]
-			tiles_to_delete.append(cur_cell)
-			disasters_dealt += 1
-		await sink_tiles(tiles_to_delete)
+		tiles_to_mark = 0
+
+	var cur_cell = Utils.pick_tile_to_sink(self.tiles.keys())
+	for i in range(tiles_to_mark):
+		var neighbors = self.get_surrounding_cells(cur_cell).filter(func(x): return self.tiles.has(x) and not self.tiles[x].marked)
+		if Utils.rng.randi() % 5 == 0 or neighbors.size() < 1:
+			cur_cell = Utils.pick_tile_to_sink(self.tiles.keys())
+		else:
+			cur_cell = neighbors[randi() % neighbors.size()]
+		self.tiles[cur_cell].mark()
+	if tiles_to_mark > 0:
+		self.messenger.call("Neptune has marked those who are destined to perish.")
 		await Utils.wait(Constants.TURN_TIME)
+
+func sink_marked():
+	var marked_coords = self.tiles.values().filter(func(x): return x.marked).map(func(x): return x.coords)
+	if marked_coords.size() > 0:
+		await sink_tiles(marked_coords)
+		await Utils.wait(Constants.TURN_TIME)
+
 
 func move_units(region_from : int, region_to: int, team: int):
 	var is_player = team == 1

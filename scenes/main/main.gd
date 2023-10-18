@@ -12,30 +12,29 @@ var gameOverScreenPrefab = preload("res://ui/game_over_menu/game_over_screen.tsc
 @onready var sacrificeButton = $"%SacrificeButton"
 @onready var sacrificeLabel = $"%SacrificeLabel"
 
-var is_sacrificing = false
-var sacrifices_available = 0
+const player_team_index: int = 0
 
-
-var eliminated_teams = []
+var is_sacrificing : bool = false
+var sacrifices_available : int = 0
+var eliminated_teams : Array[int] = []
 
 var selected_region = null
-var teams = []
-var turn = 0
-var player_team_index = 0
+var teams : Array[int] = []
+var turn : int = 0
+
 var global_turn = 0
 
-var actions_history = []
-var bots = {}
+var actions_history : Array[Action] = []
+var bots : Dictionary = {}
 
-var turn_indicators = []
+var turn_indicators : Array[Node] = []
 
-var game_started = false
-var escMenu = null
+var game_started : bool = false
+var escMenu : Node = null
 
+var sacrifice_hovered_tile : Vector2i = Constants.NULL_COORDS
 
-var sacrifice_hovered_tile = Constants.NULL_COORDS
-
-var spectating = false
+var spectating : bool = false
 
 
 
@@ -61,7 +60,7 @@ func add_teams():
 		t.queue_free()
 	self.turn_indicators.clear()
 	for team_id in teams:
-		self.bots[int(team_id)] = DumbBot.new(team_id)
+		self.bots[team_id] = DumbBot.new(team_id)
 		self.create_turn_indicator(team_id)
 
 
@@ -118,13 +117,11 @@ func _unhandled_input(event):
 				if world.tiles[coords_clicked].team == self.teams[self.player_team_index]:
 					self.sacrifices_available += 1
 					self.update_sacrifices_display()
-					self.sacrificeButton.disabled = true
 					self.clear_sacrifice()
 					sacrifice_tile(coords_clicked)
 				elif self.sacrifices_available > 0:
 					self.sacrifices_available -= 1
 					self.update_sacrifices_display()
-					self.sacrificeButton.disabled = true
 					self.clear_sacrifice()
 					sacrifice_tile(coords_clicked)
 				else:
@@ -147,12 +144,24 @@ func _unhandled_input(event):
 
 func _on_turn_button_pressed():
 	self.endTurnButton.disabled = true
-	await next_turn()
-	self.world.camera.move_smoothed(self.world.map_to_local(closest_player_tile_coords()), 5)
+	self.sacrificeButton.disabled = true
+	clear_selected_region()
+	self.world.clear_regions_used()
+	Settings.input_locked = true
+
+	await play_global_turn()
+
+	Settings.input_locked = false
 	self.endTurnButton.disabled = false
+	self.sacrificeButton.disabled = false
+
+	var tile_camera_move = closest_player_tile_coords()
+	if tile_camera_move != Constants.NULL_COORDS:
+		await self.world.camera.move_smoothed(self.world.map_to_local(tile_camera_move), 5)
+	
 
 func closest_player_tile_coords():
-	var closest_player_tile = Vector2i(100000, 100000)
+	var closest_player_tile = Constants.NULL_COORDS
 	var closest_tile_distance = 100000
 	var camera_tile = self.world.local_to_map(self.world.camera.position)
 	for region in self.world.regions:
@@ -214,16 +223,7 @@ func get_teams_alive():
 		if regions_left(team):
 			teams_alive.append(team)
 	return teams_alive
-
-func bots_play():
-	var bot_action = null
-	var bot = self.bots[Utils.to_team_id(self.turn)]
-	while bot_action == null or bot_action.action != Constants.Action.None:
-		bot_action = bot.play_turn(self.world)
-		await apply_action(bot_action)
-		self.actions_history.append(bot_action)
-		await Utils.wait(Constants.TURN_TIME)
-	self.world.clear_regions_used()
+	
 
 func clear_selected_region():
 	if selected_region != null:
@@ -234,12 +234,15 @@ func clear_selected_region():
 
 func on_tile_clicked(new_clicked_tile):
 	if !(self.turn == self.player_team_index):
+		print("not player turn")
 		clear_selected_region()
 		return
 	if new_clicked_tile.region in self.world.regions_used:
+		print("region used")
 		clear_selected_region()
 		return
 	if selected_region != null and new_clicked_tile.region == selected_region:
+		print("same region"	)
 		clear_selected_region()
 		return
 	if selected_region == null:
@@ -260,36 +263,40 @@ func on_tile_clicked(new_clicked_tile):
 				messenger.set_message("My lord, we cannot leave this region undefended!")
 			clear_selected_region()
 
-func next_turn():
-	clear_selected_region()
-	self.world.clear_regions_used()
-	Settings.input_locked = true
-	if check_global_turn_over():
-		self.global_turn += 1
-		await turn_events()
-	self.turn = (self.turn + 1) % (self.teams.size())
+func update_turn_indicators():
 	for i in range(self.teams.size()):
 		self.turn_indicators[i].set_active(self.turn == i)
-	check_win_condition()
-	if global_turn > 0:
-		generate_units(teams[self.turn])
-	if not regions_left(self.teams[self.turn]):
-		await next_turn()
-	elif (self.turn != self.player_team_index):
-		self.sacrificeButton.disabled = true
-		await bots_play()
-		await Utils.wait(Constants.TURN_TIME)
-		await next_turn()
-	else:
-		self.sacrificeButton.disabled = false
-	Settings.input_locked = false
-	self.turnLabel.set_text("Turn: " + str(self.global_turn))
+
+func play_global_turn():
+	self.turn += 1
+	update_turn_indicators()
+	while not self.turn == 0:
+		if global_turn > 0:
+			generate_units(self.teams[self.turn])
+		await play_turn(Utils.to_team_id(self.turn))
+		check_win_condition()
+		self.turn = (self.turn + 1) % (self.teams.size())
+		update_turn_indicators()
 	
+	self.global_turn += 1
+	self.turnLabel.set_text("Turn: " + str(self.global_turn))
+	await self.world.sink_marked()
+	await self.world.mark_tiles(self.global_turn)
+	if global_turn > 0:
+		generate_units(self.teams[self.player_team_index])
 
-func turn_events():
-	await world.generate_disaster(self.global_turn)
+func play_turn(team_id):
+	if team_id in self.eliminated_teams:
+		return
+	while true:
+		var bot_action = self.bots[team_id].play_turn(self.world)
+		if bot_action.action == Constants.Action.None:
+			break
+		await apply_action(bot_action)
+		self.actions_history.append(bot_action)
+		await Utils.wait(Constants.TURN_TIME)
+	self.world.clear_regions_used()
 	await Utils.wait(Constants.TURN_TIME)
-
 
 func regions_left(team):
 	for region in world.regions:
@@ -315,7 +322,9 @@ func apply_action(action : Action):
 
 func load_map():
 	self.world.clear_island()
-	self.teams = Settings.current_map.teams
+	self.teams.clear()
+	for t in Settings.current_map.teams:
+		self.teams.append(int(t)) ## json is parsed as floats
 	self.world.load_tiles(Settings.current_map.tiles)
 	self.world.load_regions(Settings.current_map.regions)
 
