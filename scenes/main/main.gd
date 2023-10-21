@@ -11,6 +11,7 @@ var gameOverScreenPrefab = preload("res://ui/game_over_menu/game_over_screen.tsc
 @onready var endTurnButton = $"%TurnButton"
 @onready var sacrificeButton = $"%SacrificeButton"
 @onready var sacrificeLabel = $"%SacrificeLabel"
+@onready var fastForwardButton = $"%FastForwardButton"
 
 const player_team_index: int = 0
 
@@ -103,11 +104,9 @@ func _unhandled_input(event):
 		else:
 			escMenu.delete()
 	if event.is_action_pressed("skip"):
-		Settings.skip(true)
-		self.world.camera.skip(true)
+		fast_forward(true)
 	elif event.is_action_released("skip"):
-		Settings.skip(false)
-		self.world.camera.skip(false)
+		fast_forward(false)
 	elif event is InputEventMouseButton:
 		if Settings.input_locked or !game_started:
 			return
@@ -335,3 +334,10 @@ func load_map():
 func _on_sacrifice_button_pressed():
 	self.is_sacrificing = true
 
+func fast_forward(val):
+	Settings.skip(val)
+	self.world.camera.skip(val)
+	self.fastForwardButton.button_pressed = val
+
+func _on_fast_forward_button_toggled(button_pressed:bool):
+	fast_forward(button_pressed)

@@ -56,18 +56,35 @@ func clear_island():
 	self.regions_used.clear()
 
 
-func generate_island(island_size = Constants.ISLAND_SIZE_DEFAULT):
+
+func get_next_empty(next_position, direction):
+	if self.tiles.has(next_position):
+		return get_next_empty(self.get_neighbor_cell(next_position, direction), direction)
+	else:
+		return next_position
+
+func generate_island(island_size = Constants.ISLAND_SIZE_DEFAULT, instant = true):
 	const n_tiles_max = Constants.WORLD_BOUNDS.x * Constants.WORLD_BOUNDS.y * 4
 	var n_tiles_target = round(n_tiles_max * island_size)
+	var current_cell = Constants.WORLD_CENTER
 	spawn_cell(Constants.WORLD_CENTER, Constants.NULL_TEAM)
-	var used_cells_coords = self.tiles.keys()
-	while ((used_cells_coords.size() < n_tiles_target)):
-		var cell_coords = used_cells_coords[randi() % used_cells_coords.size()]
-		var neighbor = self.get_neighbor_cell(cell_coords, Utils.choose_random_direction())
-		if (Utils.is_in_world(neighbor) and not self.tiles.has(neighbor)):
-			spawn_cell(neighbor, Constants.NULL_TEAM)
-			used_cells_coords = self.tiles.keys()
+	while (self.tiles.size() < n_tiles_target):
+		var movement = (Utils.rng.randi() % 3) == 0
+		var available_directions = []
+		for dir in Constants.NEIGHBORS:
+			available_directions.append(get_next_empty(current_cell, dir))
+		available_directions = available_directions.filter(func(x): return Utils.is_in_world(x))
+		var next_empty = available_directions[Utils.rng.randi() % available_directions.size()]
+		if movement:
+			current_cell = next_empty
+		spawn_cell(next_empty, Constants.NULL_TEAM)
+		if not instant:
+			await Utils.wait(0.025)
+	if not instant:
+		await Utils.wait(0.25)
 	generate_regions()
+	if not instant:
+		await Utils.wait(0.25)
 	apply_borders()
 
 func generate_regions():

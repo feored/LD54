@@ -78,6 +78,17 @@ max_value = 1.0
 step = 0.01
 value = 0.25
 
+[node name="HBoxContainer3" type="HBoxContainer" parent="SelectionUI/PanelContainer/MarginContainer/HBoxContainer/HBoxContainer"]
+layout_mode = 2
+
+[node name="InstantGenerate" type="Label" parent="SelectionUI/PanelContainer/MarginContainer/HBoxContainer/HBoxContainer/HBoxContainer3"]
+layout_mode = 2
+text = "Instant"
+
+[node name="InstantButton" type="CheckButton" parent="SelectionUI/PanelContainer/MarginContainer/HBoxContainer/HBoxContainer/HBoxContainer3"]
+unique_name_in_owner = true
+layout_mode = 2
+
 [node name="GenerateBtn" type="Button" parent="SelectionUI/PanelContainer/MarginContainer/HBoxContainer/HBoxContainer"]
 layout_mode = 2
 text = "Generate another map"
@@ -89,5 +100,6 @@ text = "Play this map"
 [connection signal="value_changed" from="SelectionUI/PanelContainer/MarginContainer/HBoxContainer/HBoxContainer/HBoxContainer/TeamNum" to="." method="_on_team_num_value_changed"]
 [connection signal="drag_ended" from="SelectionUI/PanelContainer/MarginContainer/HBoxContainer/HBoxContainer/HBoxContainer2/IslandSizeSlider" to="." method="_on_island_size_slider_drag_ended"]
 [connection signal="value_changed" from="SelectionUI/PanelContainer/MarginContainer/HBoxContainer/HBoxContainer/HBoxContainer2/IslandSizeSlider" to="." method="_on_island_size_slider_value_changed"]
+[connection signal="toggled" from="SelectionUI/PanelContainer/MarginContainer/HBoxContainer/HBoxContainer/HBoxContainer3/InstantButton" to="." method="_on_instant_button_toggled"]
 [connection signal="pressed" from="SelectionUI/PanelContainer/MarginContainer/HBoxContainer/HBoxContainer/GenerateBtn" to="." method="_on_generate_btn_pressed"]
 [connection signal="pressed" from="SelectionUI/PanelContainer/MarginContainer/HBoxContainer/PlayBtn" to="." method="_on_play_btn_pressed"]

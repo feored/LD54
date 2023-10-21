@@ -1,17 +1,18 @@
 extends Node
 
-enum Setting { FullScreen, MasterVolume, MusicVolume, SfxVolume }
+enum Setting { FullScreen, MasterVolume, MusicVolume, SfxVolume, InstantMap }
 const SETTING_NAMES = {
 	Setting.FullScreen: "full_screen",
 	Setting.MasterVolume: "master_volume",
 	Setting.MusicVolume: "music_volume",
 	Setting.SfxVolume: "sfx_volume",
+	Setting.InstantMap : "instant_map"
 }
 
 const DEFAULT_SECTION = "settings"
 const DEFAULT_PATH = "user://config.cfg"
 const DEFAULT_CONFIG = {
-	Setting.FullScreen: false, Setting.MasterVolume: 1, Setting.MusicVolume: 1, Setting.SfxVolume: 1
+	Setting.FullScreen: false, Setting.MasterVolume: 1, Setting.MusicVolume: 1, Setting.SfxVolume: 1, Setting.InstantMap: true
 }
 
 @onready var audio_bus = {
@@ -41,6 +42,11 @@ func load_config():
 	if err != OK:
 		for setting in DEFAULT_CONFIG:
 			config.set_value(DEFAULT_SECTION, SETTING_NAMES[setting], DEFAULT_CONFIG[setting])
+	# If the file did load, but is missing some settings, add them.
+	else:
+		for setting in DEFAULT_CONFIG:
+			if not config.has_section_key(DEFAULT_SECTION, SETTING_NAMES[setting]):
+				config.set_value(DEFAULT_SECTION, SETTING_NAMES[setting], DEFAULT_CONFIG[setting])
 	return config
 
 func save_config():
