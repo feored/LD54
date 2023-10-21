@@ -23,6 +23,8 @@ const DEFAULT_CONFIG = {
 var settings = null
 var input_locked: bool = false
 var current_map = null
+var turn_time = Constants.TURN_TIME
+var skipping = false
 
 
 func _ready():
@@ -65,6 +67,9 @@ func apply_config():
 	change_volume("Music", get_config_setting(Setting.MusicVolume, self.settings))
 	change_volume("SFX", get_config_setting(Setting.SfxVolume, self.settings))
 
+func skip(val: bool):
+	self.turn_time = 0.0 if val else Constants.TURN_TIME
+	skipping = val
 
 func change_volume(bus_name, new_volume):
 	var db_volume =  linear_to_db(new_volume)

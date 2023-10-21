@@ -6,7 +6,7 @@
 [ext_resource type="Script" path="res://ui/Message.gd" id="7_y3mfw"]
 [ext_resource type="Texture2D" uid="uid://bxqvi5615lj3b" path="res://assets/trident.png" id="8_gw5hb"]
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_wp2ga"]
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_08vlr"]
 bg_color = Color(0.0784314, 0.0745098, 0.0588235, 1)
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_c6hay"]
@@ -31,7 +31,7 @@ offset_top = -31.0
 grow_horizontal = 2
 grow_vertical = 0
 theme = ExtResource("5_5yrco")
-theme_override_styles/panel = SubResource("StyleBoxFlat_wp2ga")
+theme_override_styles/panel = SubResource("StyleBoxFlat_08vlr")
 
 [node name="MarginContainer" type="MarginContainer" parent="UI/Panel"]
 layout_mode = 2

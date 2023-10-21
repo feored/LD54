@@ -48,7 +48,7 @@ enum Action { None, Move, Sacrifice }
 ## Teams
 const TEAM_COLORS = [
 	0xffffffff,  # no team
-	0x180fbdff,  # blue
+	0x002ac2ff,  # blue
 	0xf78000ff,  # orange
 	0xfc03dbff,  # pink
 	0xffea00ff,  # yellow

@@ -6,6 +6,8 @@ var active = true
 const LIMIT_X = 24*(Constants.WORLD_CAMERA_BOUNDS.x)-640
 const LIMIT_Y = 24*(Constants.WORLD_CAMERA_BOUNDS.y)-360
 
+const POSITION_SMOOTHED_SPEED = 5.0
+const POSITION_SMOOTHED_SPEED_SKIP = 10.0
 
 @onready var viewport_size = get_viewport().content_scale_size
 var start_position = Constants.NULL_POS
@@ -69,6 +71,10 @@ func move_instant(target):
 	is_dragging = false
 	self.position = target - Vector2(self.viewport_size/2)
 
+func skip(val: bool):
+	if self.position_smoothing_enabled:
+		self.position_smoothing_speed = POSITION_SMOOTHED_SPEED_SKIP if val else POSITION_SMOOTHED_SPEED
+
 
 func move_smoothed(target, precision = 1):
 	if not active:
@@ -77,6 +83,7 @@ func move_smoothed(target, precision = 1):
 	Settings.input_locked = true
 	self.position_smoothing_enabled = true
 	self.position = target - Vector2(self.viewport_size/2)
+	self.position_smoothing_speed = POSITION_SMOOTHED_SPEED_SKIP if Settings.skipping else POSITION_SMOOTHED_SPEED
 	var arrived_center = target
 	while abs((arrived_center - get_screen_center_position()).length_squared()) > precision:
 		await Utils.wait(0.1)

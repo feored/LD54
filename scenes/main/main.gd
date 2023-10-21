@@ -102,6 +102,12 @@ func _unhandled_input(event):
 			self.add_child(escMenu)
 		else:
 			escMenu.delete()
+	if event.is_action_pressed("skip"):
+		Settings.skip(true)
+		self.world.camera.skip(true)
+	elif event.is_action_released("skip"):
+		Settings.skip(false)
+		self.world.camera.skip(false)
 	elif event is InputEventMouseButton:
 		if Settings.input_locked or !game_started:
 			return
@@ -193,8 +199,6 @@ func check_win_condition():
 		var gameOverScreen = gameOverScreenPrefab.instantiate()
 		gameOverScreen.init(game_won, self, false)
 		self.add_child(gameOverScreen)
-		return
-	#check_teams_on_islands(teams_alive)
 
 
 func check_teams_on_islands(teams_alive):
@@ -274,7 +278,6 @@ func play_global_turn():
 		if global_turn > 0:
 			generate_units(self.teams[self.turn])
 		await play_turn(Utils.to_team_id(self.turn))
-		check_win_condition()
 		self.turn = (self.turn + 1) % (self.teams.size())
 		update_turn_indicators()
 	
@@ -294,9 +297,9 @@ func play_turn(team_id):
 			break
 		await apply_action(bot_action)
 		self.actions_history.append(bot_action)
-		await Utils.wait(Constants.TURN_TIME)
+		await Utils.wait(Settings.turn_time)
 	self.world.clear_regions_used()
-	await Utils.wait(Constants.TURN_TIME)
+	await Utils.wait(Settings.turn_time)
 
 func regions_left(team):
 	for region in world.regions:
@@ -312,13 +315,14 @@ func generate_units(team):
 func apply_action(action : Action):
 	match action.action:
 		Constants.Action.Move:
-					await self.world.move_units(action.region_from, action.region_to, action.team)
+			await self.world.move_units(action.region_from, action.region_to, action.team)
 		Constants.Action.Sacrifice:
 			await self.world.sacrifice_tile(action.tile, action)
 		Constants.Action.None:
 			pass
 		_:
 			print("Unknown action: ", action.action)
+	check_win_condition()
 
 func load_map():
 	self.world.clear_island()

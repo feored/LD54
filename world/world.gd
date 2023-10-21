@@ -261,13 +261,13 @@ func mark_tiles(global_turn):
 		self.tiles[cur_cell].mark()
 	if tiles_to_mark > 0:
 		self.messenger.call("Neptune has marked those who are destined to perish.")
-		await Utils.wait(Constants.TURN_TIME)
+		await Utils.wait(Settings.turn_time)
 
 func sink_marked():
 	var marked_coords = self.tiles.values().filter(func(x): return x.marked).map(func(x): return x.coords)
 	if marked_coords.size() > 0:
 		await sink_tiles(marked_coords)
-		await Utils.wait(Constants.TURN_TIME)
+		await Utils.wait(Settings.turn_time)
 
 
 func move_units(region_from : int, region_to: int, team: int):
@@ -310,7 +310,7 @@ func move_units(region_from : int, region_to: int, team: int):
 	self.regions_used.append(region_from)
 	# self.regions_used.append(region_to)
 	if not is_player:
-		await Utils.wait(Constants.TURN_TIME)
+		await Utils.wait(Settings.turn_time)
 
 # Called when the node enters the scene tree for the first time.
 func _ready():

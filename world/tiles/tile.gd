@@ -24,7 +24,9 @@ var tween = null
 var lighter_color
 var blink_state = 0
 var delete_callable = null
+var dissolving = false
 var marked = false
+var elapsed = 0.0
 
 func init_cell(
 	init_coords: Vector2,
@@ -46,9 +48,16 @@ func _ready():
 	self.position = init_position
 	self.update_cell()
 
+func _process(delta):
+	if dissolving:
+		if elapsed > 1.0:
+			self.delete_from_world()
+		elapsed += delta
+		self.material.set_shader_parameter("sensitivity", elapsed)
+
 func update_cell():
 	for b in self.borders.keys():
-		self.border_objects[b].modulate = Constants.TEAM_COLORS[team] if self.borders[b] else Color.hex(0x3aa25dff)
+		self.border_objects[b].self_modulate = Color.WHITE if self.borders[b] else Color.hex(0x3aa25dff)
 	var team_color = Color(Constants.TEAM_COLORS[self.team])
 	team_color.a = Constants.BLENDING_MODULATE_ALPHA
 	self.lighter_color = Color.hex(0xffffffff).blend(team_color)
@@ -57,10 +66,14 @@ func update_cell():
 func delete():
 	animation_player.play("sink")
 	await animation_player.animation_finished
+	## dissolve
+	$GPUParticles2D.emitting = true
+	Sfx.play(Sfx.Track.Boom)
+	self.dissolving = true
+	self.material.set_shader_parameter("active", true)
 
 func delete_from_world():
 	self.delete_callable.call(self.coords)
-	Sfx.play(Sfx.Track.Boom)
 	self.queue_free()
 
 func set_team(new_team: int):
@@ -95,12 +108,13 @@ func set_highlight(highlight: int):
 
 func set_selected(selected: bool):
 	if selected:
-		self.tween = self.create_tween().set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_IN).set_loops()
-		self.tween.tween_property(self, "modulate", Color.WHITE, 0.5)
+		self.tween = self.create_tween().set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN).set_loops()
+		self.tween.tween_property(self, "modulate", Color(1.5, 1.5, 1.5), 0.5)
 		self.tween.tween_property(self, "modulate", self.lighter_color, 0.5)
 	else:
 		self.modulate = self.lighter_color
 		self.tween.kill()
+
 
 func get_save_data():
 	return {

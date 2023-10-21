@@ -1,5 +1,6 @@
-[gd_scene load_steps=13 format=3 uid="uid://d2tu4itgwxsmx"]
+[gd_scene load_steps=19 format=3 uid="uid://d2tu4itgwxsmx"]
 
+[ext_resource type="Shader" path="res://world/tiles/dissolve.gdshader" id="1_n7qej"]
 [ext_resource type="Texture2D" uid="uid://c2jmky1u16cef" path="res://assets/tiles/grass.png" id="1_ritjv"]
 [ext_resource type="Script" path="res://world/tiles/tile.gd" id="2_m7fn7"]
 [ext_resource type="Texture2D" uid="uid://bvs77v2s4itrk" path="res://assets/tiles/southeast.png" id="3_7ni8f"]
@@ -10,34 +11,11 @@
 [ext_resource type="Texture2D" uid="uid://lscvgckqsnqh" path="res://assets/tiles/northwest.png" id="8_rltnp"]
 [ext_resource type="Texture2D" uid="uid://cp2ykpdtmxnwf" path="res://assets/tiles/barred_2.png" id="9_220g0"]
 
-[sub_resource type="Animation" id="Animation_824x5"]
-resource_name = "sink"
-tracks/0/type = "method"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath(".")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"times": PackedFloat32Array(1),
-"transitions": PackedFloat32Array(1),
-"values": [{
-"args": [],
-"method": &"delete_from_world"
-}]
-}
-tracks/1/type = "value"
-tracks/1/imported = false
-tracks/1/enabled = true
-tracks/1/path = NodePath(".:offset")
-tracks/1/interp = 0
-tracks/1/loop_wrap = true
-tracks/1/keys = {
-"times": PackedFloat32Array(0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9),
-"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1, 1, 1, 1),
-"update": 0,
-"values": [Vector2(0, 0), Vector2(1, 0), Vector2(-1, 0), Vector2(1, 0), Vector2(-1, 0), Vector2(0, -1), Vector2(1, 1), Vector2(0, 0), Vector2(0, 0), Vector2(0, -1)]
-}
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_6h2i5"]
+resource_local_to_scene = true
+shader = ExtResource("1_n7qej")
+shader_parameter/active = false
+shader_parameter/sensitivity = 0.0
 
 [sub_resource type="Animation" id="Animation_1xy5g"]
 resource_name = "quake"
@@ -55,13 +33,58 @@ tracks/0/keys = {
 "values": [Vector2(0, 0), Vector2(0, 1), Vector2(0, -1), Vector2(-1, 1), Vector2(1, -1), Vector2(-1, 1), Vector2(-1, 1), Vector2(1, 0), Vector2(-1, 0), Vector2(1, 1), Vector2(0, 1)]
 }
 
+[sub_resource type="Animation" id="Animation_824x5"]
+resource_name = "sink"
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:offset")
+tracks/0/interp = 0
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1, 1, 1, 1),
+"update": 0,
+"values": [Vector2(0, 0), Vector2(1, 0), Vector2(-1, 0), Vector2(1, 0), Vector2(-1, 0), Vector2(0, -1), Vector2(1, 1), Vector2(0, 0), Vector2(0, 0), Vector2(0, -1)]
+}
+
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_j2aig"]
 _data = {
 "quake": SubResource("Animation_1xy5g"),
 "sink": SubResource("Animation_824x5")
 }
 
+[sub_resource type="CanvasItemMaterial" id="CanvasItemMaterial_jymbu"]
+light_mode = 1
+
+[sub_resource type="Gradient" id="Gradient_1mtrv"]
+colors = PackedColorArray(0.0176097, 0.260862, 0.518755, 1, 0.78696, 0.928579, 0.925693, 1)
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_t8ap8"]
+gradient = SubResource("Gradient_1mtrv")
+width = 32
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_sr5fb"]
+lifetime_randomness = 1.0
+emission_shape = 6
+emission_ring_axis = Vector3(0, 0, 1)
+emission_ring_height = 1.0
+emission_ring_radius = 12.0
+emission_ring_inner_radius = 12.0
+particle_flag_disable_z = true
+direction = Vector3(0, 0, 0)
+spread = 48.04
+gravity = Vector3(0, 0, 0)
+orbit_velocity_min = 0.0
+orbit_velocity_max = 0.0
+radial_accel_min = 9.2
+radial_accel_max = 38.3
+color = Color(0.678431, 0.894118, 0.992157, 1)
+color_initial_ramp = SubResource("GradientTexture1D_t8ap8")
+turbulence_noise_strength = 2.65
+
 [node name="tile" type="Sprite2D"]
+material = SubResource("ShaderMaterial_6h2i5")
 texture = ExtResource("1_ritjv")
 script = ExtResource("2_m7fn7")
 
@@ -92,3 +115,14 @@ texture = ExtResource("9_220g0")
 libraries = {
 "": SubResource("AnimationLibrary_j2aig")
 }
+
+[node name="GPUParticles2D" type="GPUParticles2D" parent="."]
+material = SubResource("CanvasItemMaterial_jymbu")
+emitting = false
+amount = 100
+process_material = SubResource("ParticleProcessMaterial_sr5fb")
+lifetime = 1.5
+one_shot = true
+speed_scale = 1.7
+explosiveness = 0.62
+randomness = 0.67
