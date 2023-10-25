@@ -247,11 +247,6 @@ func expand_single_region_from_coords(region: int, region_tiles: Array):
 				break
 	region_update_label(self.regions[region])
 
-func sacrifice_tile(coords, action):
-	var deleted_cell_region = self.tiles[coords].region
-	await delete_cell([coords], action)
-	recalculate_region(deleted_cell_region)
-
 func sink_tiles(coords):
 	var regions_impacted = []
 	for coord in coords:
@@ -265,9 +260,9 @@ func mark_tiles(global_turn):
 	# only sinking tiles for now
 	var n = self.tiles.size()
 	var tiles_to_mark = min(n - 1, int(global_turn * n / 10.0))
-	if (global_turn <= Constants.SINK_GRACE_PERIOD):
+	if (global_turn < Constants.SINK_GRACE_PERIOD):
 		tiles_to_mark = 0
-
+	print("Marking", tiles_to_mark, "tiles")
 	var cur_cell = Utils.pick_tile_to_sink(self.tiles.keys())
 	for i in range(tiles_to_mark):
 		var neighbors = self.get_surrounding_cells(cur_cell).filter(func(x): return self.tiles.has(x) and not self.tiles[x].marked)

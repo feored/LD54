@@ -1,0 +1,9 @@
+[gd_scene load_steps=3 format=3 uid="uid://bhpqoewial2ri"]
+
+[ext_resource type="TileSet" uid="uid://dswtp6vpo8tyt" path="res://world/tiles/tileset.tres" id="1_dwigw"]
+[ext_resource type="Script" path="res://scripts/utils.gd" id="2_pbvi2"]
+
+[node name="HelperTilemap" type="TileMap"]
+tile_set = ExtResource("1_dwigw")
+format = 2
+script = ExtResource("2_pbvi2")

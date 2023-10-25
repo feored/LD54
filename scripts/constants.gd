@@ -42,7 +42,6 @@ const NULL_TEAM = 0
 
 ## Game enums
 enum GameMode { Play, MapEditor, Scenario }
-enum Highlight { Red, Green, None }
 enum Action { None, Move, Sacrifice }
 
 ## Teams

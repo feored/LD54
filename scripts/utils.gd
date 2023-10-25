@@ -46,27 +46,14 @@ func pick_random_tile(tiles_dict):
 	return tiles_dict[keys[randi() % keys.size()]]
 
 func pick_tile_to_sink(tiles: Array):
-	var count_neighbors_water = func(coords, tiles):
-		var count = 0
-		for neighbor in surrounding_cells(coords):
-			if tiles.has(neighbor):
-				count += 1
-		return count
 	if tiles.size() == 1:
 		return tiles[0]
-	tiles.sort_custom(func(a,b): return count_neighbors_water.call(a, tiles) < count_neighbors_water.call(b, tiles))
-	var n = tiles.size()
-	var total = n*(n-1)/2
-	var random = [randi() % total, randi() % total].max()
-	var running_total = 0
-	for i in range(n):
-		running_total += i
-		if running_total >= random:
-			return tiles[i]
+	tiles.sort_custom(func(a,b): return distance_from_center(a) > distance_from_center(b))
+	return tiles[0]
 
-func distance_from_center(tile):
-	return abs(tile.coords.x - Constants.WORLD_CENTER.x) + \
-		abs(tile.coords.y - Constants.WORLD_CENTER.y)
+func distance_from_center(coords):
+	return abs(coords.x - Constants.WORLD_CENTER.x) + \
+		abs(coords.y - Constants.WORLD_CENTER.y)
 
 func surrounding_cells(coords):
 	return [

@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://oga4juu5tmaf"
-path="res://.godot/imported/9patch.png-345731ac2e4eef3f7107d06a734e145c.ctex"
+uid="uid://fh2aaiw6vrwi"
+path="res://.godot/imported/hex_shape.png-909ed1da6768c3224bf74db27453c058.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/9patch.png"
-dest_files=["res://.godot/imported/9patch.png-345731ac2e4eef3f7107d06a734e145c.ctex"]
+source_file="res://assets/tiles/hex_shape.png"
+dest_files=["res://.godot/imported/hex_shape.png-909ed1da6768c3224bf74db27453c058.ctex"]
 
 [params]
 

@@ -1,8 +1,9 @@
 extends Node2D
 
-var turnIndicatorPrefab = preload("res://ui/turn_indicator/turn_indicator.tscn")
-var escMenuPrefab = preload("res://ui/esc_menu/esc_menu.tscn")
-var gameOverScreenPrefab = preload("res://ui/game_over_menu/game_over_screen.tscn")
+const turnIndicatorPrefab = preload("res://ui/turn_indicator/turn_indicator.tscn")
+const escMenuPrefab = preload("res://ui/esc_menu/esc_menu.tscn")
+const gameOverScreenPrefab = preload("res://ui/game_over_menu/game_over_screen.tscn")
+const shapePrefab = preload("res://world/tiles/highlight/shape.tscn")
 
 @onready var world = $"World"
 @onready var turnContainer = $"%TurnContainer"
@@ -15,7 +16,7 @@ var gameOverScreenPrefab = preload("res://ui/game_over_menu/game_over_screen.tsc
 
 const player_team_index: int = 0
 
-var is_sacrificing : bool = false
+var sacrifice_item : Shape = null
 var sacrifices_available : int = 0
 var eliminated_teams : Array[int] = []
 
@@ -32,8 +33,6 @@ var turn_indicators : Array[Node] = []
 
 var game_started : bool = false
 var escMenu : Node = null
-
-var sacrifice_hovered_tile : Vector2i = Constants.NULL_COORDS
 
 var spectating : bool = false
 
@@ -84,17 +83,30 @@ func _process(_delta):
 	pass
 
 func clear_sacrifice():
-	self.is_sacrificing = false
-	if sacrifice_hovered_tile in self.world.tiles:
-		self.world.tiles[sacrifice_hovered_tile].set_highlight(Constants.Highlight.None)
-	self.sacrifice_hovered_tile = Constants.NULL_COORDS
+	self.sacrifice_item.queue_free()
+	self.sacrifice_item = null
 
-func sacrifice_tile(coords):
+func sacrifice_tiles(coords):
 	var sink_action = Action.new(self.teams[self.player_team_index], Constants.Action.Sacrifice, 0, 0, coords )
 	actions_history.append(sink_action)
 	self.apply_action(sink_action)
 
 
+func handle_sacrificing(event):
+	if event is InputEventMouseMotion:
+		var tile_hovered = world.global_pos_to_coords(event.position)
+		self.sacrifice_item.try_place(tile_hovered, self.world.tiles.keys())
+		self.sacrifice_item.position = self.world.map_to_local(tile_hovered)
+	elif event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT and event.pressed:
+		var tile_hovered = world.global_pos_to_coords(event.position)
+		if self.sacrifice_item.placeable(tile_hovered, self.world.tiles.keys()):
+			sacrifice_tiles(self.sacrifice_item.adjusted_shape_coords(tile_hovered))
+			self.sacrifices_available -= self.sacrifice_item.shape.size()
+			self.update_sacrifices_display()
+			self.clear_sacrifice()
+		else:
+			messenger.set_message("You must acquire more favor from Neptune first, my lord.")
+			clear_sacrifice()
 
 func _unhandled_input(event):
 	if event.is_action_pressed("escmenu"):
@@ -107,44 +119,21 @@ func _unhandled_input(event):
 		fast_forward(true)
 	elif event.is_action_released("skip"):
 		fast_forward(false)
-	elif event is InputEventMouseButton:
+	else:
 		if Settings.input_locked or !game_started:
 			return
-		if event.button_index == MOUSE_BUTTON_RIGHT and event.pressed:
-			clear_selected_region()
-			clear_sacrifice()
-		var coords_clicked = world.global_pos_to_coords(event.position)
-		if is_sacrificing and event.button_index == MOUSE_BUTTON_LEFT and event.pressed:
-			if not world.tiles.has(coords_clicked):
-				Sfx.play(Sfx.Track.Cancel)
+		## Right click to cancel
+		if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_RIGHT and event.pressed:
+				clear_selected_region()
 				clear_sacrifice()
+		elif event is InputEventMouse:
+			if self.sacrifice_item != null:
+				handle_sacrificing(event)
 			else:
-				if world.tiles[coords_clicked].team == self.teams[self.player_team_index]:
-					self.sacrifices_available += 1
-					self.update_sacrifices_display()
-					self.clear_sacrifice()
-					sacrifice_tile(coords_clicked)
-				elif self.sacrifices_available > 0:
-					self.sacrifices_available -= 1
-					self.update_sacrifices_display()
-					self.clear_sacrifice()
-					sacrifice_tile(coords_clicked)
-				else:
-					messenger.set_message("You must acquire more favor from Neptune first, my lord.")
-					clear_sacrifice()
-		elif world.tiles.has(coords_clicked):
-			if event.button_index == MOUSE_BUTTON_LEFT and event.pressed:
-				on_tile_clicked(world.tiles[coords_clicked])
-	elif event is InputEventMouseMotion and is_sacrificing:
-		var coords_clicked = world.global_pos_to_coords(event.position)
-		if coords_clicked != self.sacrifice_hovered_tile and self.sacrifice_hovered_tile != Constants.NULL_COORDS:
-			world.tiles[sacrifice_hovered_tile].set_highlight(Constants.Highlight.None)
-		if world.tiles.has(coords_clicked):
-			self.sacrifice_hovered_tile = coords_clicked
-			if world.tiles[coords_clicked].team == self.teams[self.player_team_index] or sacrifices_available > 0:
-				self.world.tiles[coords_clicked].set_highlight(Constants.Highlight.Green)
-			else:
-				self.world.tiles[coords_clicked].set_highlight(Constants.Highlight.Red)
+				var coords_clicked = world.global_pos_to_coords(event.position)
+				if world.tiles.has(coords_clicked):
+					if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT and event.pressed:
+						on_tile_clicked(world.tiles[coords_clicked])
 
 
 func _on_turn_button_pressed():
@@ -245,7 +234,6 @@ func on_tile_clicked(new_clicked_tile):
 		clear_selected_region()
 		return
 	if selected_region != null and new_clicked_tile.region == selected_region:
-		print("same region"	)
 		clear_selected_region()
 		return
 	if selected_region == null:
@@ -316,7 +304,7 @@ func apply_action(action : Action):
 		Constants.Action.Move:
 			await self.world.move_units(action.region_from, action.region_to, action.team)
 		Constants.Action.Sacrifice:
-			await self.world.sacrifice_tile(action.tile, action)
+			await self.world.sink_tiles(action.tiles)
 		Constants.Action.None:
 			pass
 		_:
@@ -332,7 +320,9 @@ func load_map():
 	self.world.load_regions(Settings.current_map.regions)
 
 func _on_sacrifice_button_pressed():
-	self.is_sacrificing = true
+	self.sacrifice_item = shapePrefab.instantiate()
+	self.sacrifice_item.init()
+	self.world.add_child(sacrifice_item)
 
 func fast_forward(val):
 	Settings.skip(val)
