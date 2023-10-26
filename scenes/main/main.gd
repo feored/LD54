@@ -4,6 +4,8 @@ const turnIndicatorPrefab = preload("res://ui/turn_indicator/turn_indicator.tscn
 const escMenuPrefab = preload("res://ui/esc_menu/esc_menu.tscn")
 const gameOverScreenPrefab = preload("res://ui/game_over_menu/game_over_screen.tscn")
 const shapePrefab = preload("res://world/tiles/highlight/shape.tscn")
+const shapeGuiPrefab = preload("res://ui/shape_gui.tscn")
+const flagPrefab = preload("res://world/flag.tscn")
 
 @onready var world = $"World"
 @onready var turnContainer = $"%TurnContainer"
@@ -13,12 +15,15 @@ const shapePrefab = preload("res://world/tiles/highlight/shape.tscn")
 @onready var sacrificeButton = $"%SacrificeButton"
 @onready var sacrificeLabel = $"%SacrificeLabel"
 @onready var fastForwardButton = $"%FastForwardButton"
+@onready var shapeTickerContainer = $"%ShapeTickerContainer"
 
 const player_team_index: int = 0
 
 var sacrifice_item : Shape = null
 var sacrifices_available : int = 0
 var eliminated_teams : Array[int] = []
+
+var shape_ticker : Array = []
 
 var selected_region = null
 var teams : Array[int] = []
@@ -48,11 +53,18 @@ func _ready():
 	self.load_map()
 	self.add_teams()
 	self.start_game()
+	self.shape_ticker_init()
+	flag_center()
 	self.world.camera.move_instant(self.world.map_to_local(closest_player_tile_coords()))
 
 func update_sacrifices_display():
 	self.sacrificeLabel.set_text(str(sacrifices_available))
 
+func shape_ticker_init():
+	for i in Constants.SHAPE_TICKER_NUM:
+		var shape = shapeGuiPrefab.instantiate()
+		self.shape_ticker.append(shape)
+		self.shapeTickerContainer.add_child(shape)
 
 func add_teams():
 	self.bots.clear()
@@ -63,6 +75,11 @@ func add_teams():
 		self.bots[team_id] = DumbBot.new(team_id)
 		self.create_turn_indicator(team_id)
 
+func flag_center():
+	if self.world.tiles.has(Constants.WORLD_CENTER):
+		print("flag planted")
+		var flag = flagPrefab.instantiate()
+		self.world.tiles[Constants.WORLD_CENTER].add_child(flag)
 
 func start_game():
 	self.game_started = true

@@ -3,5 +3,6 @@
 [ext_resource type="FontFile" uid="uid://dnejlqr6sbicq" path="res://assets/monogram-extended.ttf" id="1_u5pme"]
 
 [resource]
+default_base_scale = 1.0
 default_font = ExtResource("1_u5pme")
-default_font_size = 0
+default_font_size = 96

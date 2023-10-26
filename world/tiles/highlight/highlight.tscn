@@ -1,6 +1,6 @@
 [gd_scene load_steps=3 format=3 uid="uid://j4uwydgm8jx7"]
 
-[ext_resource type="Texture2D" uid="uid://fh2aaiw6vrwi" path="res://assets/tiles/hex_shape.png" id="1_aw5h3"]
+[ext_resource type="Texture2D" uid="uid://drntfim33fa64" path="res://assets/tiles/hex_shape.png" id="1_aw5h3"]
 [ext_resource type="Script" path="res://world/tiles/highlight/highlight.gd" id="2_xsne6"]
 
 [node name="Highlight" type="Sprite2D"]

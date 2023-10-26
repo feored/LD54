@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://bxqvi5615lj3b"
-path="res://.godot/imported/trident.png-ec22dfc98e8137a6f6335cd6f8bf771f.ctex"
+uid="uid://ka3qvk0pec1x"
+path="res://.godot/imported/icon.png-816117353ba57afc3af521f78eedcc3c.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/trident.png"
-dest_files=["res://.godot/imported/trident.png-ec22dfc98e8137a6f6335cd6f8bf771f.ctex"]
+source_file="res://assets/icons/icon.png"
+dest_files=["res://.godot/imported/icon.png-816117353ba57afc3af521f78eedcc3c.ctex"]
 
 [params]
 

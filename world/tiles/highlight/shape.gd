@@ -14,7 +14,7 @@ func _ready():
 
 func init():
 	var available_tiles = [Vector2i(0, 0)]
-	var to_add = Utils.rng.randi() % 6
+	var to_add = 1 + Utils.rng.randi() % 5
 	while to_add > 0:
 		var random_tile = available_tiles[randi() % available_tiles.size()]
 		available_tiles.erase(random_tile)

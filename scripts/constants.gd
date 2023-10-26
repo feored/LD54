@@ -1,8 +1,8 @@
 extends Node
 
 ## World constants
-const TILE_SIZE = 24
-const WORLD_CENTER = Vector2i(512 / 24 / 2, 288 / 24 / 2)
+const TILE_SIZE = 96
+const WORLD_CENTER = Vector2i(2560 / TILE_SIZE / 2, 1440 / TILE_SIZE / 2)
 const WORLD_BOUNDS = Vector2i(15, 15)
 const WORLD_CAMERA_BOUNDS = Vector2i(40, 25)
 const NEIGHBORS = [
@@ -33,6 +33,7 @@ const CAMERA_SPEED = 5
 const ISLAND_SIZE_DEFAULT = 0.25
 const ISLAND_SIZE_MIN = 0.1
 const ISLAND_SIZE_MAX = 0.5
+const SHAPE_TICKER_NUM = 4
 
 ## Null values
 const NULL_COORDS = Vector2i(-9999, -9999)

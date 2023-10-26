@@ -1,0 +1,20 @@
+[gd_scene load_steps=4 format=3 uid="uid://cprnm5lwqaecd"]
+
+[ext_resource type="Script" path="res://ui/shape_gui.gd" id="1_0k0j5"]
+[ext_resource type="Theme" uid="uid://3t61g0061mea" path="res://assets/theme.tres" id="1_cpkl4"]
+[ext_resource type="PackedScene" uid="uid://07l0kghc34w8" path="res://world/tiles/highlight/shape.tscn" id="2_oyknu"]
+
+[node name="shape_gui" type="MarginContainer"]
+custom_minimum_size = Vector2(32, 32)
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("1_cpkl4")
+theme_override_constants/margin_left = 64
+script = ExtResource("1_0k0j5")
+
+[node name="Shape" parent="." instance=ExtResource("2_oyknu")]
+position = Vector2(32, 0)
+scale = Vector2(0.5, 0.5)

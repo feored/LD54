@@ -3,9 +3,9 @@
 [ext_resource type="Script" path="res://scenes/main/main.gd" id="1_osaxm"]
 [ext_resource type="PackedScene" uid="uid://b8opucxucl032" path="res://world/world.tscn" id="2_unfjm"]
 [ext_resource type="Theme" uid="uid://3t61g0061mea" path="res://assets/theme.tres" id="5_5yrco"]
+[ext_resource type="Texture2D" uid="uid://bxqvi5615lj3b" path="res://assets/icons/trident.png" id="5_neief"]
 [ext_resource type="Texture2D" uid="uid://vv0nl83x0ldq" path="res://assets/icons/forward.png" id="6_7usvn"]
 [ext_resource type="Script" path="res://ui/Message.gd" id="7_y3mfw"]
-[ext_resource type="Texture2D" uid="uid://bxqvi5615lj3b" path="res://assets/trident.png" id="8_gw5hb"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_08vlr"]
 bg_color = Color(0.0784314, 0.0745098, 0.0588235, 1)
@@ -30,7 +30,7 @@ anchors_preset = 12
 anchor_top = 1.0
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_top = -31.0
+offset_top = -34.0
 grow_horizontal = 2
 grow_vertical = 0
 theme = ExtResource("5_5yrco")
@@ -89,7 +89,7 @@ vertical_alignment = 1
 
 [node name="SacrificeIcon" type="TextureRect" parent="UI/Panel/MarginContainer/HBoxContainer/HBoxContainer/SacrificeContainer/HBoxContainer"]
 layout_mode = 2
-texture = ExtResource("8_gw5hb")
+texture = ExtResource("5_neief")
 stretch_mode = 5
 
 [node name="SacrificeButton" type="Button" parent="UI/Panel/MarginContainer/HBoxContainer/HBoxContainer/SacrificeContainer"]
@@ -114,6 +114,26 @@ theme_override_styles/focus = SubResource("StyleBoxEmpty_7ox3a")
 toggle_mode = true
 icon = ExtResource("6_7usvn")
 icon_alignment = 1
+
+[node name="ShapeTicker" type="PanelContainer" parent="UI"]
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -161.0
+offset_right = -121.0
+offset_bottom = 40.0
+grow_horizontal = 0
+theme = ExtResource("5_5yrco")
+
+[node name="ShapeTickerLAbel" type="Label" parent="UI/ShapeTicker"]
+visible = false
+layout_mode = 2
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="ShapeTickerContainer" type="VBoxContainer" parent="UI/ShapeTicker"]
+unique_name_in_owner = true
+layout_mode = 2
 
 [connection signal="pressed" from="UI/Panel/MarginContainer/HBoxContainer/HBoxContainer/SacrificeContainer/SacrificeButton" to="." method="_on_sacrifice_button_pressed"]
 [connection signal="pressed" from="UI/Panel/MarginContainer/HBoxContainer/TurnButton" to="." method="_on_turn_button_pressed"]

@@ -3,11 +3,10 @@ var cloudPrefab = preload("res://world/clouds/cloud.tscn")
 
 const cloud_textures = [
 	preload("res://assets/clouds/cloud_1.png"),
+	preload("res://assets/clouds/cloud_3.png"),
 	preload("res://assets/clouds/cloud_2.png"),
-	preload("res://assets/clouds/cloud_3.png"),
-	preload("res://assets/clouds/cloud_3.png"),
-	preload("res://assets/clouds/cloud_3.png"),
-	preload("res://assets/clouds/cloud_3.png"),
+	preload("res://assets/clouds/cloud_2.png"),
+	preload("res://assets/clouds/cloud_2.png"),
 	preload("res://assets/clouds/cloud_4.png")
 ]
 
@@ -35,11 +34,11 @@ func _process(delta):
 
 
 func generate_cloud(init):
-	var x = -Constants.WORLD_CAMERA_BOUNDS.x * 24
+	var x = -Constants.WORLD_CAMERA_BOUNDS.x * Constants.TILE_SIZE
 	if init:
 		x = (
 			Utils.rng.randi_range(-Constants.WORLD_CAMERA_BOUNDS.x, Constants.WORLD_CAMERA_BOUNDS.x)
-			* 24
+			* Constants.TILE_SIZE
 		)
 
 	var cloud = cloudPrefab.instantiate()
@@ -47,7 +46,7 @@ func generate_cloud(init):
 		x,
 		(
 			Utils.rng.randi_range(-Constants.WORLD_CAMERA_BOUNDS.y, Constants.WORLD_CAMERA_BOUNDS.y)
-			* 24
+			* Constants.TILE_SIZE
 		)
 	)
 	cloud.cloud_texture = cloud_textures[Utils.rng.randi_range(0, cloud_textures.size() - 1)]

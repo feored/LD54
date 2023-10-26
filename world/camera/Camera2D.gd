@@ -8,10 +8,13 @@ const LIMIT_Y = 24*(Constants.WORLD_CAMERA_BOUNDS.y)-360
 
 const POSITION_SMOOTHED_SPEED = 5.0
 const POSITION_SMOOTHED_SPEED_SKIP = 10.0
+const ZOOM_STEP = Vector2(0.05, 0.05)
 
 @onready var viewport_size = get_viewport().content_scale_size
 var start_position = Constants.NULL_POS
 var is_dragging = false
+var zoom_speed = 0.05
+
 
 
 
@@ -33,6 +36,13 @@ func _physics_process(_delta):
 		position = Vector2(position.x,  position.y + Constants.CAMERA_SPEED/2)
 	
 
+func zoom_camera(zoom_factor, mouse_position):
+	print(mouse_position)
+	self.viewport_size = get_viewport().size
+	print(self.viewport_size, "viewport_size")
+	var previous_zoom = self.zoom
+	self.zoom += self.zoom * zoom_factor
+	self.position += ((self.viewport_size * 0.5) - mouse_position) * (self.zoom-previous_zoom)
 
 func move():
 	if not active:
@@ -51,8 +61,12 @@ func move():
 	return local_mouse_pos
 
 func _unhandled_input(event):
-	if Settings.input_locked:
+	if Settings.input_locked or not active:
 		return
+	if event.is_action_pressed("zoom_in"):
+		zoom_camera(zoom_speed, event.position)
+	elif event.is_action_pressed("zoom_out"):
+		zoom_camera(-zoom_speed, event.position)
 	if event is InputEventMouseButton:
 		if event.button_index == MOUSE_BUTTON_LEFT:
 			if event.pressed:

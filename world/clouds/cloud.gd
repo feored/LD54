@@ -14,8 +14,8 @@ func _ready():
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):
-	self.position.x += delta * speed
-	if self.position.x > Constants.WORLD_CAMERA_BOUNDS.x * 24:
+	self.position.x += delta * speed * 4
+	if self.position.x > Constants.WORLD_CAMERA_BOUNDS.x * Constants.TILE_SIZE:
 		parent.remove_cloud(self)
 
 

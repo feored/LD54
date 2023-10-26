@@ -1,0 +1,31 @@
+[gd_scene load_steps=5 format=3 uid="uid://q8smq1idt131"]
+
+[ext_resource type="Texture2D" uid="uid://d1sfpyyb67h1s" path="res://assets/flag.png" id="1_ljjer"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_2k5eg"]
+atlas = ExtResource("1_ljjer")
+region = Rect2(0, 0, 128, 128)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_cm3a4"]
+atlas = ExtResource("1_ljjer")
+region = Rect2(128, 0, 128, 128)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_no6ru"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_2k5eg")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_cm3a4")
+}],
+"loop": true,
+"name": &"default",
+"speed": 5.0
+}]
+
+[node name="Flag" type="AnimatedSprite2D"]
+z_index = 10
+sprite_frames = SubResource("SpriteFrames_no6ru")
+autoplay = "default"
+offset = Vector2(24, -24)
