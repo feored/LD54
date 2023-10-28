@@ -1,20 +1,16 @@
-[gd_scene load_steps=11 format=3 uid="uid://ceoqtlfuehsvd"]
+[gd_scene load_steps=9 format=3 uid="uid://ceoqtlfuehsvd"]
 
 [ext_resource type="Script" path="res://scenes/main/main.gd" id="1_osaxm"]
 [ext_resource type="PackedScene" uid="uid://b8opucxucl032" path="res://world/world.tscn" id="2_unfjm"]
 [ext_resource type="Theme" uid="uid://3t61g0061mea" path="res://assets/theme.tres" id="5_5yrco"]
 [ext_resource type="Texture2D" uid="uid://vv0nl83x0ldq" path="res://assets/icons/forward.png" id="6_7usvn"]
 [ext_resource type="Script" path="res://ui/Message.gd" id="7_y3mfw"]
-[ext_resource type="Texture2D" uid="uid://bxqvi5615lj3b" path="res://assets/trident.png" id="8_gw5hb"]
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_08vlr"]
-bg_color = Color(0.0784314, 0.0745098, 0.0588235, 1)
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_7ox3a"]
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_c6hay"]
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_u2eju"]
-
-[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_7ox3a"]
 
 [node name="Main" type="Node2D"]
 script = ExtResource("1_osaxm")
@@ -26,22 +22,18 @@ unique_name_in_owner = true
 layer = 2
 
 [node name="Panel" type="PanelContainer" parent="UI"]
-anchors_preset = 12
-anchor_top = 1.0
+anchors_preset = 10
 anchor_right = 1.0
-anchor_bottom = 1.0
-offset_top = -31.0
+offset_bottom = 34.0
 grow_horizontal = 2
-grow_vertical = 0
 theme = ExtResource("5_5yrco")
-theme_override_styles/panel = SubResource("StyleBoxFlat_08vlr")
 
 [node name="MarginContainer" type="MarginContainer" parent="UI/Panel"]
 layout_mode = 2
-theme_override_constants/margin_left = 5
-theme_override_constants/margin_top = 5
-theme_override_constants/margin_right = 5
-theme_override_constants/margin_bottom = 5
+theme_override_constants/margin_left = 0
+theme_override_constants/margin_top = 0
+theme_override_constants/margin_right = 0
+theme_override_constants/margin_bottom = 0
 
 [node name="HBoxContainer" type="HBoxContainer" parent="UI/Panel/MarginContainer"]
 layout_mode = 2
@@ -50,11 +42,20 @@ layout_mode = 2
 layout_mode = 2
 size_flags_horizontal = 3
 
+[node name="FastForwardButton" type="Button" parent="UI/Panel/MarginContainer/HBoxContainer/HBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_styles/focus = SubResource("StyleBoxEmpty_7ox3a")
+toggle_mode = true
+icon = ExtResource("6_7usvn")
+icon_alignment = 1
+
 [node name="VBoxContainer" type="VBoxContainer" parent="UI/Panel/MarginContainer/HBoxContainer/HBoxContainer"]
 layout_mode = 2
 
 [node name="TurnLabel" type="Label" parent="UI/Panel/MarginContainer/HBoxContainer/HBoxContainer/VBoxContainer"]
 unique_name_in_owner = true
+visible = false
 layout_mode = 2
 text = "Turn 0"
 horizontal_alignment = 1
@@ -89,7 +90,6 @@ vertical_alignment = 1
 
 [node name="SacrificeIcon" type="TextureRect" parent="UI/Panel/MarginContainer/HBoxContainer/HBoxContainer/SacrificeContainer/HBoxContainer"]
 layout_mode = 2
-texture = ExtResource("8_gw5hb")
 stretch_mode = 5
 
 [node name="SacrificeButton" type="Button" parent="UI/Panel/MarginContainer/HBoxContainer/HBoxContainer/SacrificeContainer"]
@@ -106,15 +106,6 @@ size_flags_horizontal = 0
 theme_override_styles/focus = SubResource("StyleBoxEmpty_u2eju")
 text = "End Turn"
 
-[node name="FastForwardButton" type="Button" parent="UI"]
-unique_name_in_owner = true
-offset_right = 8.0
-offset_bottom = 8.0
-theme_override_styles/focus = SubResource("StyleBoxEmpty_7ox3a")
-toggle_mode = true
-icon = ExtResource("6_7usvn")
-icon_alignment = 1
-
+[connection signal="toggled" from="UI/Panel/MarginContainer/HBoxContainer/HBoxContainer/FastForwardButton" to="." method="_on_fast_forward_button_toggled"]
 [connection signal="pressed" from="UI/Panel/MarginContainer/HBoxContainer/HBoxContainer/SacrificeContainer/SacrificeButton" to="." method="_on_sacrifice_button_pressed"]
 [connection signal="pressed" from="UI/Panel/MarginContainer/HBoxContainer/TurnButton" to="." method="_on_turn_button_pressed"]
-[connection signal="toggled" from="UI/FastForwardButton" to="." method="_on_fast_forward_button_toggled"]

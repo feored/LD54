@@ -138,7 +138,7 @@ func apply_borders():
 
 
 func region_update_label(region: Region):
-	region.label.position = self.coords_to_pos(region.center_tile()) - Vector2(30, 20)/2 ## size of the label
+	region.label.position = self.coords_to_pos(region.center_tile()) - region.label.size/2 ## size of the label
 	region.update_display()
 
 	

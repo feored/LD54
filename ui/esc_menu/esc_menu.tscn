@@ -1,8 +1,11 @@
-[gd_scene load_steps=4 format=3 uid="uid://pu46mkcjdswb"]
+[gd_scene load_steps=5 format=3 uid="uid://pu46mkcjdswb"]
 
 [ext_resource type="Script" path="res://ui/esc_menu/EscMenu.gd" id="1_m4juf"]
 [ext_resource type="Theme" uid="uid://3t61g0061mea" path="res://assets/theme.tres" id="2_pn4ld"]
 [ext_resource type="PackedScene" uid="uid://dj8sjte3quqjh" path="res://ui/settings_menu/settings_menu.tscn" id="3_iogc5"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_1v067"]
+bg_color = Color(0, 0, 0, 0.752941)
 
 [node name="EscMenu" type="CanvasLayer"]
 process_mode = 3
@@ -16,6 +19,7 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 theme = ExtResource("2_pn4ld")
+theme_override_styles/panel = SubResource("StyleBoxFlat_1v067")
 
 [node name="CenterContainer" type="CenterContainer" parent="PanelContainer"]
 layout_mode = 2

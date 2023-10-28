@@ -35,7 +35,7 @@ window/size/viewport_height=360
 window/size/window_width_override=1280
 window/size/window_height_override=720
 window/stretch/mode="viewport"
-mouse_cursor/custom_image="res://assets/cursor_triangle_16.png"
+mouse_cursor/custom_image="res://assets/ui/cursor_triangle_16.png"
 
 [input]
 

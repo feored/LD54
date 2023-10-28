@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://b6xyta7g4808h"
-path="res://.godot/imported/cursor_triangle_16.png-ce66eeb681f970c8508195acc645596d.ctex"
+uid="uid://drx370mkl3yiq"
+path="res://.godot/imported/brownbtn.png-47b206169f2764b3886e5826b17b50df.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/cursor_triangle_16.png"
-dest_files=["res://.godot/imported/cursor_triangle_16.png-ce66eeb681f970c8508195acc645596d.ctex"]
+source_file="res://assets/ui/brownbtn.png"
+dest_files=["res://.godot/imported/brownbtn.png-47b206169f2764b3886e5826b17b50df.ctex"]
 
 [params]
 

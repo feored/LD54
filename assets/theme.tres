@@ -1,7 +1,59 @@
-[gd_resource type="Theme" load_steps=2 format=3 uid="uid://3t61g0061mea"]
+[gd_resource type="Theme" load_steps=13 format=3 uid="uid://3t61g0061mea"]
 
+[ext_resource type="Texture2D" uid="uid://uamowdvuuon1" path="res://assets/ui/browbtn_disabled.png" id="1_0toau"]
+[ext_resource type="Texture2D" uid="uid://drx370mkl3yiq" path="res://assets/ui/brownbtn.png" id="1_2k6w4"]
+[ext_resource type="Texture2D" uid="uid://dj628alce4iv3" path="res://assets/ui/wood.png" id="1_nadf8"]
 [ext_resource type="FontFile" uid="uid://dnejlqr6sbicq" path="res://assets/monogram-extended.ttf" id="1_u5pme"]
+[ext_resource type="Texture2D" uid="uid://1mbqef17366m" path="res://assets/ui/brownbtn_hover.png" id="2_4km0b"]
+[ext_resource type="Texture2D" uid="uid://ca52yledtg5sa" path="res://assets/ui/brownbtn_pressed.png" id="2_rti3s"]
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_bnvqk"]
+texture = ExtResource("1_0toau")
+texture_margin_left = 4.0
+texture_margin_top = 4.0
+texture_margin_right = 4.0
+texture_margin_bottom = 4.0
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_30h70"]
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_y36yn"]
+texture = ExtResource("2_4km0b")
+texture_margin_left = 4.0
+texture_margin_top = 4.0
+texture_margin_right = 4.0
+texture_margin_bottom = 4.0
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_3v08a"]
+content_margin_left = 8.0
+content_margin_right = 8.0
+texture = ExtResource("1_2k6w4")
+texture_margin_left = 4.0
+texture_margin_top = 4.0
+texture_margin_right = 4.0
+texture_margin_bottom = 4.0
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_mhw14"]
+texture = ExtResource("2_rti3s")
+texture_margin_left = 4.0
+texture_margin_top = 4.0
+texture_margin_right = 4.0
+texture_margin_bottom = 4.0
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_vsy4g"]
+texture = ExtResource("1_nadf8")
+texture_margin_left = 8.0
+texture_margin_top = 8.0
+texture_margin_right = 8.0
+texture_margin_bottom = 8.0
+axis_stretch_horizontal = 2
+axis_stretch_vertical = 2
 
 [resource]
 default_font = ExtResource("1_u5pme")
 default_font_size = 0
+Button/styles/disabled = SubResource("StyleBoxTexture_bnvqk")
+Button/styles/focus = SubResource("StyleBoxEmpty_30h70")
+Button/styles/hover = SubResource("StyleBoxTexture_y36yn")
+Button/styles/normal = SubResource("StyleBoxTexture_3v08a")
+Button/styles/pressed = SubResource("StyleBoxTexture_mhw14")
+PanelContainer/styles/panel = SubResource("StyleBoxTexture_vsy4g")
