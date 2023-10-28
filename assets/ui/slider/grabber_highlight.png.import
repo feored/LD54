@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://drx370mkl3yiq"
-path="res://.godot/imported/brownbtn.png-47b206169f2764b3886e5826b17b50df.ctex"
+uid="uid://cubi3g60lm7fc"
+path="res://.godot/imported/grabber_highlight.png-8263444b5d88de10fcb9f43f313e7c66.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/ui/brownbtn.png"
-dest_files=["res://.godot/imported/brownbtn.png-47b206169f2764b3886e5826b17b50df.ctex"]
+source_file="res://assets/ui/slider/grabber_highlight.png"
+dest_files=["res://.godot/imported/grabber_highlight.png-8263444b5d88de10fcb9f43f313e7c66.ctex"]
 
 [params]
 
