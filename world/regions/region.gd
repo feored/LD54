@@ -27,6 +27,15 @@ func delete():
 	self.queue_free()
 
 
+func sacrifice():
+	print("Sacrificed")
+	if self.units < 2:
+		return 0
+	var favor = self.units / 10
+	self.units = 1
+	return favor
+
+
 func delete_no_tiles():
 	self.tiles.clear()
 	if label != null:

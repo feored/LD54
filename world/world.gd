@@ -110,7 +110,7 @@ func generate_regions():
 					break
 			if not expanded:
 				break
-		region_update_label(regions[current_region])
+		region_update_label(current_region)
 		current_region += 1
 
 func add_tile_to_region(tile_coords, region):
@@ -137,7 +137,8 @@ func apply_borders():
 				tile_obj.set_single_border(neighbor_direction, true)
 
 
-func region_update_label(region: Region):
+func region_update_label(region_id: int):
+	var region = self.regions[region_id]
 	region.label.position = self.coords_to_pos(region.center_tile()) - region.label.size/2 ## size of the label
 	region.update_display()
 
@@ -227,7 +228,7 @@ func recalculate_region(region: int):
 		if (region_tiles.size() > 0):
 			region_to_expand = self.regions.keys().max() + 1
 			self.regions[region_to_expand] = create_region(region_to_expand)
-	region_update_label(self.regions[region])
+	region_update_label(region)
 	self.apply_borders()
 
 func expand_single_region_from_coords(region: int, region_tiles: Array):
@@ -245,7 +246,7 @@ func expand_single_region_from_coords(region: int, region_tiles: Array):
 					break
 			if added:
 				break
-	region_update_label(self.regions[region])
+	region_update_label(region)
 
 func sink_tiles(coords):
 	var regions_impacted = []
@@ -383,7 +384,7 @@ func load_regions(new_regions):
 		region.set_team(saved_region.team)
 		region.set_units(saved_region.units)
 		self.regions[region_id] = region
-		self.region_update_label(region)
+		self.region_update_label(region_id)
 		if region.team != Constants.NULL_TEAM:
 			region.generate_units()
 			

@@ -11,14 +11,17 @@ const shapePrefab = preload("res://world/tiles/highlight/shape.tscn")
 @onready var messenger = $"%Message"
 @onready var endTurnButton = $"%TurnButton"
 @onready var sacrificeButton = $"%SacrificeButton"
-@onready var sacrificeLabel = $"%SacrificeLabel"
+@onready var favorLabel = $"%SacrificeLabel"
 @onready var fastForwardButton = $"%FastForwardButton"
 
 const player_team_index: int = 0
 
-var sacrifice_item : Shape = null
-var sacrifices_available : int = 0
+var is_sacrificing : bool = false
+
+var sink_item : Shape = null
+var favor : int = 0
 var eliminated_teams : Array[int] = []
+
 
 var selected_region = null
 var teams : Array[int] = []
@@ -50,8 +53,8 @@ func _ready():
 	self.start_game()
 	self.world.camera.move_instant(self.world.map_to_local(closest_player_tile_coords()))
 
-func update_sacrifices_display():
-	self.sacrificeLabel.set_text(str(sacrifices_available))
+func update_favor_display():
+	self.favorLabel.set_text(str(favor))
 
 
 func add_teams():
@@ -82,9 +85,9 @@ func create_turn_indicator(team_id):
 func _process(_delta):
 	pass
 
-func clear_sacrifice():
-	self.sacrifice_item.queue_free()
-	self.sacrifice_item = null
+func clear_sinking():
+	self.sink_item.queue_free()
+	self.sink_item = null
 
 func sacrifice_tiles(coords):
 	var sink_action = Action.new(self.teams[self.player_team_index], Constants.Action.Sacrifice, 0, 0, coords )
@@ -92,21 +95,21 @@ func sacrifice_tiles(coords):
 	self.apply_action(sink_action)
 
 
-func handle_sacrificing(event):
+func handle_sinking(event):
 	if event is InputEventMouseMotion:
 		var tile_hovered = world.global_pos_to_coords(event.position)
-		self.sacrifice_item.try_place(tile_hovered, self.world.tiles.keys())
-		self.sacrifice_item.position = self.world.map_to_local(tile_hovered)
+		self.sink_item.try_place(tile_hovered, self.world.tiles.keys())
+		self.sink_item.position = self.world.map_to_local(tile_hovered)
 	elif event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT and event.pressed:
 		var tile_hovered = world.global_pos_to_coords(event.position)
-		if self.sacrifice_item.placeable(tile_hovered, self.world.tiles.keys()):
-			sacrifice_tiles(self.sacrifice_item.adjusted_shape_coords(tile_hovered))
-			self.sacrifices_available -= self.sacrifice_item.shape.size()
-			self.update_sacrifices_display()
-			self.clear_sacrifice()
+		if self.sink_item.placeable(tile_hovered, self.world.tiles.keys()):
+			sacrifice_tiles(self.sink_item.adjusted_shape_coords(tile_hovered))
+			self.favor -= self.sink_item.shape.size()
+			self.update_favor_display()
+			self.clear_sinking()
 		else:
 			messenger.set_message("You must acquire more favor from Neptune first, my lord.")
-			clear_sacrifice()
+			clear_sinking()
 
 func _unhandled_input(event):
 	if event.is_action_pressed("escmenu"):
@@ -125,10 +128,21 @@ func _unhandled_input(event):
 		## Right click to cancel
 		if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_RIGHT and event.pressed:
 				clear_selected_region()
-				clear_sacrifice()
+				clear_sinking()
+				self.is_sacrificing = false
 		elif event is InputEventMouse:
-			if self.sacrifice_item != null:
-				handle_sacrificing(event)
+			if self.sink_item != null:
+				handle_sinking(event)
+			elif self.is_sacrificing:
+				if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT and event.pressed:
+					var tile_hovered = self.world.global_pos_to_coords(event.position)
+					if self.world.tiles.has(tile_hovered):
+						var region = self.world.tiles[tile_hovered].region
+						if self.world.regions[region].team == self.teams[self.player_team_index]:
+							self.favor += self.world.regions[region].sacrifice()
+							self.update_favor_display()
+							self.world.region_update_label(region)
+					self.is_sacrificing = false
 			else:
 				var coords_clicked = world.global_pos_to_coords(event.position)
 				if world.tiles.has(coords_clicked):
@@ -320,9 +334,12 @@ func load_map():
 	self.world.load_regions(Settings.current_map.regions)
 
 func _on_sacrifice_button_pressed():
-	self.sacrifice_item = shapePrefab.instantiate()
-	self.sacrifice_item.init()
-	self.world.add_child(sacrifice_item)
+	is_sacrificing = true
+
+func sinkbuttonpressed():
+	self.sink_item = shapePrefab.instantiate()
+	self.sink_item.init()
+	self.world.add_child(sink_item)
 
 func fast_forward(val):
 	Settings.skip(val)
