@@ -33,7 +33,9 @@ const CAMERA_SPEED = 5
 const ISLAND_SIZE_DEFAULT = 0.25
 const ISLAND_SIZE_MIN = 0.1
 const ISLAND_SIZE_MAX = 0.5
+const GOLD_PER_TURN_PER_REGION = 1
 const SACRIFICE_SHAPES = 3
+const SHAPE_REROLL_COST = 1
 
 ## Null values
 const NULL_COORDS = Vector2i(-9999, -9999)

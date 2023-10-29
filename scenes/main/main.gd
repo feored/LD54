@@ -65,8 +65,10 @@ func _ready():
 	Sfx.enable_track(Sfx.Track.Boom)
 	self.load_map()
 	self.add_teams()
-	self.start_game()
 	self.init_shapes()
+	self.resources[self.teams[self.player_team_index]].init_callbacks( Callable(self, "gold_changed"), Callable(self, "favor_changed"))
+	self.start_game()
+	
 	self.world.camera.move_instant(self.world.map_to_local(closest_player_tile_coords()))
 
 func update_resources_display():
@@ -88,17 +90,27 @@ func update_resources_container_display(clicked : ResourcesContainerState, activ
 			self.shopContainer.show()
 	else:
 		self.resourcesPanel.hide()
-
+	
 func reroll_shape():
-	self.resources[self.teams[self.player_team_index]].favor -= 1
-	update_resources_display()
+	self.resources[self.teams[self.player_team_index]].add_favor(-Constants.SHAPE_REROLL_COST)
 
 func init_shapes():
 	for i in Constants.SACRIFICE_SHAPES:
 		var shape_box = shapeBoxPrefab.instantiate()
-		shape_box.init(i, null, Callable(self, "reroll_shape"))
+		shape_box.init(i, Callable(self, "pick_shape_to_sink"), Callable(self, "reroll_shape"))
 		self.shape_boxes.append(shape_box)
 		self.shapeVBox.add_child(shape_box)
+
+func gold_changed():
+	update_resources_display()
+
+func favor_changed():
+	update_resources_display()
+	update_shape_boxes_state()
+	
+func update_shape_boxes_state():
+	for shape_box in self.shape_boxes:
+		shape_box.update_buttons_state(self.resources[self.teams[self.player_team_index]].favor)
 
 func add_teams():
 	self.bots.clear()
@@ -129,9 +141,15 @@ func create_turn_indicator(team_id):
 func _process(_delta):
 	pass
 
-func clear_sinking():
+func clear_sinking(successful_sink = false):
 	self.sink_item.queue_free()
 	self.sink_item = null
+	if successful_sink:
+		for shape_box in self.shape_boxes:
+			if shape_box.picked:
+				shape_box.reroll(true)
+	for shape_box in self.shape_boxes:
+		shape_box.picked = false
 
 func sacrifice_tiles(coords):
 	var sink_action = Action.new(self.teams[self.player_team_index], Constants.Action.Sacrifice, 0, 0, coords )
@@ -148,9 +166,9 @@ func handle_sinking(event):
 		var tile_hovered = world.global_pos_to_coords(event.position)
 		if self.sink_item.placeable(tile_hovered, self.world.tiles.keys()):
 			sacrifice_tiles(self.sink_item.adjusted_shape_coords(tile_hovered))
-			self.resources[self.teams[self.player_team_index]].favor -= self.sink_item.shape.size()
+			self.resources[self.teams[self.player_team_index]].add_favor(-self.sink_item.shape.size())
 			self.update_resources_display()
-			self.clear_sinking()
+			self.clear_sinking(true)
 		else:
 			messenger.set_message("You must acquire more favor from Neptune first, my lord.")
 			clear_sinking()
@@ -183,7 +201,7 @@ func _unhandled_input(event):
 					if self.world.tiles.has(tile_hovered):
 						var region = self.world.tiles[tile_hovered].region
 						if self.world.regions[region].team == self.teams[self.player_team_index]:
-							self.resources[self.teams[self.player_team_index]].favor += self.world.regions[region].sacrifice()
+							self.resources[self.teams[self.player_team_index]].add_favor(self.world.regions[region].sacrifice())
 							self.update_resources_display()
 							self.world.region_update_label(region)
 					self.is_sacrificing = false
@@ -282,7 +300,7 @@ func check_coins(team_id):
 		var coin = coinPrefab.instantiate()
 		coin.position = self.world.map_to_local(region.center_tile())
 		self.world.add_child(coin)
-		self.resources[team_id].gold += 1
+		self.resources[team_id].add_gold(Constants.GOLD_PER_TURN_PER_REGION)
 
 
 func clear_selected_region():
@@ -391,10 +409,11 @@ func load_map():
 func _on_sacrifice_button_pressed():
 	is_sacrificing = true
 
-func sinkbuttonpressed():
+func pick_shape_to_sink(shape_coords):
 	self.sink_item = shapePrefab.instantiate()
-	self.sink_item.init()
+	self.sink_item.init_with_coords(shape_coords)
 	self.world.add_child(sink_item)
+	self.sink_item.global_position = get_viewport().get_mouse_position()
 
 func fast_forward(val):
 	Settings.skip(val)

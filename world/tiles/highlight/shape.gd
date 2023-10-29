@@ -18,6 +18,14 @@ func reroll():
 	self.init()
 
 
+func init_with_coords(coords: Array):
+	for coord in coords:
+		var new_tile = tile_prefab.instantiate()
+		self.add_child(new_tile)
+		new_tile.position = Utils.to_global(Utils.map_to_local(coord)) - Vector2(12, 12)
+		self.shape[coord] = new_tile
+
+
 func init():
 	var available_tiles = [Vector2i(0, 0)]
 	var used_tiles = []
@@ -37,6 +45,10 @@ func init():
 		new_tile.position = Utils.to_global(Utils.map_to_local(random_tile)) - Vector2(12, 12)
 		self.shape[random_tile] = new_tile
 		to_add -= 1
+
+
+func highlight_center():
+	self.shape[Vector2i(0, 0)].self_modulate = Color.hex(0xffffffff)
 
 
 func try_place(pos: Vector2i, tiles: Array):

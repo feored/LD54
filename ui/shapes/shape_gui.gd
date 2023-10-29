@@ -5,13 +5,14 @@ extends Control
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
-	shape.init()
-	print(shape.shape)
+	self.shape.init()
+	self.shape.highlight_center()
 	self.custom_control()
 
 
 func reroll():
 	self.shape.reroll()
+	self.shape.highlight_center()
 	self.custom_control()
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
