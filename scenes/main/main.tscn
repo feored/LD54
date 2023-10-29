@@ -116,17 +116,18 @@ text = "End Turn"
 
 [node name="ResourcesPanel" type="PanelContainer" parent="UI"]
 unique_name_in_owner = true
+visible = false
 offset_left = 416.0
 offset_top = 120.0
 offset_right = 640.0
 offset_bottom = 320.0
 theme = ExtResource("5_5yrco")
 
-[node name="ShapesContainer" type="ScrollContainer" parent="UI/ResourcesPanel"]
+[node name="ShapeContainer" type="ScrollContainer" parent="UI/ResourcesPanel"]
 unique_name_in_owner = true
 layout_mode = 2
 
-[node name="ShapeVBox" type="VBoxContainer" parent="UI/ResourcesPanel/ShapesContainer"]
+[node name="ShapeVBox" type="VBoxContainer" parent="UI/ResourcesPanel/ShapeContainer"]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
@@ -140,5 +141,7 @@ layout_mode = 2
 layout_mode = 2
 
 [connection signal="toggled" from="UI/Panel/MarginContainer/HBoxContainer/HBoxContainer/FastForwardButton" to="." method="_on_fast_forward_button_toggled"]
+[connection signal="toggled" from="UI/Panel/MarginContainer/HBoxContainer/HBoxContainer/GoldButton" to="." method="_on_gold_button_toggled"]
+[connection signal="toggled" from="UI/Panel/MarginContainer/HBoxContainer/HBoxContainer/FavorButton" to="." method="_on_favor_button_toggled"]
 [connection signal="pressed" from="UI/Panel/MarginContainer/HBoxContainer/HBoxContainer/SacrificeButton" to="." method="_on_sacrifice_button_pressed"]
 [connection signal="pressed" from="UI/Panel/MarginContainer/HBoxContainer/TurnButton" to="." method="_on_turn_button_pressed"]

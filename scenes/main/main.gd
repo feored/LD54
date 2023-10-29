@@ -21,6 +21,12 @@ const shapeBoxPrefab = preload("res://ui/shapes/shape_gui_box.tscn")
 @onready var shapeContainer = %ShapeContainer
 @onready var shopContainer = %ShopContainer
 
+enum ResourcesContainerState {
+	None,
+	Favor,
+	Gold
+}
+
 const player_team_index: int = 0
 
 var is_sacrificing : bool = false
@@ -66,6 +72,22 @@ func _ready():
 func update_resources_display():
 	self.favorButton.set_text(str(self.resources[self.teams[self.player_team_index]].favor))
 	self.goldButton.set_text(str(self.resources[self.teams[self.player_team_index]].gold))
+
+func update_resources_container_display(clicked : ResourcesContainerState, active : bool):
+	if active:
+		self.resourcesPanel.show()
+		if clicked == ResourcesContainerState.Favor:
+			self.favorButton.set_pressed(true)
+			self.goldButton.set_pressed(false)
+			self.shapeContainer.show()
+			self.shopContainer.hide()
+		elif clicked == ResourcesContainerState.Gold:
+			self.favorButton.set_pressed(false)
+			self.goldButton.set_pressed(true)
+			self.shapeContainer.hide()
+			self.shopContainer.show()
+	else:
+		self.resourcesPanel.hide()
 
 func reroll_shape():
 	self.resources[self.teams[self.player_team_index]].favor -= 1
@@ -381,3 +403,9 @@ func fast_forward(val):
 
 func _on_fast_forward_button_toggled(button_pressed:bool):
 	fast_forward(button_pressed)
+
+func _on_favor_button_toggled(button_pressed:bool):
+	update_resources_container_display(ResourcesContainerState.Favor, button_pressed)
+
+func _on_gold_button_toggled(button_pressed:bool):
+	update_resources_container_display(ResourcesContainerState.Gold, button_pressed)
