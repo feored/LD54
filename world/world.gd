@@ -264,7 +264,7 @@ func mark_tiles(global_turn):
 	for i in range(tiles_to_mark):
 		var neighbors = self.get_surrounding_cells(cur_cell).filter(func(x): return self.tiles.has(x) and not self.tiles[x].marked)
 		if Utils.rng.randi() % 5 == 0 or neighbors.size() < 1:
-			cur_cell = Utils.pick_tile_to_sink(self.tiles.keys())
+			cur_cell = Utils.pick_tile_to_sink(self.tiles.keys(), i)
 		else:
 			cur_cell = neighbors[randi() % neighbors.size()]
 		self.tiles[cur_cell].mark()

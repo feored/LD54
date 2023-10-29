@@ -45,11 +45,11 @@ func pick_random_tile(tiles_dict):
 	var keys = tiles_dict.keys()
 	return tiles_dict[keys[randi() % keys.size()]]
 
-func pick_tile_to_sink(tiles: Array):
+func pick_tile_to_sink(tiles: Array, offset: int = 0):
 	if tiles.size() == 1:
 		return tiles[0]
 	tiles.sort_custom(func(a,b): return distance_from_center(a) > distance_from_center(b))
-	return tiles[0]
+	return tiles[min(tiles.size() - 1, 0 + offset)]
 
 func distance_from_center(coords):
 	return abs(coords.x - Constants.WORLD_CENTER.x) + \
