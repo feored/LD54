@@ -10,7 +10,6 @@ var tile = preload("res://world/tiles/tile.tscn")
 
 var tiles = {}
 var regions = {}
-var regions_used = []
 
 
 func spawn_cell(coords, team, borders = Constants.NO_BORDERS.duplicate()):
@@ -41,7 +40,6 @@ func clear_regions_mapeditor():
 	for region in self.regions:
 		self.regions[region].delete_no_tiles()
 	self.regions.clear()
-	self.regions_used.clear()
 	for tile_obj in self.tiles.values():
 		tile_obj.region = Constants.NULL_REGION
 	self.apply_borders()
@@ -53,8 +51,6 @@ func clear_island():
 	for region in self.regions:
 		self.regions[region].delete()
 	self.regions.clear()
-	self.regions_used.clear()
-
 
 
 func get_next_empty(next_position, direction):
@@ -297,12 +293,12 @@ func move_units(region_from : int, region_to: int, team: int):
 	# success
 	var moved_units = regions[region_from].units - 1
 	if not is_player:
-		var team_name = Constants.TEAM_NAMES[team]
-		if self.regions[region_from].team == self.regions[region_to].team:
-			self.messenger.call("%s is moving %s troops to a friendly neighboring region..." % [team_name, moved_units])
-		else:
-			var enemy_team_name = Constants.TEAM_NAMES[self.regions[region_to].team] 
-			self.messenger.call("%s is attacking a neighboring %s region with %s troops!" % [team_name, enemy_team_name, moved_units])
+		# var team_name = Constants.TEAM_NAMES[team]
+		# if self.regions[region_from].team == self.regions[region_to].team:
+		# 	self.messenger.call("%s is moving %s troops to a friendly neighboring region..." % [team_name, moved_units])
+		# else:
+		# 	var enemy_team_name = Constants.TEAM_NAMES[self.regions[region_to].team] 
+		# 	self.messenger.call("%s is attacking a neighboring %s region with %s troops!" % [team_name, enemy_team_name, moved_units])
 		await self.camera.move_smoothed(self.coords_to_pos(self.regions[region_from].center_tile()), 5)
 	
 	if regions[region_from].team == regions[region_to].team:
@@ -313,15 +309,11 @@ func move_units(region_from : int, region_to: int, team: int):
 		if regions[region_to].units >= moved_units:
 			regions[region_to].set_units(regions[region_to].units - moved_units)
 			self.regions[region_from].set_used(true)
-			self.regions_used.append(region_from)
 			return
 		else:
 			regions[region_to].set_units(moved_units - regions[region_to].units)
 			regions[region_to].set_team(regions[region_from].team)
 	self.regions[region_from].set_used(true)
-	# self.regions[region_to].set_used(true)
-	self.regions_used.append(region_from)
-	# self.regions_used.append(region_to)
 	if not is_player:
 		await Utils.wait(Settings.turn_time)
 
@@ -353,9 +345,8 @@ func adjacent_regions(region_id : int):
 	return adjacent
 
 func clear_regions_used():
-	for region in regions_used:
+	for region in regions:
 		regions[region].set_used(false)
-	regions_used.clear()
 
 
 func reset_regions_team():

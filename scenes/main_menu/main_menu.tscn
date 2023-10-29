@@ -1,7 +1,8 @@
-[gd_scene load_steps=6 format=3 uid="uid://b5xgrhsvxj453"]
+[gd_scene load_steps=7 format=3 uid="uid://b5xgrhsvxj453"]
 
 [ext_resource type="Script" path="res://scenes/main_menu/main_menu.gd" id="1_so4mp"]
 [ext_resource type="PackedScene" uid="uid://b8opucxucl032" path="res://world/world.tscn" id="2_lh8t0"]
+[ext_resource type="Texture2D" uid="uid://vor8jw7uss6n" path="res://assets/logo.png" id="4_4x6ya"]
 [ext_resource type="Theme" uid="uid://3t61g0061mea" path="res://assets/theme.tres" id="4_qy1gp"]
 [ext_resource type="PackedScene" uid="uid://dj8sjte3quqjh" path="res://ui/settings_menu/settings_menu.tscn" id="5_xiaj1"]
 
@@ -46,10 +47,10 @@ theme_override_constants/separation = 25
 
 [node name="Logo" type="TextureRect" parent="CanvasLayer/Control/CenterContainer/VBoxContainer"]
 unique_name_in_owner = true
-visible = false
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
+texture = ExtResource("4_4x6ya")
 
 [node name="PanelContainer" type="PanelContainer" parent="CanvasLayer/Control/CenterContainer/VBoxContainer"]
 visible = false

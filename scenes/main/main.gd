@@ -4,15 +4,22 @@ const turnIndicatorPrefab = preload("res://ui/turn_indicator/turn_indicator.tscn
 const escMenuPrefab = preload("res://ui/esc_menu/esc_menu.tscn")
 const gameOverScreenPrefab = preload("res://ui/game_over_menu/game_over_screen.tscn")
 const shapePrefab = preload("res://world/tiles/highlight/shape.tscn")
+const coinPrefab = preload("res://world/coin.tscn")
+const shapeBoxPrefab = preload("res://ui/shapes/shape_gui_box.tscn")
 
 @onready var world = $"World"
-@onready var turnContainer = $"%TurnContainer"
-@onready var turnLabel = $"%TurnLabel"
-@onready var messenger = $"%Message"
-@onready var endTurnButton = $"%TurnButton"
-@onready var sacrificeButton = $"%SacrificeButton"
-@onready var favorLabel = $"%SacrificeLabel"
-@onready var fastForwardButton = $"%FastForwardButton"
+@onready var turnContainer = %TurnContainer
+@onready var turnLabel = %TurnLabel
+@onready var messenger = %Message
+@onready var endTurnButton = %TurnButton
+@onready var sacrificeButton = %SacrificeButton
+@onready var favorButton = %FavorButton
+@onready var goldButton = %GoldButton
+@onready var resourcesPanel = %ResourcesPanel
+@onready var fastForwardButton = %FastForwardButton
+@onready var shapeVBox = %ShapeVBox
+@onready var shapeContainer = %ShapeContainer
+@onready var shopContainer = %ShopContainer
 
 const player_team_index: int = 0
 
@@ -22,6 +29,7 @@ var sink_item : Shape = null
 var favor : int = 0
 var eliminated_teams : Array[int] = []
 
+var resources : Dictionary = {}
 
 var selected_region = null
 var teams : Array[int] = []
@@ -33,6 +41,7 @@ var actions_history : Array[Action] = []
 var bots : Dictionary = {}
 
 var turn_indicators : Array[Node] = []
+var shape_boxes : Array = []
 
 var game_started : bool = false
 var escMenu : Node = null
@@ -51,11 +60,23 @@ func _ready():
 	self.load_map()
 	self.add_teams()
 	self.start_game()
+	self.init_shapes()
 	self.world.camera.move_instant(self.world.map_to_local(closest_player_tile_coords()))
 
-func update_favor_display():
-	self.favorLabel.set_text(str(favor))
+func update_resources_display():
+	self.favorButton.set_text(str(self.resources[self.teams[self.player_team_index]].favor))
+	self.goldButton.set_text(str(self.resources[self.teams[self.player_team_index]].gold))
 
+func reroll_shape():
+	self.resources[self.teams[self.player_team_index]].favor -= 1
+	update_resources_display()
+
+func init_shapes():
+	for i in Constants.SACRIFICE_SHAPES:
+		var shape_box = shapeBoxPrefab.instantiate()
+		shape_box.init(i, null, Callable(self, "reroll_shape"))
+		self.shape_boxes.append(shape_box)
+		self.shapeVBox.add_child(shape_box)
 
 func add_teams():
 	self.bots.clear()
@@ -64,6 +85,7 @@ func add_teams():
 	self.turn_indicators.clear()
 	for team_id in teams:
 		self.bots[team_id] = DumbBot.new(team_id)
+		self.resources[team_id] = Resources.new(0, 0)
 		self.create_turn_indicator(team_id)
 
 
@@ -104,8 +126,8 @@ func handle_sinking(event):
 		var tile_hovered = world.global_pos_to_coords(event.position)
 		if self.sink_item.placeable(tile_hovered, self.world.tiles.keys()):
 			sacrifice_tiles(self.sink_item.adjusted_shape_coords(tile_hovered))
-			self.favor -= self.sink_item.shape.size()
-			self.update_favor_display()
+			self.resources[self.teams[self.player_team_index]].favor -= self.sink_item.shape.size()
+			self.update_resources_display()
 			self.clear_sinking()
 		else:
 			messenger.set_message("You must acquire more favor from Neptune first, my lord.")
@@ -139,8 +161,8 @@ func _unhandled_input(event):
 					if self.world.tiles.has(tile_hovered):
 						var region = self.world.tiles[tile_hovered].region
 						if self.world.regions[region].team == self.teams[self.player_team_index]:
-							self.favor += self.world.regions[region].sacrifice()
-							self.update_favor_display()
+							self.resources[self.teams[self.player_team_index]].favor += self.world.regions[region].sacrifice()
+							self.update_resources_display()
 							self.world.region_update_label(region)
 					self.is_sacrificing = false
 			else:
@@ -151,6 +173,9 @@ func _unhandled_input(event):
 
 
 func _on_turn_button_pressed():
+	check_coins(self.teams[self.player_team_index])
+	self.update_resources_display()
+
 	self.endTurnButton.disabled = true
 	self.sacrificeButton.disabled = true
 	clear_selected_region()
@@ -230,6 +255,13 @@ func get_teams_alive():
 			teams_alive.append(team)
 	return teams_alive
 	
+func check_coins(team_id):
+	for region in self.world.regions.values().filter(func(r): return r.team == team_id and not r.is_used):
+		var coin = coinPrefab.instantiate()
+		coin.position = self.world.map_to_local(region.center_tile())
+		self.world.add_child(coin)
+		self.resources[team_id].gold += 1
+
 
 func clear_selected_region():
 	if selected_region != null:
@@ -243,8 +275,7 @@ func on_tile_clicked(new_clicked_tile):
 		print("not player turn")
 		clear_selected_region()
 		return
-	if new_clicked_tile.region in self.world.regions_used:
-		print("region used")
+	if self.world.regions[new_clicked_tile.region].is_used:
 		clear_selected_region()
 		return
 	if selected_region != null and new_clicked_tile.region == selected_region:
@@ -278,6 +309,7 @@ func play_global_turn():
 	while not self.turn == 0:
 		if global_turn > 0:
 			generate_units(self.teams[self.turn])
+		self.messenger.set_message(Constants.TEAM_NAMES[self.teams[self.turn]] + " is making their move.")
 		await play_turn(Utils.to_team_id(self.turn))
 		self.turn = (self.turn + 1) % (self.teams.size())
 		update_turn_indicators()
@@ -299,6 +331,7 @@ func play_turn(team_id):
 		await apply_action(bot_action)
 		self.actions_history.append(bot_action)
 		await Utils.wait(Settings.turn_time)
+	check_coins(self.teams[self.turn])
 	self.world.clear_regions_used()
 	await Utils.wait(Settings.turn_time)
 

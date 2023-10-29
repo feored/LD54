@@ -10,7 +10,10 @@ func play_turn(world):
 	owned_regions.shuffle()
 	for region in owned_regions:
 		for adjacent in world.adjacent_regions(region):
-			if world.regions[adjacent].team != Constants.NULL_TEAM and world.regions[adjacent].team != self.team:
+			if (
+				world.regions[adjacent].team != Constants.NULL_TEAM
+				and world.regions[adjacent].team != self.team
+			):
 				return Action.new(self.team, Constants.Action.Move, region, adjacent)
 	for region in owned_regions:
 		for adjacent in world.adjacent_regions(region):
@@ -25,14 +28,14 @@ func play_turn(world):
 				break
 		if landlocked:
 			for neighbor in neighbors:
-				if neighbor not in world.regions_used:
+				if not world.regions[neighbor].is_used:
 					return Action.new(self.team, Constants.Action.Move, region, neighbor)
 	return Action.new(self.team, Constants.Action.None)
 
 
 func can_use_region(world, region):
 	return (
-		(region not in world.regions_used)
+		(not world.regions[region].is_used)
 		and world.regions[region].team == team
 		and world.regions[region].units > 1
 	)

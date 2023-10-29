@@ -3,6 +3,7 @@ class_name Region
 
 var id: int = Constants.NULL_REGION
 var team: int = Constants.NULL_TEAM
+var is_used = false
 var tiles: Dictionary = {}
 var units = 0
 var label = null
@@ -28,7 +29,6 @@ func delete():
 
 
 func sacrifice():
-	print("Sacrificed")
 	if self.units < 2:
 		return 0
 	var favor = self.units / 10
@@ -93,6 +93,7 @@ func set_selected(show: bool):
 
 
 func set_used(is_used: bool):
+	self.is_used = is_used
 	for t in self.tiles.values():
 		t.set_barred(is_used)
 

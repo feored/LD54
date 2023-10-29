@@ -51,6 +51,7 @@ size_flags_horizontal = 3
 [node name="FastForwardButton" type="Button" parent="UI/Panel/MarginContainer/HBoxContainer/HBoxContainer"]
 unique_name_in_owner = true
 layout_mode = 2
+tooltip_text = "Fast forward"
 theme_override_styles/focus = SubResource("StyleBoxEmpty_7ox3a")
 toggle_mode = true
 icon = ExtResource("6_7usvn")
@@ -81,43 +82,27 @@ vertical_alignment = 1
 autowrap_mode = 3
 script = ExtResource("7_y3mfw")
 
-[node name="GoldContainer" type="HBoxContainer" parent="UI/Panel/MarginContainer/HBoxContainer/HBoxContainer"]
-layout_mode = 2
-
-[node name="GoldLabel" type="Label" parent="UI/Panel/MarginContainer/HBoxContainer/HBoxContainer/GoldContainer"]
-layout_mode = 2
-size_flags_vertical = 1
-text = "0"
-horizontal_alignment = 1
-vertical_alignment = 1
-
-[node name="GoldIcon" type="TextureRect" parent="UI/Panel/MarginContainer/HBoxContainer/HBoxContainer/GoldContainer"]
-layout_mode = 2
-texture = ExtResource("6_lerbj")
-stretch_mode = 5
-
-[node name="SacrificeContainer" type="HBoxContainer" parent="UI/Panel/MarginContainer/HBoxContainer/HBoxContainer"]
-layout_mode = 2
-
-[node name="HBoxContainer" type="HBoxContainer" parent="UI/Panel/MarginContainer/HBoxContainer/HBoxContainer/SacrificeContainer"]
-layout_mode = 2
-
-[node name="SacrificeLabel" type="Label" parent="UI/Panel/MarginContainer/HBoxContainer/HBoxContainer/SacrificeContainer/HBoxContainer"]
+[node name="GoldButton" type="Button" parent="UI/Panel/MarginContainer/HBoxContainer/HBoxContainer"]
 unique_name_in_owner = true
 layout_mode = 2
-size_flags_vertical = 1
+toggle_mode = true
 text = "0"
-horizontal_alignment = 1
-vertical_alignment = 1
+icon = ExtResource("6_lerbj")
+alignment = 0
+icon_alignment = 2
 
-[node name="SacrificeIcon" type="TextureRect" parent="UI/Panel/MarginContainer/HBoxContainer/HBoxContainer/SacrificeContainer/HBoxContainer"]
-layout_mode = 2
-texture = ExtResource("6_mkg7a")
-stretch_mode = 5
-
-[node name="SacrificeButton" type="Button" parent="UI/Panel/MarginContainer/HBoxContainer/HBoxContainer/SacrificeContainer"]
+[node name="FavorButton" type="Button" parent="UI/Panel/MarginContainer/HBoxContainer/HBoxContainer"]
 unique_name_in_owner = true
 layout_mode = 2
+toggle_mode = true
+text = "0"
+icon = ExtResource("6_mkg7a")
+icon_alignment = 2
+
+[node name="SacrificeButton" type="Button" parent="UI/Panel/MarginContainer/HBoxContainer/HBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+tooltip_text = "Sacrifice units to get favor."
 theme_override_styles/focus = SubResource("StyleBoxEmpty_c6hay")
 icon = ExtResource("8_gc6e2")
 icon_alignment = 1
@@ -129,6 +114,31 @@ size_flags_horizontal = 0
 theme_override_styles/focus = SubResource("StyleBoxEmpty_u2eju")
 text = "End Turn"
 
+[node name="ResourcesPanel" type="PanelContainer" parent="UI"]
+unique_name_in_owner = true
+offset_left = 416.0
+offset_top = 120.0
+offset_right = 640.0
+offset_bottom = 320.0
+theme = ExtResource("5_5yrco")
+
+[node name="ShapesContainer" type="ScrollContainer" parent="UI/ResourcesPanel"]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="ShapeVBox" type="VBoxContainer" parent="UI/ResourcesPanel/ShapesContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="ShopContainer" type="ScrollContainer" parent="UI/ResourcesPanel"]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="UI/ResourcesPanel/ShopContainer"]
+layout_mode = 2
+
 [connection signal="toggled" from="UI/Panel/MarginContainer/HBoxContainer/HBoxContainer/FastForwardButton" to="." method="_on_fast_forward_button_toggled"]
-[connection signal="pressed" from="UI/Panel/MarginContainer/HBoxContainer/HBoxContainer/SacrificeContainer/SacrificeButton" to="." method="_on_sacrifice_button_pressed"]
+[connection signal="pressed" from="UI/Panel/MarginContainer/HBoxContainer/HBoxContainer/SacrificeButton" to="." method="_on_sacrifice_button_pressed"]
 [connection signal="pressed" from="UI/Panel/MarginContainer/HBoxContainer/TurnButton" to="." method="_on_turn_button_pressed"]

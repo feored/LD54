@@ -1,4 +1,4 @@
-[gd_resource type="Theme" load_steps=30 format=3 uid="uid://3t61g0061mea"]
+[gd_resource type="Theme" load_steps=34 format=3 uid="uid://3t61g0061mea"]
 
 [ext_resource type="Texture2D" uid="uid://uamowdvuuon1" path="res://assets/ui/button/browbtn_disabled.png" id="1_5pqjh"]
 [ext_resource type="FontFile" uid="uid://dnejlqr6sbicq" path="res://assets/monogram-extended.ttf" id="1_u5pme"]
@@ -10,12 +10,16 @@
 [ext_resource type="Texture2D" uid="uid://hlgu6amcai1e" path="res://assets/ui/check_button/unchecked_disabled.png" id="7_45fij"]
 [ext_resource type="Texture2D" uid="uid://8lnlqidwb2k7" path="res://assets/ui/check_button/unchecked.png" id="8_mnp2u"]
 [ext_resource type="Texture2D" uid="uid://bdww34k26wax5" path="res://assets/ui/slider/grabber.png" id="9_51kpq"]
+[ext_resource type="Texture2D" uid="uid://d3a4n5uhexxm6" path="res://assets/ui/panel/gold.png" id="9_htqot"]
 [ext_resource type="Texture2D" uid="uid://deia0be0b63rj" path="res://assets/ui/slider/grabber_disabled.png" id="10_8kmi6"]
 [ext_resource type="Texture2D" uid="uid://cubi3g60lm7fc" path="res://assets/ui/slider/grabber_highlight.png" id="11_ed7mj"]
 [ext_resource type="Texture2D" uid="uid://bk5tm4qxaq37f" path="res://assets/ui/slider/hslider.png" id="12_ljghr"]
 [ext_resource type="Texture2D" uid="uid://dj628alce4iv3" path="res://assets/ui/panel/wood.png" id="13_2hkqj"]
+[ext_resource type="Texture2D" uid="uid://cyykdcc1bjmr4" path="res://assets/ui/tooltip.png" id="14_t00pf"]
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_bnvqk"]
+content_margin_left = 8.0
+content_margin_right = 8.0
 texture = ExtResource("1_5pqjh")
 texture_margin_left = 4.0
 texture_margin_top = 4.0
@@ -25,6 +29,8 @@ texture_margin_bottom = 4.0
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_30h70"]
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_y36yn"]
+content_margin_left = 8.0
+content_margin_right = 8.0
 texture = ExtResource("2_4g4df")
 texture_margin_left = 4.0
 texture_margin_top = 4.0
@@ -41,6 +47,8 @@ texture_margin_right = 4.0
 texture_margin_bottom = 4.0
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_mhw14"]
+content_margin_left = 8.0
+content_margin_right = 8.0
 texture = ExtResource("4_xu0cu")
 texture_margin_left = 4.0
 texture_margin_top = 4.0
@@ -58,6 +66,15 @@ texture_margin_bottom = 4.0
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_eaccr"]
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_4jacl"]
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_rawxy"]
+texture = ExtResource("9_htqot")
+texture_margin_left = 8.0
+texture_margin_top = 8.0
+texture_margin_right = 8.0
+texture_margin_bottom = 8.0
+axis_stretch_horizontal = 2
+axis_stretch_vertical = 2
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_s3mue"]
 texture = ExtResource("12_ljghr")
@@ -91,6 +108,17 @@ texture_margin_bottom = 8.0
 axis_stretch_horizontal = 2
 axis_stretch_vertical = 2
 
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_bbm33"]
+content_margin_left = 8.0
+content_margin_right = 8.0
+texture = ExtResource("14_t00pf")
+texture_margin_left = 4.0
+texture_margin_top = 4.0
+texture_margin_right = 4.0
+texture_margin_bottom = 4.0
+axis_stretch_horizontal = 2
+axis_stretch_vertical = 2
+
 [resource]
 default_base_scale = 1.0
 default_font = ExtResource("1_u5pme")
@@ -114,6 +142,8 @@ CheckButton/styles/hover = SubResource("StyleBoxEmpty_oj1bv")
 CheckButton/styles/hover_pressed = SubResource("StyleBoxEmpty_g2auu")
 CheckButton/styles/normal = SubResource("StyleBoxEmpty_eaccr")
 CheckButton/styles/pressed = SubResource("StyleBoxEmpty_4jacl")
+GoldPanel/base_type = &"PanelContainer"
+GoldPanel/styles/panel = SubResource("StyleBoxTexture_rawxy")
 HSlider/icons/grabber = ExtResource("9_51kpq")
 HSlider/icons/grabber_disabled = ExtResource("10_8kmi6")
 HSlider/icons/grabber_highlight = ExtResource("11_ed7mj")
@@ -121,3 +151,5 @@ HSlider/styles/grabber_area = SubResource("StyleBoxTexture_s3mue")
 HSlider/styles/grabber_area_highlight = SubResource("StyleBoxTexture_tshld")
 HSlider/styles/slider = SubResource("StyleBoxTexture_pde0q")
 PanelContainer/styles/panel = SubResource("StyleBoxTexture_vsy4g")
+TooltipLabel/colors/font_color = Color(0, 0, 0, 1)
+TooltipPanel/styles/panel = SubResource("StyleBoxTexture_bbm33")
