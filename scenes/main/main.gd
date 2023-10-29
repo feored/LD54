@@ -357,6 +357,7 @@ func play_global_turn():
 	self.global_turn += 1
 	self.turnLabel.set_text("Turn: " + str(self.global_turn))
 	await self.world.sink_marked()
+	check_win_condition()
 	await self.world.mark_tiles(self.global_turn)
 	if global_turn > 0:
 		generate_units(self.teams[self.player_team_index])

@@ -259,7 +259,7 @@ func mark_tiles(global_turn):
 	var tiles_to_mark = min(n - 1, int(global_turn * n / 10.0))
 	if (global_turn < Constants.SINK_GRACE_PERIOD):
 		tiles_to_mark = 0
-	print("Marking", tiles_to_mark, "tiles")
+	print("Marking ", tiles_to_mark, " tiles")
 	var cur_cell = Utils.pick_tile_to_sink(self.tiles.keys())
 	for i in range(tiles_to_mark):
 		var neighbors = self.get_surrounding_cells(cur_cell).filter(func(x): return self.tiles.has(x) and not self.tiles[x].marked)
