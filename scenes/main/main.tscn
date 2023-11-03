@@ -1,9 +1,10 @@
-[gd_scene load_steps=12 format=3 uid="uid://ceoqtlfuehsvd"]
+[gd_scene load_steps=13 format=3 uid="uid://ceoqtlfuehsvd"]
 
 [ext_resource type="Script" path="res://scenes/main/main.gd" id="1_osaxm"]
 [ext_resource type="PackedScene" uid="uid://b8opucxucl032" path="res://world/world.tscn" id="2_unfjm"]
 [ext_resource type="Theme" uid="uid://3t61g0061mea" path="res://assets/theme.tres" id="5_5yrco"]
 [ext_resource type="Texture2D" uid="uid://vv0nl83x0ldq" path="res://assets/icons/forward.png" id="6_7usvn"]
+[ext_resource type="ButtonGroup" uid="uid://cqvvvbi3whp0k" path="res://ui/resources_btn_group.tres" id="6_cwfam"]
 [ext_resource type="Texture2D" uid="uid://bp83kj0l0ow8x" path="res://assets/icons/coin_05d.png" id="6_lerbj"]
 [ext_resource type="Texture2D" uid="uid://bxqvi5615lj3b" path="res://assets/icons/trident.png" id="6_mkg7a"]
 [ext_resource type="Script" path="res://ui/Message.gd" id="7_y3mfw"]
@@ -86,6 +87,7 @@ script = ExtResource("7_y3mfw")
 unique_name_in_owner = true
 layout_mode = 2
 toggle_mode = true
+button_group = ExtResource("6_cwfam")
 text = "0"
 icon = ExtResource("6_lerbj")
 alignment = 0
@@ -95,6 +97,7 @@ icon_alignment = 2
 unique_name_in_owner = true
 layout_mode = 2
 toggle_mode = true
+button_group = ExtResource("6_cwfam")
 text = "0"
 icon = ExtResource("6_mkg7a")
 icon_alignment = 2
@@ -137,7 +140,8 @@ unique_name_in_owner = true
 visible = false
 layout_mode = 2
 
-[node name="VBoxContainer" type="VBoxContainer" parent="UI/ResourcesPanel/ShopContainer"]
+[node name="ShopVBox" type="VBoxContainer" parent="UI/ResourcesPanel/ShopContainer"]
+unique_name_in_owner = true
 layout_mode = 2
 
 [connection signal="toggled" from="UI/Panel/MarginContainer/HBoxContainer/HBoxContainer/FastForwardButton" to="." method="_on_fast_forward_button_toggled"]

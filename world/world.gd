@@ -186,7 +186,6 @@ func delete_cell(coords_array: Array, action = null):
 	else:
 		self.messenger.call("A patch of land sinks somewhere...")
 	await self.camera.move_smoothed(self.coords_to_pos(coords_array[0]), 5)
-	var delete_finished = 0
 	for coords in coords_array:
 		self.tiles[coords].delete()
 	var check_all_deleted = func():

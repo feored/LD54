@@ -46,6 +46,7 @@ const NULL_TEAM = 0
 ## Game enums
 enum GameMode { Play, MapEditor, Scenario }
 enum Action { None, Move, Sacrifice }
+enum Item { Production }
 
 ## Teams
 const TEAM_COLORS = [
@@ -73,6 +74,19 @@ const TEAM_NAMES = [
 ## Timers
 const TURN_TIME = 0.3
 const MENU_WAIT_TIME = 1
+
+## Items:
+const ITEMS = {
+	Constants.Item.Production:
+	{
+		"cost": 5,
+		"texture": preload("res://assets/icons/person.png"),
+		"tooltip":
+		"Increases the unit generation of the territory this item was placed on by 1 per turn.",
+	}
+}
+
+const DEFAULT_ITEMS = [Constants.Item.Production]
 
 ## Scenarios
 const scenarios = [

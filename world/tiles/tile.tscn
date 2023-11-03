@@ -1,4 +1,4 @@
-[gd_scene load_steps=19 format=3 uid="uid://d2tu4itgwxsmx"]
+[gd_scene load_steps=20 format=3 uid="uid://d2tu4itgwxsmx"]
 
 [ext_resource type="Shader" path="res://world/tiles/dissolve.gdshader" id="1_n7qej"]
 [ext_resource type="Texture2D" uid="uid://c2jmky1u16cef" path="res://assets/tiles/grass.png" id="1_ritjv"]
@@ -10,6 +10,7 @@
 [ext_resource type="Texture2D" uid="uid://bgixgnfsvo7b8" path="res://assets/tiles/west.png" id="7_j7cmw"]
 [ext_resource type="Texture2D" uid="uid://lscvgckqsnqh" path="res://assets/tiles/northwest.png" id="8_rltnp"]
 [ext_resource type="Texture2D" uid="uid://cp2ykpdtmxnwf" path="res://assets/tiles/barred_2.png" id="9_220g0"]
+[ext_resource type="Texture2D" uid="uid://b5ytemdsbmim0" path="res://assets/icons/person.png" id="11_6lm02"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_6h2i5"]
 resource_local_to_scene = true
@@ -126,3 +127,7 @@ one_shot = true
 speed_scale = 1.7
 explosiveness = 0.62
 randomness = 0.67
+
+[node name="Item" type="Sprite2D" parent="."]
+visible = false
+texture = ExtResource("11_6lm02")

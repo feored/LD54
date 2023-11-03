@@ -6,6 +6,7 @@ const gameOverScreenPrefab = preload("res://ui/game_over_menu/game_over_screen.t
 const shapePrefab = preload("res://world/tiles/highlight/shape.tscn")
 const coinPrefab = preload("res://world/coin.tscn")
 const shapeBoxPrefab = preload("res://ui/shapes/shape_gui_box.tscn")
+const itemBoxPrefab = preload("res://ui/items/item_gui.tscn")
 
 @onready var world = $"World"
 @onready var turnContainer = %TurnContainer
@@ -20,6 +21,7 @@ const shapeBoxPrefab = preload("res://ui/shapes/shape_gui_box.tscn")
 @onready var shapeVBox = %ShapeVBox
 @onready var shapeContainer = %ShapeContainer
 @onready var shopContainer = %ShopContainer
+@onready var shopVBox = %ShopVBox
 
 enum ResourcesContainerState {
 	None,
@@ -66,6 +68,7 @@ func _ready():
 	self.load_map()
 	self.add_teams()
 	self.init_shapes()
+	self.init_shop()
 	self.resources[self.teams[self.player_team_index]].init_callbacks( Callable(self, "gold_changed"), Callable(self, "favor_changed"))
 	self.start_game()
 	
@@ -79,13 +82,9 @@ func update_resources_container_display(clicked : ResourcesContainerState, activ
 	if active:
 		self.resourcesPanel.show()
 		if clicked == ResourcesContainerState.Favor:
-			self.favorButton.set_pressed(true)
-			self.goldButton.set_pressed(false)
 			self.shapeContainer.show()
 			self.shopContainer.hide()
 		elif clicked == ResourcesContainerState.Gold:
-			self.favorButton.set_pressed(false)
-			self.goldButton.set_pressed(true)
 			self.shapeContainer.hide()
 			self.shopContainer.show()
 	else:
@@ -100,6 +99,15 @@ func init_shapes():
 		shape_box.init(i, Callable(self, "pick_shape_to_sink"), Callable(self, "reroll_shape"))
 		self.shape_boxes.append(shape_box)
 		self.shapeVBox.add_child(shape_box)
+
+func init_shop():
+	for item in Constants.DEFAULT_ITEMS:
+		var item_box = itemBoxPrefab.instantiate()
+		item_box.init(item, Callable(self, "buy_item"))
+		self.shopVBox.add_child(item_box)
+
+func buy_item(item_info):
+	self.resources[self.teams[self.player_team_index]].add_gold(-item_info.cost)
 
 func gold_changed():
 	update_resources_display()

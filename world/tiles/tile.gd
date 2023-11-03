@@ -14,6 +14,7 @@ const CRACKED_TEXTURE = preload("res://assets/tiles/grass_cracked.png")
 	TileSet.CELL_NEIGHBOR_TOP_RIGHT_SIDE: $northeast
 }
 @onready var barred = $barred
+@onready var item = $Item
 
 var coords: Vector2i = Vector2i(0, 0)
 var team = 0
@@ -117,3 +118,9 @@ func mark():
 	self.marked = true
 	self.texture = CRACKED_TEXTURE
 	
+func set_item(item : int):
+	$item.sprite = Constants.ITEMS[item].sprite
+	$item.visible = true
+
+func hide_item():
+	$item.visible = false

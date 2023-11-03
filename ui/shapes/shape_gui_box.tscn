@@ -18,18 +18,21 @@ size_flags_vertical = 3
 unique_name_in_owner = true
 layout_mode = 2
 tooltip_text = "Pick this shape to sacrifice."
-text = "3"
+text = "0"
 icon = ExtResource("2_ptp3o")
 icon_alignment = 2
 
-[node name="ShapeGUI" parent="HBoxContainer" instance=ExtResource("3_v7aas")]
+[node name="Button" type="PanelContainer" parent="HBoxContainer"]
+layout_mode = 2
+
+[node name="ShapeGUI" parent="HBoxContainer/Button" instance=ExtResource("3_v7aas")]
 unique_name_in_owner = true
 layout_mode = 2
 
 [node name="RerollButton" type="Button" parent="HBoxContainer"]
 unique_name_in_owner = true
 layout_mode = 2
-tooltip_text = "Pick this shape to sacrifice."
+tooltip_text = "Reroll this shape (Costs 1 favor)."
 text = "Reroll"
 icon_alignment = 2
 
