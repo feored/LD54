@@ -52,13 +52,24 @@ enum Item { Production, ShapeCost, ShapeReroll, ShapeCapacity }
 ## Teams
 const TEAM_COLORS = [
 	0xffffffff,  # no team
-	0x002ac2ff,  # blue
+	0x4768fdff,  # blue
 	0xf78000ff,  # orange
-	0xfc03dbff,  # pink
+	0xed79b0ff,  # pink
 	0xffea00ff,  # yellow
 	0xff0000ff,  # red
 	0x0bfc03ff,  # green
 	0x393939ff,  # grey
+]
+
+const TEAM_BORDER_COLORS = [
+	0x000000ff,  # no team
+	0x0000ffff,  # blue
+	0xffa500ff,  # orange
+	0xff69b4ff,  # pink
+	0xffff00ff,  # yellow
+	0xff0000ff,  # red
+	0x00ff00ff,  # green
+	0x808080ff,  # grey
 ]
 
 const TEAM_NAMES = [
@@ -80,6 +91,7 @@ const MENU_WAIT_TIME = 1
 const ITEMS = {
 	Item.Production:
 	{
+		"id": Item.Production,
 		"cost": 5,
 		"texture": preload("res://assets/icons/person.png"),
 		"tooltip":
@@ -87,18 +99,21 @@ const ITEMS = {
 	},
 	Item.ShapeCost:
 	{
+		"id": Item.ShapeCost,
 		"cost": 5,
 		"texture": preload("res://assets/icons/down_arrow.png"),
 		"tooltip": "Reduces the cost of every shape in the fervor tab by 1.",
 	},
 	Item.ShapeReroll:
 	{
+		"id": Item.ShapeReroll,
 		"cost": 5,
 		"texture": preload("res://assets/icons/redo.png"),
 		"tooltip": "Reroll all the shapes in the fervor tab.",
 	},
 	Item.ShapeCapacity:
 	{
+		"id": Item.ShapeCapacity,
 		"cost": 5,
 		"texture": preload("res://assets/icons/plus.png"),
 		"tooltip": "Increases the number of available shapes by 1.",

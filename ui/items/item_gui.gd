@@ -20,7 +20,7 @@ func init(item_id: int, init_buy_func):
 	self.item_info = Constants.ITEMS[item_id]
 	self.buy_func = init_buy_func
 
-func update_button_state(gold):
+func update(gold):
 	self.button.disabled = gold < self.item_info.cost
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.

@@ -2,7 +2,9 @@ extends Node
 
 class_name Tile
 
-const CRACKED_TEXTURE = preload("res://assets/tiles/grass_cracked.png")
+const NEUTRAL_TEXTURE = preload("res://assets/tiles/grass_neutral.png")
+const TEAM_TEXTURE = preload("res://assets/tiles/grass.png")
+const CRACKED_TEXTURE = preload("res://assets/tiles/grass_cracked_2.png")
 
 @onready var animation_player = $AnimationPlayer
 @onready var border_objects = {
@@ -22,7 +24,6 @@ var init_position: Vector2 = Vector2(0, 0)
 var borders = Constants.NO_BORDERS.duplicate()
 var region: int = Constants.NULL_REGION
 var tween = null
-var lighter_color
 var blink_state = 0
 var delete_callable = null
 var dissolving = false
@@ -40,9 +41,6 @@ func init_cell(
 	self.team = init_team
 	self.init_position = init_pos
 	self.borders = init_borders
-	var team_color = Color(Constants.TEAM_COLORS[self.team])
-	team_color.a = Constants.BLENDING_MODULATE_ALPHA
-	self.lighter_color = Color.hex(0xffffffff).blend(team_color)
 	self.delete_callable = init_delete_callable
 
 func _ready():
@@ -57,12 +55,15 @@ func _process(delta):
 		self.material.set_shader_parameter("sensitivity", elapsed)
 
 func update_cell():
-	for b in self.borders.keys():
-		self.border_objects[b].self_modulate = Color.WHITE if self.borders[b] else Color.hex(0x3aa25dff)
-	var team_color = Color(Constants.TEAM_COLORS[self.team])
-	team_color.a = Constants.BLENDING_MODULATE_ALPHA
-	self.lighter_color = Color.hex(0xffffffff).blend(team_color)
-	self.modulate = self.lighter_color
+	if team == 0:
+		self.texture = NEUTRAL_TEXTURE
+		for b in self.borders.keys():
+			self.border_objects[b].self_modulate = Color.WHITE if self.borders[b] else Color.hex(0x3aa25dff)
+	else:
+		self.texture = TEAM_TEXTURE
+		for b in self.borders.keys():
+			self.border_objects[b].self_modulate = Color(Constants.TEAM_BORDER_COLORS[self.team]) if self.borders[b] else Color(Constants.TEAM_BORDER_COLORS[self.team])
+	self.self_modulate = Color(Constants.TEAM_COLORS[self.team])
 
 func delete():
 	animation_player.play("sink")
@@ -99,10 +100,10 @@ func set_barred(barred_val:bool):
 func set_selected(selected: bool):
 	if selected:
 		self.tween = self.create_tween().set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN).set_loops()
-		self.tween.tween_property(self, "modulate", Color(1, 1, 5), 0.5)
-		self.tween.tween_property(self, "modulate", self.lighter_color, 0.5)
+		self.tween.tween_property(self, "self_modulate", Color(1, 1, 5), 0.5)
+		self.tween.tween_property(self, "self_modulate", Color(Constants.TEAM_COLORS[self.team]), 0.5)
 	else:
-		self.modulate = self.lighter_color
+		self.self_modulate = Color(Constants.TEAM_COLORS[self.team])
 		self.tween.kill()
 
 

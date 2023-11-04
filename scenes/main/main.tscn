@@ -123,6 +123,7 @@ text = "End Turn"
 
 [node name="ResourcesPanel" type="PanelContainer" parent="UI"]
 unique_name_in_owner = true
+visible = false
 offset_left = 379.0
 offset_right = 640.0
 offset_bottom = 320.0

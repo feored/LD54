@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://cat4q0bmpcct"
-path="res://.godot/imported/grass.png-b4132c5d7806667eb15363d553aeeb45.ctex"
+uid="uid://baoiappalx4b7"
+path="res://.godot/imported/chevron.png-6f5f26c81803829a2d81f7394f975478.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/tiles/grass.png"
-dest_files=["res://.godot/imported/grass.png-b4132c5d7806667eb15363d553aeeb45.ctex"]
+source_file="res://assets/icons/chevron.png"
+dest_files=["res://.godot/imported/chevron.png-6f5f26c81803829a2d81f7394f975478.ctex"]
 
 [params]
 

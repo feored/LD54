@@ -63,7 +63,7 @@ layout_mode = 2
 
 [node name="buttons" type="VBoxContainer" parent="CanvasLayer/Control/CenterContainer/VBoxContainer/ButtonContainer"]
 layout_mode = 2
-theme_override_constants/separation = 25
+theme_override_constants/separation = 10
 
 [node name="PlayScenarioBtn" type="Button" parent="CanvasLayer/Control/CenterContainer/VBoxContainer/ButtonContainer/buttons"]
 layout_mode = 2

@@ -102,10 +102,7 @@ func handle_sinking(event):
 		var tile_hovered = world.global_pos_to_coords(event.position)
 		if self.sink_item.placeable(tile_hovered, self.world.tiles.keys()):
 			sacrifice_tiles(self.sink_item.adjusted_shape_coords(tile_hovered))
-			self.resources.player().add_favor(-self.sink_item.shape.size())
-			for shape_box in self.resources.shape_boxes:
-				if shape_box.picked:
-					shape_box.reroll(true)
+			self.resources.buy_shape(self.sink_item.shape)
 			self.clear_mouse_state()
 		else:
 			messenger.set_message("You must acquire more favor from Neptune first, my lord.")
@@ -211,7 +208,7 @@ func check_coins(team_id):
 		var coin = coinPrefab.instantiate()
 		coin.position = self.world.map_to_local(region.center_tile())
 		self.world.add_child(coin)
-		self.resources.player().add_gold(Constants.GOLD_PER_TURN_PER_REGION)
+		self.resources.resources[team_id].add_gold(Constants.GOLD_PER_TURN_PER_REGION)
 
 func clear_selected_region():
 	if selected_region != null:

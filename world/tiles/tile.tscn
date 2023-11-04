@@ -1,7 +1,7 @@
 [gd_scene load_steps=20 format=3 uid="uid://d2tu4itgwxsmx"]
 
 [ext_resource type="Shader" path="res://world/tiles/dissolve.gdshader" id="1_n7qej"]
-[ext_resource type="Texture2D" uid="uid://c2jmky1u16cef" path="res://assets/tiles/grass.png" id="1_ritjv"]
+[ext_resource type="Texture2D" uid="uid://cat4q0bmpcct" path="res://assets/tiles/grass.png" id="1_ritjv"]
 [ext_resource type="Script" path="res://world/tiles/tile.gd" id="2_m7fn7"]
 [ext_resource type="Texture2D" uid="uid://bvs77v2s4itrk" path="res://assets/tiles/southeast.png" id="3_7ni8f"]
 [ext_resource type="Texture2D" uid="uid://b7hnvo0cyyf8t" path="res://assets/tiles/southwest.png" id="4_mnixl"]
