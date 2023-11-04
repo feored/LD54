@@ -7,6 +7,7 @@
 
 [node name="ItemGui" type="PanelContainer"]
 theme = ExtResource("1_0lpa4")
+theme_type_variation = &"GoldPanel"
 script = ExtResource("2_a5dux")
 
 [node name="HBoxContainer" type="HBoxContainer" parent="."]
@@ -22,7 +23,6 @@ icon_alignment = 2
 [node name="ButtonContainer" type="PanelContainer" parent="HBoxContainer"]
 unique_name_in_owner = true
 layout_mode = 2
-theme_type_variation = &"GoldPanel"
 
 [node name="ItemTexture" type="TextureRect" parent="HBoxContainer/ButtonContainer"]
 unique_name_in_owner = true

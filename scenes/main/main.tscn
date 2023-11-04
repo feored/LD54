@@ -1,4 +1,4 @@
-[gd_scene load_steps=13 format=3 uid="uid://ceoqtlfuehsvd"]
+[gd_scene load_steps=14 format=3 uid="uid://ceoqtlfuehsvd"]
 
 [ext_resource type="Script" path="res://scenes/main/main.gd" id="1_osaxm"]
 [ext_resource type="PackedScene" uid="uid://b8opucxucl032" path="res://world/world.tscn" id="2_unfjm"]
@@ -9,6 +9,7 @@
 [ext_resource type="Texture2D" uid="uid://bxqvi5615lj3b" path="res://assets/icons/trident.png" id="6_mkg7a"]
 [ext_resource type="Script" path="res://ui/Message.gd" id="7_y3mfw"]
 [ext_resource type="Texture2D" uid="uid://cootktyxid5tb" path="res://assets/icons/skull_01a.png" id="8_gc6e2"]
+[ext_resource type="Script" path="res://ui/resources/resources_panel.gd" id="10_i46yg"]
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_7ox3a"]
 
@@ -119,15 +120,16 @@ text = "End Turn"
 
 [node name="ResourcesPanel" type="PanelContainer" parent="UI"]
 unique_name_in_owner = true
-visible = false
-offset_left = 416.0
-offset_top = 120.0
+offset_left = 420.0
+offset_top = 3.0
 offset_right = 640.0
 offset_bottom = 320.0
 theme = ExtResource("5_5yrco")
+script = ExtResource("10_i46yg")
 
 [node name="ShapeContainer" type="ScrollContainer" parent="UI/ResourcesPanel"]
 unique_name_in_owner = true
+visible = false
 layout_mode = 2
 
 [node name="ShapeVBox" type="VBoxContainer" parent="UI/ResourcesPanel/ShapeContainer"]
@@ -137,15 +139,16 @@ size_flags_horizontal = 3
 
 [node name="ShopContainer" type="ScrollContainer" parent="UI/ResourcesPanel"]
 unique_name_in_owner = true
-visible = false
 layout_mode = 2
 
 [node name="ShopVBox" type="VBoxContainer" parent="UI/ResourcesPanel/ShopContainer"]
 unique_name_in_owner = true
 layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
 
 [connection signal="toggled" from="UI/Panel/MarginContainer/HBoxContainer/HBoxContainer/FastForwardButton" to="." method="_on_fast_forward_button_toggled"]
-[connection signal="toggled" from="UI/Panel/MarginContainer/HBoxContainer/HBoxContainer/GoldButton" to="." method="_on_gold_button_toggled"]
-[connection signal="toggled" from="UI/Panel/MarginContainer/HBoxContainer/HBoxContainer/FavorButton" to="." method="_on_favor_button_toggled"]
+[connection signal="toggled" from="UI/Panel/MarginContainer/HBoxContainer/HBoxContainer/GoldButton" to="UI/ResourcesPanel" method="_on_gold_button_toggled"]
+[connection signal="toggled" from="UI/Panel/MarginContainer/HBoxContainer/HBoxContainer/FavorButton" to="UI/ResourcesPanel" method="_on_favor_button_toggled"]
 [connection signal="pressed" from="UI/Panel/MarginContainer/HBoxContainer/HBoxContainer/SacrificeButton" to="." method="_on_sacrifice_button_pressed"]
 [connection signal="pressed" from="UI/Panel/MarginContainer/HBoxContainer/TurnButton" to="." method="_on_turn_button_pressed"]

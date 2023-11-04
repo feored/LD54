@@ -1,59 +1,43 @@
 extends Node2D
 
-const turnIndicatorPrefab = preload("res://ui/turn_indicator/turn_indicator.tscn")
 const escMenuPrefab = preload("res://ui/esc_menu/esc_menu.tscn")
 const gameOverScreenPrefab = preload("res://ui/game_over_menu/game_over_screen.tscn")
 const shapePrefab = preload("res://world/tiles/highlight/shape.tscn")
 const coinPrefab = preload("res://world/coin.tscn")
-const shapeBoxPrefab = preload("res://ui/shapes/shape_gui_box.tscn")
-const itemBoxPrefab = preload("res://ui/items/item_gui.tscn")
 
 @onready var world = $"World"
-@onready var turnContainer = %TurnContainer
-@onready var turnLabel = %TurnLabel
 @onready var messenger = %Message
 @onready var endTurnButton = %TurnButton
 @onready var sacrificeButton = %SacrificeButton
-@onready var favorButton = %FavorButton
-@onready var goldButton = %GoldButton
-@onready var resourcesPanel = %ResourcesPanel
+@onready var resources = %ResourcesPanel
 @onready var fastForwardButton = %FastForwardButton
-@onready var shapeVBox = %ShapeVBox
-@onready var shapeContainer = %ShapeContainer
-@onready var shopContainer = %ShopContainer
-@onready var shopVBox = %ShopVBox
 
-enum ResourcesContainerState {
+enum MouseState {
 	None,
-	Favor,
-	Gold
+	Move,
+	Sacrifice,
+	Sink,
+	Item
 }
 
 const player_team_index: int = 0
 
-var is_sacrificing : bool = false
+var mouse_state = MouseState.None
 
 var sink_item : Shape = null
-var favor : int = 0
+var selected_region = null
+
+var teams : Array[int] = []
 var eliminated_teams : Array[int] = []
 
-var resources : Dictionary = {}
-
-var selected_region = null
-var teams : Array[int] = []
 var turn : int = 0
-
 var global_turn = 0
 
 var actions_history : Array[Action] = []
 var bots : Dictionary = {}
 
-var turn_indicators : Array[Node] = []
-var shape_boxes : Array = []
-
-var game_started : bool = false
 var escMenu : Node = null
-
+var game_started : bool = false
 var spectating : bool = false
 
 
@@ -66,70 +50,20 @@ func _ready():
 	Music.play_track(Music.Track.World)
 	Sfx.enable_track(Sfx.Track.Boom)
 	self.load_map()
+	self.resources.init_shapes(Callable(self, "pick_shape_to_sink"))
+	self.resources.init_shop()
 	self.add_teams()
-	self.init_shapes()
-	self.init_shop()
-	self.resources[self.teams[self.player_team_index]].init_callbacks( Callable(self, "gold_changed"), Callable(self, "favor_changed"))
+	
+	
 	self.start_game()
-	
 	self.world.camera.move_instant(self.world.map_to_local(closest_player_tile_coords()))
-
-func update_resources_display():
-	self.favorButton.set_text(str(self.resources[self.teams[self.player_team_index]].favor))
-	self.goldButton.set_text(str(self.resources[self.teams[self.player_team_index]].gold))
-
-func update_resources_container_display(clicked : ResourcesContainerState, active : bool):
-	if active:
-		self.resourcesPanel.show()
-		if clicked == ResourcesContainerState.Favor:
-			self.shapeContainer.show()
-			self.shopContainer.hide()
-		elif clicked == ResourcesContainerState.Gold:
-			self.shapeContainer.hide()
-			self.shopContainer.show()
-	else:
-		self.resourcesPanel.hide()
-	
-func reroll_shape():
-	self.resources[self.teams[self.player_team_index]].add_favor(-Constants.SHAPE_REROLL_COST)
-
-func init_shapes():
-	for i in Constants.SACRIFICE_SHAPES:
-		var shape_box = shapeBoxPrefab.instantiate()
-		shape_box.init(i, Callable(self, "pick_shape_to_sink"), Callable(self, "reroll_shape"))
-		self.shape_boxes.append(shape_box)
-		self.shapeVBox.add_child(shape_box)
-
-func init_shop():
-	for item in Constants.DEFAULT_ITEMS:
-		var item_box = itemBoxPrefab.instantiate()
-		item_box.init(item, Callable(self, "buy_item"))
-		self.shopVBox.add_child(item_box)
-
-func buy_item(item_info):
-	self.resources[self.teams[self.player_team_index]].add_gold(-item_info.cost)
-
-func gold_changed():
-	update_resources_display()
-
-func favor_changed():
-	update_resources_display()
-	update_shape_boxes_state()
-	
-func update_shape_boxes_state():
-	for shape_box in self.shape_boxes:
-		shape_box.update_buttons_state(self.resources[self.teams[self.player_team_index]].favor)
 
 func add_teams():
 	self.bots.clear()
-	for t in self.turn_indicators:
-		t.queue_free()
-	self.turn_indicators.clear()
 	for team_id in teams:
-		self.bots[team_id] = DumbBot.new(team_id)
-		self.resources[team_id] = Resources.new(0, 0)
-		self.create_turn_indicator(team_id)
-
+		if team_id != Constants.PLAYER_ID:
+			self.bots[team_id] = DumbBot.new(team_id)
+	self.resources.add_teams(self.teams)
 
 func start_game():
 	self.game_started = true
@@ -138,25 +72,21 @@ func start_game():
 	for t in self.teams:
 		generate_units(t)
 
-
-func create_turn_indicator(team_id):
-	var turnIndicator = turnIndicatorPrefab.instantiate()
-	turnIndicator.init(Color.hex(Constants.TEAM_COLORS[team_id]), false if team_id > 1 else true)
-	turnContainer.add_child(turnIndicator)
-	self.turn_indicators.append(turnIndicator)
-
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(_delta):
 	pass
 
-func clear_sinking(successful_sink = false):
-	self.sink_item.queue_free()
+
+func clear_mouse_state():
+	clear_sinking()
+	clear_selected_region()
+	self.mouse_state = MouseState.None
+
+func clear_sinking():
+	if self.sink_item != null:
+		self.sink_item.queue_free()
 	self.sink_item = null
-	if successful_sink:
-		for shape_box in self.shape_boxes:
-			if shape_box.picked:
-				shape_box.reroll(true)
-	for shape_box in self.shape_boxes:
+	for shape_box in self.resources.shape_boxes:
 		shape_box.picked = false
 
 func sacrifice_tiles(coords):
@@ -174,12 +104,14 @@ func handle_sinking(event):
 		var tile_hovered = world.global_pos_to_coords(event.position)
 		if self.sink_item.placeable(tile_hovered, self.world.tiles.keys()):
 			sacrifice_tiles(self.sink_item.adjusted_shape_coords(tile_hovered))
-			self.resources[self.teams[self.player_team_index]].add_favor(-self.sink_item.shape.size())
-			self.update_resources_display()
-			self.clear_sinking(true)
+			self.resources.player().add_favor(-self.sink_item.shape.size())
+			for shape_box in self.resources.shape_boxes:
+				if shape_box.picked:
+					shape_box.reroll(true)
+			self.clear_mouse_state()
 		else:
 			messenger.set_message("You must acquire more favor from Neptune first, my lord.")
-			clear_sinking()
+			clear_mouse_state()
 
 func _unhandled_input(event):
 	if event.is_action_pressed("escmenu"):
@@ -197,44 +129,44 @@ func _unhandled_input(event):
 			return
 		## Right click to cancel
 		if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_RIGHT and event.pressed:
-				clear_selected_region()
-				clear_sinking()
-				self.is_sacrificing = false
+				clear_mouse_state()
 		elif event is InputEventMouse:
-			if self.sink_item != null:
+			if self.mouse_state == MouseState.Sink:
 				handle_sinking(event)
-			elif self.is_sacrificing:
+			elif self.mouse_state == MouseState.Sacrifice:
 				if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT and event.pressed:
 					var tile_hovered = self.world.global_pos_to_coords(event.position)
 					if self.world.tiles.has(tile_hovered):
 						var region = self.world.tiles[tile_hovered].region
 						if self.world.regions[region].team == self.teams[self.player_team_index]:
-							self.resources[self.teams[self.player_team_index]].add_favor(self.world.regions[region].sacrifice())
-							self.update_resources_display()
+							self.resources.player().add_favor(self.world.regions[region].sacrifice())
 							self.world.region_update_label(region)
-					self.is_sacrificing = false
+					clear_mouse_state()
 			else:
 				var coords_clicked = world.global_pos_to_coords(event.position)
 				if world.tiles.has(coords_clicked):
 					if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT and event.pressed:
-						on_tile_clicked(world.tiles[coords_clicked])
+						handle_move(world.tiles[coords_clicked])
 
+func lock_controls(val : bool):
+	self.endTurnButton.disabled = val
+	self.sacrificeButton.disabled = val
+	self.resources.lock_controls(val)
+	
 
 func _on_turn_button_pressed():
 	check_coins(self.teams[self.player_team_index])
-	self.update_resources_display()
+	self.resources.update()
 
-	self.endTurnButton.disabled = true
-	self.sacrificeButton.disabled = true
-	clear_selected_region()
+	lock_controls(true)
+	clear_mouse_state()
 	self.world.clear_regions_used()
 	Settings.input_locked = true
 
 	await play_global_turn()
 
 	Settings.input_locked = false
-	self.endTurnButton.disabled = false
-	self.sacrificeButton.disabled = false
+	lock_controls(false)
 
 	var tile_camera_move = closest_player_tile_coords()
 	if tile_camera_move != Constants.NULL_COORDS:
@@ -275,27 +207,6 @@ func check_win_condition():
 		gameOverScreen.init(game_won, self, false)
 		self.add_child(gameOverScreen)
 
-
-func check_teams_on_islands(teams_alive):
-	var all_teams_on_islands = true
-	for region in self.world.regions:
-		for neighbor_region in self.world.adjacent_regions(region):
-			if world.regions[region].team != world.regions[neighbor_region].team:
-				all_teams_on_islands = false
-				break
-	if all_teams_on_islands:
-		var units_per_team = {}
-		var winner = teams_alive[0]
-		var winning_units = 0
-		for team in teams_alive:
-			units_per_team[team] = 0
-			for region in self.world.regions:
-				if self.world.regions[region].team == team:
-					units_per_team[team] += self.world.regions[region].units
-			if units_per_team[team] > winning_units:
-				winner = team
-				winning_units = units_per_team[team]
-
 func get_teams_alive():
 	var teams_alive = []
 	for team in teams:
@@ -308,35 +219,33 @@ func check_coins(team_id):
 		var coin = coinPrefab.instantiate()
 		coin.position = self.world.map_to_local(region.center_tile())
 		self.world.add_child(coin)
-		self.resources[team_id].add_gold(Constants.GOLD_PER_TURN_PER_REGION)
-
+		self.resources.player().add_gold(Constants.GOLD_PER_TURN_PER_REGION)
 
 func clear_selected_region():
 	if selected_region != null:
 		self.world.regions[selected_region].set_selected(false)
 		self.selected_region = null
-		Sfx.play(Sfx.Track.Cancel)
 	
-
-func on_tile_clicked(new_clicked_tile):
+func handle_move(new_clicked_tile):
 	if !(self.turn == self.player_team_index):
 		print("not player turn")
-		clear_selected_region()
+		clear_mouse_state()
 		return
 	if self.world.regions[new_clicked_tile.region].is_used:
-		clear_selected_region()
+		clear_mouse_state()
 		return
 	if selected_region != null and new_clicked_tile.region == selected_region:
-		clear_selected_region()
+		clear_mouse_state()
 		return
 	if selected_region == null:
 		if new_clicked_tile.team == self.teams[self.player_team_index]:
 			self.selected_region = new_clicked_tile.region
 			self.world.regions[selected_region].set_selected(true)
 			Sfx.play(Sfx.Track.Select)
+			self.mouse_state = MouseState.Move
 	else:
 		if new_clicked_tile.region not in self.world.adjacent_regions(self.selected_region):
-			clear_selected_region()
+			clear_mouse_state()
 			return
 		else:
 			if self.world.regions[selected_region].units > 1:
@@ -345,25 +254,19 @@ func on_tile_clicked(new_clicked_tile):
 				self.apply_action(move)
 			else:
 				messenger.set_message("My lord, we cannot leave this region undefended!")
-			clear_selected_region()
-
-func update_turn_indicators():
-	for i in range(self.teams.size()):
-		self.turn_indicators[i].set_active(self.turn == i)
+			clear_mouse_state()
 
 func play_global_turn():
 	self.turn += 1
-	update_turn_indicators()
 	while not self.turn == 0:
 		if global_turn > 0:
 			generate_units(self.teams[self.turn])
 		self.messenger.set_message(Constants.TEAM_NAMES[self.teams[self.turn]] + " is making their move.")
 		await play_turn(Utils.to_team_id(self.turn))
 		self.turn = (self.turn + 1) % (self.teams.size())
-		update_turn_indicators()
 	
 	self.global_turn += 1
-	self.turnLabel.set_text("Turn: " + str(self.global_turn))
+
 	await self.world.sink_marked()
 	check_win_condition()
 	await self.world.mark_tiles(self.global_turn)
@@ -416,13 +319,16 @@ func load_map():
 	self.world.load_regions(Settings.current_map.regions)
 
 func _on_sacrifice_button_pressed():
-	is_sacrificing = true
+	clear_mouse_state()
+	self.mouse_state = MouseState.Sacrifice
 
 func pick_shape_to_sink(shape_coords):
+	self.clear_mouse_state()
 	self.sink_item = shapePrefab.instantiate()
 	self.sink_item.init_with_coords(shape_coords)
 	self.world.add_child(sink_item)
 	self.sink_item.global_position = get_viewport().get_mouse_position()
+	self.mouse_state = MouseState.Sink
 
 func fast_forward(val):
 	Settings.skip(val)
@@ -431,9 +337,3 @@ func fast_forward(val):
 
 func _on_fast_forward_button_toggled(button_pressed:bool):
 	fast_forward(button_pressed)
-
-func _on_favor_button_toggled(button_pressed:bool):
-	update_resources_container_display(ResourcesContainerState.Favor, button_pressed)
-
-func _on_gold_button_toggled(button_pressed:bool):
-	update_resources_container_display(ResourcesContainerState.Gold, button_pressed)

@@ -24,6 +24,7 @@ const NO_BORDERS = {
 }
 
 ## Game constants
+const PLAYER_ID = 1
 const REGION_MAX_SIZE = 6
 const SINK_GRACE_PERIOD = 1
 const MIN_TEAMS = 2  ## including player
@@ -46,7 +47,7 @@ const NULL_TEAM = 0
 ## Game enums
 enum GameMode { Play, MapEditor, Scenario }
 enum Action { None, Move, Sacrifice }
-enum Item { Production }
+enum Item { Production, ShapeCost, ShapeReroll, ShapeCapacity }
 
 ## Teams
 const TEAM_COLORS = [
@@ -77,16 +78,34 @@ const MENU_WAIT_TIME = 1
 
 ## Items:
 const ITEMS = {
-	Constants.Item.Production:
+	Item.Production:
 	{
 		"cost": 5,
 		"texture": preload("res://assets/icons/person.png"),
 		"tooltip":
 		"Increases the unit generation of the territory this item was placed on by 1 per turn.",
-	}
+	},
+	Item.ShapeCost:
+	{
+		"cost": 5,
+		"texture": preload("res://assets/icons/down_arrow.png"),
+		"tooltip": "Reduces the cost of every shape in the fervor tab by 1.",
+	},
+	Item.ShapeReroll:
+	{
+		"cost": 5,
+		"texture": preload("res://assets/icons/redo.png"),
+		"tooltip": "Reroll all the shapes in the fervor tab.",
+	},
+	Item.ShapeCapacity:
+	{
+		"cost": 5,
+		"texture": preload("res://assets/icons/plus.png"),
+		"tooltip": "Increases the number of available shapes by 1.",
+	},
 }
 
-const DEFAULT_ITEMS = [Constants.Item.Production]
+const DEFAULT_ITEMS = [Item.Production, Item.ShapeCost, Item.ShapeReroll, Item.ShapeCapacity]
 
 ## Scenarios
 const scenarios = [

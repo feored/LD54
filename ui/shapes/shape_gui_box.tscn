@@ -6,6 +6,7 @@
 [ext_resource type="PackedScene" uid="uid://r53ogglkfpl1" path="res://ui/shapes/shape_gui.tscn" id="3_v7aas"]
 
 [node name="ShapeGUIBox" type="PanelContainer"]
+size_flags_horizontal = 3
 theme = ExtResource("1_x7d3o")
 theme_type_variation = &"GoldPanel"
 script = ExtResource("2_dnaqr")
@@ -24,6 +25,7 @@ icon_alignment = 2
 
 [node name="Button" type="PanelContainer" parent="HBoxContainer"]
 layout_mode = 2
+size_flags_horizontal = 3
 
 [node name="ShapeGUI" parent="HBoxContainer/Button" instance=ExtResource("3_v7aas")]
 unique_name_in_owner = true
