@@ -1,14 +1,13 @@
 extends CanvasLayer
 
+enum State {Esc, Settings}
+
 @onready var esc_menu = $"%EscMenu"
 @onready var settings_menu = $"%SettingsMenu"
 
-enum State {Esc, Settings}
-
 # Called when the node enters the scene tree for the first time.
 func _ready():
-	get_tree().paused = true
-	show_state(State.Esc)
+	self.hide()
 	settings_menu.disappear = func(): show_state(State.Esc)
 
 
@@ -31,19 +30,21 @@ func _on_menu_button_pressed():
 	get_tree().paused = false
 	await SceneTransition.change_scene(SceneTransition.SCENE_MAIN_MENU)
 
-
 func _on_resume_button_pressed():
-	self.delete()
+	self.disappear()
 
+func appear():
+	show_state(State.Esc)
+	self.get_tree().paused = true
+	self.show()
 
-func delete():
-	get_tree().paused = false
-	self.queue_free()
-
+func disappear():
+	self.get_tree().paused = false
+	self.hide()
 
 func _unhandled_input(event):
 	if event.is_action_pressed("escmenu"):
-		self.delete()
+		self.disappear() if self.visible else self.appear()
 
 func _on_settings_button_pressed():
 	self.show_state(State.Settings)

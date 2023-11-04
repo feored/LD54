@@ -1,6 +1,7 @@
-[gd_scene load_steps=14 format=3 uid="uid://ceoqtlfuehsvd"]
+[gd_scene load_steps=15 format=3 uid="uid://ceoqtlfuehsvd"]
 
 [ext_resource type="Script" path="res://scenes/main/main.gd" id="1_osaxm"]
+[ext_resource type="PackedScene" uid="uid://pu46mkcjdswb" path="res://ui/esc_menu/esc_menu.tscn" id="2_pam5e"]
 [ext_resource type="PackedScene" uid="uid://b8opucxucl032" path="res://world/world.tscn" id="2_unfjm"]
 [ext_resource type="Theme" uid="uid://3t61g0061mea" path="res://assets/theme.tres" id="5_5yrco"]
 [ext_resource type="Texture2D" uid="uid://vv0nl83x0ldq" path="res://assets/icons/forward.png" id="6_7usvn"]
@@ -19,6 +20,8 @@
 
 [node name="Main" type="Node2D"]
 script = ExtResource("1_osaxm")
+
+[node name="EscMenu" parent="." instance=ExtResource("2_pam5e")]
 
 [node name="World" parent="." instance=ExtResource("2_unfjm")]
 
@@ -120,8 +123,7 @@ text = "End Turn"
 
 [node name="ResourcesPanel" type="PanelContainer" parent="UI"]
 unique_name_in_owner = true
-offset_left = 420.0
-offset_top = 3.0
+offset_left = 379.0
 offset_right = 640.0
 offset_bottom = 320.0
 theme = ExtResource("5_5yrco")

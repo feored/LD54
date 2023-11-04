@@ -1,6 +1,5 @@
 extends Node2D
 
-const escMenuPrefab = preload("res://ui/esc_menu/esc_menu.tscn")
 const gameOverScreenPrefab = preload("res://ui/game_over_menu/game_over_screen.tscn")
 const shapePrefab = preload("res://world/tiles/highlight/shape.tscn")
 const coinPrefab = preload("res://world/coin.tscn")
@@ -36,7 +35,6 @@ var global_turn = 0
 var actions_history : Array[Action] = []
 var bots : Dictionary = {}
 
-var escMenu : Node = null
 var game_started : bool = false
 var spectating : bool = false
 
@@ -114,12 +112,6 @@ func handle_sinking(event):
 			clear_mouse_state()
 
 func _unhandled_input(event):
-	if event.is_action_pressed("escmenu"):
-		if escMenu == null:
-			escMenu = escMenuPrefab.instantiate()
-			self.add_child(escMenu)
-		else:
-			escMenu.delete()
 	if event.is_action_pressed("skip"):
 		fast_forward(true)
 	elif event.is_action_released("skip"):

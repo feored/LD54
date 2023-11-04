@@ -10,6 +10,7 @@ bg_color = Color(0, 0, 0, 0.752941)
 [node name="EscMenu" type="CanvasLayer"]
 process_mode = 3
 layer = 99
+visible = false
 script = ExtResource("1_m4juf")
 
 [node name="PanelContainer" type="PanelContainer" parent="."]

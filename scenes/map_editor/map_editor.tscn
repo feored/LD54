@@ -1,8 +1,9 @@
-[gd_scene load_steps=7 format=3 uid="uid://jphqct536elm"]
+[gd_scene load_steps=8 format=3 uid="uid://jphqct536elm"]
 
 [ext_resource type="Script" path="res://scenes/map_editor/map_editor.gd" id="1_fr50u"]
 [ext_resource type="PackedScene" uid="uid://b8opucxucl032" path="res://world/world.tscn" id="1_w0dbr"]
 [ext_resource type="Theme" uid="uid://3t61g0061mea" path="res://assets/theme.tres" id="2_kvbud"]
+[ext_resource type="PackedScene" uid="uid://pu46mkcjdswb" path="res://ui/esc_menu/esc_menu.tscn" id="2_qxuk0"]
 
 [sub_resource type="Gradient" id="Gradient_kdtfb"]
 interpolation_mode = 1
@@ -22,6 +23,8 @@ bg_color = Color(0.0784314, 0.0745098, 0.0588235, 1)
 
 [node name="MapEditor" type="Node2D"]
 script = ExtResource("1_fr50u")
+
+[node name="EscMenu" parent="." instance=ExtResource("2_qxuk0")]
 
 [node name="Center" type="Sprite2D" parent="."]
 unique_name_in_owner = true
