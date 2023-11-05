@@ -52,24 +52,24 @@ enum Item { Production, ShapeCost, ShapeReroll, ShapeCapacity }
 ## Teams
 const TEAM_COLORS = [
 	0xffffffff,  # no team
-	0x4768fdff,  # blue
-	0xf78000ff,  # orange
+	0x0056b5ff,  # blue
+	0xf0a818ff,  # orange
 	0xed79b0ff,  # pink
 	0xffea00ff,  # yellow
-	0xff0000ff,  # red
-	0x0bfc03ff,  # green
+	0xc91e1eff,  # red
+	0x09b030ff,  # green
 	0x393939ff,  # grey
 ]
 
 const TEAM_BORDER_COLORS = [
 	0x000000ff,  # no team
-	0x0000ffff,  # blue
+	0x147ff7ff,  # blue
 	0xffa500ff,  # orange
 	0xff69b4ff,  # pink
 	0xffff00ff,  # yellow
 	0xff0000ff,  # red
 	0x00ff00ff,  # green
-	0x808080ff,  # grey
+	0x1a1919ff,  # grey
 ]
 
 const TEAM_NAMES = [

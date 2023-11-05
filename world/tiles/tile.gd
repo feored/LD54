@@ -55,14 +55,19 @@ func _process(delta):
 		self.material.set_shader_parameter("sensitivity", elapsed)
 
 func update_cell():
+	for b in self.borders.keys():
+		if self.borders[b]:
+			self.border_objects[b].show()
+		else:
+			self.border_objects[b].hide()
 	if team == 0:
 		self.texture = NEUTRAL_TEXTURE
 		for b in self.borders.keys():
-			self.border_objects[b].self_modulate = Color.WHITE if self.borders[b] else Color.hex(0x3aa25dff)
+			self.border_objects[b].self_modulate = Color.WHITE
 	else:
 		self.texture = TEAM_TEXTURE
 		for b in self.borders.keys():
-			self.border_objects[b].self_modulate = Color(Constants.TEAM_BORDER_COLORS[self.team]) if self.borders[b] else Color(Constants.TEAM_BORDER_COLORS[self.team])
+			self.border_objects[b].self_modulate = Color(Constants.TEAM_BORDER_COLORS[self.team])
 	self.self_modulate = Color(Constants.TEAM_COLORS[self.team])
 
 func delete():
@@ -117,7 +122,8 @@ func get_save_data():
 
 func mark():
 	self.marked = true
-	self.texture = CRACKED_TEXTURE
+	#self.texture = CRACKED_TEXTURE
+	self.modulate = Color.hex(0xacacacac)
 	
 func set_item(item : int):
 	$item.sprite = Constants.ITEMS[item].sprite
