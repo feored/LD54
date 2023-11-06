@@ -15,6 +15,7 @@ func _ready():
 	self.tooltip_text = self.item_info.tooltip
 	self.item_texture.tooltip_text = self.item_info.tooltip
 	self.button_container.tooltip_text = self.item_info.tooltip
+	%Label.text = self.item_info.tooltip
 
 func init(item_id: int, init_buy_func):
 	self.item_info = Constants.ITEMS[item_id]

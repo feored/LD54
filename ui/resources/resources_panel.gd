@@ -43,7 +43,7 @@ func buy_item(item_info):
 
 func add_teams(teams):
 	for team_id in teams:
-		self.resources[team_id] = Resources.new(50, 0)
+		self.resources[team_id] = Resources.new(0, 0)
 	self.resources[Constants.PLAYER_ID].init_callback(Callable(self, "update"))
 
 func player():
@@ -57,7 +57,7 @@ func init_shop():
 	
 func add_shape():
 	var shape_box = shapeBoxPrefab.instantiate()
-	shape_box.init(pick_shape_func, Callable(self, "reroll_shape"), Callable(self, "shape_cost"))
+	shape_box.init(pick_shape_func, Callable(self, "buy_shape_reroll"), Callable(self, "shape_cost"))
 	self.shape_boxes.append(shape_box)
 	self.shapeVBox.add_child(shape_box)
 

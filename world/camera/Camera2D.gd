@@ -3,8 +3,8 @@ extends Camera2D
 
 var active = true
 
-const LIMIT_X = 24*(Constants.WORLD_CAMERA_BOUNDS.x)-640
-const LIMIT_Y = 24*(Constants.WORLD_CAMERA_BOUNDS.y)-360
+var LIMIT_X = Constants.VIEWPORT_SIZE.x * 0.75
+var LIMIT_Y = Constants.VIEWPORT_SIZE.y * 0.75
 
 const POSITION_SMOOTHED_SPEED = 5.0
 const POSITION_SMOOTHED_SPEED_SKIP = 10.0

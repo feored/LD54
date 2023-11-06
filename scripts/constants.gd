@@ -1,10 +1,11 @@
 extends Node
 
 ## World constants
+const VIEWPORT_SIZE = Vector2(960, 540)
 const TILE_SIZE = 24
-const WORLD_CENTER = Vector2i(512 / 24 / 2, 288 / 24 / 2)
+const WORLD_CENTER = Vector2i(0, 0)  #Vector2i(VIEWPORT_SIZE.x / TILE_SIZE / 2, VIEWPORT_SIZE.y / TILE_SIZE / 2)
 const WORLD_BOUNDS = Vector2i(15, 15)
-const WORLD_CAMERA_BOUNDS = Vector2i(40, 25)
+const WORLD_CAMERA_BOUNDS = Vector2i(60, 35)
 const NEIGHBORS = [
 	TileSet.CELL_NEIGHBOR_RIGHT_SIDE,
 	TileSet.CELL_NEIGHBOR_BOTTOM_LEFT_SIDE,
@@ -37,6 +38,7 @@ const ISLAND_SIZE_MAX = 0.5
 const GOLD_PER_TURN_PER_REGION = 1
 const SACRIFICE_SHAPES = 3
 const SHAPE_REROLL_COST = 1
+const HOVER_TIME_BEFORE_POPUP = 0.5
 
 ## Null values
 const NULL_COORDS = Vector2i(-9999, -9999)

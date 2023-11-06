@@ -9,4 +9,5 @@ anchors_preset = 0
 script = ExtResource("1_r4tvx")
 
 [node name="Shape" type="Node2D" parent="."]
+scale = Vector2(0.5, 0.5)
 script = ExtResource("2_1wj5d")

@@ -25,10 +25,10 @@ func custom_control():
 		return 
 	var sorted_keys = self.shape.shape.values().duplicate()
 	sorted_keys.sort_custom(func(a,b): return a.position.x < b.position.x)
-	var offset_x = -sorted_keys[0].position.x + Constants.TILE_SIZE/2
-	var width = Constants.TILE_SIZE + sorted_keys[sorted_keys.size()-1].position.x - sorted_keys[0].position.x
+	var offset_x = (-sorted_keys[0].position.x + Constants.TILE_SIZE/2) * self.shape.scale.x
+	var width = (Constants.TILE_SIZE + sorted_keys[sorted_keys.size()-1].position.x - sorted_keys[0].position.x) * self.shape.scale.x
 	sorted_keys.sort_custom(func(a,b): return a.position.y < b.position.y)
-	var height = Constants.TILE_SIZE + sorted_keys[sorted_keys.size()-1].position.y - sorted_keys[0].position.y
-	var offset_y = -sorted_keys[0].position.y + Constants.TILE_SIZE/2
+	var height = (Constants.TILE_SIZE + sorted_keys[sorted_keys.size()-1].position.y - sorted_keys[0].position.y) * self.shape.scale.y
+	var offset_y = (-sorted_keys[0].position.y + Constants.TILE_SIZE/2) * self.shape.scale.y
 	set_custom_minimum_size(Vector2(width, height))
 	self.shape.position = Vector2(offset_x, offset_y)

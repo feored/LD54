@@ -3,6 +3,7 @@ extends Node2D
 const gameOverScreenPrefab = preload("res://ui/game_over_menu/game_over_screen.tscn")
 const shapePrefab = preload("res://world/tiles/highlight/shape.tscn")
 const coinPrefab = preload("res://world/coin.tscn")
+const region_info_prefab = preload("res://ui/region_info/region_info.tscn")
 
 @onready var world = $"World"
 @onready var messenger = %Message
@@ -10,9 +11,11 @@ const coinPrefab = preload("res://world/coin.tscn")
 @onready var sacrificeButton = %SacrificeButton
 @onready var resources = %ResourcesPanel
 @onready var fastForwardButton = %FastForwardButton
+@onready var hover_object = %RegionInfo
 
 enum MouseState {
 	None,
+	Hover,
 	Move,
 	Sacrifice,
 	Sink,
@@ -38,6 +41,8 @@ var bots : Dictionary = {}
 var game_started : bool = false
 var spectating : bool = false
 
+var time_hovering = 0
+var last_coords_hovered = Vector2i.ZERO
 
 
 
@@ -52,7 +57,7 @@ func _ready():
 	self.resources.init_shop()
 	self.add_teams()
 	
-	
+	%Center.position = self.world.coords_to_pos(Constants.WORLD_CENTER)
 	self.start_game()
 	self.world.camera.move_instant(self.world.map_to_local(closest_player_tile_coords()))
 
@@ -71,8 +76,26 @@ func start_game():
 		generate_units(t)
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
-func _process(_delta):
-	pass
+func _process(delta):
+	var mouse_pos = get_local_mouse_position()
+	var tile_hovered = self.world.local_to_map(mouse_pos)
+	if tile_hovered != last_coords_hovered:
+		time_hovering = 0
+		last_coords_hovered = tile_hovered
+		if hover_object.visible:
+			hover_object.disappear()
+	else:
+		time_hovering += delta
+	if !hover_object.visible and time_hovering > Constants.HOVER_TIME_BEFORE_POPUP:
+		if world.tiles.has(tile_hovered):
+			var region_id = world.tiles[tile_hovered].region
+			var team = world.regions[region_id].team
+			var favor = self.resources.resources[team].favor if team != 0 else 0
+			var gold = self.resources.resources[team].gold if team != 0 else 0
+			self.hover_object.init(team, world.regions[region_id].tiles.size(), favor, gold)
+			self.hover_object.position = mouse_pos + Vector2(5, 5)
+		else:
+			time_hovering = 0
 
 
 func clear_mouse_state():

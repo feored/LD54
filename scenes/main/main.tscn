@@ -1,4 +1,4 @@
-[gd_scene load_steps=15 format=3 uid="uid://ceoqtlfuehsvd"]
+[gd_scene load_steps=18 format=3 uid="uid://ceoqtlfuehsvd"]
 
 [ext_resource type="Script" path="res://scenes/main/main.gd" id="1_osaxm"]
 [ext_resource type="PackedScene" uid="uid://pu46mkcjdswb" path="res://ui/esc_menu/esc_menu.tscn" id="2_pam5e"]
@@ -11,12 +11,26 @@
 [ext_resource type="Script" path="res://ui/Message.gd" id="7_y3mfw"]
 [ext_resource type="Texture2D" uid="uid://cootktyxid5tb" path="res://assets/icons/skull_01a.png" id="8_gc6e2"]
 [ext_resource type="Script" path="res://ui/resources/resources_panel.gd" id="10_i46yg"]
+[ext_resource type="PackedScene" uid="uid://iwefd7llwk5t" path="res://ui/region_info/region_info.tscn" id="12_wvvkd"]
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_7ox3a"]
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_c6hay"]
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_u2eju"]
+
+[sub_resource type="Gradient" id="Gradient_kdtfb"]
+interpolation_mode = 1
+offsets = PackedFloat32Array(0, 0.697531)
+colors = PackedColorArray(0, 0, 0, 1, 1, 1, 1, 0)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_i35tl"]
+gradient = SubResource("Gradient_kdtfb")
+width = 8
+height = 8
+fill = 1
+fill_from = Vector2(0.5, 0.5)
+fill_to = Vector2(1, 1)
 
 [node name="Main" type="Node2D"]
 script = ExtResource("1_osaxm")
@@ -28,6 +42,39 @@ script = ExtResource("1_osaxm")
 [node name="UI" type="CanvasLayer" parent="."]
 unique_name_in_owner = true
 layer = 2
+
+[node name="ResourcesPanel" type="PanelContainer" parent="UI"]
+unique_name_in_owner = true
+visible = false
+custom_minimum_size = Vector2(240, 0)
+offset_left = 720.0
+offset_top = 140.0
+offset_right = 960.0
+offset_bottom = 500.0
+size_flags_horizontal = 8
+size_flags_stretch_ratio = 0.33
+theme = ExtResource("5_5yrco")
+script = ExtResource("10_i46yg")
+
+[node name="ShapeContainer" type="ScrollContainer" parent="UI/ResourcesPanel"]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+
+[node name="ShapeVBox" type="VBoxContainer" parent="UI/ResourcesPanel/ShapeContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="ShopContainer" type="ScrollContainer" parent="UI/ResourcesPanel"]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="ShopVBox" type="VBoxContainer" parent="UI/ResourcesPanel/ShopContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
 
 [node name="Panel" type="PanelContainer" parent="UI"]
 anchors_preset = 12
@@ -90,6 +137,7 @@ script = ExtResource("7_y3mfw")
 [node name="GoldButton" type="Button" parent="UI/Panel/MarginContainer/HBoxContainer/HBoxContainer"]
 unique_name_in_owner = true
 layout_mode = 2
+tooltip_text = "Open shop."
 toggle_mode = true
 button_group = ExtResource("6_cwfam")
 text = "0"
@@ -100,6 +148,7 @@ icon_alignment = 2
 [node name="FavorButton" type="Button" parent="UI/Panel/MarginContainer/HBoxContainer/HBoxContainer"]
 unique_name_in_owner = true
 layout_mode = 2
+tooltip_text = "Open favor menu."
 toggle_mode = true
 button_group = ExtResource("6_cwfam")
 text = "0"
@@ -109,7 +158,7 @@ icon_alignment = 2
 [node name="SacrificeButton" type="Button" parent="UI/Panel/MarginContainer/HBoxContainer/HBoxContainer"]
 unique_name_in_owner = true
 layout_mode = 2
-tooltip_text = "Sacrifice units to get favor."
+tooltip_text = "Sacrifice units and gain 1 favor per 10 units sacrificed."
 theme_override_styles/focus = SubResource("StyleBoxEmpty_c6hay")
 icon = ExtResource("8_gc6e2")
 icon_alignment = 1
@@ -121,34 +170,18 @@ size_flags_horizontal = 0
 theme_override_styles/focus = SubResource("StyleBoxEmpty_u2eju")
 text = "End Turn"
 
-[node name="ResourcesPanel" type="PanelContainer" parent="UI"]
+[node name="Center" type="Sprite2D" parent="."]
 unique_name_in_owner = true
-visible = false
-offset_left = 379.0
-offset_right = 640.0
-offset_bottom = 320.0
-theme = ExtResource("5_5yrco")
-script = ExtResource("10_i46yg")
+z_index = 3000
+z_as_relative = false
+texture = SubResource("GradientTexture2D_i35tl")
 
-[node name="ShapeContainer" type="ScrollContainer" parent="UI/ResourcesPanel"]
-unique_name_in_owner = true
-visible = false
-layout_mode = 2
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
+layer = 50
+follow_viewport_enabled = true
 
-[node name="ShapeVBox" type="VBoxContainer" parent="UI/ResourcesPanel/ShapeContainer"]
+[node name="RegionInfo" parent="CanvasLayer" instance=ExtResource("12_wvvkd")]
 unique_name_in_owner = true
-layout_mode = 2
-size_flags_horizontal = 3
-
-[node name="ShopContainer" type="ScrollContainer" parent="UI/ResourcesPanel"]
-unique_name_in_owner = true
-layout_mode = 2
-
-[node name="ShopVBox" type="VBoxContainer" parent="UI/ResourcesPanel/ShopContainer"]
-unique_name_in_owner = true
-layout_mode = 2
-size_flags_horizontal = 3
-size_flags_vertical = 3
 
 [connection signal="toggled" from="UI/Panel/MarginContainer/HBoxContainer/HBoxContainer/FastForwardButton" to="." method="_on_fast_forward_button_toggled"]
 [connection signal="toggled" from="UI/Panel/MarginContainer/HBoxContainer/HBoxContainer/GoldButton" to="UI/ResourcesPanel" method="_on_gold_button_toggled"]
