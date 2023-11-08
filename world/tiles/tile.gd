@@ -16,10 +16,11 @@ const CRACKED_TEXTURE = preload("res://assets/tiles/grass_cracked_2.png")
 	TileSet.CELL_NEIGHBOR_TOP_RIGHT_SIDE: $northeast
 }
 @onready var barred = $barred
-@onready var item = $Item
+@onready var building_sprite = $Building
 
 var coords: Vector2i = Vector2i(0, 0)
 var team = 0
+var building = Constants.NULL_BUILDING
 var init_position: Vector2 = Vector2(0, 0)
 var borders = Constants.NO_BORDERS.duplicate()
 var region: int = Constants.NULL_REGION
@@ -35,13 +36,15 @@ func init_cell(
 	init_pos: Vector2,
 	init_team: int,
 	init_borders: Dictionary = Constants.NO_BORDERS.duplicate(),
-	init_delete_callable = null
+	init_delete_callable = null,
+	init_building = Constants.NULL_BUILDING
 ):
 	self.coords = init_coords
 	self.team = init_team
 	self.init_position = init_pos
 	self.borders = init_borders
 	self.delete_callable = init_delete_callable
+	self.building = init_building
 
 func _ready():
 	self.position = init_position
@@ -55,6 +58,11 @@ func _process(delta):
 		self.material.set_shader_parameter("sensitivity", elapsed)
 
 func update_cell():
+	if self.building != Constants.NULL_BUILDING:
+		building_sprite.sprite = Constants.BUILDINGS[building].texture
+		building_sprite.visible = true
+	else:
+		building_sprite.visible = false
 	for b in self.borders.keys():
 		if self.borders[b]:
 			self.border_objects[b].show()
@@ -105,7 +113,7 @@ func set_barred(barred_val:bool):
 func set_selected(selected: bool):
 	if selected:
 		self.tween = self.create_tween().set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN).set_loops()
-		self.tween.tween_property(self, "self_modulate", Color(1, 1, 5), 0.5)
+		self.tween.tween_property(self, "self_modulate", Color(2, 2, 2), 0.5)
 		self.tween.tween_property(self, "self_modulate", Color(Constants.TEAM_COLORS[self.team]), 0.5)
 	else:
 		self.self_modulate = Color(Constants.TEAM_COLORS[self.team])
@@ -125,9 +133,10 @@ func mark():
 	#self.texture = CRACKED_TEXTURE
 	self.modulate = Color.hex(0xacacacac)
 	
-func set_item(item : int):
-	$item.sprite = Constants.ITEMS[item].sprite
-	$item.visible = true
+func set_building(new_building : int):
+	self.building = new_building
+	self.update_cell()
 
-func hide_item():
-	$item.visible = false
+func remove_building():
+	self.building = Constants.NULL_BUILDING
+	self.update_cell()

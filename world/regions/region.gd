@@ -29,9 +29,7 @@ func delete():
 
 
 func sacrifice():
-	if self.units < 2:
-		return 0
-	var favor = self.units / 10
+	var favor = self.units - 1
 	self.units = 1
 	return favor
 

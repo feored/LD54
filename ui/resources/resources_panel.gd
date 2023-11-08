@@ -36,7 +36,7 @@ func buy_shape(shape):
 			shape_box.reroll()
 
 func shape_cost(shape):
-	return max(1, shape.size() - self.shape_cost_reduction)
+	return max(1, shape.size() - self.shape_cost_reduction) * 10
 
 func buy_item(item_info):
 	self.player().add_gold(-item_info.cost)

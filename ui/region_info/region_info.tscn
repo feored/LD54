@@ -1,16 +1,12 @@
-[gd_scene load_steps=9 format=3 uid="uid://iwefd7llwk5t"]
+[gd_scene load_steps=11 format=3 uid="uid://iwefd7llwk5t"]
 
 [ext_resource type="Theme" uid="uid://3t61g0061mea" path="res://assets/theme.tres" id="1_5k87u"]
 [ext_resource type="Texture2D" uid="uid://bxqvi5615lj3b" path="res://assets/icons/trident.png" id="2_h5yah"]
 [ext_resource type="Script" path="res://ui/region_info/region_info.gd" id="2_hbxtt"]
+[ext_resource type="StyleBox" uid="uid://bodmh2fly7ipq" path="res://ui/popup_style.tres" id="2_oyj8a"]
 [ext_resource type="Texture2D" uid="uid://bp83kj0l0ow8x" path="res://assets/icons/coin_05d.png" id="3_8trlx"]
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_lo21u"]
-bg_color = Color(0, 0, 0, 0.627451)
-corner_radius_top_left = 5
-corner_radius_top_right = 5
-corner_radius_bottom_right = 5
-corner_radius_bottom_left = 5
+[ext_resource type="Texture2D" uid="uid://cx1k7dpj00i0y" path="res://assets/icons/castle1.png" id="5_5ier5"]
+[ext_resource type="Texture2D" uid="uid://cqphb7lm64kw5" path="res://assets/icons/List.png" id="6_ovvye"]
 
 [sub_resource type="Animation" id="Animation_vgovk"]
 resource_name = "appear"
@@ -38,6 +34,18 @@ tracks/1/keys = {
 "transitions": PackedFloat32Array(1),
 "update": 1,
 "values": [true]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath(".:busy")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0.1),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [false]
 }
 
 [sub_resource type="Animation" id="Animation_mj8wv"]
@@ -67,6 +75,30 @@ tracks/1/keys = {
 "update": 1,
 "values": [false]
 }
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath(".:busy")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0.1),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [false]
+}
+tracks/3/type = "value"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath(".:shown")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"times": PackedFloat32Array(0.1),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [false]
+}
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_8futl"]
 _data = {
@@ -75,94 +107,112 @@ _data = {
 }
 
 [node name="RegionInfo" type="PanelContainer"]
-offset_right = 140.0
-offset_bottom = 46.0
+offset_right = 64.0
+offset_bottom = 24.0
 size_flags_horizontal = 2
 size_flags_vertical = 2
 theme = ExtResource("1_5k87u")
-theme_override_styles/panel = SubResource("StyleBoxFlat_lo21u")
+theme_override_styles/panel = ExtResource("2_oyj8a")
 script = ExtResource("2_hbxtt")
 
 [node name="MarginContainer" type="MarginContainer" parent="."]
 layout_mode = 2
 size_flags_horizontal = 0
 size_flags_vertical = 0
-theme_override_constants/margin_left = 5
-theme_override_constants/margin_top = 5
-theme_override_constants/margin_right = 5
-theme_override_constants/margin_bottom = 5
 
-[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer"]
+[node name="InfoContainer" type="VBoxContainer" parent="MarginContainer"]
+unique_name_in_owner = true
+visible = false
 layout_mode = 2
 size_flags_horizontal = 0
 size_flags_vertical = 0
 theme_override_constants/separation = 10
 
-[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer/VBoxContainer"]
+[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer/InfoContainer"]
 layout_mode = 2
 
-[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer/VBoxContainer/HBoxContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer/InfoContainer/HBoxContainer"]
 layout_mode = 2
 
-[node name="OwnedBy" type="Label" parent="MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer"]
+[node name="OwnedBy" type="Label" parent="MarginContainer/InfoContainer/HBoxContainer/VBoxContainer"]
 layout_mode = 2
 text = "Owned By: "
 
-[node name="Size" type="Label" parent="MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer"]
+[node name="Size" type="Label" parent="MarginContainer/InfoContainer/HBoxContainer/VBoxContainer"]
 layout_mode = 2
 text = "Size:"
 
-[node name="VBoxContainer2" type="VBoxContainer" parent="MarginContainer/VBoxContainer/HBoxContainer"]
+[node name="VBoxContainer2" type="VBoxContainer" parent="MarginContainer/InfoContainer/HBoxContainer"]
 layout_mode = 2
 
-[node name="OwnerLabel" type="Label" parent="MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer2"]
+[node name="OwnerLabel" type="Label" parent="MarginContainer/InfoContainer/HBoxContainer/VBoxContainer2"]
 unique_name_in_owner = true
 layout_mode = 2
 text = "Pink Empire"
 
-[node name="SizeLabel" type="Label" parent="MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer2"]
+[node name="SizeLabel" type="Label" parent="MarginContainer/InfoContainer/HBoxContainer/VBoxContainer2"]
 unique_name_in_owner = true
 layout_mode = 2
 text = "7"
 
-[node name="Label2" type="Label" parent="MarginContainer/VBoxContainer"]
+[node name="Label2" type="Label" parent="MarginContainer/InfoContainer"]
 visible = false
 layout_mode = 2
 text = "Player Resources"
 
-[node name="ResourcesContainer" type="HBoxContainer" parent="MarginContainer/VBoxContainer"]
+[node name="ResourcesContainer" type="HBoxContainer" parent="MarginContainer/InfoContainer"]
 unique_name_in_owner = true
 visible = false
 layout_mode = 2
 alignment = 1
 
-[node name="VBoxContainer" type="HBoxContainer" parent="MarginContainer/VBoxContainer/ResourcesContainer"]
+[node name="VBoxContainer" type="HBoxContainer" parent="MarginContainer/InfoContainer/ResourcesContainer"]
 layout_mode = 2
 
-[node name="TextureRect" type="TextureRect" parent="MarginContainer/VBoxContainer/ResourcesContainer/VBoxContainer"]
+[node name="TextureRect" type="TextureRect" parent="MarginContainer/InfoContainer/ResourcesContainer/VBoxContainer"]
 layout_mode = 2
 texture = ExtResource("2_h5yah")
 stretch_mode = 5
 
-[node name="FavorLabel" type="Label" parent="MarginContainer/VBoxContainer/ResourcesContainer/VBoxContainer"]
+[node name="FavorLabel" type="Label" parent="MarginContainer/InfoContainer/ResourcesContainer/VBoxContainer"]
 unique_name_in_owner = true
 layout_mode = 2
 text = "0"
 
-[node name="VBoxContainer2" type="HBoxContainer" parent="MarginContainer/VBoxContainer/ResourcesContainer"]
+[node name="VBoxContainer2" type="HBoxContainer" parent="MarginContainer/InfoContainer/ResourcesContainer"]
 layout_mode = 2
 
-[node name="TextureRect2" type="TextureRect" parent="MarginContainer/VBoxContainer/ResourcesContainer/VBoxContainer2"]
+[node name="TextureRect2" type="TextureRect" parent="MarginContainer/InfoContainer/ResourcesContainer/VBoxContainer2"]
 layout_mode = 2
 texture = ExtResource("3_8trlx")
 stretch_mode = 5
 
-[node name="GoldLabel" type="Label" parent="MarginContainer/VBoxContainer/ResourcesContainer/VBoxContainer2"]
+[node name="GoldLabel" type="Label" parent="MarginContainer/InfoContainer/ResourcesContainer/VBoxContainer2"]
 unique_name_in_owner = true
 layout_mode = 2
 text = "0"
+
+[node name="BuildingsContainer" type="HBoxContainer" parent="MarginContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="ButtonContainer" type="HBoxContainer" parent="MarginContainer"]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+
+[node name="BuildingButton" type="Button" parent="MarginContainer/ButtonContainer"]
+layout_mode = 2
+icon = ExtResource("5_5ier5")
+
+[node name="InfoButton" type="Button" parent="MarginContainer/ButtonContainer"]
+layout_mode = 2
+icon = ExtResource("6_ovvye")
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
 libraries = {
 "": SubResource("AnimationLibrary_8futl")
 }
+
+[connection signal="pressed" from="MarginContainer/ButtonContainer/BuildingButton" to="." method="_on_building_button_pressed"]
+[connection signal="pressed" from="MarginContainer/ButtonContainer/InfoButton" to="." method="_on_info_button_pressed"]

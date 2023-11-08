@@ -45,11 +45,11 @@ const NULL_COORDS = Vector2i(-9999, -9999)
 const NULL_POS = Vector2(-9999, -9999)
 const NULL_REGION = -9999
 const NULL_TEAM = 0
+const NULL_BUILDING = -9999
 
 ## Game enums
 enum GameMode { Play, MapEditor, Scenario }
 enum Action { None, Move, Sacrifice }
-enum Item { Production, ShapeCost, ShapeReroll, ShapeCapacity }
 
 ## Teams
 const TEAM_COLORS = [
@@ -89,16 +89,42 @@ const TEAM_NAMES = [
 const TURN_TIME = 0.3
 const MENU_WAIT_TIME = 1
 
-## Items:
-const ITEMS = {
-	Item.Production:
+## Buildings
+enum Building { Barracks, Temple, Mine }
+
+const BUILDINGS = {
+	Building.Barracks:
 	{
-		"id": Item.Production,
+		"id": Building.Barracks,
+		"name": "Barracks",
 		"cost": 5,
 		"texture": preload("res://assets/icons/person.png"),
-		"tooltip":
-		"Increases the unit generation of the territory this item was placed on by 1 per turn.",
+		"tooltip": "This territory will generate +1 unit per turn.",
 	},
+	Building.Temple:
+	{
+		"id": Building.Temple,
+		"name": "Temple",
+		"cost": 5,
+		"texture": preload("res://assets/icons/temple.png"),
+		"tooltip": "This territory will generate +1 faith per turn.",
+	},
+	Building.Mine:
+	{
+		"id": Building.Mine,
+		"name": "Mine",
+		"cost": 5,
+		"texture": preload("res://assets/icons/shovel.png"),
+		"tooltip": "This territory will generate +1 gold per turn.",
+	},
+}
+
+const DEFAULT_BUILDINGS = [Building.Barracks, Building.Temple, Building.Mine]
+
+## Items
+enum Item { ShapeCost, ShapeReroll, ShapeCapacity }
+
+const ITEMS = {
 	Item.ShapeCost:
 	{
 		"id": Item.ShapeCost,
@@ -122,7 +148,7 @@ const ITEMS = {
 	},
 }
 
-const DEFAULT_ITEMS = [Item.Production, Item.ShapeCost, Item.ShapeReroll, Item.ShapeCapacity]
+const DEFAULT_ITEMS = [Item.ShapeCost, Item.ShapeReroll, Item.ShapeCapacity]
 
 ## Scenarios
 const scenarios = [

@@ -188,3 +188,4 @@ unique_name_in_owner = true
 [connection signal="toggled" from="UI/Panel/MarginContainer/HBoxContainer/HBoxContainer/FavorButton" to="UI/ResourcesPanel" method="_on_favor_button_toggled"]
 [connection signal="pressed" from="UI/Panel/MarginContainer/HBoxContainer/HBoxContainer/SacrificeButton" to="." method="_on_sacrifice_button_pressed"]
 [connection signal="pressed" from="UI/Panel/MarginContainer/HBoxContainer/TurnButton" to="." method="_on_turn_button_pressed"]
+[connection signal="tile_unselected" from="CanvasLayer/RegionInfo" to="." method="_on_region_info_tile_unselected"]

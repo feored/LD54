@@ -11,12 +11,11 @@ const region_info_prefab = preload("res://ui/region_info/region_info.tscn")
 @onready var sacrificeButton = %SacrificeButton
 @onready var resources = %ResourcesPanel
 @onready var fastForwardButton = %FastForwardButton
-@onready var hover_object = %RegionInfo
+@onready var region_info = %RegionInfo
 
 enum MouseState {
 	None,
-	Hover,
-	Move,
+	Context,
 	Sacrifice,
 	Sink,
 	Item
@@ -40,9 +39,6 @@ var bots : Dictionary = {}
 
 var game_started : bool = false
 var spectating : bool = false
-
-var time_hovering = 0
-var last_coords_hovered = Vector2i.ZERO
 
 
 
@@ -77,28 +73,12 @@ func start_game():
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):
-	var mouse_pos = get_local_mouse_position()
-	var tile_hovered = self.world.local_to_map(mouse_pos)
-	if tile_hovered != last_coords_hovered:
-		time_hovering = 0
-		last_coords_hovered = tile_hovered
-		if hover_object.visible:
-			hover_object.disappear()
-	else:
-		time_hovering += delta
-	if !hover_object.visible and time_hovering > Constants.HOVER_TIME_BEFORE_POPUP:
-		if world.tiles.has(tile_hovered):
-			var region_id = world.tiles[tile_hovered].region
-			var team = world.regions[region_id].team
-			var favor = self.resources.resources[team].favor if team != 0 else 0
-			var gold = self.resources.resources[team].gold if team != 0 else 0
-			self.hover_object.init(team, world.regions[region_id].tiles.size(), favor, gold)
-			self.hover_object.position = mouse_pos + Vector2(5, 5)
-		else:
-			time_hovering = 0
-
+	pass
+		
+			
 
 func clear_mouse_state():
+	region_info.disappear_instant()
 	clear_sinking()
 	clear_selected_region()
 	self.mouse_state = MouseState.None
@@ -141,7 +121,17 @@ func _unhandled_input(event):
 			return
 		## Right click to cancel
 		if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_RIGHT and event.pressed:
-				clear_mouse_state()
+			clear_mouse_state()
+			var mouse_pos = get_local_mouse_position()
+			var tile_hovered = self.world.local_to_map(mouse_pos)
+			if world.tiles.has(tile_hovered):
+				var region_id = world.tiles[tile_hovered].region
+				var team = world.regions[region_id].team
+				var favor = self.resources.resources[team].favor if team != 0 else 0
+				var gold = self.resources.resources[team].gold if team != 0 else 0
+				world.tiles[tile_hovered].set_selected(true)
+				self.region_info.position = mouse_pos + Vector2(self.region_info.MARGIN, self.region_info.MARGIN)
+				self.region_info.init(tile_hovered, Constants.DEFAULT_BUILDINGS, world.tiles[tile_hovered].building, team, world.regions[region_id].tiles.size(), favor, gold)
 		elif event is InputEventMouse:
 			if self.mouse_state == MouseState.Sink:
 				handle_sinking(event)
@@ -254,7 +244,6 @@ func handle_move(new_clicked_tile):
 			self.selected_region = new_clicked_tile.region
 			self.world.regions[selected_region].set_selected(true)
 			Sfx.play(Sfx.Track.Select)
-			self.mouse_state = MouseState.Move
 	else:
 		if new_clicked_tile.region not in self.world.adjacent_regions(self.selected_region):
 			clear_mouse_state()
@@ -349,3 +338,8 @@ func fast_forward(val):
 
 func _on_fast_forward_button_toggled(button_pressed:bool):
 	fast_forward(button_pressed)
+
+
+func _on_region_info_tile_unselected(coords):
+	if self.world.tiles.has(coords):
+		self.world.tiles[coords].set_selected(false)
