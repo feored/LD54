@@ -38,14 +38,14 @@ func _on_reroll_button_pressed():
 func _on_sacrifice_button_pressed():
 	self.pick()
 
-func update(favor):
+func update(faith):
 	sacrificeButton.set_text(str(shape_cost.call(shape.shape.shape.keys())))
-	if favor < Constants.SHAPE_REROLL_COST:
+	if faith < Constants.SHAPE_REROLL_COST:
 		rerollButton.set_disabled(true)
 	else:
 		rerollButton.set_disabled(false)
 
-	if favor < shape_cost.call(shape.shape.shape):
+	if faith < shape_cost.call(shape.shape.shape):
 		sacrificeButton.set_disabled(true)
 	else:
 		sacrificeButton.set_disabled(false)

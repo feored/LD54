@@ -2,7 +2,7 @@ extends RefCounted
 class_name Resources
 
 var gold: int = 0
-var favor: int = 0
+var faith: int = 0
 
 var resource_changed = null
 
@@ -10,9 +10,9 @@ func init_callback(init_resource_changed):
 	self.resource_changed = init_resource_changed
 	self.resource_changed.call()
 
-func _init(init_gold, init_favor,):
+func _init(init_gold, init_faith,):
 	gold = init_gold
-	favor = init_favor
+	faith = init_faith
 
 func set_gold(new_gold):
 	gold = new_gold
@@ -24,12 +24,12 @@ func add_gold(amount):
 	if resource_changed != null:
 		resource_changed.call()
 
-func set_favor(new_favor):
-	favor = new_favor
+func set_faith(new_faith):
+	faith = new_faith
 	if resource_changed != null:
 		resource_changed.call()
 
-func add_favor(amount):
-	favor += amount
+func add_faith(amount):
+	faith += amount
 	if resource_changed != null:
 		resource_changed.call()

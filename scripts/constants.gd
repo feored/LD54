@@ -39,6 +39,8 @@ const GOLD_PER_TURN_PER_REGION = 1
 const SACRIFICE_SHAPES = 3
 const SHAPE_REROLL_COST = 1
 const HOVER_TIME_BEFORE_POPUP = 0.5
+const TEMPLE_FAITH_PER_TURN = 5
+const MINE_GOLD_PER_TURN = 2
 
 ## Null values
 const NULL_COORDS = Vector2i(-9999, -9999)
@@ -90,7 +92,7 @@ const TURN_TIME = 0.3
 const MENU_WAIT_TIME = 1
 
 ## Buildings
-enum Building { Barracks, Temple, Mine }
+enum Building { None, Barracks, Temple, Mine, Test1, Test2, Test3, Test4 }
 
 const BUILDINGS = {
 	Building.Barracks:
@@ -117,9 +119,45 @@ const BUILDINGS = {
 		"texture": preload("res://assets/icons/shovel.png"),
 		"tooltip": "This territory will generate +1 gold per turn.",
 	},
+	Building.Test1:
+	{
+		"id": Building.Test1,
+		"name": "Test1",
+		"cost": 5,
+		"texture": preload("res://assets/icons/shovel.png"),
+		"tooltip": "This territory will generate +1 gold per turn.",
+	},
+	Building.Test2:
+	{
+		"id": Building.Test2,
+		"name": "Test2",
+		"cost": 5,
+		"texture": preload("res://assets/icons/shovel.png"),
+		"tooltip": "This territory will generate +1 gold per turn.",
+	},
+	Building.Test3:
+	{
+		"id": Building.Test3,
+		"name": "Test3",
+		"cost": 5,
+		"texture": preload("res://assets/icons/shovel.png"),
+		"tooltip": "This territory will generate +1 gold per turn.",
+	},
+	Building.Test4:
+	{
+		"id": Building.Test4,
+		"name": "Test4",
+		"cost": 5,
+		"texture": preload("res://assets/icons/shovel.png"),
+		"tooltip": "This territory will generate +1 gold per turn.",
+	},
 }
 
-const DEFAULT_BUILDINGS = [Building.Barracks, Building.Temple, Building.Mine]
+const DEFAULT_BUILDINGS = [
+	Building.Barracks,
+	Building.Temple,
+	Building.Mine,
+]
 
 ## Items
 enum Item { ShapeCost, ShapeReroll, ShapeCapacity }
@@ -179,7 +217,7 @@ const scenarios = [
 		"description": "This land must have been shaped by the gods.",
 		"path": "sort_of_a_star.json"
 	},
-	{"title": "Pacman", "description": "Uh...Neptune's favorite game?", "path": "pacman.json"},
+	{"title": "Pacman", "description": "Uh...Neptune's faithite game?", "path": "pacman.json"},
 	{
 		"title": "4 Islands",
 		"description": "An isolated empire is doomed to decay",

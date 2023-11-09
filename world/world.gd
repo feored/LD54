@@ -179,7 +179,7 @@ func delete_cell(coords_array: Array, action = null):
 	if action != null:
 		var team_name = Constants.TEAM_NAMES[action.team]
 		if action.team == self.tiles[coords_array[0]].team:
-			self.messenger.call("%s sacrifices their own land to curry favor from the gods..." % team_name)
+			self.messenger.call("%s sacrifices their own land to curry faith from the gods..." % team_name)
 		else:
 			var enemy_team_name = Constants.TEAM_NAMES[self.tiles[coords_array[0]].team]
 			self.messenger.call("%s begs the gods to strike down the land of %s..." % [team_name, enemy_team_name])

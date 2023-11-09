@@ -29,9 +29,9 @@ func delete():
 
 
 func sacrifice():
-	var favor = self.units - 1
+	var faith = self.units - 1
 	self.units = 1
-	return favor
+	return faith
 
 
 func delete_no_tiles():

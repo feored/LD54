@@ -1,11 +1,11 @@
 extends PanelContainer
 
-enum ResourcesContainerState { None, Favor, Gold }
+enum ResourcesContainerState { None, Faith, Gold }
 
 const shapeBoxPrefab = preload("res://ui/shapes/shape_gui_box.tscn")
 const itemBoxPrefab = preload("res://ui/items/item_gui.tscn")
 
-@onready var favorButton = %FavorButton
+@onready var faithButton = %FaithButton
 @onready var goldButton = %GoldButton
 @onready var shapeVBox = %ShapeVBox
 @onready var shapeContainer = %ShapeContainer
@@ -27,10 +27,10 @@ func _process(_delta):
 	pass
 
 func buy_shape_reroll():
-	self.player().add_favor(-Constants.SHAPE_REROLL_COST)
+	self.player().add_faith(-Constants.SHAPE_REROLL_COST)
 
 func buy_shape(shape):
-	self.player().add_favor(-shape_cost(shape))
+	self.player().add_faith(-shape_cost(shape))
 	for shape_box in self.shape_boxes:
 		if shape_box.picked:
 			shape_box.reroll()
@@ -43,7 +43,7 @@ func buy_item(item_info):
 
 func add_teams(teams):
 	for team_id in teams:
-		self.resources[team_id] = Resources.new(0, 0)
+		self.resources[team_id] = Resources.new(4, 0)
 	self.resources[Constants.PLAYER_ID].init_callback(Callable(self, "update"))
 
 func player():
@@ -67,10 +67,10 @@ func init_shapes(pick_shape_func):
 		add_shape()
 
 func update():
-	self.favorButton.set_text(str(self.player().favor))
+	self.faithButton.set_text(str(self.player().faith))
 	self.goldButton.set_text(str(self.player().gold))
 	for shape_box in self.shape_boxes:
-		shape_box.update(self.player().favor)
+		shape_box.update(self.player().faith)
 	for item_box in self.shopVBox.get_children():
 		item_box.update(self.player().gold)
 	
@@ -96,7 +96,7 @@ func apply_item(item_info):
 func update_display(clicked: ResourcesContainerState, active: bool):
 	if active:
 		self.show()
-		if clicked == ResourcesContainerState.Favor:
+		if clicked == ResourcesContainerState.Faith:
 			self.shapeContainer.show()
 			self.shopContainer.hide()
 		elif clicked == ResourcesContainerState.Gold:
@@ -106,16 +106,16 @@ func update_display(clicked: ResourcesContainerState, active: bool):
 		self.hide()
 
 func lock_controls(val : bool):
-	self.favorButton.button_pressed = false
+	self.faithButton.button_pressed = false
 	self.goldButton.button_pressed = false
-	self.favorButton.disabled = val
+	self.faithButton.disabled = val
 	self.goldButton.disabled = val
 	if val:
 		self.hide()
 
 
-func _on_favor_button_toggled(button_pressed: bool):
-	update_display(ResourcesContainerState.Favor, button_pressed)
+func _on_faith_button_toggled(button_pressed: bool):
+	update_display(ResourcesContainerState.Faith, button_pressed)
 
 
 func _on_gold_button_toggled(button_pressed: bool):

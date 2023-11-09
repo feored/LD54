@@ -37,7 +37,7 @@ layout_mode = 2
 [node name="RerollButton" type="Button" parent="HBoxContainer"]
 unique_name_in_owner = true
 layout_mode = 2
-tooltip_text = "Reroll this shape (Costs 1 favor)."
+tooltip_text = "Reroll this shape (Costs 1 faith)."
 text = "Reroll"
 icon_alignment = 2
 

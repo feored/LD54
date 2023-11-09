@@ -20,7 +20,7 @@ const CRACKED_TEXTURE = preload("res://assets/tiles/grass_cracked_2.png")
 
 var coords: Vector2i = Vector2i(0, 0)
 var team = 0
-var building = Constants.NULL_BUILDING
+var building = Constants.Building.None
 var init_position: Vector2 = Vector2(0, 0)
 var borders = Constants.NO_BORDERS.duplicate()
 var region: int = Constants.NULL_REGION
@@ -37,7 +37,7 @@ func init_cell(
 	init_team: int,
 	init_borders: Dictionary = Constants.NO_BORDERS.duplicate(),
 	init_delete_callable = null,
-	init_building = Constants.NULL_BUILDING
+	init_building = Constants.Building.None
 ):
 	self.coords = init_coords
 	self.team = init_team
@@ -58,8 +58,8 @@ func _process(delta):
 		self.material.set_shader_parameter("sensitivity", elapsed)
 
 func update_cell():
-	if self.building != Constants.NULL_BUILDING:
-		building_sprite.sprite = Constants.BUILDINGS[building].texture
+	if self.building != Constants.Building.None:
+		building_sprite.texture = Constants.BUILDINGS[building].texture
 		building_sprite.visible = true
 	else:
 		building_sprite.visible = false
@@ -138,5 +138,5 @@ func set_building(new_building : int):
 	self.update_cell()
 
 func remove_building():
-	self.building = Constants.NULL_BUILDING
+	self.building = Constants.Building.None
 	self.update_cell()
