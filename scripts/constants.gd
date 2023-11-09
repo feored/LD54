@@ -4,6 +4,7 @@ extends Node
 const VIEWPORT_SIZE = Vector2(960, 540)
 const TILE_SIZE = 24
 const WORLD_CENTER = Vector2i(0, 0)  #Vector2i(VIEWPORT_SIZE.x / TILE_SIZE / 2, VIEWPORT_SIZE.y / TILE_SIZE / 2)
+const CAMERA_CENTER = Vector2(VIEWPORT_SIZE.x / TILE_SIZE / 2, VIEWPORT_SIZE.y / TILE_SIZE / 2)
 const WORLD_BOUNDS = Vector2i(15, 15)
 const WORLD_CAMERA_BOUNDS = Vector2i(60, 35)
 const NEIGHBORS = [
@@ -29,7 +30,7 @@ const PLAYER_ID = 1
 const REGION_MAX_SIZE = 6
 const SINK_GRACE_PERIOD = 1
 const MIN_TEAMS = 2  ## including player
-const MAX_TEAMS = 7
+const MAX_TEAMS = 10
 const BLENDING_MODULATE_ALPHA = 0.6
 const CAMERA_SPEED = 5
 const ISLAND_SIZE_DEFAULT = 0.25
@@ -63,6 +64,9 @@ const TEAM_COLORS = [
 	0xc91e1eff,  # red
 	0x09b030ff,  # green
 	0x393939ff,  # grey
+	0xa103fcff,  # purple
+	0x03e3fcff,  # cyan
+	0xc2fc03ff,  # lime
 ]
 
 const TEAM_BORDER_COLORS = [
@@ -74,6 +78,9 @@ const TEAM_BORDER_COLORS = [
 	0xff0000ff,  # red
 	0x00ff00ff,  # green
 	0x1a1919ff,  # grey
+	0x800080ff,  # purple
+	0x00b0b0ff,  # cyan
+	0x63cc00ff,  # lime
 ]
 
 const TEAM_NAMES = [
@@ -84,7 +91,10 @@ const TEAM_NAMES = [
 	"Yellow Protectorate",
 	"Red Republic",
 	"Green Federation",
-	"Grey Coalition"
+	"Grey Coalition",
+	"Purple Commonwealth",
+	"Cyan Union",
+	"Lime Dominion",
 ]
 
 ## Timers
@@ -157,6 +167,14 @@ const DEFAULT_BUILDINGS = [
 	Building.Barracks,
 	Building.Temple,
 	Building.Mine,
+	# Building.Test1,
+	# Building.Test2,
+	# Building.Test3,
+	# Building.Test4,
+	# Building.Test1,
+	# Building.Test2,
+	# Building.Test3,
+	# Building.Test4,
 ]
 
 ## Items

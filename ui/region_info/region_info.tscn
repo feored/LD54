@@ -126,7 +126,7 @@ theme = ExtResource("1_5k87u")
 theme_override_styles/panel = ExtResource("2_oyj8a")
 script = ExtResource("2_hbxtt")
 
-[node name="BuildingsContainer" type="Control" parent="."]
+[node name="OptionsContainer" type="Control" parent="."]
 unique_name_in_owner = true
 layout_mode = 2
 

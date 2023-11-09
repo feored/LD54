@@ -52,7 +52,7 @@ vertical_alignment = 1
 [node name="TeamNum" type="SpinBox" parent="SelectionUI/PanelContainer/MarginContainer/HBoxContainer/HBoxContainer/HBoxContainer"]
 layout_mode = 2
 min_value = 2.0
-max_value = 7.0
+max_value = 10.0
 value = 7.0
 rounded = true
 alignment = 1

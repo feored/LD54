@@ -54,6 +54,7 @@ func _ready():
 	self.add_teams()
 	
 	%Center.position = self.world.coords_to_pos(Constants.WORLD_CENTER)
+	print("Center: ", %Center.global_position)
 	self.start_game()
 	self.world.camera.move_instant(self.world.map_to_local(closest_player_tile_coords()))
 
@@ -130,19 +131,11 @@ func _unhandled_input(event):
 			if world.tiles.has(tile_hovered) and world.tiles[tile_hovered].team == self.teams[self.player_team_index]:
 				world.tiles[tile_hovered].set_selected(true)
 				self.region_info.position = world.tiles[tile_hovered].position#mouse_pos# + Vector2(self.region_info.MARGIN, self.region_info.MARGIN)
-				self.region_info.init(tile_hovered, Constants.DEFAULT_BUILDINGS, world.tiles[tile_hovered].building, self.resources.player().gold, Callable(self, "buy_building"))
+				var can_sacrifice = self.world.regions[self.world.tiles[tile_hovered].region].units > 1
+				self.region_info.init(tile_hovered, Constants.DEFAULT_BUILDINGS, world.tiles[tile_hovered].building, self.resources.player().gold, can_sacrifice)
 		elif event is InputEventMouse:
 			if self.mouse_state == MouseState.Sink:
 				handle_sinking(event)
-			elif self.mouse_state == MouseState.Sacrifice:
-				if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT and event.pressed:
-					var tile_hovered = self.world.global_pos_to_coords(event.position)
-					if self.world.tiles.has(tile_hovered):
-						var region = self.world.tiles[tile_hovered].region
-						if self.world.regions[region].team == self.teams[self.player_team_index]:
-							self.resources.player().add_faith(self.world.regions[region].sacrifice())
-							self.world.region_update_label(region)
-					clear_mouse_state()
 			else:
 				var coords_clicked = world.global_pos_to_coords(event.position)
 				if world.tiles.has(coords_clicked):
@@ -152,6 +145,12 @@ func _unhandled_input(event):
 func buy_building(tile_coords, building):
 	self.resources.player().add_gold(-Constants.BUILDINGS[building].cost)
 	self.world.tiles[tile_coords].set_building(building)
+
+func sacrifice_region(region_id):
+	if self.world.regions[region_id].team == self.teams[self.player_team_index]:
+		self.resources.player().add_faith(self.world.regions[region_id].sacrifice())
+		self.world.region_update_label(region_id)
+	
 
 func lock_controls(val : bool):
 	self.endTurnButton.disabled = val
@@ -229,7 +228,7 @@ func apply_building(tile_coords, building):
 	var team_id = self.world.tiles[tile_coords].team
 	match building:
 		Constants.Building.Barracks:
-			self.world.regions[self.world.tiles[tile_coords].region].units += 1
+			self.world.regions[self.world.tiles[tile_coords].region].units += 3
 		Constants.Building.Mine:
 			if team_id != Constants.NULL_TEAM:
 				self.resources.resources[team_id].add_gold(Constants.MINE_GOLD_PER_TURN)
@@ -240,7 +239,7 @@ func apply_building(tile_coords, building):
 
 func spawn_coin(tile_coords):
 	var coin = coinPrefab.instantiate()
-	coin.position = self.world.map_to_local(self.world.tiles[tile_coords].position)
+	coin.position = self.world.map_to_local(self.world.tiles[tile_coords].coords)
 	self.world.add_child(coin)
 	
 func check_coins(team_id):
@@ -369,3 +368,13 @@ func _on_fast_forward_button_toggled(button_pressed:bool):
 func _on_region_info_tile_unselected(coords):
 	if self.world.tiles.has(coords):
 		self.world.tiles[coords].set_selected(false)
+
+
+func _on_region_info_tile_sacrificed(coords):
+	self.sacrifice_region(self.world.tiles[coords].region)
+	clear_mouse_state()
+
+
+func _on_region_info_building_bought(coords, building):
+	self.buy_building(coords, building)
+	clear_mouse_state()

@@ -179,7 +179,7 @@ func delete_cell(coords_array: Array, action = null):
 	if action != null:
 		var team_name = Constants.TEAM_NAMES[action.team]
 		if action.team == self.tiles[coords_array[0]].team:
-			self.messenger.call("%s sacrifices their own land to curry faith from the gods..." % team_name)
+			self.messenger.call("%s sacrifices their own land to curry favor from the gods..." % team_name)
 		else:
 			var enemy_team_name = Constants.TEAM_NAMES[self.tiles[coords_array[0]].team]
 			self.messenger.call("%s begs the gods to strike down the land of %s..." % [team_name, enemy_team_name])
@@ -255,10 +255,9 @@ func sink_tiles(coords):
 func mark_tiles(global_turn):
 	# only sinking tiles for now
 	var n = self.tiles.size()
-	var tiles_to_mark = min(n - 1, int(global_turn * n / 10.0))
+	var tiles_to_mark = int(1 + n/(Utils.rng.randf_range(15.0, 30.0)))
 	if (global_turn < Constants.SINK_GRACE_PERIOD):
 		tiles_to_mark = 0
-	print("Marking ", tiles_to_mark, " tiles")
 	var cur_cell = Utils.pick_tile_to_sink(self.tiles.keys())
 	for i in range(tiles_to_mark):
 		var neighbors = self.get_surrounding_cells(cur_cell).filter(func(x): return self.tiles.has(x) and not self.tiles[x].marked)
