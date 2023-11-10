@@ -70,6 +70,24 @@ func set_units(init_units):
 	update_display()
 
 
+func attack(num_attackers, team):
+	var total_attackers = num_attackers
+	for tile in self.tiles.values():
+		if tile.building == Constants.Building.Fort:
+			total_attackers -= Constants.CASTLE_UNITS_REMOVED
+	if total_attackers > self.units:
+		self.units = total_attackers - self.units
+		self.set_team(team)
+	else:
+		self.units -= total_attackers
+	update_display()
+
+
+func reinforce(num_reinforcements):
+	self.units += num_reinforcements
+	update_display()
+
+
 func center_tile():
 	var total = Vector2i(0, 0)
 	for tile_obj in self.tiles.values():

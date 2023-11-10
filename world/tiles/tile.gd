@@ -133,7 +133,7 @@ func mark():
 	#self.texture = CRACKED_TEXTURE
 	self.modulate = Color.hex(0xacacacac)
 	
-func set_building(new_building : int):
+func set_building(new_building):
 	self.building = new_building
 	self.update_cell()
 

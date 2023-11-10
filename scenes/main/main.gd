@@ -8,7 +8,6 @@ const region_info_prefab = preload("res://ui/region_info/region_info.tscn")
 @onready var world = $"World"
 @onready var messenger = %Message
 @onready var endTurnButton = %TurnButton
-@onready var sacrificeButton = %SacrificeButton
 @onready var resources = %ResourcesPanel
 @onready var fastForwardButton = %FastForwardButton
 @onready var region_info = %RegionInfo
@@ -16,9 +15,8 @@ const region_info_prefab = preload("res://ui/region_info/region_info.tscn")
 enum MouseState {
 	None,
 	Context,
-	Sacrifice,
 	Sink,
-	Item
+	Move
 }
 
 const player_team_index: int = 0
@@ -50,11 +48,9 @@ func _ready():
 	Sfx.enable_track(Sfx.Track.Boom)
 	self.load_map()
 	self.resources.init_shapes(Callable(self, "pick_shape_to_sink"))
-	self.resources.init_shop()
 	self.add_teams()
 	
 	%Center.position = self.world.coords_to_pos(Constants.WORLD_CENTER)
-	print("Center: ", %Center.global_position)
 	self.start_game()
 	self.world.camera.move_instant(self.world.map_to_local(closest_player_tile_coords()))
 
@@ -133,6 +129,7 @@ func _unhandled_input(event):
 				self.region_info.position = world.tiles[tile_hovered].position#mouse_pos# + Vector2(self.region_info.MARGIN, self.region_info.MARGIN)
 				var can_sacrifice = self.world.regions[self.world.tiles[tile_hovered].region].units > 1
 				self.region_info.init(tile_hovered, Constants.DEFAULT_BUILDINGS, world.tiles[tile_hovered].building, self.resources.player().gold, can_sacrifice)
+				self.mouse_state = MouseState.Context
 		elif event is InputEventMouse:
 			if self.mouse_state == MouseState.Sink:
 				handle_sinking(event)
@@ -140,6 +137,8 @@ func _unhandled_input(event):
 				var coords_clicked = world.global_pos_to_coords(event.position)
 				if world.tiles.has(coords_clicked):
 					if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT and event.pressed:
+						if mouse_state != MouseState.Move:
+							clear_mouse_state()
 						handle_move(world.tiles[coords_clicked])
 
 func buy_building(tile_coords, building):
@@ -154,7 +153,6 @@ func sacrifice_region(region_id):
 
 func lock_controls(val : bool):
 	self.endTurnButton.disabled = val
-	self.sacrificeButton.disabled = val
 	self.resources.lock_controls(val)
 	
 
@@ -228,7 +226,7 @@ func apply_building(tile_coords, building):
 	var team_id = self.world.tiles[tile_coords].team
 	match building:
 		Constants.Building.Barracks:
-			self.world.regions[self.world.tiles[tile_coords].region].units += 3
+			self.world.regions[self.world.tiles[tile_coords].region].units += Constants.BARRACKS_UNITS_PER_TURN
 		Constants.Building.Mine:
 			if team_id != Constants.NULL_TEAM:
 				self.resources.resources[team_id].add_gold(Constants.MINE_GOLD_PER_TURN)
@@ -253,6 +251,7 @@ func clear_selected_region():
 		self.selected_region = null
 	
 func handle_move(new_clicked_tile):
+	mouse_state = MouseState.Move
 	if !(self.turn == self.player_team_index):
 		print("not player turn")
 		clear_mouse_state()
@@ -343,10 +342,6 @@ func load_map():
 		self.teams.append(int(t)) ## json is parsed as floats
 	self.world.load_tiles(Settings.current_map.tiles)
 	self.world.load_regions(Settings.current_map.regions)
-
-func _on_sacrifice_button_pressed():
-	clear_mouse_state()
-	self.mouse_state = MouseState.Sacrifice
 
 func pick_shape_to_sink(shape_coords):
 	self.clear_mouse_state()

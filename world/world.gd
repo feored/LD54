@@ -289,29 +289,18 @@ func move_units(region_from : int, region_to: int, team: int):
 		print("Error: regions are not adjacent")
 
 	# success
-	var moved_units = regions[region_from].units - 1
 	if not is_player:
-		# var team_name = Constants.TEAM_NAMES[team]
-		# if self.regions[region_from].team == self.regions[region_to].team:
-		# 	self.messenger.call("%s is moving %s troops to a friendly neighboring region..." % [team_name, moved_units])
-		# else:
-		# 	var enemy_team_name = Constants.TEAM_NAMES[self.regions[region_to].team] 
-		# 	self.messenger.call("%s is attacking a neighboring %s region with %s troops!" % [team_name, enemy_team_name, moved_units])
 		await self.camera.move_smoothed(self.coords_to_pos(self.regions[region_from].center_tile()), 5)
-	
-	if regions[region_from].team == regions[region_to].team:
-		regions[region_from].set_units(1)
-		regions[region_to].set_units( regions[region_to].units + moved_units)
-	else:
-		regions[region_from].set_units(1)
-		if regions[region_to].units >= moved_units:
-			regions[region_to].set_units(regions[region_to].units - moved_units)
-			self.regions[region_from].set_used(true)
-			return
-		else:
-			regions[region_to].set_units(moved_units - regions[region_to].units)
-			regions[region_to].set_team(regions[region_from].team)
+
+	var moved_units = regions[region_from].units - 1
+	regions[region_from].set_units(1)
 	self.regions[region_from].set_used(true)
+
+	if regions[region_from].team == regions[region_to].team:
+		regions[region_to].reinforce(moved_units)
+	else:
+		regions[region_to].attack(moved_units, team)
+			
 	if not is_player:
 		await Utils.wait(Settings.turn_time)
 

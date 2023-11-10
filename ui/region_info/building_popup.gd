@@ -2,6 +2,7 @@ extends PanelContainer
 
 @onready var building_name = %Name
 @onready var tooltip = %Tooltip
+@onready var cost = %Cost
 @onready var animation_player = $AnimationPlayer
 
 var building = Constants.Building.None
@@ -36,6 +37,7 @@ func init(init_building, init_built, disappear_func):
 func update():
 	self.building_name.text = Constants.BUILDINGS[self.building].name
 	self.tooltip.text = Constants.BUILDINGS[self.building].tooltip
+	self.cost.text = str(Constants.BUILDINGS[self.building].cost)
 
 
 # Called when the node enters the scene tree for the first time.

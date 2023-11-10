@@ -3,8 +3,11 @@ extends Camera2D
 
 var active = true
 
-var LIMIT_X = Constants.VIEWPORT_SIZE.x * 0.75
-var LIMIT_Y = Constants.VIEWPORT_SIZE.y * 0.75
+var LIMIT_X_NEGATIVE = Constants.CAMERA_CENTER.x - Constants.VIEWPORT_SIZE.x * 0.5
+var LIMIT_X_POSITIVE = Constants.CAMERA_CENTER.x + Constants.VIEWPORT_SIZE.x * 0.5
+var LIMIT_Y_NEGATIVE = Constants.CAMERA_CENTER.y - Constants.VIEWPORT_SIZE.y * 0.5 * 16/9
+var LIMIT_Y_POSITIVE = Constants.CAMERA_CENTER.y + Constants.VIEWPORT_SIZE.y * 0.5 * 16/9
+
 
 const POSITION_SMOOTHED_SPEED = 5.0
 const POSITION_SMOOTHED_SPEED_SKIP = 10.0
@@ -16,6 +19,8 @@ var is_dragging = false
 
 
 func _ready():
+	if self.position == Vector2.ZERO:
+		self.position = Constants.CAMERA_CENTER
 	self.position_smoothing_enabled = false
 	self.position_smoothing_speed = Constants.CAMERA_SPEED
 
@@ -39,14 +44,14 @@ func move():
 		return
 	var local_mouse_pos = get_local_mouse_position()
 	var new_position = position + (start_position - local_mouse_pos)
-	if new_position.x < -LIMIT_X:
-		new_position.x = -LIMIT_X
-	elif new_position.x > LIMIT_X:
-		new_position.x = LIMIT_X
-	if new_position.y < -LIMIT_Y:
-		new_position.y = -LIMIT_Y
-	elif new_position.y > LIMIT_Y:
-		new_position.y = LIMIT_Y
+	if new_position.x < LIMIT_X_NEGATIVE:
+		new_position.x = LIMIT_X_NEGATIVE
+	elif new_position.x > LIMIT_X_POSITIVE:
+		new_position.x = LIMIT_X_POSITIVE
+	if new_position.y < LIMIT_Y_NEGATIVE:
+		new_position.y = LIMIT_Y_NEGATIVE
+	elif new_position.y > LIMIT_Y_POSITIVE:
+		new_position.y = LIMIT_Y_POSITIVE
 	self.position = new_position
 	return local_mouse_pos
 

@@ -4,9 +4,9 @@ extends Node
 const VIEWPORT_SIZE = Vector2(960, 540)
 const TILE_SIZE = 24
 const WORLD_CENTER = Vector2i(0, 0)  #Vector2i(VIEWPORT_SIZE.x / TILE_SIZE / 2, VIEWPORT_SIZE.y / TILE_SIZE / 2)
-const CAMERA_CENTER = Vector2(VIEWPORT_SIZE.x / TILE_SIZE / 2, VIEWPORT_SIZE.y / TILE_SIZE / 2)
+const CAMERA_CENTER = -VIEWPORT_SIZE / 2
 const WORLD_BOUNDS = Vector2i(15, 15)
-const WORLD_CAMERA_BOUNDS = Vector2i(60, 35)
+const WORLD_CAMERA_BOUNDS = Vector2i(80, 45)
 const NEIGHBORS = [
 	TileSet.CELL_NEIGHBOR_RIGHT_SIDE,
 	TileSet.CELL_NEIGHBOR_BOTTOM_LEFT_SIDE,
@@ -42,6 +42,8 @@ const SHAPE_REROLL_COST = 1
 const HOVER_TIME_BEFORE_POPUP = 0.5
 const TEMPLE_FAITH_PER_TURN = 5
 const MINE_GOLD_PER_TURN = 2
+const CASTLE_UNITS_REMOVED = 10
+const BARRACKS_UNITS_PER_TURN = 3
 
 ## Null values
 const NULL_COORDS = Vector2i(-9999, -9999)
@@ -102,7 +104,7 @@ const TURN_TIME = 0.3
 const MENU_WAIT_TIME = 1
 
 ## Buildings
-enum Building { None, Barracks, Temple, Mine, Test1, Test2, Test3, Test4 }
+enum Building { None, Barracks, Temple, Mine, Fort, Test2, Test3, Test4 }
 
 const BUILDINGS = {
 	Building.Barracks:
@@ -111,7 +113,7 @@ const BUILDINGS = {
 		"name": "Barracks",
 		"cost": 5,
 		"texture": preload("res://assets/icons/person.png"),
-		"tooltip": "This territory will generate +1 unit per turn.",
+		"tooltip": "This territory will generate +%s unit per turn." % BARRACKS_UNITS_PER_TURN,
 	},
 	Building.Temple:
 	{
@@ -119,7 +121,7 @@ const BUILDINGS = {
 		"name": "Temple",
 		"cost": 5,
 		"texture": preload("res://assets/icons/temple.png"),
-		"tooltip": "This territory will generate +1 faith per turn.",
+		"tooltip": "This territory will generate +%s faith per turn." % TEMPLE_FAITH_PER_TURN,
 	},
 	Building.Mine:
 	{
@@ -127,15 +129,16 @@ const BUILDINGS = {
 		"name": "Mine",
 		"cost": 5,
 		"texture": preload("res://assets/icons/shovel.png"),
-		"tooltip": "This territory will generate +1 gold per turn.",
+		"tooltip": "This territory will generate +%s gold per turn." % MINE_GOLD_PER_TURN,
 	},
-	Building.Test1:
+	Building.Fort:
 	{
-		"id": Building.Test1,
-		"name": "Test1",
-		"cost": 5,
-		"texture": preload("res://assets/icons/shovel.png"),
-		"tooltip": "This territory will generate +1 gold per turn.",
+		"id": Building.Fort,
+		"name": "Fort",
+		"cost": 20,
+		"texture": preload("res://assets/icons/castle.png"),
+		"tooltip":
+		"Enemies invading this territory lose %s units instantly." % CASTLE_UNITS_REMOVED,
 	},
 	Building.Test2:
 	{
@@ -167,14 +170,7 @@ const DEFAULT_BUILDINGS = [
 	Building.Barracks,
 	Building.Temple,
 	Building.Mine,
-	# Building.Test1,
-	# Building.Test2,
-	# Building.Test3,
-	# Building.Test4,
-	# Building.Test1,
-	# Building.Test2,
-	# Building.Test3,
-	# Building.Test4,
+	Building.Fort,
 ]
 
 ## Items
@@ -209,36 +205,8 @@ const DEFAULT_ITEMS = [Item.ShapeCost, Item.ShapeReroll, Item.ShapeCapacity]
 ## Scenarios
 const scenarios = [
 	{
-		"title": "Humble Beginnings",
+		"title": "Heart",
 		"description": "Neptune means to teach you that you must sink or be sunk.",
-		"path": "cross.json"
+		"path": "heart.json"
 	},
-	{
-		"title": "The Trident",
-		"description":
-		"Neptune wants to test your ability to conquer an island with a single chokepoint.",
-		"path": "trident.json"
-	},
-	{
-		"title": "Not Poseidon",
-		"description": "Neptune wants you to conquer a land dear to him.",
-		"path": "italy.json"
-	},
-	{"title": "The Loop", "description": "All paths lead to Rome.", "path": "loop.json"},
-	{
-		"title": "A Tale of Two Cities",
-		"description": "A fragile bridge connects two prosperous lands.",
-		"path": "two_halves.json"
-	},
-	{
-		"title": "Stars Align",
-		"description": "This land must have been shaped by the gods.",
-		"path": "sort_of_a_star.json"
-	},
-	{"title": "Pacman", "description": "Uh...Neptune's faithite game?", "path": "pacman.json"},
-	{
-		"title": "4 Islands",
-		"description": "An isolated empire is doomed to decay",
-		"path": "4_islands.json"
-	}
 ]
