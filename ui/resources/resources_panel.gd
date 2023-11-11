@@ -38,7 +38,7 @@ func shape_cost(shape):
 
 func add_teams(teams):
 	for team_id in teams:
-		self.resources[team_id] = Resources.new(4, 0)
+		self.resources[team_id] = Resources.new(50, 200)
 	self.resources[Constants.PLAYER_ID].init_callback(Callable(self, "update"))
 
 func player():

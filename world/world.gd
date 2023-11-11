@@ -20,6 +20,12 @@ func spawn_cell(coords, team, borders = Constants.NO_BORDERS.duplicate()):
 	var delete = Callable(self, "delete_cell_memory")
 	new_tile.init_cell(coords, self.coords_to_pos(coords), team, borders, delete)
 	self.add_child(new_tile)
+	if Settings.debug_position:
+		var label = Label.new()
+		label.text = str(coords)
+		label.set_theme(load("res://assets/theme.tres"))
+		label.position = -Vector2(12,12)
+		new_tile.add_child(label)
 	tiles[coords] = new_tile
 
 func remove_cell(coords):

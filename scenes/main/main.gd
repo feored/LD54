@@ -105,7 +105,7 @@ func handle_sinking(event):
 			self.resources.buy_shape(self.sink_item.shape)
 			self.clear_mouse_state()
 		else:
-			messenger.set_message("You must acquire more faith from Neptune first, my lord.")
+			messenger.set_message("You cannot sink what has already sunk, my lord.")
 			clear_mouse_state()
 
 func _unhandled_input(event):
