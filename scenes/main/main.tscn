@@ -137,6 +137,7 @@ layer = 2
 
 [node name="ResourcesPanel" type="PanelContainer" parent="UI"]
 unique_name_in_owner = true
+visible = false
 custom_minimum_size = Vector2(240, 0)
 offset_left = 720.0
 offset_top = 260.0
@@ -271,11 +272,11 @@ size_flags_horizontal = 0
 theme_override_styles/focus = SubResource("StyleBoxEmpty_u2eju")
 text = "End Turn"
 
-[node name="CanvasLayer" type="CanvasLayer" parent="."]
+[node name="RegionInfo" type="CanvasLayer" parent="."]
 layer = 50
 follow_viewport_enabled = true
 
-[node name="RegionInfo" parent="CanvasLayer" instance=ExtResource("12_wvvkd")]
+[node name="RegionInfo" parent="RegionInfo" instance=ExtResource("12_wvvkd")]
 unique_name_in_owner = true
 
 [connection signal="mouse_entered" from="UI/ResourcesPanel" to="UI/ResourcesPanel" method="_on_mouse_entered"]
@@ -283,6 +284,6 @@ unique_name_in_owner = true
 [connection signal="toggled" from="UI/Panel/MarginContainer/HBoxContainer/HBoxContainer/FastForwardButton" to="." method="_on_fast_forward_button_toggled"]
 [connection signal="pressed" from="UI/Panel/MarginContainer/HBoxContainer/HBoxContainer/ResContainer/HBoxContainer/ShapeButton" to="UI/ResourcesPanel" method="_on_shape_button_pressed"]
 [connection signal="pressed" from="UI/Panel/MarginContainer/HBoxContainer/TurnButton" to="." method="_on_turn_button_pressed"]
-[connection signal="building_bought" from="CanvasLayer/RegionInfo" to="." method="_on_region_info_building_bought"]
-[connection signal="tile_sacrificed" from="CanvasLayer/RegionInfo" to="." method="_on_region_info_tile_sacrificed"]
-[connection signal="tile_unselected" from="CanvasLayer/RegionInfo" to="." method="_on_region_info_tile_unselected"]
+[connection signal="building_bought" from="RegionInfo/RegionInfo" to="." method="_on_region_info_building_bought"]
+[connection signal="tile_sacrificed" from="RegionInfo/RegionInfo" to="." method="_on_region_info_tile_sacrificed"]
+[connection signal="tile_unselected" from="RegionInfo/RegionInfo" to="." method="_on_region_info_tile_unselected"]

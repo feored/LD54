@@ -56,6 +56,10 @@ func add_tile(coords, tileObj):
 	self.tiles[coords] = tileObj
 
 
+func remove_tile(coords):
+	self.tiles.erase(coords)
+
+
 func random_in_region():
 	return self.tiles.keys()[randi() % self.tiles.size()]
 

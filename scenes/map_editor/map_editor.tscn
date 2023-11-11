@@ -37,7 +37,8 @@ z_index = 999
 
 [node name="MapEditorUI" type="CanvasLayer" parent="."]
 
-[node name="PanelContainer" type="PanelContainer" parent="MapEditorUI"]
+[node name="DrawingUI" type="PanelContainer" parent="MapEditorUI"]
+unique_name_in_owner = true
 anchors_preset = 12
 anchor_top = 1.0
 anchor_right = 1.0
@@ -47,86 +48,138 @@ grow_horizontal = 2
 grow_vertical = 0
 theme = ExtResource("2_kvbud")
 
-[node name="MarginContainer" type="MarginContainer" parent="MapEditorUI/PanelContainer"]
+[node name="MarginContainer" type="MarginContainer" parent="MapEditorUI/DrawingUI"]
 layout_mode = 2
 theme_override_constants/margin_left = 5
 theme_override_constants/margin_top = 5
 theme_override_constants/margin_right = 5
 theme_override_constants/margin_bottom = 5
 
-[node name="HBoxContainer" type="GridContainer" parent="MapEditorUI/PanelContainer/MarginContainer"]
+[node name="HBoxContainer" type="GridContainer" parent="MapEditorUI/DrawingUI/MarginContainer"]
+visible = false
 layout_mode = 2
 
-[node name="HBoxContainer" type="HBoxContainer" parent="MapEditorUI/PanelContainer/MarginContainer/HBoxContainer"]
+[node name="HBoxContainer2" type="HBoxContainer" parent="MapEditorUI/DrawingUI/MarginContainer/HBoxContainer"]
+layout_mode = 2
+
+[node name="CenterBtn" type="Button" parent="MapEditorUI/DrawingUI/MarginContainer/HBoxContainer/HBoxContainer2"]
+visible = false
+layout_mode = 2
+text = "Center"
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="MapEditorUI/DrawingUI/MarginContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="PlaceTeamBtn" type="Button" parent="MapEditorUI/PanelContainer/MarginContainer/HBoxContainer/HBoxContainer"]
+[node name="HBoxContainer" type="HBoxContainer" parent="MapEditorUI/DrawingUI/MarginContainer/HBoxContainer2"]
 layout_mode = 2
-text = "Make Team"
+size_flags_horizontal = 3
 
-[node name="PlaceTeamNum" type="SpinBox" parent="MapEditorUI/PanelContainer/MarginContainer/HBoxContainer/HBoxContainer"]
+[node name="DrawBtn" type="Button" parent="MapEditorUI/DrawingUI/MarginContainer/HBoxContainer2/HBoxContainer"]
+layout_mode = 2
+text = "Draw Tile"
+
+[node name="EraseBtn" type="Button" parent="MapEditorUI/DrawingUI/MarginContainer/HBoxContainer2/HBoxContainer"]
+layout_mode = 2
+text = "Erase Tile"
+
+[node name="ManualTerritoryBtn" type="Button" parent="MapEditorUI/DrawingUI/MarginContainer/HBoxContainer2/HBoxContainer"]
+layout_mode = 2
+text = "New Territory"
+
+[node name="RegionsBtn" type="Button" parent="MapEditorUI/DrawingUI/MarginContainer/HBoxContainer2/HBoxContainer"]
+layout_mode = 2
+text = "Generate Territories
+"
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="MapEditorUI/DrawingUI/MarginContainer/HBoxContainer2"]
+layout_mode = 2
+
+[node name="ResetBtn" type="Button" parent="MapEditorUI/DrawingUI/MarginContainer/HBoxContainer2/HBoxContainer2"]
+layout_mode = 2
+size_flags_horizontal = 8
+theme = ExtResource("2_kvbud")
+theme_override_colors/font_color = Color(0.792157, 0, 0, 1)
+text = "Reset Island"
+
+[node name="LoadBtn" type="Button" parent="MapEditorUI/DrawingUI/MarginContainer/HBoxContainer2/HBoxContainer2"]
+layout_mode = 2
+text = "Load Saved Map"
+
+[node name="NextStageBtn" type="Button" parent="MapEditorUI/DrawingUI/MarginContainer/HBoxContainer2/HBoxContainer2"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Next Stage >"
+
+[node name="TeamsUI" type="PanelContainer" parent="MapEditorUI"]
+unique_name_in_owner = true
+anchors_preset = 12
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -31.0
+grow_horizontal = 2
+grow_vertical = 0
+theme = ExtResource("2_kvbud")
+
+[node name="MarginContainer" type="MarginContainer" parent="MapEditorUI/TeamsUI"]
+layout_mode = 2
+theme_override_constants/margin_left = 5
+theme_override_constants/margin_top = 5
+theme_override_constants/margin_right = 5
+theme_override_constants/margin_bottom = 5
+
+[node name="HBoxContainer" type="HBoxContainer" parent="MapEditorUI/TeamsUI/MarginContainer"]
+layout_mode = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="MapEditorUI/TeamsUI/MarginContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="PreviousStageBtn" type="Button" parent="MapEditorUI/TeamsUI/MarginContainer/HBoxContainer/HBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "< Previous Stage"
+
+[node name="PlaceTeamBtn" type="Button" parent="MapEditorUI/TeamsUI/MarginContainer/HBoxContainer/HBoxContainer"]
+layout_mode = 2
+text = "Set Team"
+
+[node name="PlaceTeamNum" type="SpinBox" parent="MapEditorUI/TeamsUI/MarginContainer/HBoxContainer/HBoxContainer"]
 layout_mode = 2
 max_value = 10.0
 value = 1.0
 rounded = true
 alignment = 1
 
-[node name="DrawBtn" type="Button" parent="MapEditorUI/PanelContainer/MarginContainer/HBoxContainer/HBoxContainer"]
-layout_mode = 2
-text = "Draw Tile"
-
-[node name="EraseBtn" type="Button" parent="MapEditorUI/PanelContainer/MarginContainer/HBoxContainer/HBoxContainer"]
-layout_mode = 2
-text = "Erase Tile"
-
-[node name="RegionsBtn" type="Button" parent="MapEditorUI/PanelContainer/MarginContainer/HBoxContainer/HBoxContainer"]
-layout_mode = 2
-text = "Generate Regions"
-
-[node name="HBoxContainer2" type="HBoxContainer" parent="MapEditorUI/PanelContainer/MarginContainer/HBoxContainer"]
+[node name="HBoxContainer2" type="HBoxContainer" parent="MapEditorUI/TeamsUI/MarginContainer/HBoxContainer"]
 layout_mode = 2
 
-[node name="PlayBtn" type="Button" parent="MapEditorUI/PanelContainer/MarginContainer/HBoxContainer/HBoxContainer2"]
+[node name="PlayBtn" type="Button" parent="MapEditorUI/TeamsUI/MarginContainer/HBoxContainer/HBoxContainer2"]
+unique_name_in_owner = true
 layout_mode = 2
 text = "Play Map"
 
-[node name="SaveBtn" type="Button" parent="MapEditorUI/PanelContainer/MarginContainer/HBoxContainer/HBoxContainer2"]
+[node name="SaveBtn" type="Button" parent="MapEditorUI/TeamsUI/MarginContainer/HBoxContainer/HBoxContainer2"]
+unique_name_in_owner = true
 layout_mode = 2
 text = "Save Map"
 
-[node name="LoadBtn" type="Button" parent="MapEditorUI/PanelContainer/MarginContainer/HBoxContainer/HBoxContainer2"]
+[node name="LoadBtn2" type="Button" parent="MapEditorUI/TeamsUI/MarginContainer/HBoxContainer/HBoxContainer2"]
 layout_mode = 2
 text = "Load Saved Map"
 
-[node name="CenterBtn" type="Button" parent="MapEditorUI/PanelContainer/MarginContainer/HBoxContainer/HBoxContainer2"]
-layout_mode = 2
-text = "Center"
-
-[node name="ResetBtn" type="Button" parent="MapEditorUI"]
-anchors_preset = 3
-anchor_left = 1.0
-anchor_top = 1.0
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_left = -110.0
-offset_top = -64.0
-offset_right = -8.0
-offset_bottom = -8.0
-grow_horizontal = 0
-grow_vertical = 0
-size_flags_horizontal = 8
-theme = ExtResource("2_kvbud")
-theme_override_colors/font_color = Color(0.792157, 0, 0, 1)
-text = "Reset Island"
-
-[connection signal="pressed" from="MapEditorUI/PanelContainer/MarginContainer/HBoxContainer/HBoxContainer/PlaceTeamBtn" to="." method="_on_place_team_btn_pressed"]
-[connection signal="value_changed" from="MapEditorUI/PanelContainer/MarginContainer/HBoxContainer/HBoxContainer/PlaceTeamNum" to="." method="_on_place_team_num_value_changed"]
-[connection signal="pressed" from="MapEditorUI/PanelContainer/MarginContainer/HBoxContainer/HBoxContainer/DrawBtn" to="." method="_on_draw_btn_pressed"]
-[connection signal="pressed" from="MapEditorUI/PanelContainer/MarginContainer/HBoxContainer/HBoxContainer/EraseBtn" to="." method="_on_erase_btn_pressed"]
-[connection signal="pressed" from="MapEditorUI/PanelContainer/MarginContainer/HBoxContainer/HBoxContainer/RegionsBtn" to="." method="_on_regions_btn_pressed"]
-[connection signal="pressed" from="MapEditorUI/PanelContainer/MarginContainer/HBoxContainer/HBoxContainer2/PlayBtn" to="." method="_on_play_btn_pressed"]
-[connection signal="pressed" from="MapEditorUI/PanelContainer/MarginContainer/HBoxContainer/HBoxContainer2/SaveBtn" to="." method="_on_save_btn_pressed"]
-[connection signal="pressed" from="MapEditorUI/PanelContainer/MarginContainer/HBoxContainer/HBoxContainer2/LoadBtn" to="." method="_on_load_btn_pressed"]
-[connection signal="pressed" from="MapEditorUI/PanelContainer/MarginContainer/HBoxContainer/HBoxContainer2/CenterBtn" to="." method="_on_center_btn_pressed"]
-[connection signal="pressed" from="MapEditorUI/ResetBtn" to="." method="_on_reset_btn_pressed"]
+[connection signal="pressed" from="MapEditorUI/DrawingUI/MarginContainer/HBoxContainer/HBoxContainer2/CenterBtn" to="." method="_on_center_btn_pressed"]
+[connection signal="pressed" from="MapEditorUI/DrawingUI/MarginContainer/HBoxContainer2/HBoxContainer/DrawBtn" to="." method="_on_draw_btn_pressed"]
+[connection signal="pressed" from="MapEditorUI/DrawingUI/MarginContainer/HBoxContainer2/HBoxContainer/EraseBtn" to="." method="_on_erase_btn_pressed"]
+[connection signal="pressed" from="MapEditorUI/DrawingUI/MarginContainer/HBoxContainer2/HBoxContainer/ManualTerritoryBtn" to="." method="_on_manual_territory_btn_pressed"]
+[connection signal="pressed" from="MapEditorUI/DrawingUI/MarginContainer/HBoxContainer2/HBoxContainer/RegionsBtn" to="." method="_on_regions_btn_pressed"]
+[connection signal="pressed" from="MapEditorUI/DrawingUI/MarginContainer/HBoxContainer2/HBoxContainer2/ResetBtn" to="." method="_on_reset_btn_pressed"]
+[connection signal="pressed" from="MapEditorUI/DrawingUI/MarginContainer/HBoxContainer2/HBoxContainer2/LoadBtn" to="." method="_on_load_btn_pressed"]
+[connection signal="pressed" from="MapEditorUI/DrawingUI/MarginContainer/HBoxContainer2/HBoxContainer2/NextStageBtn" to="." method="_on_next_stage_pressed"]
+[connection signal="pressed" from="MapEditorUI/TeamsUI/MarginContainer/HBoxContainer/HBoxContainer/PreviousStageBtn" to="." method="_on_previous_stage_btn_pressed"]
+[connection signal="pressed" from="MapEditorUI/TeamsUI/MarginContainer/HBoxContainer/HBoxContainer/PlaceTeamBtn" to="." method="_on_place_team_btn_pressed"]
+[connection signal="value_changed" from="MapEditorUI/TeamsUI/MarginContainer/HBoxContainer/HBoxContainer/PlaceTeamNum" to="." method="_on_place_team_num_value_changed"]
+[connection signal="pressed" from="MapEditorUI/TeamsUI/MarginContainer/HBoxContainer/HBoxContainer2/PlayBtn" to="." method="_on_play_btn_pressed"]
+[connection signal="pressed" from="MapEditorUI/TeamsUI/MarginContainer/HBoxContainer/HBoxContainer2/SaveBtn" to="." method="_on_save_btn_pressed"]
+[connection signal="pressed" from="MapEditorUI/TeamsUI/MarginContainer/HBoxContainer/HBoxContainer2/LoadBtn2" to="." method="_on_load_btn_2_pressed"]

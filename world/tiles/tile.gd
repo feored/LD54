@@ -81,7 +81,14 @@ func update_cell():
 		self.texture = TEAM_TEXTURE
 		for b in self.borders.keys():
 			self.border_objects[b].self_modulate = Color(Constants.TEAM_BORDER_COLORS[self.team])
-	self.self_modulate = Color(Constants.TEAM_COLORS[self.team])
+	
+	if Settings.editor_mode:
+		if self.region == Constants.NULL_REGION:
+			self.modulate = Color(1, 0.25, 0.25, 0.75)
+		else:
+			self.modulate = Color(1, 1, 1)
+	else:
+		self.self_modulate = Color(Constants.TEAM_COLORS[self.team])
 
 func delete():
 	animation_player.play("sink")

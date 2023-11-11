@@ -149,6 +149,7 @@ func create_region(id: int) -> Region:
 	return region
 
 func apply_borders():
+	print("Applying borders")
 	for tile_coords in self.tiles:
 		var tile_obj = self.tiles[tile_coords]
 		for neighbor_direction in Constants.NEIGHBORS:
@@ -156,6 +157,8 @@ func apply_borders():
 			if (self.tiles.has(neighbor)):
 				if(tile_obj.region != self.tiles[neighbor].region):
 					tile_obj.set_single_border(neighbor_direction, true)
+				else:
+					tile_obj.set_single_border(neighbor_direction, false)
 			else:
 				tile_obj.set_single_border(neighbor_direction, true)
 
@@ -224,8 +227,10 @@ func delete_cell(coords_array: Array, action = null):
 		await Utils.wait(0.1)
 		
 
-
-	
+func region_new_id():
+	if self.regions.size() == 0:
+		return 0
+	return self.regions.keys().max() + 1
 
 func recalculate_region(region: int):
 	if (self.regions[region].tiles.size() == 0):
@@ -241,7 +246,7 @@ func recalculate_region(region: int):
 	while (region_tiles.size() > 0):
 		expand_single_region_from_coords(region_to_expand, region_tiles)
 		if (region_tiles.size() > 0):
-			region_to_expand = self.regions.keys().max() + 1
+			region_to_expand = region_new_id()
 			self.regions[region_to_expand] = create_region(region_to_expand)
 	region_update_label(region)
 	self.apply_borders()
