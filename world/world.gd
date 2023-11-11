@@ -31,6 +31,22 @@ func remove_cell(coords):
 	if region != Constants.NULL_REGION:
 		recalculate_region(region)
 
+func delete_cell_memory(coords : Vector2i):
+	if not self.tiles.has(coords):
+		print("Error: tiles does not have coords: ", coords)
+		return
+	self.regions[self.tiles[coords].region].tiles.erase(coords)
+	self.tiles.erase(coords)
+
+func remove_cell_instant(coords):
+	var region = self.tiles[coords].region
+	if region != Constants.NULL_REGION:
+		self.regions[region].tiles.erase(coords)
+	self.tiles[coords].queue_free()
+	self.tiles.erase(coords)
+	if region != Constants.NULL_REGION:
+		recalculate_region(region)
+
 func init(messengerCallable):
 	self.messenger = messengerCallable
 	tile_water()
@@ -82,6 +98,11 @@ func generate_island(island_size = Constants.ISLAND_SIZE_DEFAULT, instant = true
 	if not instant:
 		await Utils.wait(0.25)
 	apply_borders()
+
+func remove_regions():
+	for region in self.regions:
+		self.regions[region].delete()
+	self.regions.clear()
 
 func generate_regions():
 	var current_region = 0
@@ -196,14 +217,7 @@ func delete_cell(coords_array: Array, action = null):
 	while not check_all_deleted.call():
 		await Utils.wait(0.1)
 		
-	
 
-func delete_cell_memory(coords : Vector2i):
-	if not self.tiles.has(coords):
-		print("Error: tiles does not have coords: ", coords)
-		return
-	self.regions[self.tiles[coords].region].tiles.erase(coords)
-	self.tiles.erase(coords)
 
 	
 

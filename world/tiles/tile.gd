@@ -2,6 +2,8 @@ extends Node
 
 class_name Tile
 
+const SINK_ANIMATION = preload("res://world/tiles/sinking_animation.tscn")
+
 const NEUTRAL_TEXTURE = preload("res://assets/tiles/grass_neutral.png")
 const TEAM_TEXTURE = preload("res://assets/tiles/grass.png")
 const CRACKED_TEXTURE = preload("res://assets/tiles/grass_cracked_2.png")
@@ -17,6 +19,8 @@ const CRACKED_TEXTURE = preload("res://assets/tiles/grass_cracked_2.png")
 }
 @onready var barred = $barred
 @onready var building_sprite = $Building
+
+var variant: int = 0
 
 var coords: Vector2i = Vector2i(0, 0)
 var team = 0
@@ -45,6 +49,7 @@ func init_cell(
 	self.borders = init_borders
 	self.delete_callable = init_delete_callable
 	self.building = init_building
+	self.variant = randi() % 2
 
 func _ready():
 	self.position = init_position
@@ -83,7 +88,10 @@ func delete():
 	await animation_player.animation_finished
 	## dissolve
 	$GPUParticles2D.emitting = true
+	for b in self.borders.keys():
+		self.border_objects[b].hide()
 	Sfx.play(Sfx.Track.Boom)
+	self.add_child(SINK_ANIMATION.instantiate())
 	self.dissolving = true
 	self.material.set_shader_parameter("active", true)
 

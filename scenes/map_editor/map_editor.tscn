@@ -5,13 +5,13 @@
 [ext_resource type="Theme" uid="uid://3t61g0061mea" path="res://assets/theme.tres" id="2_kvbud"]
 [ext_resource type="PackedScene" uid="uid://pu46mkcjdswb" path="res://ui/esc_menu/esc_menu.tscn" id="2_qxuk0"]
 
-[sub_resource type="Gradient" id="Gradient_bvcal"]
+[sub_resource type="Gradient" id="Gradient_1u8we"]
 interpolation_mode = 1
-offsets = PackedFloat32Array(0, 0.697531)
-colors = PackedColorArray(0, 0, 0, 1, 1, 1, 1, 0)
+offsets = PackedFloat32Array(0, 0.327381, 0.693452)
+colors = PackedColorArray(1, 1, 1, 1, 0, 0, 0, 1, 1, 1, 1, 0)
 
-[sub_resource type="GradientTexture2D" id="GradientTexture2D_mdxak"]
-gradient = SubResource("Gradient_bvcal")
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_vmnme"]
+gradient = SubResource("Gradient_1u8we")
 width = 8
 height = 8
 fill = 1
@@ -23,13 +23,17 @@ script = ExtResource("1_fr50u")
 
 [node name="EscMenu" parent="." instance=ExtResource("2_qxuk0")]
 
-[node name="Center" type="Sprite2D" parent="."]
+[node name="World" parent="." instance=ExtResource("1_w0dbr")]
+
+[node name="Center" type="Sprite2D" parent="World"]
 unique_name_in_owner = true
 z_index = 3000
 z_as_relative = false
-texture = SubResource("GradientTexture2D_mdxak")
+texture = SubResource("GradientTexture2D_vmnme")
 
-[node name="World" parent="." instance=ExtResource("1_w0dbr")]
+[node name="MouseCursor" type="Sprite2D" parent="World"]
+unique_name_in_owner = true
+z_index = 999
 
 [node name="MapEditorUI" type="CanvasLayer" parent="."]
 
@@ -63,8 +67,7 @@ text = "Make Team"
 
 [node name="PlaceTeamNum" type="SpinBox" parent="MapEditorUI/PanelContainer/MarginContainer/HBoxContainer/HBoxContainer"]
 layout_mode = 2
-min_value = 1.0
-max_value = 7.0
+max_value = 10.0
 value = 1.0
 rounded = true
 alignment = 1

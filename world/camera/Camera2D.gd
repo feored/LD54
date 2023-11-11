@@ -85,7 +85,6 @@ func move_smoothed(target, precision = 1):
 	if not active:
 		return
 	is_dragging = false
-	Settings.input_locked = true
 	self.position_smoothing_enabled = true
 	self.position = target - Vector2(self.viewport_size/2)
 	self.position_smoothing_speed = POSITION_SMOOTHED_SPEED_SKIP if Settings.skipping else POSITION_SMOOTHED_SPEED
@@ -93,4 +92,3 @@ func move_smoothed(target, precision = 1):
 	while abs((arrived_center - get_screen_center_position()).length_squared()) > precision:
 		await Utils.wait(0.1)
 	self.position_smoothing_enabled = false
-	Settings.input_locked = false

@@ -29,8 +29,8 @@ func delete():
 
 
 func sacrifice():
-	var faith = self.units - 1
-	self.units = 1
+	var faith = self.units
+	self.units = 0
 	return faith
 
 
@@ -62,6 +62,9 @@ func random_in_region():
 
 func generate_units():
 	self.units += self.tiles.size()
+	for tile in self.tiles.values():
+		if tile.building == Constants.Building.Barracks:
+			self.units += Constants.BARRACKS_UNITS_PER_TURN
 	update_display()
 
 

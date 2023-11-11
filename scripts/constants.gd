@@ -209,4 +209,9 @@ const scenarios = [
 		"description": "Neptune means to teach you that you must sink or be sunk.",
 		"path": "heart.json"
 	},
+	{
+		"title": "Rome",
+		"description": "Neptune means to teach you that you must sink or be sunk.",
+		"path": "rome.json"
+	},
 ]

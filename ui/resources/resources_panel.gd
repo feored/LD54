@@ -73,17 +73,18 @@ func lock_controls(val : bool):
 		self.hide()
 
 func _on_shape_button_pressed():
-	print("shape button pressed", busy)
 	if not busy:
 		busy = true
-		animationPlayer.play("appear")
-		print("appearing")
-
+		if self.visible:
+			animationPlayer.play("disappear")
+		else:
+			animationPlayer.play("appear")
 func _on_mouse_exited():
 	if shown and not busy:
-		busy = true
-		shown = false
-		animationPlayer.play("disappear")
+		if not Rect2(Vector2(), size).has_point(get_local_mouse_position()):
+			busy = true
+			shown = false
+			animationPlayer.play("disappear")
 
 func _on_mouse_entered():
 	self.shown = true

@@ -12,6 +12,19 @@
 [ext_resource type="Texture2D" uid="uid://fh2aaiw6vrwi" path="res://assets/tiles/hex_shape.png" id="10_v8075"]
 [ext_resource type="PackedScene" uid="uid://iwefd7llwk5t" path="res://ui/region_info/region_info.tscn" id="12_wvvkd"]
 
+[sub_resource type="Gradient" id="Gradient_7sqo2"]
+interpolation_mode = 1
+offsets = PackedFloat32Array(0, 0.327381, 0.693452)
+colors = PackedColorArray(1, 1, 1, 1, 0, 0, 0, 1, 1, 1, 1, 0)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_i35tl"]
+gradient = SubResource("Gradient_7sqo2")
+width = 8
+height = 8
+fill = 1
+fill_from = Vector2(0.5, 0.5)
+fill_to = Vector2(1, 1)
+
 [sub_resource type="Animation" id="Animation_7xbpu"]
 resource_name = "appear"
 length = 0.1
@@ -105,25 +118,18 @@ _data = {
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_u2eju"]
 
-[sub_resource type="Gradient" id="Gradient_kdtfb"]
-interpolation_mode = 1
-offsets = PackedFloat32Array(0, 0.327381, 0.693452)
-colors = PackedColorArray(1, 1, 1, 1, 0, 0, 0, 1, 1, 1, 1, 0)
-
-[sub_resource type="GradientTexture2D" id="GradientTexture2D_i35tl"]
-gradient = SubResource("Gradient_kdtfb")
-width = 8
-height = 8
-fill = 1
-fill_from = Vector2(0.5, 0.5)
-fill_to = Vector2(1, 1)
-
 [node name="Main" type="Node2D"]
 script = ExtResource("1_osaxm")
 
 [node name="EscMenu" parent="." instance=ExtResource("2_pam5e")]
 
 [node name="World" parent="." instance=ExtResource("2_unfjm")]
+
+[node name="Center" type="Sprite2D" parent="World"]
+unique_name_in_owner = true
+z_index = 3000
+z_as_relative = false
+texture = SubResource("GradientTexture2D_i35tl")
 
 [node name="UI" type="CanvasLayer" parent="."]
 unique_name_in_owner = true
@@ -264,12 +270,6 @@ layout_mode = 2
 size_flags_horizontal = 0
 theme_override_styles/focus = SubResource("StyleBoxEmpty_u2eju")
 text = "End Turn"
-
-[node name="Center" type="Sprite2D" parent="."]
-unique_name_in_owner = true
-z_index = 3000
-z_as_relative = false
-texture = SubResource("GradientTexture2D_i35tl")
 
 [node name="CanvasLayer" type="CanvasLayer" parent="."]
 layer = 50

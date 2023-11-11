@@ -1,0 +1,89 @@
+[gd_scene load_steps=13 format=3 uid="uid://beikk7xheic6m"]
+
+[ext_resource type="Texture2D" uid="uid://xad6qoadhk7s" path="res://assets/tiles/01.png" id="1_ayo81"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_3anwm"]
+atlas = ExtResource("1_ayo81")
+region = Rect2(0, 384, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_jes5m"]
+atlas = ExtResource("1_ayo81")
+region = Rect2(64, 384, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_tt4ly"]
+atlas = ExtResource("1_ayo81")
+region = Rect2(128, 384, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_6owkj"]
+atlas = ExtResource("1_ayo81")
+region = Rect2(192, 384, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_v2gsy"]
+atlas = ExtResource("1_ayo81")
+region = Rect2(256, 384, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_sodfd"]
+atlas = ExtResource("1_ayo81")
+region = Rect2(320, 384, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_svv4h"]
+atlas = ExtResource("1_ayo81")
+region = Rect2(384, 384, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_saddr"]
+atlas = ExtResource("1_ayo81")
+region = Rect2(448, 384, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_x1djw"]
+atlas = ExtResource("1_ayo81")
+region = Rect2(512, 384, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_u8rng"]
+atlas = ExtResource("1_ayo81")
+region = Rect2(576, 384, 64, 64)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_vaavt"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_3anwm")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_jes5m")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_tt4ly")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_6owkj")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_v2gsy")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_sodfd")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_svv4h")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_saddr")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_x1djw")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_u8rng")
+}],
+"loop": false,
+"name": &"sink",
+"speed": 10.0
+}]
+
+[node name="SinkingAnimation" type="AnimatedSprite2D"]
+scale = Vector2(0.5, 0.5)
+sprite_frames = SubResource("SpriteFrames_vaavt")
+animation = &"sink"
+autoplay = "sink"
+frame = 9
+frame_progress = 1.0

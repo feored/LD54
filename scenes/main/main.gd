@@ -225,8 +225,6 @@ func apply_buildings(team):
 func apply_building(tile_coords, building):
 	var team_id = self.world.tiles[tile_coords].team
 	match building:
-		Constants.Building.Barracks:
-			self.world.regions[self.world.tiles[tile_coords].region].units += Constants.BARRACKS_UNITS_PER_TURN
 		Constants.Building.Mine:
 			if team_id != Constants.NULL_TEAM:
 				self.resources.resources[team_id].add_gold(Constants.MINE_GOLD_PER_TURN)
