@@ -9,12 +9,15 @@ extends Node2D
 @onready var prev_stage_btn = %"PreviousStageBtn"
 @onready var play_btn = %"PlayBtn"
 @onready var save_btn = %"SaveBtn"
+@onready var pick_building_btn = %"PickBuildingBtn"
 
 const COLOR_VALID = Color(0, 1, 0, 0.75)
 const COLOR_INVALID = Color(1, 0, 0, 0.75)
 const COLOR_DELETE = Color(1, 0.25, 0, 0.75)
 const COLOR_INVISIBLE = Color(0, 0, 0, 0)
 const COLOR_REGION = Color(0.5, 0.5, 0.5, 0.5)
+const COLOR_DEFAULT = Color(1, 1, 1, 1)
+
 const TEXTURE_HEX = preload("res://assets/tiles/hex_shape.png")
 
 enum EditStage {
@@ -27,7 +30,8 @@ enum State {
 	Drawing,
 	Erasing,
 	PlacingTeam,
-	PlacingRegion
+	PlacingRegion,
+	PlacingBuilding
 }
 
 var edit_stage = EditStage.Drawing
@@ -44,6 +48,9 @@ var teams = []
 var region_used_tiles = []
 var current_region_id = 0
 
+## placing buildings
+var selected_building = Constants.Building.None
+
 
 
 # Called when the node enters the scene tree for the first time.
@@ -51,9 +58,14 @@ func _ready():
 	Settings.input_locked = false
 	self.world.init(Callable())
 	self.center.position = self.world.coords_to_pos(Constants.WORLD_CENTER)
+	self.init_building_button()
 	self.world.regionLabelsParent.hide()
 	self.set_stage(EditStage.Drawing)
 	
+
+func init_building_button():
+	for b in Constants.DEFAULT_BUILDINGS:
+		self.pick_building_btn.add_icon_item(Constants.BUILDINGS[b].texture, Constants.BUILDINGS[b].name, b as int)
 
 func set_stage(new_stage):
 	self.edit_stage = new_stage
@@ -68,6 +80,7 @@ func set_stage(new_stage):
 			self.teams_UI.show()
 			Settings.editor_mode = false
 			check_teams_valid()
+	self.set_state(State.None)
 
 func set_state(state):
 	self.state = state
@@ -79,6 +92,11 @@ func set_state(state):
 			self.cursor.texture = TEXTURE_HEX
 			self.cursor.visible = true
 			self.cursor.modulate = COLOR_REGION
+		State.PlacingBuilding:
+			self.cursor.scale = Vector2(1, 1)
+			self.cursor.texture = Constants.BUILDING[self.selected_building].texture
+			self.cursor.visible = true
+			self.cursor.modulate = COLOR_DEFAULT
 		State.Drawing:
 			self.cursor.scale = Vector2(1, 1)
 			self.cursor.texture = TEXTURE_HEX
@@ -113,18 +131,18 @@ func _unhandled_input(event):
 	if event is InputEventMouseMotion and state != State.None:
 		var coords = self.world.global_pos_to_coords(event.position)
 		self.cursor.position = self.world.coords_to_pos(coords)
-
-	match self.state:
-		State.None:
-			return
-		State.Drawing:
-			draw(event)
-		State.Erasing:
-			erase(event)
-		State.PlacingTeam:
-			place_team(event)
-		State.PlacingRegion:
-			place_region(event)
+	if event is InputEventMouse:
+		match self.state:
+			State.None:
+				return
+			State.Drawing:
+				draw(event)
+			State.Erasing:
+				erase(event)
+			State.PlacingTeam:
+				place_team(event)
+			State.PlacingRegion:
+				place_region(event)
 
 func place_region(event):
 	var coords = self.world.global_pos_to_coords(event.position)
@@ -184,18 +202,10 @@ func place_team(event):
 
 func save():
 	var save_game = FileAccess.open("user://savegame.json", FileAccess.WRITE)
-	save_game.store_line(JSON.stringify(get_save_data()))
-	print("Saved game")
+	save_game.store_line(JSON.stringify(Utils.get_save_data(self.world, self.teams)))
 	save_game.close()
 
-func get_save_data():
-	var saved_tiles = {}
-	var saved_regions = {}
-	for coords in self.world.tiles:
-		saved_tiles[var_to_str(coords)] = self.world.tiles[coords].get_save_data()
-	for region in self.world.regions:
-		saved_regions[region] = self.world.regions[region].get_save_data()
-	return Utils.to_map_object(saved_tiles, saved_regions, teams.duplicate())
+
 
 
 func load_saved_game():
@@ -270,7 +280,7 @@ func _on_center_btn_pressed():
 
 
 func _on_play_btn_pressed():
-	Settings.current_map = get_save_data()
+	Settings.current_map = Utils.get_save_data(self.world, self.teams)
 	await SceneTransition.change_scene(SceneTransition.SCENE_MAIN_GAME)
 
 
@@ -291,3 +301,12 @@ func _on_load_btn_2_pressed():
 
 func _on_previous_stage_btn_pressed():
 	self.set_stage(EditStage.Drawing)
+
+
+
+func _on_building_btn_item_selected(index):
+	self.set_state(State.PlacingBuilding)
+
+
+func _on_buildingbtn_pressed():
+	pass # Replace with function body.

@@ -2,6 +2,7 @@ extends Node
 
 class_name Tile
 
+
 const SINK_ANIMATION = preload("res://world/tiles/sinking_animation.tscn")
 
 const NEUTRAL_TEXTURE = preload("res://assets/tiles/grass_neutral.png")
@@ -20,36 +21,50 @@ const CRACKED_TEXTURE = preload("res://assets/tiles/grass_cracked_2.png")
 @onready var barred = $barred
 @onready var building_sprite = $Building
 
-var variant: int = 0
+class TileWorldData:
+	var coords: Vector2i
+	var team: int
+	var region: int
+	var building: int
+	var marked: bool
 
-var coords: Vector2i = Vector2i(0, 0)
-var team = 0
-var building = Constants.Building.None
+	func _init():
+		self.coords = Constants.NULL_COORDS
+		self.team = Constants.NULL_TEAM
+		self.region = Constants.NULL_REGION
+		self.building = Constants.Building.None
+		self.marked = false
+	
+	func save():
+		return {
+			"coords": self.coords,
+			"team": self.team,
+			"region": self.region,
+			"building": self.building,
+			"marked": self.marked
+		}
+
+
+var data = TileWorldData.new()
 var init_position: Vector2 = Vector2(0, 0)
 var borders = Constants.NO_BORDERS.duplicate()
-var region: int = Constants.NULL_REGION
 var tween = null
 var blink_state = 0
 var delete_callable = null
 var dissolving = false
-var marked = false
 var elapsed = 0.0
 
 func init_cell(
 	init_coords: Vector2,
 	init_pos: Vector2,
 	init_team: int,
-	init_borders: Dictionary = Constants.NO_BORDERS.duplicate(),
-	init_delete_callable = null,
-	init_building = Constants.Building.None
+	init_delete_callable = null
 ):
-	self.coords = init_coords
-	self.team = init_team
+	self.data.coords = init_coords
 	self.init_position = init_pos
-	self.borders = init_borders
+	self.data.team = init_team
 	self.delete_callable = init_delete_callable
-	self.building = init_building
-	self.variant = randi() % 2
+	
 
 func _ready():
 	self.position = init_position
@@ -63,8 +78,8 @@ func _process(delta):
 		self.material.set_shader_parameter("sensitivity", elapsed)
 
 func update_cell():
-	if self.building != Constants.Building.None:
-		building_sprite.texture = Constants.BUILDINGS[building].texture
+	if self.data.building != Constants.Building.None:
+		building_sprite.texture = Constants.BUILDINGS[self.data.building].texture
 		building_sprite.visible = true
 	else:
 		building_sprite.visible = false
@@ -73,14 +88,14 @@ func update_cell():
 			self.border_objects[b].show()
 		else:
 			self.border_objects[b].hide()
-	if team == 0:
+	if self.data.team == 0:
 		self.texture = NEUTRAL_TEXTURE
 		for b in self.borders.keys():
 			self.border_objects[b].self_modulate = Color.WHITE
 	else:
 		self.texture = TEAM_TEXTURE
 		for b in self.borders.keys():
-			self.border_objects[b].self_modulate = Color(Constants.TEAM_BORDER_COLORS[self.team])
+			self.border_objects[b].self_modulate = Color(Constants.TEAM_BORDER_COLORS[self.data.team])
 	
 	if Settings.editor_mode:
 		if self.region == Constants.NULL_REGION:
@@ -88,7 +103,7 @@ func update_cell():
 		else:
 			self.modulate = Color(1, 1, 1)
 	else:
-		self.self_modulate = Color(Constants.TEAM_COLORS[self.team])
+		self.self_modulate = Color(Constants.TEAM_COLORS[self.data.team])
 
 func delete():
 	animation_player.play("sink")
@@ -103,7 +118,7 @@ func delete():
 	self.material.set_shader_parameter("active", true)
 
 func delete_from_world():
-	self.delete_callable.call(self.coords)
+	self.delete_callable.call(self.data.coords)
 	self.queue_free()
 
 func set_team(new_team: int):
@@ -119,7 +134,7 @@ func set_single_border(border_changed: int , value: bool):
 	self.update_cell()
 
 func set_region(new_region):
-	self.region = new_region
+	self.data.region = new_region
 	self.update_cell()
 
 func set_barred(barred_val:bool):
@@ -134,24 +149,15 @@ func set_selected(selected: bool):
 		self.self_modulate = Color(Constants.TEAM_COLORS[self.team])
 		self.tween.kill()
 
-
-func get_save_data():
-	return {
-		"coords": var_to_str(self.coords),
-		"team": self.team,
-		"borders": self.borders,
-		"region": self.region
-	}
-
 func mark():
-	self.marked = true
+	self.data.marked = true
 	#self.texture = CRACKED_TEXTURE
 	self.modulate = Color.hex(0xacacacac)
 	
 func set_building(new_building):
-	self.building = new_building
+	self.data.building = new_building
 	self.update_cell()
 
 func remove_building():
-	self.building = Constants.Building.None
+	self.data.building = Constants.Building.None
 	self.update_cell()

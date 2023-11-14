@@ -152,6 +152,15 @@ value = 1.0
 rounded = true
 alignment = 1
 
+[node name="PickBuildingBtn" type="OptionButton" parent="MapEditorUI/TeamsUI/MarginContainer/HBoxContainer/HBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+alignment = 1
+
+[node name="Buildingbtn" type="Button" parent="MapEditorUI/TeamsUI/MarginContainer/HBoxContainer/HBoxContainer"]
+layout_mode = 2
+text = "Build"
+
 [node name="HBoxContainer2" type="HBoxContainer" parent="MapEditorUI/TeamsUI/MarginContainer/HBoxContainer"]
 layout_mode = 2
 
@@ -180,6 +189,7 @@ text = "Load Saved Map"
 [connection signal="pressed" from="MapEditorUI/TeamsUI/MarginContainer/HBoxContainer/HBoxContainer/PreviousStageBtn" to="." method="_on_previous_stage_btn_pressed"]
 [connection signal="pressed" from="MapEditorUI/TeamsUI/MarginContainer/HBoxContainer/HBoxContainer/PlaceTeamBtn" to="." method="_on_place_team_btn_pressed"]
 [connection signal="value_changed" from="MapEditorUI/TeamsUI/MarginContainer/HBoxContainer/HBoxContainer/PlaceTeamNum" to="." method="_on_place_team_num_value_changed"]
+[connection signal="pressed" from="MapEditorUI/TeamsUI/MarginContainer/HBoxContainer/HBoxContainer/Buildingbtn" to="." method="_on_buildingbtn_pressed"]
 [connection signal="pressed" from="MapEditorUI/TeamsUI/MarginContainer/HBoxContainer/HBoxContainer2/PlayBtn" to="." method="_on_play_btn_pressed"]
 [connection signal="pressed" from="MapEditorUI/TeamsUI/MarginContainer/HBoxContainer/HBoxContainer2/SaveBtn" to="." method="_on_save_btn_pressed"]
 [connection signal="pressed" from="MapEditorUI/TeamsUI/MarginContainer/HBoxContainer/HBoxContainer2/LoadBtn2" to="." method="_on_load_btn_2_pressed"]

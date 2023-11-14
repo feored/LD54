@@ -91,3 +91,7 @@ func _on_settings_btn_pressed():
 func _on_quit_button_pressed():
 	get_tree().quit()
 
+
+
+func _on_map_editor_btn_pressed():
+	await SceneTransition.change_scene(SceneTransition.SCENE_MAP_EDITOR)

@@ -77,3 +77,12 @@ func to_team_id(team_id):
 
 func distance(a, b):
 	return abs(a.x - b.x) + abs(a.y - b.y)
+
+func get_save_data(world, teams):
+	var saved_tiles = []
+	var saved_regions = []
+	for coords in world.tiles:
+		saved_tiles.append(world.tiles[coords].data.save())
+	for region in world.regions:
+		saved_regions.append(world.regions[region].data.save())
+	return Utils.to_map_object(saved_tiles, saved_regions, teams.duplicate())

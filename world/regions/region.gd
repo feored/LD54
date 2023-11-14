@@ -1,89 +1,104 @@
 extends Node
 class_name Region
 
-var id: int = Constants.NULL_REGION
-var team: int = Constants.NULL_TEAM
-var is_used = false
-var tiles: Dictionary = {}
-var units = 0
+
+class RegionData:
+	var id: int
+	var team: int
+	var tiles: Array
+	var units: int
+
+	func _init():
+		self.id = Constants.NULL_REGION
+		self.team = Constants.NULL_TEAM
+		self.tiles = []
+		self.units = 0
+
+	func save():
+		return {"id": self.id, "team": self.team, "tiles": self.tiles, "units": self.units}
+
+
+var data: RegionData = RegionData.new()
+var tiles_obj: Dictionary = {}
 var label = null
 
 
 func _init(init_id):
-	self.units = 0
-	self.id = init_id
+	self.data.id = init_id
 
 
 func _ready():
-	self.units = 0
+	pass
 
 
 func delete():
-	for tile in self.tiles.values():
+	for tile in self.tiles_obj.values():
 		if tile != null:
 			tile.queue_free()
-	self.tiles.clear()
+	self.tiles_obj.clear()
 	if label != null:
 		self.label.queue_free()
 	self.queue_free()
 
 
 func sacrifice():
-	var faith = self.units
-	self.units = 0
+	var faith = self.data.units
+	self.data.units = 0
 	return faith
 
 
 func delete_no_tiles():
-	self.tiles.clear()
+	self.tiles_obj.clear()
 	if label != null:
 		self.label.queue_free()
 	self.queue_free()
 
 
 func update_display():
-	self.label.set_text(str(self.units))
+	self.label.set_text(str(self.data.units))
 
 
 func set_team(init_team):
-	self.team = init_team
-	for tile in tiles.values():
-		tile.set_team(team)
+	self.data.team = init_team
+	for tile in self.tiles_obj.values():
+		tile.set_team(self.team)
 
 
 func add_tile(coords, tileObj):
-	tileObj.region = self.id
-	self.tiles[coords] = tileObj
+	tileObj.data.region = self.data.id
+	self.data.tiles.append(coords)
+	self.tiles_obj[coords] = tileObj
 
 
 func remove_tile(coords):
-	self.tiles.erase(coords)
+	self.data.tiles.erase(coords)
+	self.tiles_obj.erase(coords)
 
 
 func random_in_region():
-	return self.tiles.keys()[randi() % self.tiles.size()]
+	return self.data.tiles[randi() % self.data.tiles.size()]
 
 
 func generate_units():
-	self.units += self.tiles.size()
-	for tile in self.tiles.values():
-		if tile.building == Constants.Building.Barracks:
-			self.units += Constants.BARRACKS_UNITS_PER_TURN
+	self.data.units += self.data.tiles.size()
+	for tile in self.tiles_obj.values():
+		if tile.data.building == Constants.Building.Barracks:
+			self.data.units += Constants.BARRACKS_UNITS_PER_TURN
 	update_display()
 
 
 func set_units(init_units):
-	self.units = init_units
+	self.data.units = init_units
 	update_display()
 
 
 func attack(num_attackers, team):
 	var total_attackers = num_attackers
-	for tile in self.tiles.values():
-		if tile.building == Constants.Building.Fort:
+	for tile in self.tiles_obj.values():
+		if tile.data.building == Constants.Building.Fort:
 			total_attackers -= Constants.CASTLE_UNITS_REMOVED
-	if total_attackers > self.units:
-		self.units = total_attackers - self.units
+	if total_attackers > self.data.units:
+		self.data.units = total_attackers - self.data.units
 		self.set_team(team)
 	else:
 		self.units -= total_attackers
@@ -91,42 +106,38 @@ func attack(num_attackers, team):
 
 
 func reinforce(num_reinforcements):
-	self.units += num_reinforcements
+	self.data.units += num_reinforcements
 	update_display()
 
 
 func center_tile():
 	var total = Vector2i(0, 0)
-	for tile_obj in self.tiles.values():
-		total += tile_obj.coords
-	var avg = Vector2(float(total.x) / self.tiles.size(), float(total.y) / self.tiles.size())
-	var closest_tile = self.tiles.values()[0]
-	var closest_distance = avg.distance_squared_to(closest_tile.coords)
-	for t in self.tiles.values():
-		var distance = avg.distance_squared_to(t.coords)
+	for tile_obj in self.tiles_obj.values():
+		total += tile_obj.data.coords
+	var avg = Vector2(
+		float(total.x) / self.tiles_obj.size(), float(total.y) / self.tiles_obj.size()
+	)
+	var closest_tile = self.tiles_obj.values()[0]
+	var closest_distance = avg.distance_squared_to(closest_tile.data.coords)
+	for t in self.tiles_obj.values():
+		var distance = avg.distance_squared_to(t.data.coords)
 		if distance < closest_distance:
 			closest_tile = t
 			closest_distance = distance
-	return closest_tile.coords
+	return closest_tile.data.coords
 
 
 func set_selected(show: bool):
-	for t in self.tiles.values():
+	for t in self.tiles_obj.values():
 		t.set_selected(show)
 
 
 func set_used(is_used: bool):
-	self.is_used = is_used
-	for t in self.tiles.values():
+	self.data.is_used = is_used
+	for t in self.tiles_obj.values():
 		t.set_barred(is_used)
 
 
 func reset_tiles():
-	self.tiles.clear()
-
-
-func get_save_data():
-	var saved_state = {"id": self.id, "team": self.team, "tiles": [], "units": self.units}
-	for coords in self.tiles:
-		saved_state.tiles.append(var_to_str(coords))
-	return saved_state
+	self.data.tiles.clear()
+	self.tiles_obj.clear()
