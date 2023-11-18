@@ -65,8 +65,8 @@ func start_game():
 	self.game_started = true
 	for r in self.world.regions.values():
 		r.data.units = 0
-	for t in self.teams:
-		generate_units(t)
+	# for t in self.teams:
+	# 	generate_units(t)
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):
@@ -335,7 +335,6 @@ func load_map():
 	self.teams.clear()
 	for t in Settings.current_map.teams:
 		self.teams.append(int(t)) ## json is parsed as floats
-	self.world.load_tiles(Settings.current_map.tiles)
 	self.world.load_regions(Settings.current_map.regions)
 
 func pick_shape_to_sink(shape_coords):

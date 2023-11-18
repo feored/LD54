@@ -1,97 +1,57 @@
 extends TileMap
 
-
+signal world_ready
 var messenger = null
 @onready var camera = $"%MainCamera"
-@onready var regionLabelsParent = $"%RegionLabels"
-
-var regionLabelPrefab = preload("res://world/regions/region_label.tscn")
-var tilePrefab = preload("res://world/tiles/tile.tscn")
 
 var tiles = {}
 var regions = {}
-
-
-func spawn_cell(coords, team):
-	if typeof(coords) != typeof(Vector2i.ZERO):
-		print("Error: coords is not a Vector2i")
-		return
-	if tiles.has(coords):
-		print("Error: cell already exists at " + str(coords))
-		return
-	var new_tile = tilePrefab.instantiate()
-	var delete = Callable(self, "delete_cell_memory")
-	new_tile.init_cell(coords, self.coords_to_pos(coords), team, delete)
-	self.add_child(new_tile)
-	if Settings.debug_position:
-		var label = Label.new()
-		label.text = str(coords)
-		label.set_theme(load("res://assets/theme.tres"))
-		label.position = -Vector2(12,12)
-		new_tile.add_child(label)
-	tiles[coords] = new_tile
-	return new_tile
-
-func remove_cell(coords):
-	var region = self.tiles[coords].data.region
-	if region != Constants.NULL_REGION:
-		self.regions[region].data.tiles.erase(coords)
-	self.tiles[coords].delete() # queue_free?
-	self.tiles.erase(coords)
-	if region != Constants.NULL_REGION:
-		recalculate_region(region)
-
-func delete_cell_memory(coords : Vector2i):
-	if not self.tiles.has(coords):
-		print("Error: tiles does not have coords: ", coords)
-		return
-	var region_id = self.tiles[coords].data.region
-	self.regions[region_id].data.tiles.erase(coords)
-	self.tiles.erase(coords)
-
-func remove_cell_instant(coords):
-	var region = self.tiles[coords].data.region
-	if region != Constants.NULL_REGION:
-		self.regions[region].data.tiles.erase(coords)
-	self.tiles[coords].queue_free()
-	self.tiles.erase(coords)
-	if region != Constants.NULL_REGION:
-		recalculate_region(region)
 
 func init(messengerCallable):
 	self.messenger = messengerCallable
 	tile_water()
 
+func spawn_region(id: int, from_save: Dictionary = {}) -> Region:
+	var region = Region.new(id)
+	region.coords_to_pos = Callable(self, "coords_to_pos")
+	region.tile_deleted.connect(func(coords): self.tiles.erase(coords))
+	region.region_deleted.connect(Callable(self, "erase_region"))
+	if from_save.size() > 0:
+		region.init_from_save(from_save)
+	self.add_child(region)
+	return region
 
-func clear_regions_mapeditor():
-	for region in self.regions:
-		self.regions[region].delete_no_tiles()
-	self.regions.clear()
-	for tile_obj in self.tiles.values():
-		tile_obj.region = Constants.NULL_REGION
-	self.apply_borders()
+func erase_region(id: int):
+	for tile in self.regions[id].data.tiles:
+		self.tiles.erase(tile)
+	self.regions.erase(id)
 
 func clear_island():
-	for tile_obj in self.tiles.values():
-		tile_obj.queue_free()
-	self.tiles.clear()
-	for region in self.regions:
-		self.regions[region].delete()
+	for region in self.regions.values():
+		region.delete()
 	self.regions.clear()
 
-
 func get_next_empty_cell_in_direction(next_position, direction):
-	if self.tiles.has(next_position):
+	if self.tiles.keys().has(next_position):
 		return get_next_empty_cell_in_direction(self.get_neighbor_cell(next_position, direction), direction)
 	else:
 		return next_position
 
 func generate_island(island_size = Constants.ISLAND_SIZE_DEFAULT, instant = true):
+	await self.generate_tiles(island_size, instant)
+	if not instant:
+		await Utils.wait(0.25)
+	await self.generate_regions()
+
+func generate_tiles(island_size, instant):
 	const n_tiles_max = Constants.WORLD_BOUNDS.x * Constants.WORLD_BOUNDS.y * 4
 	var n_tiles_target = round(n_tiles_max * island_size)
 	var current_cell = Constants.WORLD_CENTER
-	spawn_cell(Constants.WORLD_CENTER, Constants.NULL_TEAM)
-	while (self.tiles.size() < n_tiles_target):
+	var new_region = region_new_id()
+	self.regions[new_region] = spawn_region(new_region)
+	self.tiles[Constants.WORLD_CENTER] = self.regions[new_region].spawn_cell(Constants.WORLD_CENTER, Constants.NULL_TEAM)
+	var created_tiles = [Constants.WORLD_CENTER]
+	while (created_tiles.size() < n_tiles_target):
 		var movement = (Utils.rng.randi() % 3) == 0
 		var available_directions = []
 		for dir in Constants.NEIGHBORS:
@@ -100,30 +60,21 @@ func generate_island(island_size = Constants.ISLAND_SIZE_DEFAULT, instant = true
 		var next_empty = available_directions[Utils.rng.randi() % available_directions.size()]
 		if movement:
 			current_cell = next_empty
-		spawn_cell(next_empty, Constants.NULL_TEAM)
+		self.tiles[next_empty] = self.regions[new_region].spawn_cell(next_empty, Constants.NULL_TEAM)
+		created_tiles.append(next_empty)
 		if not instant:
 			await Utils.wait(0.025)
-	if not instant:
-		await Utils.wait(0.25)
-	generate_regions()
-	if not instant:
-		await Utils.wait(0.25)
-	apply_borders()
-
-func remove_regions():
-	for region in self.regions:
-		self.regions[region].delete()
-	self.regions.clear()
-
+	self.regions[new_region].update()
+	
 func generate_regions():
-	var current_region = 0
+	var current_region = region_new_id()
 	var tiles_shuffled = self.tiles.keys()
 	tiles_shuffled.shuffle()
-	
 	while tiles_shuffled.size() > 0:
 		var start = tiles_shuffled.pop_back()
-		regions[current_region] = create_region(current_region)
-		add_tile_to_region(start, current_region)
+		regions[current_region] = spawn_region(current_region)
+		self.regions[self.tiles[start].data.region].remove_tile(start, true)
+		regions[current_region].add_tile(self.tiles[start])
 		for i in range(Constants.REGION_MAX_SIZE):
 			var random_in_region = regions[current_region].random_in_region()
 			var neighbor_dirs = Constants.NEIGHBORS.duplicate()
@@ -131,119 +82,86 @@ func generate_regions():
 			var expanded = false
 			for neighbor_dir in neighbor_dirs:
 				var neighbor = self.get_neighbor_cell(random_in_region, neighbor_dir)
-				if (self.tiles.has(neighbor) and self.tiles[neighbor].data.region == Constants.NULL_REGION):
+				if (tiles.has(neighbor) and tiles_shuffled.has(neighbor)):
 					tiles_shuffled.erase(neighbor)
-					add_tile_to_region(neighbor, current_region)
+					self.regions[self.tiles[neighbor].data.region].remove_tile(neighbor, true)
+					regions[current_region].add_tile(self.tiles[neighbor])
 					expanded = true
 					break
 			if not expanded:
 				break
-		region_update_label(current_region)
-		current_region += 1
-
-func add_tile_to_region(tile_coords, region):
-	self.tiles[tile_coords].set_region(region)
-	regions[region].add_tile(tile_coords, self.tiles[tile_coords])
-
-func create_region(id: int) -> Region:
-	var region = Region.new(id)
-	var regionLabel = regionLabelPrefab.instantiate()
-	self.add_child(region)
-	regionLabelsParent.add_child(regionLabel)	
-	region.label = regionLabel
-	return region
-
-func apply_borders():
-	for tile_coords in self.tiles:
-		var tile_obj = self.tiles[tile_coords]
-		for neighbor_direction in Constants.NEIGHBORS:
-			var neighbor = self.get_neighbor_cell(tile_coords, neighbor_direction)
-			if (self.tiles.has(neighbor)):
-				if(tile_obj.data.region != self.tiles[neighbor].data.region):
-					tile_obj.set_single_border(neighbor_direction, true)
-				else:
-					tile_obj.set_single_border(neighbor_direction, false)
-			else:
-				tile_obj.set_single_border(neighbor_direction, true)
+		current_region = region_new_id()
+	for region in self.regions.values():
+		region.update()
+	world_ready.emit()
 
 
-func region_update_label(region_id: int):
-	var region = self.regions[region_id]
-	region.label.position = self.coords_to_pos(region.center_tile()) - region.label.size/2 ## size of the label
-	region.update_display()
-
-	
 func tile_water():
 	for i in range(-Constants.WORLD_CAMERA_BOUNDS.x, Constants.WORLD_CAMERA_BOUNDS.x):
 		for j in range(-Constants.WORLD_CAMERA_BOUNDS.y, Constants.WORLD_CAMERA_BOUNDS.y):
 			self.set_cell(0, Vector2i(Constants.WORLD_CENTER.x + i, Constants.WORLD_CENTER.y + j), 0, Vector2i(0, 0), 0)
 
 func sort_most_neighbors():
-	var sorted_tiles = self.tiles.values()
-	sorted_tiles.sort_custom(func(a, b): return count_neighbors(a) > count_neighbors(b))
+	var sorted_tiles = self.tiles.keys()
+	sorted_tiles.sort_custom(func(a, b): return count_neighbors(a, sorted_tiles) > count_neighbors(b, sorted_tiles))
 	return sorted_tiles
 
 func sort_least_neighbors():
-	var sorted_tiles = self.tiles.values()
-	sorted_tiles.sort_custom(func(a, b): return count_neighbors(a) < count_neighbors(b))
+	var sorted_tiles = self.tiles.keys()
+	sorted_tiles.sort_custom(func(a, b): return count_neighbors(a, sorted_tiles) < count_neighbors(b, sorted_tiles))
 	return sorted_tiles
 
 func add_team(team_id : int):
+	##REDO
 	var foundRegion = false
 	while not foundRegion:
-		var random_region = regions[Utils.rng.randi() % self.regions.size()]
+		var random_region = self.regions.values()[Utils.rng.randi() % self.regions.size()]
 		if random_region.data.team == Constants.NULL_TEAM:
 			random_region.set_team(team_id)
 			foundRegion = true
 		
-func count_neighbors(cell: Tile):
+func count_neighbors(cell: Tile, all_tiles):
 	var total = 0;
 	for neighbor in self.get_surrounding_cells(cell.coords):
-		if (self.tiles.has(neighbor)):
+		if (all_tiles.has(neighbor)):
 			total += 1
 	return total
 
-func get_tile_group_center_position(coords_group: Array):
-	var total = Vector2(0, 0)
-	for c in coords_group:
-		total += self.coords_to_pos(c)
-	return total / coords_group.size()
+func get_tile_obj(coords):
+	return self.regions[self.tiles[coords].data.region].tile_objs[coords]
 
-func delete_cell(coords_array: Array, action = null):
-	if action != null:
-		var team_name = Constants.TEAM_NAMES[action.team]
-		if action.team == self.tiles[coords_array[0]].data.team:
-			self.messenger.call("%s sacrifices their own land to curry favor from the gods..." % team_name)
-		else:
-			var enemy_team_name = Constants.TEAM_NAMES[self.tiles[coords_array[0]].data.team]
-			self.messenger.call("%s begs the gods to strike down the land of %s..." % [team_name, enemy_team_name])
-	else:
-		self.messenger.call("A patch of land sinks somewhere...")
+func deleted_tile(coords):
+	if self.tiles.has(coords):
+		return false
+	return true
+
+func sink_tiles(coords_array: Array):
+	self.messenger.call("A patch of land sinks somewhere...")
 	await self.camera.move_smoothed(self.coords_to_pos(coords_array[0]), 5)
 	for coords in coords_array:
-		self.tiles[coords].delete()
-	var check_all_deleted = func():
-		for coords in coords_array:
+		self.tiles[coords].sink()
+	var check_all_deleted = func(coords):
+		for c in coords:
 			if self.tiles.has(coords):
 				return false
 		return true
-	while not check_all_deleted.call():
+	while not check_all_deleted.call(coords_array):
 		await Utils.wait(0.1)
 		
-
 func region_new_id():
 	if self.regions.size() == 0:
 		return 0
 	return self.regions.keys().max() + 1
 
 func recalculate_region(region: int):
+	## TODO remove region from tile.gd
 	if (self.regions[region].data.tiles.size() == 0):
 		var r = self.regions[region]
 		self.regions.erase(region)
 		r.delete()
 		return
-	var region_tiles = self.regions[region].tiles_obj.keys()
-	self.regions[region].reset_tiles()
+	var region_tiles = self.regions[region].tile_objs.keys()
+	self.regions[region].clear()
 	for tile_coords in region_tiles:
 		self.tiles[tile_coords].set_region(Constants.NULL_REGION)
 	var region_to_expand = region
@@ -251,35 +169,25 @@ func recalculate_region(region: int):
 		expand_single_region_from_coords(region_to_expand, region_tiles)
 		if (region_tiles.size() > 0):
 			region_to_expand = region_new_id()
-			self.regions[region_to_expand] = create_region(region_to_expand)
-	region_update_label(region)
-	self.apply_borders()
+			self.regions[region_to_expand] = spawn_region(region_to_expand)
+
 
 func expand_single_region_from_coords(region: int, region_tiles: Array):
 	var new_center = region_tiles.pop_back()
-	add_tile_to_region(new_center, region)
+	self.regions[region].add_tile(new_center)
 	var added = true
 	while added:
 		added = false
-		for tile_coords in region_tiles:
-			for neighbor in self.get_surrounding_cells(tile_coords):
+		for tile_obj in region_tiles:
+			for neighbor in self.get_surrounding_cells(tile_obj):
 				if (self.tiles.has(neighbor) and self.tiles[neighbor].data.region == region):
-					add_tile_to_region(tile_coords, region)
+					self.regions[region].add_tile(tile_obj)
 					added = true
-					region_tiles.erase(tile_coords)
+					region_tiles.erase(tile_obj)
 					break
 			if added:
 				break
-	region_update_label(region)
-
-func sink_tiles(coords):
-	var regions_impacted = []
-	for coord in coords:
-		regions_impacted.append(self.tiles[coord].data.region)
-	await delete_cell(coords)
-	for region in regions_impacted:
-		if self.regions.has(region):
-			recalculate_region(region)
+	self.regions[region].update()
 
 func mark_tiles(global_turn):
 	# only sinking tiles for now
@@ -304,7 +212,6 @@ func sink_marked():
 	if marked_coords.size() > 0:
 		await sink_tiles(marked_coords)
 		await Utils.wait(Settings.turn_time)
-
 
 func move_units(region_from : int, region_to: int, team: int, simulated = false):
 	var is_player = team == 1
@@ -352,10 +259,11 @@ func coords_to_pos(coords):
 
 func adjacent_regions(region_id : int):
 	var adjacent = []
+	var all = self.tiles
 	for t in regions[region_id].data.tiles:
 		for neighbor in self.get_surrounding_cells(t):
-			if self.tiles.has(neighbor):
-				var neighbor_region = self.tiles[neighbor].data.region
+			if all.has(neighbor):
+				var neighbor_region = all[neighbor].data.region
 				if neighbor_region != region_id and not adjacent.has(neighbor_region):
 					adjacent.append(neighbor_region)
 	return adjacent
@@ -368,19 +276,8 @@ func reset_regions_team():
 	for region in self.regions:
 		self.regions[region].set_team(Constants.NULL_TEAM)
 
-func load_tiles(new_tiles):
-	for tile_data in new_tiles:
-		var t = self.spawn_cell(tile_data.coords, int(tile_data.team))
-		t.set_region(tile_data.region)
-
 func load_regions(new_regions):
 	for region in new_regions:
-		var r = self.create_region(int(region.id))
-		r.set_team(int(region.team))
-		r.set_units(int(region.units))
-		for coords in region.tiles:
-			r.add_tile(coords, self.tiles[coords])
-		self.regions[region.id] = r
-		self.region_update_label(region.id)
-		if region.team != Constants.NULL_TEAM:
-			region.generate_units()
+		self.spawn_region(region.id, region)
+		# if region.team != Constants.NULL_TEAM:
+		# 	r.generate_units()

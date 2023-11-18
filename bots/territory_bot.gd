@@ -3,7 +3,7 @@ class_name TerritoryBot
 
 
 func play_turn(world):
-	var owned_regions = get_owned_regions(world)
+	var available_regions = self.get_available_regions(world)
 	for region in owned_regions:
 		for adjacent in world.adjacent_regions(region):
 			if (

@@ -2,9 +2,9 @@ extends Node
 
 class_name Tile
 
+signal deleted
 
 const SINK_ANIMATION = preload("res://world/tiles/sinking_animation.tscn")
-
 const NEUTRAL_TEXTURE = preload("res://assets/tiles/grass_neutral.png")
 const TEAM_TEXTURE = preload("res://assets/tiles/grass.png")
 const CRACKED_TEXTURE = preload("res://assets/tiles/grass_cracked_2.png")
@@ -44,13 +44,19 @@ class TileWorldData:
 			"marked": self.marked
 		}
 
+	func from_save(data):
+		self.coords = Vector2i(data["coords"])
+		self.team = int(data["team"])
+		self.region = int(data["region"])
+		self.building = int(data["building"])
+		self.marked = bool(data["marked"])
+
 
 var data = TileWorldData.new()
 var init_position: Vector2 = Vector2(0, 0)
 var borders = Constants.NO_BORDERS.duplicate()
 var tween = null
 var blink_state = 0
-var delete_callable = null
 var dissolving = false
 var elapsed = 0.0
 
@@ -58,12 +64,15 @@ func init_cell(
 	init_coords: Vector2,
 	init_pos: Vector2,
 	init_team: int,
-	init_delete_callable = null
+	init_region : int,
 ):
 	self.data.coords = init_coords
 	self.init_position = init_pos
 	self.data.team = init_team
-	self.delete_callable = init_delete_callable
+	self.data.region = init_region
+
+func init_from_save(init_data):
+	self.data.from_save(init_data)
 	
 
 func _ready():
@@ -78,6 +87,50 @@ func _process(delta):
 		self.material.set_shader_parameter("sensitivity", elapsed)
 
 func update_cell():
+	const fake_colors = [
+		Color.WEB_GRAY,
+		Color.WEB_GREEN,
+		Color.ALICE_BLUE,
+		Color.ANTIQUE_WHITE,
+		Color.AQUA,
+		Color.AQUAMARINE,
+		Color.AZURE,
+		Color.BEIGE,
+		Color.BISQUE,
+		Color.BLACK,
+		Color.BLANCHED_ALMOND,
+		Color.BLUE,
+		Color.BLUE_VIOLET,
+		Color.BROWN,
+		Color.BURLYWOOD,
+		Color.CADET_BLUE,
+		Color.CHARTREUSE,
+		Color.CHOCOLATE,
+		Color.CORAL,
+		Color.CORNFLOWER_BLUE,
+		Color.CORNSILK,
+		Color.CRIMSON,
+		Color.CYAN,
+		Color.DARK_BLUE,
+		Color.DARK_CYAN,
+		Color.DARK_GOLDENROD,
+		Color.DARK_GRAY,
+		Color.DARK_GREEN,
+		Color.DARK_KHAKI,
+		Color.DARK_MAGENTA,
+		Color.DARK_OLIVE_GREEN,
+		Color.DARK_ORANGE,
+		Color.DARK_ORCHID,
+		Color.DARK_RED,
+		Color.DARK_SALMON,
+		Color.DARK_SEA_GREEN,
+		Color.DARK_SLATE_BLUE,
+		Color.DARK_SLATE_GRAY,
+		Color.DARK_TURQUOISE,
+		Color.DARK_VIOLET,
+		Color.DEEP_PINK,
+		Color.DEEP_SKY_BLUE,
+	]
 	if self.data.building != Constants.Building.None:
 		building_sprite.texture = Constants.BUILDINGS[self.data.building].texture
 		building_sprite.visible = true
@@ -104,8 +157,9 @@ func update_cell():
 			self.modulate = Color(1, 1, 1)
 	else:
 		self.self_modulate = Color(Constants.TEAM_COLORS[self.data.team])
+	self.modulate = fake_colors[self.data.region % fake_colors.size()]
 
-func delete():
+func sink():
 	animation_player.play("sink")
 	await animation_player.animation_finished
 	## dissolve
@@ -118,11 +172,11 @@ func delete():
 	self.material.set_shader_parameter("active", true)
 
 func delete_from_world():
-	self.delete_callable.call(self.data.coords)
+	deleted.emit(self.data.coords)
 	self.queue_free()
 
 func set_team(new_team: int):
-	self.team = new_team
+	self.data.team = new_team
 	self.update_cell()
 
 func set_borders(new_borders: Dictionary):

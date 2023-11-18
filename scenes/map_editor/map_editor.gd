@@ -59,7 +59,7 @@ func _ready():
 	self.world.init(Callable())
 	self.center.position = self.world.coords_to_pos(Constants.WORLD_CENTER)
 	self.init_building_button()
-	self.world.regionLabelsParent.hide()
+	#self.world.regionLabelsParent.hide()
 	self.set_stage(EditStage.Drawing)
 	
 
@@ -219,11 +219,8 @@ func load_saved_game():
 	self.set_stage(EditStage.Teams)
 
 func drawing_valid():
-	if self.world.tiles.size() < 2 or self.world.regions.size() < 2:
+	if self.world.all_tile_coords().size() < 2 or self.world.regions.size() < 2:
 		return false
-	for t in self.world.tiles.values():
-		if t.region == Constants.NULL_REGION:
-			return false
 	return true
 
 func check_drawing_valid():

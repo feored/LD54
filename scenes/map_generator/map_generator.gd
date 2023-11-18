@@ -35,7 +35,7 @@ func add_teams():
 
 
 func gen_world():
-	self.world.clear_island()
+	await self.world.clear_island()
 	await self.world.generate_island(island_size, Settings.get_setting(Settings.Setting.InstantMap))
 	self.add_teams()
 
