@@ -1,6 +1,7 @@
 extends Node
 class_name Region
 
+signal tile_added
 signal tile_deleted
 signal region_deleted
 
@@ -15,15 +16,20 @@ class RegionData:
 	var team: int
 	var tiles: Array
 	var units: int
+	var is_used: bool
 
 	func _init():
 		self.id = Constants.NULL_REGION
 		self.team = Constants.NULL_TEAM
 		self.tiles = []
 		self.units = 0
+		self.is_used = false
 
 	func save():
-		return {"id": self.id, "team": self.team, "tiles": self.tiles, "units": self.units}
+		return {"id": self.id, "team": self.team, "tiles": self.tiles, "units": self.units, "is_used": self.is_used}
+	
+	func _to_string():
+		return "Region %s, team %s, %s tiles, %s units" % [str(self.id), str(self.team), str(self.tiles.size()), str(self.units)]
 
 
 var data: RegionData = RegionData.new()
@@ -43,14 +49,10 @@ func save():
 func init_from_save(saved_region):
 	self.data.id = saved_region.id
 	self.data.team = saved_region.team
-	self.data.tiles = saved_region.tiles.keys()
 	self.data.units = saved_region.units
+	self.data.is_used = saved_region.is_used
 	for tile in saved_region.tiles:
-		self.tile_objs[tile] = tilePrefab.instantiate()
-		self.tile_objs[tile].init_from_save(saved_region.tiles[tile])
-		self.tile_objs[tile].position = self.coords_to_pos.call(saved_region.tiles[tile]["coords"])
-		self.add_child(self.tile_objs[tile])
-		
+		spawn_cell(tile, saved_region.tiles[tile]["team"], saved_region.tiles[tile])
 	self.label = regionLabelPrefab.instantiate()
 	self.add_child(self.label)
 
@@ -148,7 +150,7 @@ func attack(num_attackers, team):
 		self.data.units = total_attackers - self.data.units
 		self.set_team(team)
 	else:
-		self.units -= total_attackers
+		self.data.units -= total_attackers
 	self.update()
 
 
@@ -185,7 +187,7 @@ func set_used(is_used: bool):
 		t.set_barred(is_used)
 
 
-func spawn_cell(coords, team):
+func spawn_cell(coords, team, save_data = {}):
 	if self.data.tiles.has(coords):
 		print("Error: cell already exists at " + str(coords))
 		return
@@ -201,6 +203,9 @@ func spawn_cell(coords, team):
 		label.position = -Vector2(12, 12)
 		new_tile.add_child(label)
 	self.tile_objs[coords] = new_tile
+	if save_data.size() > 0:
+		new_tile.init_from_save(save_data)
+	tile_added.emit(new_tile)
 	return new_tile
 
 

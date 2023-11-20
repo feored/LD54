@@ -7,13 +7,13 @@ func play_turn(world):
 	for region in owned_regions:
 		for adjacent in world.adjacent_regions(region):
 			if (
-				world.regions[adjacent].team != Constants.NULL_TEAM
-				and world.regions[adjacent].team != self.team
+				world.regions[adjacent].data.team != Constants.NULL_TEAM
+				and world.regions[adjacent].data.team != self.team
 			):
 				return Action.new(self.team, Constants.Action.Move, region, adjacent)
 	for region in owned_regions:
 		for adjacent in world.adjacent_regions(region):
-			if world.regions[adjacent].team == Constants.NULL_TEAM:
+			if world.regions[adjacent].data.team == Constants.NULL_TEAM:
 				return Action.new(self.team, Constants.Action.Move, region, adjacent)
 	if not is_game_locked(world, owned_regions):
 		for region in owned_regions:
@@ -27,10 +27,11 @@ func play_turn(world):
 
 func can_use_region(world, region):
 	return (
-		(not world.regions[region].is_used)
-		and world.regions[region].team == team
-		and world.regions[region].units > 1
+		(not world.regions[region].data.is_used)
+		and world.regions[region].data.team == team
+		and world.regions[region].data.units > 1
 	)
+
 
 func is_region_landlocked(world, region, neighbors = null):
 	var landlocked = true
@@ -40,7 +41,8 @@ func is_region_landlocked(world, region, neighbors = null):
 			landlocked = false
 			break
 	return landlocked
-	
+
+
 func is_game_locked(world, owned_regions):
 	var game_locked = true
 	for region in owned_regions:
@@ -48,6 +50,7 @@ func is_game_locked(world, owned_regions):
 			game_locked = false
 			break
 	return game_locked
+
 
 func get_owned_regions(world):
 	var owned_regions = []

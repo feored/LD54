@@ -16,6 +16,7 @@ func spawn_region(id: int, from_save: Dictionary = {}) -> Region:
 	region.coords_to_pos = Callable(self, "coords_to_pos")
 	region.tile_deleted.connect(func(coords): self.tiles.erase(coords))
 	region.region_deleted.connect(Callable(self, "erase_region"))
+	region.tile_added.connect(func(tile): self.tiles[tile.data.coords] = tile)
 	if from_save.size() > 0:
 		region.init_from_save(from_save)
 	self.add_child(region)
@@ -219,7 +220,7 @@ func move_units(region_from : int, region_to: int, team: int, simulated = false)
 		print("Error: invalid region trying to move", region_from)
 	if not self.regions.has(region_to):
 		print("Error: invalid region trying to move to", region_to)
-	if self.regions[region_from].units <= 1:
+	if self.regions[region_from].data.units <= 1:
 		print("Error: not enough units to move:", regions[region_from].units)
 	if not region_to in self.adjacent_regions(region_from):
 		print("Error: regions are not adjacent")
@@ -239,6 +240,9 @@ func move_units(region_from : int, region_to: int, team: int, simulated = false)
 			
 	if not is_player and not simulated:
 		await Utils.wait(Settings.turn_time)
+
+func get_tile_region(coords):
+	return self.regions[self.tiles[coords].data.region]
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
@@ -278,6 +282,8 @@ func reset_regions_team():
 
 func load_regions(new_regions):
 	for region in new_regions:
-		self.spawn_region(region.id, region)
-		# if region.team != Constants.NULL_TEAM:
-		# 	r.generate_units()
+		self.regions[region.id] = self.spawn_region(region.id, region)
+		if region.team != Constants.NULL_TEAM:
+			print("generated")
+			self.regions[region.id].generate_units()
+		self.regions[region.id].update()

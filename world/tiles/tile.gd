@@ -157,7 +157,7 @@ func update_cell():
 			self.modulate = Color(1, 1, 1)
 	else:
 		self.self_modulate = Color(Constants.TEAM_COLORS[self.data.team])
-	self.modulate = fake_colors[self.data.region % fake_colors.size()]
+	#self.modulate = fake_colors[self.data.region % fake_colors.size()]
 
 func sink():
 	animation_player.play("sink")
@@ -198,9 +198,9 @@ func set_selected(selected: bool):
 	if selected:
 		self.tween = self.create_tween().set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN).set_loops()
 		self.tween.tween_property(self, "self_modulate", Color(2, 2, 2), 0.5)
-		self.tween.tween_property(self, "self_modulate", Color(Constants.TEAM_COLORS[self.team]), 0.5)
+		self.tween.tween_property(self, "self_modulate", Color(Constants.TEAM_COLORS[self.data.team]), 0.5)
 	else:
-		self.self_modulate = Color(Constants.TEAM_COLORS[self.team])
+		self.self_modulate = Color(Constants.TEAM_COLORS[self.data.team])
 		self.tween.kill()
 
 func mark():

@@ -49,9 +49,11 @@ func _ready():
 	self.load_map()
 	self.resources.init_shapes(Callable(self, "pick_shape_to_sink"))
 	self.add_teams()
+	for r in self.world.regions.values():
+		r.update()
 	
 	%Center.position = self.world.coords_to_pos(Constants.WORLD_CENTER)
-	self.start_game()
+	self.game_started = true
 	self.world.camera.move_instant(self.world.map_to_local(closest_player_tile_coords()))
 
 func add_teams():
@@ -60,13 +62,6 @@ func add_teams():
 		if team_id != Constants.PLAYER_ID:
 			self.bots[team_id] = DumbBot.new(team_id)
 	self.resources.add_teams(self.teams)
-
-func start_game():
-	self.game_started = true
-	for r in self.world.regions.values():
-		r.data.units = 0
-	# for t in self.teams:
-	# 	generate_units(t)
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):
@@ -105,7 +100,7 @@ func handle_sinking(event):
 			self.resources.buy_shape(self.sink_item.shape)
 			self.clear_mouse_state()
 		else:
-			messenger.set_message("You cannot sink what has already sunk, my lord.")
+			messenger.set_message("You cannot sink that which has already sunk, my lord.")
 			clear_mouse_state()
 
 func _unhandled_input(event):
@@ -139,7 +134,7 @@ func _unhandled_input(event):
 					if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT and event.pressed:
 						if mouse_state != MouseState.Move:
 							clear_mouse_state()
-						handle_move(world.tiles[coords_clicked])
+						handle_move(self.world.get_tile_region(coords_clicked))
 
 func buy_building(tile_coords, building):
 	self.resources.player().add_gold(-Constants.BUILDINGS[building].cost)
@@ -248,30 +243,33 @@ func clear_selected_region():
 		self.world.regions[selected_region].set_selected(false)
 		self.selected_region = null
 	
-func handle_move(new_clicked_tile):
+func handle_move(clicked_region):
 	mouse_state = MouseState.Move
 	if !(self.turn == self.player_team_index):
 		print("not player turn")
 		clear_mouse_state()
 		return
-	if self.world.regions[new_clicked_tile.region].data.is_used:
+	if clicked_region.data.is_used:
 		clear_mouse_state()
 		return
-	if selected_region != null and new_clicked_tile.data.region == selected_region:
+	if selected_region != null and clicked_region.data.id == selected_region:
 		clear_mouse_state()
 		return
 	if selected_region == null:
-		if new_clicked_tile.data.team == self.teams[self.player_team_index]:
-			self.selected_region = new_clicked_tile.data.region
+		if clicked_region.data.team == self.teams[self.player_team_index]:
+			self.selected_region = clicked_region.data.id
 			self.world.regions[selected_region].set_selected(true)
 			Sfx.play(Sfx.Track.Select)
 	else:
-		if new_clicked_tile.region not in self.world.adjacent_regions(self.selected_region):
+		if clicked_region.data.id not in self.world.adjacent_regions(self.selected_region):
 			clear_mouse_state()
 			return
 		else:
+			self.world.regions[selected_region].update()
+			clicked_region.update()
+			print("Selected:", str(self.world.regions[selected_region].data), "Clicked:", str(clicked_region.data))
 			if self.world.regions[selected_region].data.units > 1:
-				var move = Action.new(self.teams[self.player_team_index], Constants.Action.Move, selected_region, new_clicked_tile.data.region )
+				var move = Action.new(self.teams[self.player_team_index], Constants.Action.Move, selected_region, clicked_region.data.id )
 				actions_history.append(move)
 				self.apply_action(move)
 			else:
