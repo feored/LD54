@@ -4,6 +4,8 @@ class_name Tile
 
 signal deleted
 
+var NEUTRAL_COLOR = Color.hex(0x55d981ff)
+
 const SINK_ANIMATION = preload("res://world/tiles/sinking_animation.tscn")
 const NEUTRAL_TEXTURE = preload("res://assets/tiles/grass_neutral.png")
 const TEAM_TEXTURE = preload("res://assets/tiles/grass.png")
@@ -79,10 +81,15 @@ func _ready():
 	self.position = init_position
 	self.update_cell()
 
+func delete():
+	self.queue_free()
+	deleted.emit(self.data.coords)
+
 func _process(delta):
 	if dissolving:
 		if elapsed > 1.0:
-			self.delete_from_world()
+			delete()
+			dissolving = false
 		elapsed += delta
 		self.material.set_shader_parameter("sensitivity", elapsed)
 
@@ -141,12 +148,15 @@ func update_cell():
 			self.border_objects[b].show()
 		else:
 			self.border_objects[b].hide()
-	if self.data.team == 0:
-		self.texture = NEUTRAL_TEXTURE
+
+	if self.data.marked:
+		self.texture = CRACKED_TEXTURE
+	else:
+		self.texture = TEAM_TEXTURE
+	if self.data.team == Constants.NULL_TEAM:
 		for b in self.borders.keys():
 			self.border_objects[b].self_modulate = Color.WHITE
 	else:
-		self.texture = TEAM_TEXTURE
 		for b in self.borders.keys():
 			self.border_objects[b].self_modulate = Color(Constants.TEAM_BORDER_COLORS[self.data.team])
 	
@@ -156,7 +166,10 @@ func update_cell():
 		else:
 			self.modulate = Color(1, 1, 1)
 	else:
-		self.self_modulate = Color(Constants.TEAM_COLORS[self.data.team])
+		if self.data.team == Constants.NULL_TEAM:
+			self.self_modulate = NEUTRAL_COLOR
+		else:
+			self.self_modulate = Color(Constants.TEAM_COLORS[self.data.team])
 	#self.modulate = fake_colors[self.data.region % fake_colors.size()]
 
 func sink():
@@ -170,10 +183,6 @@ func sink():
 	self.add_child(SINK_ANIMATION.instantiate())
 	self.dissolving = true
 	self.material.set_shader_parameter("active", true)
-
-func delete_from_world():
-	deleted.emit(self.data.coords)
-	self.queue_free()
 
 func set_team(new_team: int):
 	self.data.team = new_team
@@ -206,7 +215,8 @@ func set_selected(selected: bool):
 func mark():
 	self.data.marked = true
 	#self.texture = CRACKED_TEXTURE
-	self.modulate = Color.hex(0xacacacac)
+	#self.modulate = Color.hex(0xacacacac)
+	self.update_cell()
 	
 func set_building(new_building):
 	self.data.building = new_building

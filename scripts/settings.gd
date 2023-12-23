@@ -21,7 +21,7 @@ const DEFAULT_CONFIG = {
 	"SFX": AudioServer.get_bus_index("SFX"),
 }
 
-const debug_position = false
+const debug_position = true
 var settings = null
 var input_locked: bool = false
 var current_map = null

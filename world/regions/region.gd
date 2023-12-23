@@ -9,6 +9,7 @@ var tilePrefab = preload("res://world/tiles/tile.tscn")
 var regionLabelPrefab = preload("res://world/regions/region_label.tscn")
 
 var coords_to_pos: Callable
+var get_contiguous_tilesets: Callable
 
 
 class RegionData:
@@ -62,14 +63,13 @@ func _init(init_id):
 	self.label = regionLabelPrefab.instantiate()
 	self.add_child(self.label)
 
-
 func _ready():
 	pass
 
 
 func delete():
 	for tile in self.tile_objs.values():
-		tile_deleted.emit(tile.data.coords)
+		tile_deleted.emit(tile.data.coords, self.data.id)
 		tile.queue_free()
 	self.tile_objs.clear()
 	self.data.tiles.clear()
@@ -80,8 +80,11 @@ func delete():
 
 
 func clear():
+	# for t in self.tile_objs.values():
+	# 	self.remove_child(t)
 	self.tile_objs.clear()
 	self.data.tiles.clear()
+
 
 
 func sacrifice():
@@ -91,6 +94,8 @@ func sacrifice():
 
 
 func update():
+	print("Start update", self.data.id)
+	print("Tiles:", self.data.tiles)
 	if self.data.tiles.size() < 1:
 		self.delete()
 		return
@@ -105,12 +110,15 @@ func set_team(init_team):
 		tile.set_team(self.data.team)
 
 
-func add_tile(tileObj):
+func add_tile(tileObj, should_reparent = false):
 	tileObj.data.region = self.data.id
 	var coords = tileObj.data.coords
 	self.data.tiles.append(coords)
 	self.tile_objs[coords] = tileObj
-	self.add_child(tileObj)
+	if should_reparent:
+		tileObj.reparent(self)
+	else:
+		self.add_child(tileObj)
 
 
 func remove_tile(coords, delete_child = false):
@@ -212,14 +220,13 @@ func spawn_cell(coords, team, save_data = {}):
 func delete_tile(coords):
 	self.data.tiles.erase(coords)
 	self.tile_objs.erase(coords)
-	tile_deleted.emit(coords)
-	#self.recalculate_region()
+	tile_deleted.emit(coords, self.data.id)
+	self.update()
 
 
 func sink_tile(coords):
 	self.tile_objs[coords].sink()
 	self.tile_objs.erase(coords)
-	#self.recalculate_region()
 
 
 func update_borders():

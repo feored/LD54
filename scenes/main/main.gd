@@ -214,6 +214,7 @@ func get_teams_alive():
 	
 
 func apply_buildings(team):
+	return
 	self.world.tiles.values().filter(func(t): return t.data.team == team and t.data.building != Constants.Building.None).map(func(t): apply_building(t.coords, t.building))
 
 

@@ -37,7 +37,7 @@ func is_region_landlocked(world, region, neighbors = null):
 	var landlocked = true
 	var neighbors_local = neighbors if neighbors != null else world.adjacent_regions(region)
 	for neighbor in neighbors_local:
-		if world.regions[neighbor].team != self.team:
+		if world.regions[neighbor].data.team != self.team:
 			landlocked = false
 			break
 	return landlocked
