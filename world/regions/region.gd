@@ -69,7 +69,7 @@ func _ready():
 
 func delete():
 	for tile in self.tile_objs.values():
-		tile_deleted.emit(tile.data.coords, self.data.id)
+		tile_deleted.emit(tile.data.coords, self.data.id, true)
 		tile.queue_free()
 	self.tile_objs.clear()
 	self.data.tiles.clear()
@@ -220,7 +220,7 @@ func spawn_cell(coords, team, save_data = {}):
 func delete_tile(coords):
 	self.data.tiles.erase(coords)
 	self.tile_objs.erase(coords)
-	tile_deleted.emit(coords, self.data.id)
+	tile_deleted.emit(coords, self.data.id, false)
 	self.update()
 
 

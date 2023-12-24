@@ -22,9 +22,10 @@ func spawn_region(id: int, from_save: Dictionary = {}) -> Region:
 	self.add_child(region)
 	return region
 
-func on_tile_deleted(coords, region_id):
+func on_tile_deleted(coords, region_id, region_delete):
 	self.tiles.erase(coords)
-	self.recalculate_region(region_id)
+	if not region_delete:
+		self.recalculate_region(region_id)
 
 func clear_island():
 	for region in self.regions.values():

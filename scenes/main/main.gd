@@ -134,6 +134,7 @@ func _unhandled_input(event):
 					if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT and event.pressed:
 						if mouse_state != MouseState.Move:
 							clear_mouse_state()
+						print ("COORDS CLICKED", coords_clicked)
 						handle_move(self.world.get_tile_region(coords_clicked))
 
 func buy_building(tile_coords, building):
