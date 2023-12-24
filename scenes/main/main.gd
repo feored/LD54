@@ -247,7 +247,6 @@ func clear_selected_region():
 func handle_move(clicked_region):
 	mouse_state = MouseState.Move
 	if !(self.turn == self.player_team_index):
-		print("not player turn")
 		clear_mouse_state()
 		return
 	if clicked_region.data.is_used:

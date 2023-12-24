@@ -54,22 +54,21 @@ func init_from_save(saved_region):
 	self.data.is_used = saved_region.is_used
 	for tile in saved_region.tiles:
 		spawn_cell(tile, saved_region.tiles[tile]["team"], saved_region.tiles[tile])
-	self.label = regionLabelPrefab.instantiate()
-	self.add_child(self.label)
 
 
 func _init(init_id):
 	self.data.id = init_id
 	self.label = regionLabelPrefab.instantiate()
 	self.add_child(self.label)
+	self.label.z_index = 100
 
 func _ready():
-	pass
+	self.name = StringName("Region " + str(self.data.id))
 
 
 func delete():
 	for tile in self.tile_objs.values():
-		tile_deleted.emit(tile.data.coords, self.data.id)
+		tile_deleted.emit(tile.data.coords)
 		tile.queue_free()
 	self.tile_objs.clear()
 	self.data.tiles.clear()
@@ -94,13 +93,14 @@ func sacrifice():
 
 
 func update():
-	print("Start update", self.data.id)
-	print("Tiles:", self.data.tiles)
+	#print("Start update", self.data.id)
+	#print("Tiles:", self.data.tiles)
 	if self.data.tiles.size() < 1:
 		self.delete()
 		return
 	self.label.position = self.coords_to_pos.call(self.center_tile()) - self.label.size / 2  ## size of the label
 	self.label.set_text(str(self.data.units))
+	# self.label.set_text(str(self.data.id))
 	self.update_borders()
 
 
@@ -112,6 +112,7 @@ func set_team(init_team):
 
 func add_tile(tileObj, should_reparent = false):
 	tileObj.data.region = self.data.id
+	tileObj.deleted.connect(delete_tile)
 	var coords = tileObj.data.coords
 	self.data.tiles.append(coords)
 	self.tile_objs[coords] = tileObj
@@ -205,11 +206,11 @@ func spawn_cell(coords, team, save_data = {}):
 	self.data.tiles.append(coords)
 	self.add_child(new_tile)
 	if Settings.debug_position:
-		var label = Label.new()
-		label.text = str(coords)
-		label.set_theme(load("res://assets/theme.tres"))
-		label.position = -Vector2(12, 12)
-		new_tile.add_child(label)
+		var new_label = Label.new()
+		new_label.text = str(coords)
+		new_label.set_theme(load("res://assets/theme.tres"))
+		new_label.position = -Vector2(12, 12)
+		new_tile.add_child(new_label)
 	self.tile_objs[coords] = new_tile
 	if save_data.size() > 0:
 		new_tile.init_from_save(save_data)
@@ -220,7 +221,7 @@ func spawn_cell(coords, team, save_data = {}):
 func delete_tile(coords):
 	self.data.tiles.erase(coords)
 	self.tile_objs.erase(coords)
-	tile_deleted.emit(coords, self.data.id)
+	tile_deleted.emit(coords)
 	self.update()
 
 

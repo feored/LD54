@@ -11,6 +11,13 @@ func init(messengerCallable):
 	self.messenger = messengerCallable
 	tile_water()
 
+func get_tiles():
+	var total = []
+	for region in self.regions.values():
+		for t in region.data.tiles:
+			total.append(t)
+	return total
+
 func spawn_region(id: int, from_save: Dictionary = {}) -> Region:
 	var region = Region.new(id)
 	region.coords_to_pos = Callable(self, "coords_to_pos")
@@ -22,9 +29,8 @@ func spawn_region(id: int, from_save: Dictionary = {}) -> Region:
 	self.add_child(region)
 	return region
 
-func on_tile_deleted(coords, region_id):
+func on_tile_deleted(coords):
 	self.tiles.erase(coords)
-	self.recalculate_region(region_id)
 
 func clear_island():
 	for region in self.regions.values():
@@ -68,7 +74,6 @@ func generate_tiles(island_size, instant):
 	self.regions[new_region].update()
 	
 func generate_regions():
-	print(self.regions.keys())
 	var current_region = region_new_id()
 	var tiles_shuffled = self.tiles.keys()
 	tiles_shuffled.shuffle()
@@ -137,25 +142,29 @@ func region_new_id():
 
 func recalculate_region(region: int):
 	print("recalculating region", region)
-	var region_tiles = self.regions[region].tile_objs.keys().duplicate()
-	var tilesets = get_contiguous_tilesets(region_tiles)
+	if not self.regions.has(region):
+		print("Error: invalid region trying to recalculate", region)
+		return
+	var region_tiles = self.regions[region].tile_objs.values().map(func(x): return x.data)
+	var region_tile_coords = region_tiles.map(func(x): return x.coords)
+	var tilesets = get_contiguous_tilesets(region_tile_coords)
 	if tilesets.size() == 1:
 		self.regions[region].update()
 		return ## all contiguous
 	var region_data = self.regions[region].data
 	self.regions[region].clear()
 	self.regions[region].delete()
-	print("tilesets", tilesets)
 	for tileset in tilesets:
 		var new_region = region_new_id()
 		self.regions[new_region] = spawn_region(new_region)
 		for tile in tileset:
 			self.regions[new_region].add_tile(self.tiles[tile], true)
+		self.regions[new_region].set_team(region_data.team)
+		self.regions[new_region].set_used(region_data.is_used)
 		self.regions[new_region].set_units(region_data.units/len(tilesets))
 		self.regions[new_region].update()
 
 func get_contiguous_tilesets(tile_array: Array):
-	print("tile_array", tile_array)
 	var tilesets = []
 	while tile_array.size() > 0:
 		var tileset = [tile_array.pop_back()]
@@ -176,7 +185,7 @@ func get_contiguous_tilesets(tile_array: Array):
 func mark_tiles(global_turn):
 	# only sinking tiles for now
 	var n = self.tiles.size()
-	var tiles_to_mark = int(1 + n/(Utils.rng.randf_range(15.0, 30.0)))
+	var tiles_to_mark = self.tiles.size()/2 #int(1 + n/(Utils.rng.randf_range(15.0, 30.0)))
 	if (global_turn < Constants.SINK_GRACE_PERIOD):
 		tiles_to_mark = 0
 	var cur_cell = Utils.pick_tile_to_sink(self.tiles.keys())
@@ -193,9 +202,23 @@ func mark_tiles(global_turn):
 
 func sink_marked():
 	var marked_coords = self.tiles.values().filter(func(x): return x.data.marked).map(func(x): return x.data.coords)
+	var affected_regions = []
+	for coords in marked_coords:
+		var region = self.tiles[coords].data.region
+		if not affected_regions.has(region):
+			affected_regions.append(region)
 	if marked_coords.size() > 0:
 		await sink_tiles(marked_coords)
-		await Utils.wait(1)
+	var deleted = 0
+	while deleted < marked_coords.size():
+		deleted = 0
+		await Utils.wait(0.1)
+		for coords in marked_coords:
+			if not self.tiles.has(coords):
+				deleted += 1
+	for region in affected_regions:
+		self.recalculate_region(region)
+	
 	
 	
 
@@ -269,6 +292,5 @@ func load_regions(new_regions):
 	for region in new_regions:
 		self.regions[region.id] = self.spawn_region(region.id, region)
 		if region.team != Constants.NULL_TEAM:
-			print("generated")
 			self.regions[region.id].generate_units()
 		self.regions[region.id].update()

@@ -72,6 +72,7 @@ func init_cell(
 	self.init_position = init_pos
 	self.data.team = init_team
 	self.data.region = init_region
+	self.set_name.call_deferred(StringName("Tile " + str(self.data.coords)))
 
 func init_from_save(init_data):
 	self.data.from_save(init_data)
@@ -82,8 +83,8 @@ func _ready():
 	self.update_cell()
 
 func delete():
-	self.queue_free()
 	deleted.emit(self.data.coords)
+	self.queue_free()
 
 func _process(delta):
 	if dissolving:
@@ -170,7 +171,7 @@ func update_cell():
 			self.self_modulate = NEUTRAL_COLOR
 		else:
 			self.self_modulate = Color(Constants.TEAM_COLORS[self.data.team])
-	#self.modulate = fake_colors[self.data.region % fake_colors.size()]
+	#self.modulate = fake_colors[self.data.region % fake_colors.size()
 
 func sink():
 	animation_player.play("sink")
