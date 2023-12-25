@@ -18,7 +18,7 @@ func get_tiles():
 			total.append(t)
 	return total
 
-func spawn_region(id: int, from_save: Dictionary = {}) -> Region:
+func spawn_region(id: int, from_save: Dictionary = {}):
 	var region = Region.new(id)
 	region.coords_to_pos = Callable(self, "coords_to_pos")
 	region.tile_deleted.connect(Callable(self, "on_tile_deleted"))
@@ -27,7 +27,7 @@ func spawn_region(id: int, from_save: Dictionary = {}) -> Region:
 	if from_save.size() > 0:
 		region.init_from_save(from_save)
 	self.add_child(region)
-	return region
+	self.regions[id] = region
 
 func on_tile_deleted(coords):
 	self.tiles.erase(coords)
@@ -55,7 +55,7 @@ func generate_tiles(island_size, instant):
 	var n_tiles_target = round(n_tiles_max * island_size)
 	var current_cell = Constants.WORLD_CENTER
 	var new_region = region_new_id()
-	self.regions[new_region] = spawn_region(new_region)
+	spawn_region(new_region)
 	self.tiles[Constants.WORLD_CENTER] = self.regions[new_region].spawn_cell(Constants.WORLD_CENTER, Constants.NULL_TEAM)
 	var created_tiles = [Constants.WORLD_CENTER]
 	while (created_tiles.size() < n_tiles_target):
@@ -79,7 +79,7 @@ func generate_regions():
 	tiles_shuffled.shuffle()
 	while tiles_shuffled.size() > 0:
 		var start = tiles_shuffled.pop_back()
-		regions[current_region] = spawn_region(current_region)
+		spawn_region(current_region)
 		self.regions[self.tiles[start].data.region].remove_tile(start, true)
 		regions[current_region].add_tile(self.tiles[start])
 		for i in range(Constants.REGION_MAX_SIZE):
@@ -156,7 +156,7 @@ func recalculate_region(region: int):
 	self.regions[region].delete()
 	for tileset in tilesets:
 		var new_region = region_new_id()
-		self.regions[new_region] = spawn_region(new_region)
+		spawn_region(new_region)
 		for tile in tileset:
 			self.regions[new_region].add_tile(self.tiles[tile], true)
 		self.regions[new_region].set_team(region_data.team)
@@ -290,7 +290,7 @@ func reset_regions_team():
 
 func load_regions(new_regions):
 	for region in new_regions:
-		self.regions[region.id] = self.spawn_region(region.id, region)
+		self.spawn_region(region.id, region)
 		if region.team != Constants.NULL_TEAM:
 			self.regions[region.id].generate_units()
 		self.regions[region.id].update()

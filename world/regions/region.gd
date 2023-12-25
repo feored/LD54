@@ -51,7 +51,8 @@ func init_from_save(saved_region):
 	self.data.id = saved_region.id
 	self.data.team = saved_region.team
 	self.data.units = saved_region.units
-	self.data.is_used = saved_region.is_used
+	self.data.is_used = saved_region.is_used if saved_region.has("is_used") else false
+	print(saved_region.tiles)
 	for tile in saved_region.tiles:
 		spawn_cell(tile, saved_region.tiles[tile]["team"], saved_region.tiles[tile])
 

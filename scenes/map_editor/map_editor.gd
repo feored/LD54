@@ -45,7 +45,6 @@ var teams = []
 
 
 ## placing regions
-var region_used_tiles = []
 var current_region_id = 0
 
 ## placing buildings
@@ -86,8 +85,8 @@ func set_state(state):
 	self.state = state
 	match state:
 		State.PlacingRegion:
-			self.region_used_tiles.clear()
 			self.current_region_id = self.world.region_new_id()
+			self.world.spawn_region(self.current_region_id)
 			self.cursor.scale = Vector2(1, 1)
 			self.cursor.texture = TEXTURE_HEX
 			self.cursor.visible = true
@@ -98,6 +97,8 @@ func set_state(state):
 			self.cursor.visible = true
 			self.cursor.modulate = COLOR_DEFAULT
 		State.Drawing:
+			self.current_region_id = self.world.region_new_id()
+			self.world.spawn_region(self.current_region_id)
 			self.cursor.scale = Vector2(1, 1)
 			self.cursor.texture = TEXTURE_HEX
 			self.cursor.visible = true
@@ -151,18 +152,15 @@ func place_region(event):
 	else:
 		self.cursor.modulate = COLOR_INVALID
 		return
-	if clicking and coords not in region_used_tiles:
-		self.region_used_tiles.append(coords)
-		var old_region = self.world.tiles[coords].region
-		if not self.world.regions.has(current_region_id):
-			self.world.regions[current_region_id] = self.world.create_region(current_region_id)
-		self.world.tiles[coords].set_region(current_region_id)
-		if old_region != Constants.NULL_REGION:
-			self.world.regions[old_region].remove_tile(coords)
-			self.world.recalculate_region(old_region)
-		self.world.regions[current_region_id].add_tile(coords, self.world.tiles[coords])
+	if clicking and self.world.tiles[coords].data.region != current_region_id:
+		var old_region = self.world.tiles[coords].data.region
+		self.world.regions[old_region].remove_tile(coords, true)
+		self.world.regions[current_region_id].add_tile(self.world.tiles[coords], false)
 		self.world.recalculate_region(current_region_id)
+		self.world.recalculate_region(old_region)
 		self.check_drawing_valid()
+		for r in self.world.regions.values():
+			print("Region " + str(r.data.id) + " has " + str(r.data.tiles.size()) + " tiles")
 
 func draw(event):
 	var coords = self.world.global_pos_to_coords(event.position)
@@ -173,7 +171,8 @@ func draw(event):
 		self.cursor.modulate = COLOR_VALID
 
 	if clicking:
-			world.spawn_cell(coords, 0)
+			self.world.regions[current_region_id].spawn_cell(coords, 0)
+			self.world.regions[current_region_id].update()
 			self.check_drawing_valid()
 
 func erase(event):
@@ -219,7 +218,7 @@ func load_saved_game():
 	self.set_stage(EditStage.Teams)
 
 func drawing_valid():
-	if self.world.all_tile_coords().size() < 2 or self.world.regions.size() < 2:
+	if self.world.tiles.size() < 2 or self.world.regions.size() < 2:
 		return false
 	return true
 

@@ -161,16 +161,16 @@ func update_cell():
 		for b in self.borders.keys():
 			self.border_objects[b].self_modulate = Color(Constants.TEAM_BORDER_COLORS[self.data.team])
 	
-	if Settings.editor_mode:
-		if self.region == Constants.NULL_REGION:
-			self.modulate = Color(1, 0.25, 0.25, 0.75)
-		else:
-			self.modulate = Color(1, 1, 1)
+	# if Settings.editor_mode:
+		# if self.data.region == Constants.NULL_REGION:
+		# 	self.modulate = Color(1, 0.25, 0.25, 0.75)
+		# else:
+		# 	self.modulate = Color(1, 1, 1)
+	# else:
+	if self.data.team == Constants.NULL_TEAM:
+		self.self_modulate = NEUTRAL_COLOR
 	else:
-		if self.data.team == Constants.NULL_TEAM:
-			self.self_modulate = NEUTRAL_COLOR
-		else:
-			self.self_modulate = Color(Constants.TEAM_COLORS[self.data.team])
+		self.self_modulate = Color(Constants.TEAM_COLORS[self.data.team])
 	#self.modulate = fake_colors[self.data.region % fake_colors.size()
 
 func sink():
