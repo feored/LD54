@@ -183,7 +183,7 @@ func erase(event):
 		self.cursor.modulate = COLOR_INVISIBLE
 		return
 	if clicking:
-			world.remove_cell_instant(coords)
+		self.world.tiles[coords].delete()
 
 func place_team(event):
 	var coords = self.world.global_pos_to_coords(event.position)
@@ -213,7 +213,6 @@ func load_saved_game():
 	save_game.close()
 	self.world.clear_island()
 	self.teams = saved_state.teams
-	self.world.load_tiles(saved_state.tiles)
 	self.world.load_regions(saved_state.regions)
 	self.set_stage(EditStage.Teams)
 

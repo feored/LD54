@@ -46,7 +46,7 @@ func _ready():
 	self.world.init(Callable(self.messenger, "set_message"))
 	Music.play_track(Music.Track.World)
 	Sfx.enable_track(Sfx.Track.Boom)
-	self.load_map()
+	self.load_map(Settings.current_map.teams, Settings.current_map.regions)
 	self.resources.init_shapes(Callable(self, "pick_shape_to_sink"))
 	self.add_teams()
 	for r in self.world.regions.values():
@@ -328,12 +328,12 @@ func apply_action(action : Action):
 			print("Unknown action: ", action.action)
 	check_win_condition()
 
-func load_map():
+func load_map(map_teams, map_regions):
 	self.world.clear_island()
 	self.teams.clear()
-	for t in Settings.current_map.teams:
+	for t in map_teams:
 		self.teams.append(int(t)) ## json is parsed as floats
-	self.world.load_regions(Settings.current_map.regions)
+	self.world.load_regions(map_regions)
 
 func pick_shape_to_sink(shape_coords):
 	self.clear_mouse_state()
