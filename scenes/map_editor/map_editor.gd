@@ -189,7 +189,7 @@ func place_team(event):
 	var coords = self.world.global_pos_to_coords(event.position)
 	if event.is_action_pressed("left_click"):
 		if world.tiles.has(coords):
-			var region = world.tiles[coords].region
+			var region = world.tiles[coords].data.region
 			self.world.regions[region].set_team(self.current_team_place)
 			if self.highest_team_place < self.current_team_place:
 				self.highest_team_place = self.current_team_place
@@ -250,12 +250,11 @@ func _on_draw_btn_pressed():
 	self.set_state(State.Drawing)
 	
 func _on_regions_btn_pressed():
-	var tiles = self.world.tiles.keys().duplicate()
-	self.world.clear_island()
-	for t in tiles:
-		self.world.spawn_cell(t, 0)
+	# var tiles = self.world.tiles.keys().duplicate()
+	# self.world.clear_island()
+	# for t in tiles:
+	# 	self.world.spawn_cell(t, 0)
 	self.world.generate_regions()
-	self.world.apply_borders()
 	self.check_drawing_valid()
 
 

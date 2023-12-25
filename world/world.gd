@@ -290,7 +290,8 @@ func reset_regions_team():
 
 func load_regions(new_regions):
 	for region in new_regions:
-		self.spawn_region(region.id, region)
+		var region_id = int(region.id)
+		self.spawn_region(region_id, region)
 		if region.team != Constants.NULL_TEAM:
-			self.regions[region.id].generate_units()
-		self.regions[region.id].update()
+			self.regions[region_id].generate_units()
+		self.regions[region_id].update()

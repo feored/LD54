@@ -39,7 +39,8 @@ class TileWorldData:
 	
 	func save():
 		return {
-			"coords": self.coords,
+			"x": self.coords.x,
+			"y": self.coords.y,
 			"team": self.team,
 			"region": self.region,
 			"building": self.building,
@@ -47,11 +48,11 @@ class TileWorldData:
 		}
 
 	func from_save(data):
-		self.coords = Vector2i(data["coords"])
+		self.coords = Vector2i(data["x"], data["y"])
 		self.team = int(data["team"])
 		self.region = int(data["region"])
-		self.building = int(data["building"])
-		self.marked = bool(data["marked"])
+		self.building = int(data["building"]) if "building" in data else Constants.Building.None
+		self.marked = bool(data["marked"]) if "marked" in data else false
 
 
 var data = TileWorldData.new()

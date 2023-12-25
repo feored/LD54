@@ -175,6 +175,7 @@ const DEFAULT_BUILDINGS = [
 
 ## Scenarios
 const scenarios = [
+	{"title": "Savegame", "description": "A savegame.", "path": "savegame.json"},
 	{
 		"title": "Heart",
 		"description": "Neptune means to teach you that you must sink or be sunk.",

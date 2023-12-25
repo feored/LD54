@@ -40,10 +40,9 @@ var label = null
 
 func save():
 	var base = self.data.save()
-	var tile_dict = {}
+	base.tiles.clear()
 	for tile in self.tile_objs.values():
-		tile_dict[tile.data.coords] = tile.data.save()
-	base.tiles = tile_dict
+		base.tiles.append(tile.data.save())
 	return base
 
 
@@ -52,9 +51,8 @@ func init_from_save(saved_region):
 	self.data.team = saved_region.team
 	self.data.units = saved_region.units
 	self.data.is_used = saved_region.is_used if saved_region.has("is_used") else false
-	print(saved_region.tiles)
 	for tile in saved_region.tiles:
-		spawn_cell(tile, saved_region.tiles[tile]["team"], saved_region.tiles[tile])
+		spawn_cell(Vector2i(tile["x"], tile["y"]), tile["team"], tile)
 
 
 func _init(init_id):
@@ -121,6 +119,7 @@ func add_tile(tileObj, should_reparent = false):
 		tileObj.reparent(self)
 	else:
 		self.add_child(tileObj)
+	self.update()
 
 
 func remove_tile(coords, delete_child = false):
@@ -131,6 +130,7 @@ func remove_tile(coords, delete_child = false):
 		self.remove_child(self.tile_objs[coords])
 	self.data.tiles.erase(coords)
 	self.tile_objs.erase(coords)
+	self.update()
 	
 
 
