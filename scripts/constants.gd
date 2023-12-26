@@ -177,6 +177,6 @@ const DEFAULT_BUILDINGS = [
 
 ## Scenarios
 const scenarios = [
-	{"title": "Savegame", "description": "A savegame.", "path": "savegame.json"},
+	{"title": "Savegame", "description": "A savegame.", "path": "savegame2.json"},
 	{"title": "Flower", "description": "The Flower", "path": "flower.json"},
 ]
