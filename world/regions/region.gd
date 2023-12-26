@@ -88,6 +88,7 @@ func clear():
 func sacrifice():
 	var faith = self.data.units
 	self.data.units = 0
+	self.update()
 	return faith
 
 
@@ -122,7 +123,7 @@ func add_tile(tileObj, should_reparent = false):
 	self.update()
 
 
-func remove_tile(coords, delete_child = false):
+func remove_tile(coords, delete_child = false, should_update = true):
 	if coords not in self.data.tiles:
 		print("Error: tile %s not in region" % str(coords))
 		return
@@ -130,7 +131,8 @@ func remove_tile(coords, delete_child = false):
 		self.remove_child(self.tile_objs[coords])
 	self.data.tiles.erase(coords)
 	self.tile_objs.erase(coords)
-	self.update()
+	if should_update:
+		self.update()
 	
 
 

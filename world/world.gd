@@ -80,18 +80,18 @@ func generate_regions():
 	while tiles_shuffled.size() > 0:
 		var start = tiles_shuffled.pop_back()
 		spawn_region(current_region)
-		self.regions[self.tiles[start].data.region].remove_tile(start, true)
+		self.regions[self.tiles[start].data.region].remove_tile(start, true, false)
 		regions[current_region].add_tile(self.tiles[start])
 		for i in range(Constants.REGION_MAX_SIZE):
 			var random_in_region = regions[current_region].random_in_region()
 			var neighbor_dirs = Constants.NEIGHBORS.duplicate()
-			neighbor_dirs.shuffle();
+			neighbor_dirs.shuffle()
 			var expanded = false
 			for neighbor_dir in neighbor_dirs:
 				var neighbor = self.get_neighbor_cell(random_in_region, neighbor_dir)
 				if (tiles.has(neighbor) and tiles_shuffled.has(neighbor)):
 					tiles_shuffled.erase(neighbor)
-					self.regions[self.tiles[neighbor].data.region].remove_tile(neighbor, true)
+					self.regions[self.tiles[neighbor].data.region].remove_tile(neighbor, true, false)
 					regions[current_region].add_tile(self.tiles[neighbor])
 					expanded = true
 					break

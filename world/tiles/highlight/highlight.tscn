@@ -5,5 +5,6 @@
 
 [node name="Highlight" type="Sprite2D"]
 self_modulate = Color(1, 1, 1, 0.498039)
+z_index = 99
 texture = ExtResource("1_aw5h3")
 script = ExtResource("2_xsne6")

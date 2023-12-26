@@ -143,7 +143,6 @@ func buy_building(tile_coords, building):
 func sacrifice_region(region_id):
 	if self.world.regions[region_id].data.team == self.teams[self.player_team_index]:
 		self.resources.player().add_faith(self.world.regions[region_id].sacrifice())
-		self.world.region_update_label(region_id)
 	
 
 func lock_controls(val : bool):
@@ -358,7 +357,7 @@ func _on_region_info_tile_unselected(coords):
 
 
 func _on_region_info_tile_sacrificed(coords):
-	self.sacrifice_region(self.world.tiles[coords].region)
+	self.sacrifice_region(self.world.tiles[coords].data.region)
 	clear_mouse_state()
 
 
