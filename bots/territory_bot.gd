@@ -1,19 +1,19 @@
 extends BaseBot
-class_name DumbBot
+class_name TerritoryBot
 
 
 func play_turn(world):
-	var owned_regions = get_owned_regions(world)
+	var available_regions = self.get_available_regions(world)
 	for region in owned_regions:
 		for adjacent in world.adjacent_regions(region):
 			if (
-				world.regions[adjacent].data.team != Constants.NULL_TEAM
-				and world.regions[adjacent].data.team != self.team
+				world.regions[adjacent].team != Constants.NULL_TEAM
+				and world.regions[adjacent].team != self.team
 			):
 				return Action.new(self.team, Constants.Action.Move, region, adjacent)
 	for region in owned_regions:
 		for adjacent in world.adjacent_regions(region):
-			if world.regions[adjacent].data.team == Constants.NULL_TEAM:
+			if world.regions[adjacent].team == Constants.NULL_TEAM:
 				return Action.new(self.team, Constants.Action.Move, region, adjacent)
 	if not is_game_locked(world, owned_regions):
 		for region in owned_regions:
@@ -27,9 +27,9 @@ func play_turn(world):
 
 func can_use_region(world, region):
 	return (
-		(not world.regions[region].data.is_used)
-		and world.regions[region].data.team == team
-		and world.regions[region].data.units > 1
+		(not world.regions[region].is_used)
+		and world.regions[region].team == team
+		and world.regions[region].units > 1
 	)
 
 
@@ -37,7 +37,7 @@ func is_region_landlocked(world, region, neighbors = null):
 	var landlocked = true
 	var neighbors_local = neighbors if neighbors != null else world.adjacent_regions(region)
 	for neighbor in neighbors_local:
-		if world.regions[neighbor].data.team != self.team:
+		if world.regions[neighbor].team != self.team:
 			landlocked = false
 			break
 	return landlocked
@@ -59,3 +59,11 @@ func get_owned_regions(world):
 			owned_regions.append(region)
 	owned_regions.shuffle()
 	return owned_regions
+
+
+func evaluate_game_state(world):
+	var score = 0
+	var regions_owned = self.get_regions(world, self.team)
+	score += regions_owned.size() * 10
+	score += regions_owned.map(func(region): return region.units).reduce(func(a, b): return a + b)
+	return score

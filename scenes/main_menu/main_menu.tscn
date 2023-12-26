@@ -77,6 +77,10 @@ text = "Play Random Map"
 layout_mode = 2
 text = "Settings"
 
+[node name="MapEditorBtn" type="Button" parent="CanvasLayer/Control/CenterContainer/VBoxContainer/ButtonContainer/buttons"]
+layout_mode = 2
+text = "Map Editor"
+
 [node name="InstructionsBtn" type="Button" parent="CanvasLayer/Control/CenterContainer/VBoxContainer/ButtonContainer/buttons"]
 visible = false
 layout_mode = 2
@@ -115,5 +119,6 @@ layout_mode = 2
 [connection signal="pressed" from="CanvasLayer/Control/CenterContainer/VBoxContainer/ButtonContainer/buttons/PlayScenarioBtn" to="." method="_on_play_scenario_btn_pressed"]
 [connection signal="pressed" from="CanvasLayer/Control/CenterContainer/VBoxContainer/ButtonContainer/buttons/PlayBtn" to="." method="_on_play_btn_pressed"]
 [connection signal="pressed" from="CanvasLayer/Control/CenterContainer/VBoxContainer/ButtonContainer/buttons/SettingsBtn" to="." method="_on_settings_btn_pressed"]
+[connection signal="pressed" from="CanvasLayer/Control/CenterContainer/VBoxContainer/ButtonContainer/buttons/MapEditorBtn" to="." method="_on_map_editor_btn_pressed"]
 [connection signal="pressed" from="CanvasLayer/Control/CenterContainer/VBoxContainer/ButtonContainer/buttons/QuitButton" to="." method="_on_quit_button_pressed"]
 [connection signal="pressed" from="CanvasLayer/Control/CenterContainer/VBoxContainer/ReturnButton" to="." method="_on_return_button_pressed"]

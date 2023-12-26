@@ -41,11 +41,8 @@ func is_in_world(cell):
 	and cell.y > -Constants.WORLD_BOUNDS.y + Constants.WORLD_CENTER.y \
 	and cell.y < Constants.WORLD_BOUNDS.y + Constants.WORLD_CENTER.y
 
-func pick_random_tile(tiles_dict):
-	var keys = tiles_dict.keys()
-	return tiles_dict[keys[randi() % keys.size()]]
-
 func pick_tile_to_sink(tiles: Array, offset: int = 0):
+	assert( tiles.size() > 0, "Error: pick_tile_to_sink called with array of size 0.");
 	if tiles.size() == 1:
 		return tiles[0]
 	tiles.sort_custom(func(a,b): return distance_from_center(a) > distance_from_center(b))
@@ -77,3 +74,14 @@ func to_team_id(team_id):
 
 func distance(a, b):
 	return abs(a.x - b.x) + abs(a.y - b.y)
+
+func get_save_data(world, teams):
+	var saved_tiles = []
+	var saved_regions = []
+	for region in world.regions:
+		saved_regions.append(world.regions[region].save())
+	return Utils.to_map_object(saved_tiles, saved_regions, teams.duplicate())
+
+func timestamp():
+	var unix_timestamp = Time.get_unix_time_from_system()
+	return Time.get_time_string_from_system(false) + ":" + str(unix_timestamp).split(".")[1]

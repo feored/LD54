@@ -46,12 +46,14 @@ func _ready():
 	self.world.init(Callable(self.messenger, "set_message"))
 	Music.play_track(Music.Track.World)
 	Sfx.enable_track(Sfx.Track.Boom)
-	self.load_map()
+	self.load_map(Settings.current_map.teams, Settings.current_map.regions)
 	self.resources.init_shapes(Callable(self, "pick_shape_to_sink"))
 	self.add_teams()
+	for r in self.world.regions.values():
+		r.update()
 	
 	%Center.position = self.world.coords_to_pos(Constants.WORLD_CENTER)
-	self.start_game()
+	self.game_started = true
 	self.world.camera.move_instant(self.world.map_to_local(closest_player_tile_coords()))
 
 func add_teams():
@@ -60,13 +62,6 @@ func add_teams():
 		if team_id != Constants.PLAYER_ID:
 			self.bots[team_id] = DumbBot.new(team_id)
 	self.resources.add_teams(self.teams)
-
-func start_game():
-	self.game_started = true
-	for r in self.world.regions.values():
-		r.units = 0
-	for t in self.teams:
-		generate_units(t)
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):
@@ -105,7 +100,7 @@ func handle_sinking(event):
 			self.resources.buy_shape(self.sink_item.shape)
 			self.clear_mouse_state()
 		else:
-			messenger.set_message("You cannot sink what has already sunk, my lord.")
+			messenger.set_message("You cannot sink that which has already sunk, my lord.")
 			clear_mouse_state()
 
 func _unhandled_input(event):
@@ -124,11 +119,11 @@ func _unhandled_input(event):
 			clear_mouse_state()
 			var mouse_pos = get_local_mouse_position()
 			var tile_hovered = self.world.local_to_map(mouse_pos)
-			if world.tiles.has(tile_hovered) and world.tiles[tile_hovered].team == self.teams[self.player_team_index]:
+			if world.tiles.has(tile_hovered) and world.tiles[tile_hovered].data.team == self.teams[self.player_team_index]:
 				world.tiles[tile_hovered].set_selected(true)
 				self.region_info.position = world.tiles[tile_hovered].position#mouse_pos# + Vector2(self.region_info.MARGIN, self.region_info.MARGIN)
-				var can_sacrifice = self.world.regions[self.world.tiles[tile_hovered].region].units > 1
-				self.region_info.init(tile_hovered, Constants.DEFAULT_BUILDINGS, world.tiles[tile_hovered].building, self.resources.player().gold, can_sacrifice)
+				var can_sacrifice = self.world.regions[self.world.tiles[tile_hovered].data.region].data.units > 1
+				self.region_info.init(tile_hovered, Constants.DEFAULT_BUILDINGS, world.tiles[tile_hovered].data.building, self.resources.player().gold, can_sacrifice)
 				self.mouse_state = MouseState.Context
 		elif event is InputEventMouse:
 			if self.mouse_state == MouseState.Sink:
@@ -139,16 +134,15 @@ func _unhandled_input(event):
 					if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT and event.pressed:
 						if mouse_state != MouseState.Move:
 							clear_mouse_state()
-						handle_move(world.tiles[coords_clicked])
+						handle_move(self.world.get_tile_region(coords_clicked))
 
 func buy_building(tile_coords, building):
 	self.resources.player().add_gold(-Constants.BUILDINGS[building].cost)
 	self.world.tiles[tile_coords].set_building(building)
 
 func sacrifice_region(region_id):
-	if self.world.regions[region_id].team == self.teams[self.player_team_index]:
+	if self.world.regions[region_id].data.team == self.teams[self.player_team_index]:
 		self.resources.player().add_faith(self.world.regions[region_id].sacrifice())
-		self.world.region_update_label(region_id)
 	
 
 func lock_controls(val : bool):
@@ -160,7 +154,7 @@ func _on_turn_button_pressed():
 	check_coins(self.teams[self.player_team_index])
 	self.apply_buildings(self.teams[self.player_team_index])
 	self.resources.update()
-
+	generate_units(self.teams[self.player_team_index])
 	lock_controls(true)
 	clear_mouse_state()
 	self.world.clear_regions_used()
@@ -181,7 +175,7 @@ func closest_player_tile_coords():
 	var closest_tile_distance = 100000
 	var camera_tile = self.world.local_to_map(self.world.camera.position)
 	for region in self.world.regions:
-		if self.world.regions[region].team == self.teams[self.player_team_index]:
+		if self.world.regions[region].data.team == self.teams[self.player_team_index]:
 			var center_tile = self.world.regions[region].center_tile()
 			var distance = Utils.distance(center_tile, camera_tile)
 			if distance < closest_tile_distance:
@@ -219,11 +213,12 @@ func get_teams_alive():
 	
 
 func apply_buildings(team):
-	self.world.tiles.values().filter(func(t): return t.team == team and t.building != Constants.Building.None).map(func(t): apply_building(t.coords, t.building))
+	return
+	self.world.tiles.values().filter(func(t): return t.data.team == team and t.data.building != Constants.Building.None).map(func(t): apply_building(t.coords, t.building))
 
 
 func apply_building(tile_coords, building):
-	var team_id = self.world.tiles[tile_coords].team
+	var team_id = self.world.tiles[tile_coords].data.team
 	match building:
 		Constants.Building.Mine:
 			if team_id != Constants.NULL_TEAM:
@@ -235,11 +230,11 @@ func apply_building(tile_coords, building):
 
 func spawn_coin(tile_coords):
 	var coin = coinPrefab.instantiate()
-	coin.position = self.world.map_to_local(self.world.tiles[tile_coords].coords)
+	coin.position = self.world.map_to_local(self.world.tiles[tile_coords].data.coords)
 	self.world.add_child(coin)
 	
 func check_coins(team_id):
-	for region in self.world.regions.values().filter(func(r): return r.team == team_id and not r.is_used):
+	for region in self.world.regions.values().filter(func(r): return r.data.team == team_id and not r.data.is_used):
 		self.resources.resources[team_id].add_gold(Constants.GOLD_PER_TURN_PER_REGION)
 		spawn_coin(region.center_tile())
 
@@ -248,30 +243,32 @@ func clear_selected_region():
 		self.world.regions[selected_region].set_selected(false)
 		self.selected_region = null
 	
-func handle_move(new_clicked_tile):
+func handle_move(clicked_region):
 	mouse_state = MouseState.Move
 	if !(self.turn == self.player_team_index):
-		print("not player turn")
 		clear_mouse_state()
 		return
-	if self.world.regions[new_clicked_tile.region].is_used:
+	if clicked_region.data.is_used:
 		clear_mouse_state()
 		return
-	if selected_region != null and new_clicked_tile.region == selected_region:
+	if selected_region != null and clicked_region.data.id == selected_region:
 		clear_mouse_state()
 		return
 	if selected_region == null:
-		if new_clicked_tile.team == self.teams[self.player_team_index]:
-			self.selected_region = new_clicked_tile.region
+		if clicked_region.data.team == self.teams[self.player_team_index]:
+			self.selected_region = clicked_region.data.id
 			self.world.regions[selected_region].set_selected(true)
 			Sfx.play(Sfx.Track.Select)
 	else:
-		if new_clicked_tile.region not in self.world.adjacent_regions(self.selected_region):
+		if clicked_region.data.id not in self.world.adjacent_regions(self.selected_region):
 			clear_mouse_state()
 			return
 		else:
-			if self.world.regions[selected_region].units > 1:
-				var move = Action.new(self.teams[self.player_team_index], Constants.Action.Move, selected_region, new_clicked_tile.region )
+			self.world.regions[selected_region].update()
+			clicked_region.update()
+			print("Selected:", str(self.world.regions[selected_region].data), "Clicked:", str(clicked_region.data))
+			if self.world.regions[selected_region].data.units > 1:
+				var move = Action.new(self.teams[self.player_team_index], Constants.Action.Move, selected_region, clicked_region.data.id )
 				actions_history.append(move)
 				self.apply_action(move)
 			else:
@@ -281,10 +278,9 @@ func handle_move(new_clicked_tile):
 func play_global_turn():
 	self.turn += 1
 	while not self.turn == 0:
-		if global_turn > 0:
-			generate_units(self.teams[self.turn])
 		self.messenger.set_message(Constants.TEAM_NAMES[self.teams[self.turn]] + " is making their move.")
 		await play_turn(Utils.to_team_id(self.turn))
+		generate_units(self.teams[self.turn])
 		self.turn = (self.turn + 1) % (self.teams.size())
 	
 	self.global_turn += 1
@@ -292,8 +288,6 @@ func play_global_turn():
 	await self.world.sink_marked()
 	check_win_condition()
 	await self.world.mark_tiles(self.global_turn)
-	if global_turn > 0:
-		generate_units(self.teams[self.player_team_index])
 
 func play_turn(team_id):
 	if team_id in self.eliminated_teams:
@@ -312,13 +306,13 @@ func play_turn(team_id):
 
 func regions_left(team):
 	for region in world.regions:
-		if world.regions[region].team == team:
+		if world.regions[region].data.team == team:
 			return true
 	return false
 
 func generate_units(team):
 	for region in world.regions:
-		if world.regions[region].team == team:
+		if world.regions[region].data.team == team:
 			world.regions[region].generate_units()
 
 func apply_action(action : Action):
@@ -333,13 +327,12 @@ func apply_action(action : Action):
 			print("Unknown action: ", action.action)
 	check_win_condition()
 
-func load_map():
+func load_map(map_teams, map_regions):
 	self.world.clear_island()
 	self.teams.clear()
-	for t in Settings.current_map.teams:
+	for t in map_teams:
 		self.teams.append(int(t)) ## json is parsed as floats
-	self.world.load_tiles(Settings.current_map.tiles)
-	self.world.load_regions(Settings.current_map.regions)
+	self.world.load_regions(map_regions)
 
 func pick_shape_to_sink(shape_coords):
 	self.clear_mouse_state()
@@ -364,7 +357,7 @@ func _on_region_info_tile_unselected(coords):
 
 
 func _on_region_info_tile_sacrificed(coords):
-	self.sacrifice_region(self.world.tiles[coords].region)
+	self.sacrifice_region(self.world.tiles[coords].data.region)
 	clear_mouse_state()
 
 

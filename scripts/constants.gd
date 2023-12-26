@@ -173,45 +173,23 @@ const DEFAULT_BUILDINGS = [
 	Building.Fort,
 ]
 
-## Items
-enum Item { ShapeCost, ShapeReroll, ShapeCapacity }
-
-const ITEMS = {
-	Item.ShapeCost:
-	{
-		"id": Item.ShapeCost,
-		"cost": 5,
-		"texture": preload("res://assets/icons/down_arrow.png"),
-		"tooltip": "Reduces the cost of every shape in the fervor tab by 1.",
-	},
-	Item.ShapeReroll:
-	{
-		"id": Item.ShapeReroll,
-		"cost": 5,
-		"texture": preload("res://assets/icons/redo.png"),
-		"tooltip": "Reroll all the shapes in the fervor tab.",
-	},
-	Item.ShapeCapacity:
-	{
-		"id": Item.ShapeCapacity,
-		"cost": 5,
-		"texture": preload("res://assets/icons/plus.png"),
-		"tooltip": "Increases the number of available shapes by 1.",
-	},
-}
-
-const DEFAULT_ITEMS = [Item.ShapeCost, Item.ShapeReroll, Item.ShapeCapacity]
-
 ## Scenarios
 const scenarios = [
+	{"title": "Savegame", "description": "A savegame.", "path": "savegame.json"},
 	{
 		"title": "Heart",
 		"description": "Neptune means to teach you that you must sink or be sunk.",
 		"path": "heart.json"
 	},
+	{"title": "Rome", "description": "In rome, do as the romans do.", "path": "rome.json"},
 	{
-		"title": "Rome",
-		"description": "Neptune means to teach you that you must sink or be sunk.",
-		"path": "rome.json"
+		"title": "Six Kingdoms",
+		"description": "The six kingdoms are at war.",
+		"path": "six_kingdoms.json"
 	},
+	{
+		"title": "Bottleneck",
+		"description": "The only way to win is to control the bottleneck.",
+		"path": "bottleneck.json"
+	}
 ]

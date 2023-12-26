@@ -25,10 +25,11 @@ func _ready():
 	Sfx.disable_track(Sfx.Track.Boom)
 
 	self.world.init(Callable(self, "no_message"))
-	self.world.regionLabelsParent.hide()
+#	self.world.regionLabelsParent.hide()
 	self.world.camera.active = false
 	self.world.clear_island()
 	self.world.generate_island()
+	self.world.world_ready.connect(Callable(self, "sink"))
 
 	settingsContainer.disappear = func():
 		self.show_state(State.Main)
@@ -37,7 +38,6 @@ func _ready():
 		var scenario_obj = scenarioPrefab.instantiate()
 		scenario_obj.init(scenario)
 		allScenarios.add_child(scenario_obj)
-	await sink()
 
 func no_message(_message):
 	pass
@@ -64,10 +64,10 @@ func show_state(state):
 			self.logo.hide()
 
 
-func sink():
-	while self.world.tiles.size() > 0:
-		await self.world.sink_tiles([Utils.pick_tile_to_sink(self.world.tiles.keys())])
-		await Utils.wait(Constants.MENU_WAIT_TIME)
+func sink(_coords = Vector2.ZERO):
+	var tile_to_sink = Utils.pick_tile_to_sink(self.world.tiles.keys())
+	self.world.tiles[tile_to_sink].deleted.connect(Callable(self, "sink"))
+	self.world.sink_tiles([tile_to_sink])
 
 func _process(_delta):
 	pass
@@ -91,3 +91,7 @@ func _on_settings_btn_pressed():
 func _on_quit_button_pressed():
 	get_tree().quit()
 
+
+
+func _on_map_editor_btn_pressed():
+	await SceneTransition.change_scene(SceneTransition.SCENE_MAP_EDITOR)

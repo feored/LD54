@@ -272,6 +272,14 @@ size_flags_horizontal = 0
 theme_override_styles/focus = SubResource("StyleBoxEmpty_u2eju")
 text = "End Turn"
 
+[node name="TurnInfo" type="PanelContainer" parent="UI"]
+visible = false
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="VBoxContainer" type="VBoxContainer" parent="UI/TurnInfo"]
+layout_mode = 2
+
 [node name="RegionInfo" type="CanvasLayer" parent="."]
 layer = 50
 follow_viewport_enabled = true

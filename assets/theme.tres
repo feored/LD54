@@ -1,4 +1,4 @@
-[gd_resource type="Theme" load_steps=34 format=3 uid="uid://3t61g0061mea"]
+[gd_resource type="Theme" load_steps=39 format=3 uid="uid://3t61g0061mea"]
 
 [ext_resource type="Texture2D" uid="uid://uamowdvuuon1" path="res://assets/ui/button/browbtn_disabled.png" id="1_5pqjh"]
 [ext_resource type="FontFile" uid="uid://dnejlqr6sbicq" path="res://assets/monogram-extended.ttf" id="1_u5pme"]
@@ -99,6 +99,36 @@ texture_margin_bottom = 4.0
 axis_stretch_horizontal = 2
 axis_stretch_vertical = 2
 
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_e2w4d"]
+texture = ExtResource("1_5pqjh")
+texture_margin_left = 8.0
+texture_margin_top = 4.0
+texture_margin_right = 8.0
+texture_margin_bottom = 4.0
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_vemgv"]
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_td4ek"]
+texture = ExtResource("2_4g4df")
+texture_margin_left = 8.0
+texture_margin_top = 4.0
+texture_margin_right = 8.0
+texture_margin_bottom = 4.0
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_i6w0p"]
+texture = ExtResource("3_lr335")
+texture_margin_left = 8.0
+texture_margin_top = 4.0
+texture_margin_right = 8.0
+texture_margin_bottom = 4.0
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_7fuic"]
+texture = ExtResource("4_xu0cu")
+texture_margin_left = 8.0
+texture_margin_top = 4.0
+texture_margin_right = 8.0
+texture_margin_bottom = 4.0
+
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_vsy4g"]
 texture = ExtResource("13_2hkqj")
 texture_margin_left = 8.0
@@ -154,6 +184,11 @@ MarginContainer/constants/margin_bottom = 5
 MarginContainer/constants/margin_left = 5
 MarginContainer/constants/margin_right = 5
 MarginContainer/constants/margin_top = 5
+MenuButton/styles/disabled = SubResource("StyleBoxTexture_e2w4d")
+MenuButton/styles/focus = SubResource("StyleBoxEmpty_vemgv")
+MenuButton/styles/hover = SubResource("StyleBoxTexture_td4ek")
+MenuButton/styles/normal = SubResource("StyleBoxTexture_i6w0p")
+MenuButton/styles/pressed = SubResource("StyleBoxTexture_7fuic")
 PanelContainer/styles/panel = SubResource("StyleBoxTexture_vsy4g")
 TooltipLabel/colors/font_color = Color(0, 0, 0, 1)
 TooltipPanel/styles/panel = SubResource("StyleBoxTexture_bbm33")

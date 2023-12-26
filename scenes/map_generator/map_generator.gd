@@ -35,7 +35,7 @@ func add_teams():
 
 
 func gen_world():
-	self.world.clear_island()
+	await self.world.clear_island()
 	await self.world.generate_island(island_size, Settings.get_setting(Settings.Setting.InstantMap))
 	self.add_teams()
 
@@ -49,17 +49,8 @@ func _on_generate_btn_pressed():
 	await self.gen_world()
 
 
-func get_save_data():
-	var saved_tiles = {}
-	var saved_regions = {}
-	for coords in self.world.tiles:
-		saved_tiles[var_to_str(coords)] = self.world.tiles[coords].get_save_data()
-	for region in self.world.regions:
-		saved_regions[region] = self.world.regions[region].get_save_data()
-	return Utils.to_map_object(saved_tiles, saved_regions, teams.duplicate())
-
 func _on_play_btn_pressed():
-	Settings.current_map = get_save_data()
+	Settings.current_map = Utils.get_save_data(self.world, self.teams)
 	await SceneTransition.change_scene(SceneTransition.SCENE_MAIN_GAME)
 
 
