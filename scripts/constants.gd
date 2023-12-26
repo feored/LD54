@@ -44,6 +44,8 @@ const TEMPLE_FAITH_PER_TURN = 5
 const MINE_GOLD_PER_TURN = 2
 const CASTLE_UNITS_REMOVED = 10
 const BARRACKS_UNITS_PER_TURN = 3
+const DEFAULT_GOLD = 0
+const DEFAULT_FAITH = 0
 
 ## Null values
 const NULL_COORDS = Vector2i(-9999, -9999)
@@ -176,20 +178,5 @@ const DEFAULT_BUILDINGS = [
 ## Scenarios
 const scenarios = [
 	{"title": "Savegame", "description": "A savegame.", "path": "savegame.json"},
-	{
-		"title": "Heart",
-		"description": "Neptune means to teach you that you must sink or be sunk.",
-		"path": "heart.json"
-	},
-	{"title": "Rome", "description": "In rome, do as the romans do.", "path": "rome.json"},
-	{
-		"title": "Six Kingdoms",
-		"description": "The six kingdoms are at war.",
-		"path": "six_kingdoms.json"
-	},
-	{
-		"title": "Bottleneck",
-		"description": "The only way to win is to control the bottleneck.",
-		"path": "bottleneck.json"
-	}
+	{"title": "Flower", "description": "The Flower", "path": "flower.json"},
 ]
