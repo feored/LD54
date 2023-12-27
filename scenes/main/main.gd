@@ -60,7 +60,7 @@ func add_teams():
 	self.bots.clear()
 	for team_id in teams:
 		if team_id != Constants.PLAYER_ID:
-			self.bots[team_id] = DumbBot.new(team_id)
+			self.bots[team_id] = TerritoryBot.new(team_id)
 	self.resources.add_teams(self.teams)
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
@@ -265,7 +265,6 @@ func handle_move(clicked_region):
 		else:
 			self.world.regions[selected_region].update()
 			clicked_region.update()
-			print("Selected:", str(self.world.regions[selected_region].data), "Clicked:", str(clicked_region.data))
 			if self.world.regions[selected_region].data.units > 1:
 				var move = Action.new(self.teams[self.player_team_index], Constants.Action.Move, selected_region, clicked_region.data.id )
 				actions_history.append(move)

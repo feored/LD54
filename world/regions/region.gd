@@ -31,6 +31,15 @@ class RegionData:
 	
 	func _to_string():
 		return "Region %s, team %s, %s tiles, %s units" % [str(self.id), str(self.team), str(self.tiles.size()), str(self.units)]
+	
+	func clone():
+		var new_data = RegionData.new()
+		new_data.id = self.id
+		new_data.team = self.team
+		new_data.tiles = self.tiles.duplicate()
+		new_data.units = self.units
+		new_data.is_used = self.is_used
+		return new_data
 
 
 var data: RegionData = RegionData.new()
@@ -152,7 +161,6 @@ func set_units(init_units):
 	self.data.units = init_units
 	if self.data.units == 0:
 		self.set_team(Constants.NULL_TEAM)
-		print("hey ho teamo nullo")
 	self.update()
 
 

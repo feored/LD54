@@ -1,69 +1,61 @@
 extends BaseBot
 class_name TerritoryBot
 
-
-func play_turn(world):
-	var available_regions = self.get_available_regions(world)
-	for region in owned_regions:
-		for adjacent in world.adjacent_regions(region):
-			if (
-				world.regions[adjacent].team != Constants.NULL_TEAM
-				and world.regions[adjacent].team != self.team
-			):
-				return Action.new(self.team, Constants.Action.Move, region, adjacent)
-	for region in owned_regions:
-		for adjacent in world.adjacent_regions(region):
-			if world.regions[adjacent].team == Constants.NULL_TEAM:
-				return Action.new(self.team, Constants.Action.Move, region, adjacent)
-	if not is_game_locked(world, owned_regions):
-		for region in owned_regions:
-			var neighbors = world.adjacent_regions(region)
-			if is_region_landlocked(world, region, neighbors):
-				for neighbor in neighbors:
-					if not world.regions[neighbor].is_used:
-						return Action.new(self.team, Constants.Action.Move, region, neighbor)
-	return Action.new(self.team, Constants.Action.None)
-
-
-func can_use_region(world, region):
-	return (
-		(not world.regions[region].is_used)
-		and world.regions[region].team == team
-		and world.regions[region].units > 1
-	)
-
-
-func is_region_landlocked(world, region, neighbors = null):
-	var landlocked = true
-	var neighbors_local = neighbors if neighbors != null else world.adjacent_regions(region)
-	for neighbor in neighbors_local:
-		if world.regions[neighbor].team != self.team:
-			landlocked = false
-			break
-	return landlocked
-
-
-func is_game_locked(world, owned_regions):
-	var game_locked = true
-	for region in owned_regions:
-		if not is_region_landlocked(world, region):
-			game_locked = false
-			break
-	return game_locked
-
-
-func get_owned_regions(world):
-	var owned_regions = []
-	for region in world.regions.keys():
-		if can_use_region(world, region):
-			owned_regions.append(region)
-	owned_regions.shuffle()
-	return owned_regions
-
-
-func evaluate_game_state(world):
+func evaluate_state(world_state):
 	var score = 0
-	var regions_owned = self.get_regions(world, self.team)
+	var regions_owned = self.get_team_regions(world_state)
+	if regions_owned.size() == 0:
+		return score
 	score += regions_owned.size() * 10
+	score += regions_owned.map(func(region): return region.tiles.size() * 5).reduce(func(a, b): return a + b)
 	score += regions_owned.map(func(region): return region.units).reduce(func(a, b): return a + b)
 	return score
+
+func play_turn(world):
+	var world_sim = WorldState.new(world)
+	var usable_regions = self.get_usable_regions(world_sim)
+	var possible_moves = {}
+	var default_score = self.evaluate_state(world_sim)
+	#print("Usable regions", usable_regions)
+	for region in usable_regions:
+		var adjacent_regions = world.adjacent_regions(region.id)
+		#print("Adjacent regions", adjacent_regions)
+		for move in self.get_region_moves(region.id, adjacent_regions):
+			var clone_world = world_sim.clone()
+			clone_world.simulate(move)
+			possible_moves[move] = self.evaluate_state(clone_world)
+	#print("Calculated possible moves", possible_moves.size())
+	
+	var best_move = Action.new(self.team, Constants.Action.None)
+	var best_score = default_score
+	for move in possible_moves.keys():
+		#print("Move: ", move, " Score: ",possible_moves[move])
+		if possible_moves[move] > best_score:
+			print("New best move: ", move, " Score: ", possible_moves[move])
+			best_move = move
+			best_score = possible_moves[move]
+	print("Best move", best_move, best_score)
+	return best_move
+
+
+func get_region_moves(region, adjacent_regions):
+	print("Getting moves for region ", region)
+	var moves = []
+	for adjacent_region in adjacent_regions:
+		moves.append(Action.new(self.team, Constants.Action.Move, region, adjacent_region))
+	print("Moves for region ", region, ": ", moves)
+	return moves
+
+func get_team_regions(world_state):
+	var regions = []
+	for region in world_state.regions.values():
+		if region.team == self.team:
+			regions.append(region)
+	return regions
+
+func is_usable_region(region):
+	return region.units > 1 && !region.is_used && region.team == self.team
+
+func get_usable_regions(world_state):
+	return get_team_regions(world_state).filter(func(region): return is_usable_region(region))
+

@@ -20,3 +20,16 @@ func _init(
 	self.region_from = init_region_from
 	self.region_to = init_region_to
 	self.tiles = init_tiles
+
+
+func _to_string():
+	return (
+		"Action: "
+		+ Constants.TEAM_NAMES[self.team]
+		+ " "
+		+ Constants.Action.keys()[self.action]
+		+ " From: "
+		+ str(self.region_from)
+		+ " To: "
+		+ str(self.region_to)
+	)

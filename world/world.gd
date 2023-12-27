@@ -141,7 +141,6 @@ func region_new_id():
 	return self.regions.keys().max() + 1
 
 func recalculate_region(region: int):
-	print("recalculating region", region)
 	if not self.regions.has(region):
 		print("Error: invalid region trying to recalculate", region)
 		return
@@ -222,7 +221,7 @@ func sink_marked():
 	
 	
 
-func move_units(region_from : int, region_to: int, team: int, simulated = false):
+func move_units(region_from : int, region_to: int, team: int):
 	var is_player = team == 1
 	if not self.regions.has(region_from):
 		print("Error: invalid region trying to move", region_from)
@@ -234,7 +233,7 @@ func move_units(region_from : int, region_to: int, team: int, simulated = false)
 		print("Error: regions are not adjacent")
 
 	# success
-	if not is_player and not simulated:
+	if not is_player:
 		await self.camera.move_smoothed(self.coords_to_pos(self.regions[region_from].center_tile()), 5)
 
 	var moved_units = regions[region_from].data.units - 1 #max(1, regions[region_from].units/2)
@@ -246,7 +245,7 @@ func move_units(region_from : int, region_to: int, team: int, simulated = false)
 	else:
 		regions[region_to].attack(moved_units, team)
 			
-	if not is_player and not simulated:
+	if not is_player:
 		await Utils.wait(Settings.turn_time)
 
 func get_tile_region(coords):
