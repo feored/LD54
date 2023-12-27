@@ -154,14 +154,14 @@ func _on_turn_button_pressed():
 	check_coins(self.teams[self.player_team_index])
 	self.apply_buildings(self.teams[self.player_team_index])
 	self.resources.update()
-	generate_units(self.teams[self.player_team_index])
+	
 	lock_controls(true)
 	clear_mouse_state()
 	self.world.clear_regions_used()
 	Settings.input_locked = true
 
 	await play_global_turn()
-
+	generate_units(self.teams[self.player_team_index])
 	Settings.input_locked = false
 	lock_controls(false)
 
@@ -213,8 +213,7 @@ func get_teams_alive():
 	
 
 func apply_buildings(team):
-	return
-	self.world.tiles.values().filter(func(t): return t.data.team == team and t.data.building != Constants.Building.None).map(func(t): apply_building(t.coords, t.building))
+	self.world.tiles.values().filter(func(t): return t.data.team == team and t.data.building != Constants.Building.None).map(func(t): apply_building(t.data.coords, t.data.building))
 
 
 func apply_building(tile_coords, building):
@@ -279,8 +278,8 @@ func play_global_turn():
 	self.turn += 1
 	while not self.turn == 0:
 		self.messenger.set_message(Constants.TEAM_NAMES[self.teams[self.turn]] + " is making their move.")
-		await play_turn(Utils.to_team_id(self.turn))
 		generate_units(self.teams[self.turn])
+		await play_turn(Utils.to_team_id(self.turn))
 		self.turn = (self.turn + 1) % (self.teams.size())
 	
 	self.global_turn += 1

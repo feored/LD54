@@ -185,7 +185,7 @@ func get_contiguous_tilesets(tile_array: Array):
 func mark_tiles(global_turn):
 	# only sinking tiles for now
 	var n = self.tiles.size()
-	var tiles_to_mark = self.tiles.size()/2 #int(1 + n/(Utils.rng.randf_range(15.0, 30.0)))
+	var tiles_to_mark = int(1 + n/(Utils.rng.randf_range(15.0, 30.0)))
 	if (global_turn < Constants.SINK_GRACE_PERIOD):
 		tiles_to_mark = 0
 	var cur_cell = Utils.pick_tile_to_sink(self.tiles.keys())

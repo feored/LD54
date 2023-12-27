@@ -45,7 +45,8 @@ func pick_tile_to_sink(tiles: Array, offset: int = 0):
 	assert( tiles.size() > 0, "Error: pick_tile_to_sink called with array of size 0.");
 	if tiles.size() == 1:
 		return tiles[0]
-	tiles.sort_custom(func(a,b): return distance_from_center(a) > distance_from_center(b))
+	tiles.shuffle()
+	#tiles.sort_custom(func(a,b): return distance_from_center(a) > distance_from_center(b))
 	return tiles[min(tiles.size() - 1, 0 + offset)]
 
 func distance_from_center(coords):
