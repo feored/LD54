@@ -86,8 +86,8 @@ func clear():
 
 
 func sacrifice():
-	var faith = self.data.units
-	self.data.units = 0
+	var faith = self.data.units - 1
+	self.data.units = 1
 	self.update()
 	return faith
 
@@ -150,6 +150,9 @@ func generate_units():
 
 func set_units(init_units):
 	self.data.units = init_units
+	if self.data.units == 0:
+		self.set_team(Constants.NULL_TEAM)
+		print("hey ho teamo nullo")
 	self.update()
 
 
@@ -159,15 +162,15 @@ func attack(num_attackers, team):
 		if tile.data.building == Constants.Building.Fort:
 			total_attackers -= Constants.CASTLE_UNITS_REMOVED
 	if total_attackers > self.data.units:
-		self.data.units = total_attackers - self.data.units
+		self.set_units(total_attackers - self.data.units)
 		self.set_team(team)
 	else:
-		self.data.units -= total_attackers
+		self.set_units(self.data.units - total_attackers)
 	self.update()
 
 
 func reinforce(num_reinforcements):
-	self.data.units += num_reinforcements
+	self.set_units(self.data.units + num_reinforcements)
 	self.update()
 
 
