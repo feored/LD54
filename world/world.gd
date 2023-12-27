@@ -268,6 +268,9 @@ func global_pos_to_coords(pos):
 func coords_to_pos(coords):
 	return self.map_to_local(coords)
 
+func hex_distance(a, b):
+	return Vector2(map_to_local(a)).distance_squared_to(Vector2(map_to_local(b)))
+
 func adjacent_regions(region_id : int):
 	var adjacent = []
 	var all = self.tiles

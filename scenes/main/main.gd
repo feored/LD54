@@ -43,6 +43,7 @@ var spectating : bool = false
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	Settings.input_locked = false
+	Settings.skipping = false
 	self.world.init(Callable(self.messenger, "set_message"))
 	Music.play_track(Music.Track.World)
 	Sfx.enable_track(Sfx.Track.Boom)
@@ -290,13 +291,16 @@ func play_global_turn():
 func play_turn(team_id):
 	if team_id in self.eliminated_teams:
 		return
-	while true:
-		var bot_action = self.bots[team_id].play_turn(self.world)
-		if bot_action.action == Constants.Action.None:
-			break
-		await apply_action(bot_action)
-		self.actions_history.append(bot_action)
-		await Utils.wait(Settings.turn_time)
+	var playing = true
+	while playing:
+		var bot_actions = self.bots[team_id].play_turn(self.world)
+		for bot_action in bot_actions:
+			if bot_action.action == Constants.Action.None:
+				playing = false
+				break
+			await apply_action(bot_action)
+			self.actions_history.append(bot_action)
+			await Utils.wait(Settings.turn_time)
 	check_coins(self.teams[self.turn])
 	self.apply_buildings(self.teams[self.turn])
 	self.world.clear_regions_used()

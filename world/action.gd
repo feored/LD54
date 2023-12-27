@@ -22,6 +22,10 @@ func _init(
 	self.tiles = init_tiles
 
 
+func clone():
+	return Action.new(self.team, self.action, self.region_from, self.region_to, self.tiles)
+
+
 func _to_string():
 	return (
 		"Action: "

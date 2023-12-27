@@ -16,6 +16,7 @@ class RegionData:
 	var id: int
 	var team: int
 	var tiles: Array
+	# var n_tiles: int
 	var units: int
 	var is_used: bool
 
@@ -24,6 +25,7 @@ class RegionData:
 		self.team = Constants.NULL_TEAM
 		self.tiles = []
 		self.units = 0
+		# self.n_tiles = 0
 		self.is_used = false
 
 	func save():
@@ -37,6 +39,7 @@ class RegionData:
 		new_data.id = self.id
 		new_data.team = self.team
 		new_data.tiles = self.tiles.duplicate()
+		# new_data.n_tiles = self.n_tiles
 		new_data.units = self.units
 		new_data.is_used = self.is_used
 		return new_data
@@ -124,6 +127,7 @@ func add_tile(tileObj, should_reparent = false):
 	tileObj.deleted.connect(delete_tile)
 	var coords = tileObj.data.coords
 	self.data.tiles.append(coords)
+	# self.data.n_tiles+=1
 	self.tile_objs[coords] = tileObj
 	if should_reparent:
 		tileObj.reparent(self)
@@ -140,6 +144,7 @@ func remove_tile(coords, delete_child = false, should_update = true):
 		self.remove_child(self.tile_objs[coords])
 	self.data.tiles.erase(coords)
 	self.tile_objs.erase(coords)
+	# self.data.n_tiles-=1
 	if should_update:
 		self.update()
 	
