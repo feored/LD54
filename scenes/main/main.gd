@@ -276,6 +276,8 @@ func handle_move(clicked_region):
 
 func play_global_turn():
 	self.turn += 1
+	world.path_lengths.clear()
+	world.path_lengths = world.all_path_lengths()
 	while not self.turn == 0:
 		self.messenger.set_message(Constants.TEAM_NAMES[self.teams[self.turn]] + " is making their move.")
 		generate_units(self.teams[self.turn])

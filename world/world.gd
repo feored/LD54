@@ -6,6 +6,8 @@ var messenger = null
 
 var tiles = {}
 var regions = {}
+var adjacencies = {}
+var path_lengths = {}
 
 func init(messengerCallable):
 	self.messenger = messengerCallable
@@ -22,12 +24,18 @@ func spawn_region(id: int, from_save: Dictionary = {}):
 	var region = Region.new(id)
 	region.coords_to_pos = Callable(self, "coords_to_pos")
 	region.tile_deleted.connect(Callable(self, "on_tile_deleted"))
-	region.region_deleted.connect(func(id): self.regions.erase(id))
+	region.region_deleted.connect(Callable(self, "on_region_deleted"))
 	region.tile_added.connect(func(tile): self.tiles[tile.data.coords] = tile)
 	if from_save.size() > 0:
 		region.init_from_save(from_save)
 	self.add_child(region)
 	self.regions[id] = region
+
+func on_region_deleted(id: int):
+	self.regions.erase(id)
+	for r in self.adjacencies:
+		if self.adjacencies[r].has(id):
+			self.adjacencies[r].erase(id)
 
 func on_tile_deleted(coords):
 	self.tiles.erase(coords)
@@ -150,6 +158,8 @@ func recalculate_region(region: int):
 	if tilesets.size() == 1:
 		self.regions[region].update()
 		return ## all contiguous
+	
+	var new_regions = []
 	var region_data = self.regions[region].data
 	self.regions[region].clear()
 	self.regions[region].delete()
@@ -162,6 +172,9 @@ func recalculate_region(region: int):
 		self.regions[new_region].set_used(region_data.is_used)
 		self.regions[new_region].set_units(region_data.units/len(tilesets))
 		self.regions[new_region].update()
+		new_regions.append(new_region)
+	for r in new_regions:
+		self.adjacencies[r] = self.adjacent_regions(r)
 
 func get_contiguous_tilesets(tile_array: Array):
 	var tilesets = []
@@ -297,3 +310,31 @@ func load_regions(new_regions):
 		if region.team != Constants.NULL_TEAM:
 			self.regions[region_id].generate_units()
 		self.regions[region_id].update()
+	for r in self.regions:
+		self.adjacencies[r] = self.adjacent_regions(r)
+
+
+func shortest_path_length(from_id, to_id):
+	var length = 0
+	var visited = [from_id]
+	for r in visited:
+		if to_id in adjacencies[r]:
+			return length
+		for neighbor in adjacencies[r]:
+			if not visited.has(neighbor):
+				visited.append(neighbor)
+				length += 1
+				if neighbor == to_id:
+					return length
+
+func all_path_lengths():
+	var lengths = {}
+	for r in self.regions:
+		lengths[r] = {}
+		for r2 in self.regions:
+			if r != r2:
+				if r2 in lengths and r in lengths[r2]:
+					lengths[r][r2] = lengths[r2][r]
+				else:
+					lengths[r][r2] = self.shortest_path_length(r, r2)
+	return lengths

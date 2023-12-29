@@ -4,6 +4,7 @@ class_name WorldState
 var regions: Dictionary = {}
 var resources: Dictionary = {}
 var adjacent_regions: Dictionary = {}
+var team_regions = {}
 
 
 func clone():
@@ -11,6 +12,7 @@ func clone():
 	for r in self.regions.values():
 		cloned_world.regions[r.id] = r.clone()
 	## TODO CLONE RESOURCES
+	cloned_world.team_regions = self.team_regions.duplicate()
 	return cloned_world
 
 
@@ -19,7 +21,7 @@ func _init(world = null):
 		return
 	for region in world.regions.values():
 		self.regions[region.data.id] = region.data.clone()
-		self.adjacent_regions[region.data.id] = world.adjacent_regions(region.data.id)
+		self.team_regions[region.data.team] = 1 + self.team_regions.get(region.data.team, 0)
 
 
 func add_cell(cell):
@@ -50,6 +52,12 @@ func move_units(region_from, region_to, team):
 	else:
 		if self.regions[region_to].units > moved_units:
 			self.regions[region_to].units -= moved_units
+		elif self.regions[region_to].units == moved_units:
+			self.team_regions[self.regions[region_to].team] -= 1
+			self.regions[region_to].units = 0
+			self.regions[region_to].team = Constants.NULL_TEAM
 		else:
+			self.team_regions[self.regions[region_to].team] -= 1
+			self.team_regions[self.regions[region_from].team] += 1
 			self.regions[region_to].units = moved_units - self.regions[region_to].units
 			self.regions[region_to].team = team
