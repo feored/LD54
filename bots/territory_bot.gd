@@ -6,34 +6,61 @@ func evaluate_state(world_state, world):
 	var regions_owned = self.get_team_regions(world_state)
 	if regions_owned.size() == 0:
 		return -999
-	score += regions_owned.size() * 100
-	score += regions_owned.map(func(region): return region.tiles.size() * 10).reduce(func(a, b): return a + b, 0)
-	score += regions_owned.map(func(region): return region.units).reduce(func(a, b): return a + b, 0)
-	score -= regions_owned.filter(func(region): return is_region_landlocked(world, region.id))\
-							.map(func(region): return region.units)\
-							.reduce(func(a, b): return a + b, 0) * 10
-	# var regions_not_owned = world_state.regions.values().filter(func(region): return region.team != self.team && region.team != Constants.NULL_TEAM)
-	# var regions_not_owned_pos = regions_not_owned.map(func(region): return world.coords_to_pos(world.tiles[world.regions[region.id].data.tiles[0]].data.coords))
-	# for r in regions_owned:
-	# 	var pos = world.coords_to_pos(world.tiles[world.regions[r.id].data.tiles[0]].data.coords)
-	# 	regions_not_owned_pos.sort_custom(func(a, b): return world.hex_distance(pos, a) - world.hex_distance(pos, b))
-	# 	var closest = regions_not_owned_pos[0]
-	# 	var dist = world.hex_distance(pos, closest) * r.units / 1000000.0
-	# 	print("Closest ", closest, " to ", r, " is ", dist)
-	#	score -= dist
+	var bonus_regions_owned = regions_owned.size() * 10
+	#print("Bonus regions owned: ", bonus_regions_owned)
+	score += bonus_regions_owned
+	var bonus_tiles_owned = regions_owned.map(func(region): return region.tiles.size() * 5).reduce(func(a, b): return a + b, 0)
+	#print("Bonus tiles owned: ", bonus_tiles_owned)
+	score += bonus_tiles_owned
+	var bonus_units_owned = regions_owned.map(func(region): return region.units).reduce(func(a, b): return a + b, 0)
+	#print("Bonus units owned: ", bonus_units_owned)
+	score += bonus_units_owned
+	# score -= regions_owned.filter(func(region): return is_region_landlocked(world, region.id))\
+	# 						.map(func(region): return region.units)\
+	# 						.reduce(func(a, b): return a + b, 0) * 5
+	# var bonus_adjacent = regions_owned.map(func(region): return region.units * (world.adjacent_regions(region.id)\
+	# .filter(func(r): return world_state.regions[r].team != self.team).size()))\
+	# .reduce(func(a, b): return a + b, 0) *0.5
+	# print("Minus adjacent: ", bonus_adjacent)
+	# score += bonus_adjacent
+
+	var regions_not_owned = world_state.regions.values().filter(func(region): return region.team != self.team && region.team != Constants.NULL_TEAM)
+	var regions_not_owned_pos = regions_not_owned.map(func(region): return world.coords_to_pos(world.tiles[world.regions[region.id].data.tiles[0]].data.coords))
+	var total_dist = 0
+	for r in regions_owned:
+		var pos = world.coords_to_pos(world.tiles[world.regions[r.id].data.tiles[0]].data.coords)
+		regions_not_owned_pos.sort_custom(func(a, b): return world.hex_distance(pos, a) < world.hex_distance(pos, b))
+		var closest = regions_not_owned_pos[0]
+		var dist = world.hex_distance(pos, closest) * r.units / 1000000.0
+		#print("Closest ", closest, " to ", r, " is ", dist)
+		total_dist += dist
+	var avg_dist = total_dist / regions_owned.size()
+	#print("Average distance: ", avg_dist)
+	score -= avg_dist
+	
 	return score
 		
 
 func prune_tree(moves):
-	var keep_n_moves = min(25, moves.size())
+	var keep_n_moves = min(15, moves.size())
 	var pruned_moves = {}
 	var sorted_moves = moves.values().duplicate(true)
 	sorted_moves.sort()
+	var picked_moves = sorted_moves.slice(0, keep_n_moves)
+	for i in range(keep_n_moves):
+		picked_moves.append(sorted_moves.pop_at(Utils.rng.randi() % sorted_moves.size()))
 	for m in moves:
-		if moves[m] >= sorted_moves[keep_n_moves-1]:
+		if moves[m] in picked_moves:
 			pruned_moves[m] = moves[m]
-		if pruned_moves.size() == keep_n_moves:
-			break
+			picked_moves.erase(moves[m])
+
+	# for m in moves:
+	# 	if moves[m] >= sorted_moves[keep_n_moves-1]:
+	# 		pruned_moves[m] = moves[m]
+	# 	if pruned_moves.size() == keep_n_moves:
+	# 		break
+	print("Pruned moves: ", pruned_moves.size())
+
 	return pruned_moves
 
 func sim_turn(sim_moves, world, world_sim):
@@ -44,9 +71,8 @@ func sim_turn(sim_moves, world, world_sim):
 			world_state.simulate(move)
 		var usable_regions = self.get_usable_regions(world_state)
 		for region in usable_regions:
-			var adjacent_regions = world.adjacent_regions(region.id)
-			var test_adjacent_regions_for_realsies = adjacent_regions.filter(func(r): return !world_sim.regions[r].is_used)
-			for move in self.get_region_moves(region.id, test_adjacent_regions_for_realsies):
+			var adjacent_regions = world.adjacent_regions(region.id).filter(func(r): return !world_state.regions[r].is_used)
+			for move in self.get_region_moves(region.id, adjacent_regions):
 				var clone_world = world_state.clone()
 				clone_world.simulate(move)
 				var all_moves = sim_move.duplicate(true)
@@ -61,7 +87,7 @@ func play_turn(world):
 	var world_sim = WorldState.new(world)
 	var default_score = self.evaluate_state(world_sim, world)
 	var possible_moves = {[]: default_score}
-	for i in range(15):
+	for i in range(10):
 		#print("Calculating possible moves (", i, ") , size: ", possible_moves.size())
 		var new_moves = self.prune_tree(self.sim_turn(possible_moves, world, world_sim))
 		if new_moves.keys() == possible_moves.keys():

@@ -3,6 +3,7 @@ class_name WorldState
 
 var regions: Dictionary = {}
 var resources: Dictionary = {}
+var adjacent_regions: Dictionary = {}
 
 
 func clone():
@@ -18,6 +19,7 @@ func _init(world = null):
 		return
 	for region in world.regions.values():
 		self.regions[region.data.id] = region.data.clone()
+		self.adjacent_regions[region.data.id] = world.adjacent_regions(region.data.id)
 
 
 func add_cell(cell):
