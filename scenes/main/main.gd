@@ -316,6 +316,9 @@ func regions_left(team):
 
 func generate_units(team):
 	for region in world.regions:
+		if !is_instance_valid(world.regions[region]):
+			Utils.log("Region %s is not valid" % region)
+			break
 		if world.regions[region].data.team == team:
 			world.regions[region].generate_units()
 
@@ -328,7 +331,7 @@ func apply_action(action : Action):
 		Constants.Action.None:
 			pass
 		_:
-			print("Unknown action: ", action.action)
+			Utils.log("Unknown action: %s" % action.action)
 	check_win_condition()
 
 func load_map(map_teams, map_regions):

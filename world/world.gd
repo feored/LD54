@@ -32,10 +32,19 @@ func spawn_region(id: int, from_save: Dictionary = {}):
 	self.regions[id] = region
 
 func on_region_deleted(id: int):
-	self.regions.erase(id)
+	# Utils.log("before")
+	# Utils.log(self.regions.keys())
+	# Utils.log(self.regions.keys().size())
+	var _deleted = self.regions.erase(id)
+	# print("region deleted: ", _deleted)
+	# Utils.log("after")
+	# Utils.log(self.regions.keys())
+	# Utils.log(self.regions.keys().size())
+	self.adjacencies.erase(id)
 	for r in self.adjacencies:
 		if self.adjacencies[r].has(id):
 			self.adjacencies[r].erase(id)
+			
 
 func on_tile_deleted(coords):
 	self.tiles.erase(coords)
@@ -150,8 +159,9 @@ func region_new_id():
 
 func recalculate_region(region: int):
 	if not self.regions.has(region):
-		print("Error: invalid region trying to recalculate", region)
+		Utils.log("Error: invalid region trying to recalculate %s" % region)
 		return
+	Utils.log("recalculating region %s" % region)
 	var region_tiles = self.regions[region].tile_objs.values().map(func(x): return x.data)
 	var region_tile_coords = region_tiles.map(func(x): return x.coords)
 	var tilesets = get_contiguous_tilesets(region_tile_coords)
@@ -163,6 +173,7 @@ func recalculate_region(region: int):
 	var region_data = self.regions[region].data
 	self.regions[region].clear()
 	self.regions[region].delete()
+	on_region_deleted(region)
 	for tileset in tilesets:
 		var new_region = region_new_id()
 		spawn_region(new_region)
@@ -173,7 +184,13 @@ func recalculate_region(region: int):
 		self.regions[new_region].set_units(region_data.units/len(tilesets))
 		self.regions[new_region].update()
 		new_regions.append(new_region)
+	## recalc adjacencies
+	for r in self.adjacencies:
+		if region in self.adjacencies[r]:
+			## remove old region from all other regions adjacencies
+			self.adjacencies[r].erase(region)
 	for r in new_regions:
+		## calc new regions adjacencies
 		self.adjacencies[r] = self.adjacent_regions(r)
 
 func get_contiguous_tilesets(tile_array: Array):
@@ -237,13 +254,13 @@ func sink_marked():
 func move_units(region_from : int, region_to: int, team: int):
 	var is_player = team == 1
 	if not self.regions.has(region_from):
-		print("Error: invalid region trying to move", region_from)
+		Utils.log("Error: invalid region trying to move %s" % region_from)
 	if not self.regions.has(region_to):
-		print("Error: invalid region trying to move to", region_to)
+		Utils.log("Error: invalid region trying to move to %s" % region_to)
 	if self.regions[region_from].data.units <= 1:
-		print("Error: not enough units to move:", regions[region_from].units)
+		Utils.log("Error: not enough units to move: %s" % regions[region_from].units)
 	if not region_to in self.adjacent_regions(region_from):
-		print("Error: regions are not adjacent")
+		Utils.log("Error: regions are not adjacent")
 
 	# success
 	if not is_player:
@@ -326,9 +343,15 @@ func shortest_path_length(from_id, to_id):
 				length += 1
 				if neighbor == to_id:
 					return length
+	Utils.log("Error: no path found between %s and %s" % [from_id, to_id])
+	Utils.log("Adjacencies for region ", adjacencies[from_id])
 
 func all_path_lengths():
 	var lengths = {}
+	# Utils.log("all path lengths")
+	# Utils.log(self.regions.keys())
+	# Utils.log(self.regions.keys().size())
+	# Utils.log("all path lengths")
 	for r in self.regions:
 		lengths[r] = {}
 		for r2 in self.regions:
@@ -337,4 +360,5 @@ func all_path_lengths():
 					lengths[r][r2] = lengths[r2][r]
 				else:
 					lengths[r][r2] = self.shortest_path_length(r, r2)
+	Utils.log(lengths)
 	return lengths

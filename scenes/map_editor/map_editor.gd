@@ -160,7 +160,7 @@ func place_region(event):
 		self.world.recalculate_region(old_region)
 		self.check_drawing_valid()
 		for r in self.world.regions.values():
-			print("Region " + str(r.data.id) + " has " + str(r.data.tiles.size()) + " tiles")
+			Utils.log("Region " + str(r.data.id) + " has " + str(r.data.tiles.size()) + " tiles")
 
 func draw(event):
 	var coords = self.world.global_pos_to_coords(event.position)

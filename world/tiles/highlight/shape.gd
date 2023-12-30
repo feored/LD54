@@ -25,7 +25,7 @@ func init_with_coords(coords: Array):
 		self.add_child(new_tile)
 		new_tile.position = Utils.to_global(Utils.map_to_local(coord)) - HALF_TILE
 		self.shape[coord] = new_tile
-		if Settings.debug_position:
+		if Constants.DEBUG_POSITION:
 			var label = Label.new()
 			label.text = str(coord)
 			label.position = -HALF_TILE
@@ -49,7 +49,7 @@ func init():
 		var new_tile = tile_prefab.instantiate()
 		self.add_child(new_tile)
 		new_tile.position = Utils.to_global(Utils.map_to_local(random_tile)) - HALF_TILE
-		if Settings.debug_position:
+		if Constants.DEBUG_POSITION:
 			var label = Label.new()
 			label.text = str(random_tile)
 			label.position = -HALF_TILE

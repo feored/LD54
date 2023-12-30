@@ -54,6 +54,10 @@ const NULL_REGION = -9999
 const NULL_TEAM = 0
 const NULL_BUILDING = -9999
 
+## Debug utilities
+const DEBUG_POSITION = false
+const DEBUG_REGION = false
+
 ## Game enums
 enum GameMode { Play, MapEditor, Scenario }
 enum Action { None, Move, Sacrifice }
@@ -180,5 +184,6 @@ const scenarios = [
 	{"title": "Confrontation", "description": "One on one.", "path": "confrontation.json"},
 	{"title": "Flower", "description": "The Flower", "path": "flower.json"},
 	{"title": "The Blob", "description": "All paths lead into the blob.", "path": "blob.json"},
-	{"title": "The Wheel", "description": "wheel", "path": "wheel.json"}
+	{"title": "The Wheel", "description": "wheel", "path": "wheel.json"},
+	{"title": "Rings", "description": "Ring around the rosie", "path": "rings.json"}
 ]
