@@ -61,7 +61,7 @@ func add_teams():
 	self.bots.clear()
 	for team_id in teams:
 		if team_id != Constants.PLAYER_ID:
-			self.bots[team_id] = TerritoryBot.new(team_id)
+			self.bots[team_id] = TerritoryBot.new(team_id, Personalities.AGGRESSIVE_PERSONALITY)
 	self.resources.add_teams(self.teams)
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.

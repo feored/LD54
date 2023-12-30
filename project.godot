@@ -32,6 +32,7 @@ Settings="*res://scripts/settings.gd"
 SceneTransition="*res://scenes/scene_transition.tscn"
 Music="*res://scenes/music/music.tscn"
 Sfx="*res://scenes/music/sfx.gd"
+Personalities="*res://bots/personalities.gd"
 
 [display]
 
