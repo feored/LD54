@@ -2,7 +2,9 @@ extends TileMap
 
 signal world_ready
 var messenger = null
+@onready var regions_parent = $Regions
 @onready var camera = $"%MainCamera"
+@onready var animation_player = $AnimationPlayer
 
 var tiles = {}
 var regions = {}
@@ -28,7 +30,7 @@ func spawn_region(id: int, from_save: Dictionary = {}):
 	region.tile_added.connect(func(tile): self.tiles[tile.data.coords] = tile)
 	if from_save.size() > 0:
 		region.init_from_save(from_save)
-	self.add_child(region)
+	self.regions_parent.add_child(region)
 	self.regions[id] = region
 
 func on_region_deleted(id: int):

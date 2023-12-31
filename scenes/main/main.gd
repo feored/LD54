@@ -50,10 +50,7 @@ func _ready():
 	self.load_map(Settings.current_map.teams, Settings.current_map.regions)
 	self.resources.init_shapes(Callable(self, "pick_shape_to_sink"))
 	self.add_teams()
-	for r in self.world.regions.values():
-		r.update()
 	
-	%Center.position = self.world.coords_to_pos(Constants.WORLD_CENTER)
 	self.game_started = true
 	self.world.camera.move_instant(self.world.map_to_local(closest_player_tile_coords()))
 

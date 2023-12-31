@@ -1,9 +1,81 @@
-[gd_scene load_steps=5 format=3 uid="uid://b8opucxucl032"]
+[gd_scene load_steps=10 format=3 uid="uid://b8opucxucl032"]
 
 [ext_resource type="TileSet" uid="uid://dswtp6vpo8tyt" path="res://world/tiles/tileset.tres" id="1_tacgr"]
 [ext_resource type="Script" path="res://world/camera/Camera2D.gd" id="2_cguu5"]
 [ext_resource type="Script" path="res://world/world.gd" id="2_priir"]
 [ext_resource type="Script" path="res://world/clouds/CloudGenerator.gd" id="3_55hig"]
+
+[sub_resource type="Animation" id="Animation_738tj"]
+resource_name = "float_right"
+length = 0.2
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Regions:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.2),
+"transitions": PackedFloat32Array(1, -9.18957),
+"update": 0,
+"values": [Vector2(0, 0), Vector2(1000, 0)]
+}
+
+[sub_resource type="Animation" id="Animation_dj1xn"]
+resource_name = "float_left"
+length = 0.2
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Regions:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.2),
+"transitions": PackedFloat32Array(1, -9.18958),
+"update": 0,
+"values": [Vector2(0, 0), Vector2(-1000, 0)]
+}
+
+[sub_resource type="Animation" id="Animation_o4rvj"]
+resource_name = "float_from_left"
+length = 0.2
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Regions:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(-0.4, 0.2),
+"transitions": PackedFloat32Array(2.37841, -8.87653),
+"update": 0,
+"values": [Vector2(-1000, 0), Vector2(0, 0)]
+}
+
+[sub_resource type="Animation" id="Animation_mh3e2"]
+resource_name = "float_from_right"
+length = 0.2
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Regions:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.2),
+"transitions": PackedFloat32Array(1, -9.51363),
+"update": 0,
+"values": [Vector2(1000, 0), Vector2(0, 0)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_rslaw"]
+_data = {
+"float_from_left": SubResource("Animation_o4rvj"),
+"float_from_right": SubResource("Animation_mh3e2"),
+"float_left": SubResource("Animation_dj1xn"),
+"float_right": SubResource("Animation_738tj")
+}
 
 [node name="World" type="TileMap"]
 tile_set = ExtResource("1_tacgr")
@@ -55,9 +127,12 @@ drag_right_margin = 0.9
 drag_bottom_margin = 0.9
 script = ExtResource("2_cguu5")
 
-[node name="RegionLabels" type="CanvasLayer" parent="."]
-unique_name_in_owner = true
-follow_viewport_enabled = true
-
 [node name="CloudGenerator" type="Node2D" parent="."]
 script = ExtResource("3_55hig")
+
+[node name="Regions" type="Node2D" parent="."]
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+libraries = {
+"": SubResource("AnimationLibrary_rslaw")
+}

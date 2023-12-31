@@ -77,7 +77,8 @@ func _on_play_btn_pressed():
 
 
 func _on_play_scenario_btn_pressed():
-	self.show_state(State.Scenario)
+	#self.show_state(State.Scenario)
+	await SceneTransition.change_scene(SceneTransition.SCENE_CAMPAIGN)
 
 
 func _on_return_button_pressed():

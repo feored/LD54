@@ -1,7 +1,6 @@
 extends Node2D
 
 @onready var world = $"World"
-@onready var center = $"%Center"
 @onready var cursor = %MouseCursor
 @onready var drawing_UI = %"DrawingUI"
 @onready var teams_UI = %"TeamsUI"
@@ -56,7 +55,6 @@ var selected_building = Constants.Building.None
 func _ready():
 	Settings.input_locked = false
 	self.world.init(Callable())
-	self.center.position = self.world.coords_to_pos(Constants.WORLD_CENTER)
 	self.init_building_button()
 	#self.world.regionLabelsParent.hide()
 	self.set_stage(EditStage.Drawing)

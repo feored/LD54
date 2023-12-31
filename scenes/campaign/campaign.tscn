@@ -1,0 +1,131 @@
+[gd_scene load_steps=7 format=3 uid="uid://c5l0lewjbqm47"]
+
+[ext_resource type="PackedScene" uid="uid://b8opucxucl032" path="res://world/world.tscn" id="1_jtkqy"]
+[ext_resource type="Script" path="res://scenes/campaign/campaign.gd" id="1_uyg8v"]
+[ext_resource type="PackedScene" uid="uid://pu46mkcjdswb" path="res://ui/esc_menu/esc_menu.tscn" id="2_5qe7g"]
+[ext_resource type="Theme" uid="uid://3t61g0061mea" path="res://assets/theme.tres" id="3_71aav"]
+[ext_resource type="Texture2D" uid="uid://db3bht83hhsgb" path="res://assets/ui/left.png" id="4_bmyya"]
+[ext_resource type="Texture2D" uid="uid://djyq8pin6esph" path="res://assets/ui/right.png" id="5_0euq5"]
+
+[node name="Campaign" type="Node2D"]
+script = ExtResource("1_uyg8v")
+
+[node name="EscMenu" parent="." instance=ExtResource("2_5qe7g")]
+
+[node name="World" parent="." instance=ExtResource("1_jtkqy")]
+
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
+
+[node name="Panel" type="PanelContainer" parent="CanvasLayer"]
+anchors_preset = 12
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -52.0
+grow_horizontal = 2
+grow_vertical = 0
+theme = ExtResource("3_71aav")
+
+[node name="MarginContainer" type="MarginContainer" parent="CanvasLayer/Panel"]
+layout_mode = 2
+theme_override_constants/margin_left = 0
+theme_override_constants/margin_top = 0
+theme_override_constants/margin_right = 0
+theme_override_constants/margin_bottom = 0
+
+[node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer/Panel/MarginContainer"]
+layout_mode = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="CanvasLayer/Panel/MarginContainer/VBoxContainer"]
+layout_mode = 2
+alignment = 1
+
+[node name="LeftButton" type="Button" parent="CanvasLayer/Panel/MarginContainer/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+icon = ExtResource("4_bmyya")
+icon_alignment = 1
+
+[node name="CenterContainer" type="CenterContainer" parent="CanvasLayer/Panel/MarginContainer/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="HBoxContainer" type="HBoxContainer" parent="CanvasLayer/Panel/MarginContainer/VBoxContainer/HBoxContainer/CenterContainer"]
+layout_mode = 2
+theme_override_constants/separation = 20
+
+[node name="ScenarioNumber" type="Label" parent="CanvasLayer/Panel/MarginContainer/VBoxContainer/HBoxContainer/CenterContainer/HBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/font_size = 32
+text = "[1]"
+
+[node name="ScenarioTitle" type="Label" parent="CanvasLayer/Panel/MarginContainer/VBoxContainer/HBoxContainer/CenterContainer/HBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/font_size = 32
+text = "THE RINGS"
+
+[node name="PlayButton" type="Button" parent="CanvasLayer/Panel/MarginContainer/VBoxContainer/HBoxContainer/CenterContainer/HBoxContainer"]
+layout_mode = 2
+theme = ExtResource("3_71aav")
+theme_override_font_sizes/font_size = 0
+text = "Play"
+
+[node name="HBoxContainer" type="HBoxContainer" parent="CanvasLayer/Panel/MarginContainer/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+
+[node name="RightButton" type="Button" parent="CanvasLayer/Panel/MarginContainer/VBoxContainer/HBoxContainer/HBoxContainer"]
+layout_mode = 2
+icon = ExtResource("5_0euq5")
+icon_alignment = 1
+
+[node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer"]
+visible = false
+anchors_preset = 12
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -132.0
+grow_horizontal = 2
+grow_vertical = 0
+size_flags_horizontal = 4
+alignment = 1
+
+[node name="Panel2" type="Panel" parent="CanvasLayer"]
+custom_minimum_size = Vector2(240, 0)
+anchors_preset = 9
+anchor_bottom = 1.0
+offset_top = 428.0
+offset_right = 959.0
+offset_bottom = -51.0
+grow_vertical = 2
+size_flags_horizontal = 4
+theme = ExtResource("3_71aav")
+theme_type_variation = &"GoldPanel"
+
+[node name="MarginContainer" type="MarginContainer" parent="CanvasLayer/Panel2"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="ScrollContainer" type="ScrollContainer" parent="CanvasLayer/Panel2/MarginContainer"]
+layout_mode = 2
+
+[node name="ScenarioDescription" type="Label" parent="CanvasLayer/Panel2/MarginContainer/ScrollContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 1
+text = "Commander, Neptune's dominion awaits your strategic genius. Forge alliances wisely, navigate treacherous currents, and unleash Neptune's wrath upon those who challenge our rule. Assemble a mighty armada, exploit the planet's mysteries, and sink rival nations to secure Neptune's sovereignty. The fate of our aquatic empire rests in your cunning hands. Sink or be sunk!Commander, Neptune's dominion awaits your strategic genius. Forge alliances wisely, navigate treacherous currents, and unleash Neptune's wrath upon those who challenge our rule. Assemble a mighty armada, exploit the planet's mysteries, and sink rival nations to secure Neptune's sovereignty. The fate of our aquatic empire rests in your cunning hands. Sink or be sunk!Commander, Neptune's dominion awaits your strategic genius. Forge alliances wisely, navigate treacherous currents, and unleash Neptune's wrath upon those who challenge our rule. Assemble a mighty armada, exploit the planet's mysteries, and sink rival nations to secure Neptune's sovereignty. The fate of our aquatic empire rests in your cunning hands. Sink or be sunk!Commander, Neptune's dominion awaits your strategic genius. Forge alliances wisely, navigate treacherous currents, and unleash Neptune's wrath upon those who challenge our rule. Assemble a mighty armada, exploit the planet's mysteries, and sink rival nations to secure Neptune's sovereignty. The fate of our aquatic empire rests in your cunning hands. Sink or be sunk!"
+autowrap_mode = 3
+
+[connection signal="pressed" from="CanvasLayer/Panel/MarginContainer/VBoxContainer/HBoxContainer/LeftButton" to="." method="_on_left_button_pressed"]
+[connection signal="pressed" from="CanvasLayer/Panel/MarginContainer/VBoxContainer/HBoxContainer/CenterContainer/HBoxContainer/PlayButton" to="." method="_on_play_button_pressed"]
+[connection signal="pressed" from="CanvasLayer/Panel/MarginContainer/VBoxContainer/HBoxContainer/HBoxContainer/RightButton" to="." method="_on_right_button_pressed"]
