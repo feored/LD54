@@ -24,7 +24,7 @@ func show_state(state):
 			esc_menu.hide()
 			settings_menu.show()
 		_:
-			print("Error: Invalid state")
+			Utils.log("Error: Invalid state")
 
 func _on_menu_button_pressed():
 	get_tree().paused = false

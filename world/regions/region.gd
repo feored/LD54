@@ -16,6 +16,7 @@ class RegionData:
 	var id: int
 	var team: int
 	var tiles: Array
+	# var n_tiles: int
 	var units: int
 	var is_used: bool
 
@@ -24,6 +25,7 @@ class RegionData:
 		self.team = Constants.NULL_TEAM
 		self.tiles = []
 		self.units = 0
+		# self.n_tiles = 0
 		self.is_used = false
 
 	func save():
@@ -31,6 +33,16 @@ class RegionData:
 	
 	func _to_string():
 		return "Region %s, team %s, %s tiles, %s units" % [str(self.id), str(self.team), str(self.tiles.size()), str(self.units)]
+	
+	func clone():
+		var new_data = RegionData.new()
+		new_data.id = self.id
+		new_data.team = self.team
+		new_data.tiles = self.tiles.duplicate()
+		# new_data.n_tiles = self.n_tiles
+		new_data.units = self.units
+		new_data.is_used = self.is_used
+		return new_data
 
 
 var data: RegionData = RegionData.new()
@@ -93,14 +105,16 @@ func sacrifice():
 
 
 func update():
-	#print("Start update", self.data.id)
-	#print("Tiles:", self.data.tiles)
+	#Utils.log("Start update", self.data.id)
+	#Utils.log("Tiles:", self.data.tiles)
 	if self.data.tiles.size() < 1:
 		self.delete()
 		return
 	self.label.position = self.coords_to_pos.call(self.center_tile()) - self.label.size / 2  ## size of the label
-	self.label.set_text(str(self.data.units))
-	# self.label.set_text(str(self.data.id))
+	if Constants.DEBUG_REGION:
+		self.label.set_text(str(self.data.units) + "(" + str(self.data.id) + ")")
+	else:
+		self.label.set_text(str(self.data.units))
 	self.update_borders()
 
 
@@ -115,6 +129,7 @@ func add_tile(tileObj, should_reparent = false):
 	tileObj.deleted.connect(delete_tile)
 	var coords = tileObj.data.coords
 	self.data.tiles.append(coords)
+	# self.data.n_tiles+=1
 	self.tile_objs[coords] = tileObj
 	if should_reparent:
 		tileObj.reparent(self)
@@ -125,12 +140,13 @@ func add_tile(tileObj, should_reparent = false):
 
 func remove_tile(coords, delete_child = false, should_update = true):
 	if coords not in self.data.tiles:
-		print("Error: tile %s not in region" % str(coords))
+		Utils.log("Error: tile %s not in region" % str(coords))
 		return
 	if delete_child:
 		self.remove_child(self.tile_objs[coords])
 	self.data.tiles.erase(coords)
 	self.tile_objs.erase(coords)
+	# self.data.n_tiles-=1
 	if should_update:
 		self.update()
 	
@@ -152,7 +168,6 @@ func set_units(init_units):
 	self.data.units = init_units
 	if self.data.units == 0:
 		self.set_team(Constants.NULL_TEAM)
-		print("hey ho teamo nullo")
 	self.update()
 
 
@@ -204,14 +219,14 @@ func set_used(is_used: bool):
 
 func spawn_cell(coords, team, save_data = {}):
 	if self.data.tiles.has(coords):
-		print("Error: cell already exists at " + str(coords))
+		Utils.log("Error: cell already exists at " + str(coords))
 		return
 	var new_tile = tilePrefab.instantiate()
 	new_tile.init_cell(coords, self.coords_to_pos.call(coords), team, self.data.id)
 	new_tile.deleted.connect(delete_tile)
 	self.data.tiles.append(coords)
 	self.add_child(new_tile)
-	if Settings.debug_position:
+	if Constants.DEBUG_POSITION:
 		var new_label = Label.new()
 		new_label.text = str(coords)
 		new_label.set_theme(load("res://assets/theme.tres"))

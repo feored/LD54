@@ -85,4 +85,8 @@ func get_save_data(world, teams):
 
 func timestamp():
 	var unix_timestamp = Time.get_unix_time_from_system()
-	return Time.get_time_string_from_system(false) + ":" + str(unix_timestamp).split(".")[1]
+	return Time.get_time_string_from_system(false) + ":" #+ str(unix_timestamp).split(".")[1]
+
+func log(message, message2 = "", message3 = "", message4 = "", message5 = "", message6 = "", message7 = ""):
+	## handmade variadic function lol
+	print(timestamp()," ", message, message2, message3, message4, message5, message6, message7)

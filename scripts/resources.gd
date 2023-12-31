@@ -33,3 +33,7 @@ func add_faith(amount):
 	faith += amount
 	if resource_changed != null:
 		resource_changed.call()
+
+func clone():
+	var new_resources = Resources.new(gold, faith)
+	return new_resources

@@ -20,8 +20,6 @@ const DEFAULT_CONFIG = {
 	"Music": AudioServer.get_bus_index("Music"),
 	"SFX": AudioServer.get_bus_index("SFX"),
 }
-
-const debug_position = false
 var settings = null
 var input_locked: bool = false
 var current_map = null
@@ -36,7 +34,7 @@ func _ready():
 
 func load_config():
 	if settings != null:
-		print("Tried to load config more than once.")
+		Utils.log("Tried to load config more than once.")
 		return
 	var config = ConfigFile.new()
 	var err = config.load(DEFAULT_PATH)
@@ -55,7 +53,7 @@ func save_config():
 	assert(self.settings != null, "Tried to save config before config was loaded.")
 	var err = self.settings.save(DEFAULT_PATH)
 	if err != OK:
-		print("Failed to save config file.")
+		Utils.log("Failed to save config file.")
 
 func get_setting(setting: Setting):
 	assert(self.settings != null, "Tried to get setting before config was loaded.")

@@ -43,6 +43,7 @@ var spectating : bool = false
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	Settings.input_locked = false
+	Settings.skipping = false
 	self.world.init(Callable(self.messenger, "set_message"))
 	Music.play_track(Music.Track.World)
 	Sfx.enable_track(Sfx.Track.Boom)
@@ -60,7 +61,7 @@ func add_teams():
 	self.bots.clear()
 	for team_id in teams:
 		if team_id != Constants.PLAYER_ID:
-			self.bots[team_id] = DumbBot.new(team_id)
+			self.bots[team_id] = TerritoryBot.new(team_id, Personalities.AGGRESSIVE_PERSONALITY)
 	self.resources.add_teams(self.teams)
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
@@ -265,7 +266,6 @@ func handle_move(clicked_region):
 		else:
 			self.world.regions[selected_region].update()
 			clicked_region.update()
-			print("Selected:", str(self.world.regions[selected_region].data), "Clicked:", str(clicked_region.data))
 			if self.world.regions[selected_region].data.units > 1:
 				var move = Action.new(self.teams[self.player_team_index], Constants.Action.Move, selected_region, clicked_region.data.id )
 				actions_history.append(move)
@@ -276,6 +276,8 @@ func handle_move(clicked_region):
 
 func play_global_turn():
 	self.turn += 1
+	world.path_lengths.clear()
+	world.path_lengths = world.all_path_lengths()
 	while not self.turn == 0:
 		self.messenger.set_message(Constants.TEAM_NAMES[self.teams[self.turn]] + " is making their move.")
 		generate_units(self.teams[self.turn])
@@ -291,13 +293,16 @@ func play_global_turn():
 func play_turn(team_id):
 	if team_id in self.eliminated_teams:
 		return
-	while true:
-		var bot_action = self.bots[team_id].play_turn(self.world)
-		if bot_action.action == Constants.Action.None:
-			break
-		await apply_action(bot_action)
-		self.actions_history.append(bot_action)
-		await Utils.wait(Settings.turn_time)
+	var playing = true
+	while playing:
+		var bot_actions = self.bots[team_id].play_turn(self.world)
+		for bot_action in bot_actions:
+			if bot_action.action == Constants.Action.None:
+				playing = false
+				break
+			await apply_action(bot_action)
+			self.actions_history.append(bot_action)
+			await Utils.wait(Settings.turn_time)
 	check_coins(self.teams[self.turn])
 	self.apply_buildings(self.teams[self.turn])
 	self.world.clear_regions_used()
@@ -311,6 +316,9 @@ func regions_left(team):
 
 func generate_units(team):
 	for region in world.regions:
+		if !is_instance_valid(world.regions[region]):
+			Utils.log("Region %s is not valid" % region)
+			break
 		if world.regions[region].data.team == team:
 			world.regions[region].generate_units()
 
@@ -323,7 +331,7 @@ func apply_action(action : Action):
 		Constants.Action.None:
 			pass
 		_:
-			print("Unknown action: ", action.action)
+			Utils.log("Unknown action: %s" % action.action)
 	check_win_condition()
 
 func load_map(map_teams, map_regions):

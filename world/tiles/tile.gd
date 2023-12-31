@@ -53,6 +53,15 @@ class TileWorldData:
 		self.region = int(data["region"])
 		self.building = int(data["building"]) if "building" in data else Constants.Building.None
 		self.marked = bool(data["marked"]) if "marked" in data else false
+	
+	func clone():
+		var new_data = TileWorldData.new()
+		new_data.coords = self.coords
+		new_data.team = self.team
+		new_data.region = self.region
+		new_data.building = self.building
+		new_data.marked = self.marked
+		return new_data
 
 
 var data = TileWorldData.new()
