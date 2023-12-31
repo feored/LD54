@@ -343,8 +343,9 @@ func shortest_path_length(from_id, to_id):
 				length += 1
 				if neighbor == to_id:
 					return length
-	Utils.log("Error: no path found between %s and %s" % [from_id, to_id])
-	Utils.log("Adjacencies for region ", adjacencies[from_id])
+	return Constants.NULL_PATH_LENGTH
+	#Utils.log("Error: no path found between %s and %s" % [from_id, to_id])
+	#Utils.log("Adjacencies for region ", adjacencies[from_id])
 
 func all_path_lengths():
 	var lengths = {}
@@ -360,5 +361,5 @@ func all_path_lengths():
 					lengths[r][r2] = lengths[r2][r]
 				else:
 					lengths[r][r2] = self.shortest_path_length(r, r2)
-	Utils.log(lengths)
+	# Utils.log(lengths)
 	return lengths

@@ -63,6 +63,9 @@ func evaluate_state(world_state, world):
 		#Utils.log("%s regions not owned: %s " % [regions_not_owned.size(), regions_not_owned])
 		var closest = regions_not_owned[0]
 		#Utils.log("Closest ", closest)
+		if closest == Constants.NULL_PATH_LENGTH:
+			## no enemy regions reachable from this region
+			continue
 		var dist = world.path_lengths[r.id][closest] * r.units
 		#Utils.log("Closest ", closest, " to ", r, " is ", dist)
 		total_dist += dist
