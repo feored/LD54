@@ -292,7 +292,12 @@ func play_turn(team_id):
 		return
 	var playing = true
 	while playing:
-		var bot_actions = self.bots[team_id].play_turn(self.world)
+		var thread = Thread.new()
+		thread.start(self.bots[team_id].play_turn.bind(self.world))
+		while thread.is_alive():
+			print("Thread is alive")
+			await Utils.wait(0.1)
+		var bot_actions = thread.wait_to_finish()
 		for bot_action in bot_actions:
 			if bot_action.action == Constants.Action.None:
 				playing = false
