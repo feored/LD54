@@ -3,6 +3,8 @@ extends Node2D
 @onready var scenario_number = %ScenarioNumber
 @onready var scenario_title = %ScenarioTitle
 @onready var scenario_description = %ScenarioDescription
+@onready var scenario_container = %ScenarioContainer
+@onready var picker_container = %PickerContainer
 @onready var world = $"World"
 var current_scenario_id = 0
 
@@ -11,6 +13,9 @@ var current_scenario_id = 0
 func _ready():
 	Settings.input_locked = false
 	Settings.skipping = false
+	var offset_y = picker_container.size.y
+	var offset_x = scenario_container.size.x/2
+	self.world.camera.position += Vector2(offset_x, offset_y)
 	self.world.init(func(): pass)
 	self.load_scenario()
 
