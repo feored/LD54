@@ -62,12 +62,6 @@ size_flags_vertical = 1
 text = "Commander, Neptune's dominion awaits your strategic genius. Forge alliances wisely, navigate treacherous currents, and unleash Neptune's wrath upon those who challenge our rule. Assemble a mighty armada, exploit the planet's mysteries, and sink rival nations to secure Neptune's sovereignty. The fate of our aquatic empire rests in your cunning hands. Sink or be sunk!Commander, Neptune's dominion awaits your strategic genius. Forge alliances wisely, navigate treacherous currents, and unleash Neptune's wrath upon those who challenge our rule. Assemble a mighty armada, exploit the planet's mysteries, and sink rival nations to secure Neptune's sovereignty. The fate of our aquatic empire rests in your cunning hands. Sink or be sunk!Commander, Neptune's dominion awaits your strategic genius. Forge alliances wisely, navigate treacherous currents, and unleash Neptune's wrath upon those who challenge our rule. Assemble a mighty armada, exploit the planet's mysteries, and sink rival nations to secure Neptune's sovereignty. The fate of our aquatic empire rests in your cunning hands. Sink or be sunk!Commander, Neptune's dominion awaits your strategic genius. Forge alliances wisely, navigate treacherous currents, and unleash Neptune's wrath upon those who challenge our rule. Assemble a mighty armada, exploit the planet's mysteries, and sink rival nations to secure Neptune's sovereignty. The fate of our aquatic empire rests in your cunning hands. Sink or be sunk!"
 autowrap_mode = 3
 
-[node name="PlayButton" type="Button" parent="CanvasLayer/VBoxContainer2/ScenarioContainer"]
-layout_mode = 2
-theme = ExtResource("3_71aav")
-theme_override_font_sizes/font_size = 0
-text = "Play"
-
 [node name="PickerContainer" type="PanelContainer" parent="CanvasLayer/VBoxContainer2"]
 unique_name_in_owner = true
 layout_mode = 2
@@ -117,6 +111,13 @@ layout_mode = 2
 icon = ExtResource("5_0euq5")
 icon_alignment = 1
 
-[connection signal="pressed" from="CanvasLayer/VBoxContainer2/ScenarioContainer/PlayButton" to="." method="_on_play_button_pressed"]
+[node name="PlayButton" type="Button" parent="CanvasLayer/VBoxContainer2/PickerContainer/MarginContainer/VBoxContainer/HBoxContainer"]
+custom_minimum_size = Vector2(230, 0)
+layout_mode = 2
+theme = ExtResource("3_71aav")
+theme_override_font_sizes/font_size = 0
+text = "Play"
+
 [connection signal="pressed" from="CanvasLayer/VBoxContainer2/PickerContainer/MarginContainer/VBoxContainer/HBoxContainer/LeftButton" to="." method="_on_left_button_pressed"]
 [connection signal="pressed" from="CanvasLayer/VBoxContainer2/PickerContainer/MarginContainer/VBoxContainer/HBoxContainer/HBoxContainer/RightButton" to="." method="_on_right_button_pressed"]
+[connection signal="pressed" from="CanvasLayer/VBoxContainer2/PickerContainer/MarginContainer/VBoxContainer/HBoxContainer/PlayButton" to="." method="_on_play_button_pressed"]

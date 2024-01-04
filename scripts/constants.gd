@@ -111,14 +111,13 @@ const TURN_TIME = 0.3
 const MENU_WAIT_TIME = 1
 
 ## Buildings
-enum Building { None, Barracks, Temple, Mine, Fort, Test2, Test3, Test4 }
+enum Building { None, Barracks, Temple, Fort, Shrine }
 
 const BUILDINGS = {
 	Building.Barracks:
 	{
 		"id": Building.Barracks,
 		"name": "Barracks",
-		"cost": 5,
 		"texture": preload("res://assets/icons/person.png"),
 		"tooltip": "This territory will generate +%s unit per turn." % BARRACKS_UNITS_PER_TURN,
 	},
@@ -126,59 +125,25 @@ const BUILDINGS = {
 	{
 		"id": Building.Temple,
 		"name": "Temple",
-		"cost": 5,
 		"texture": preload("res://assets/icons/temple.png"),
 		"tooltip": "This territory will generate +%s faith per turn." % TEMPLE_FAITH_PER_TURN,
-	},
-	Building.Mine:
-	{
-		"id": Building.Mine,
-		"name": "Mine",
-		"cost": 5,
-		"texture": preload("res://assets/icons/shovel.png"),
-		"tooltip": "This territory will generate +%s gold per turn." % MINE_GOLD_PER_TURN,
 	},
 	Building.Fort:
 	{
 		"id": Building.Fort,
 		"name": "Fort",
-		"cost": 20,
 		"texture": preload("res://assets/icons/castle.png"),
 		"tooltip":
 		"Enemies invading this territory lose %s units instantly." % CASTLE_UNITS_REMOVED,
 	},
-	Building.Test2:
+	Building.Shrine:
 	{
-		"id": Building.Test2,
-		"name": "Test2",
-		"cost": 5,
-		"texture": preload("res://assets/icons/shovel.png"),
-		"tooltip": "This territory will generate +1 gold per turn.",
-	},
-	Building.Test3:
-	{
-		"id": Building.Test3,
-		"name": "Test3",
-		"cost": 5,
-		"texture": preload("res://assets/icons/shovel.png"),
-		"tooltip": "This territory will generate +1 gold per turn.",
-	},
-	Building.Test4:
-	{
-		"id": Building.Test4,
-		"name": "Test4",
-		"cost": 5,
-		"texture": preload("res://assets/icons/shovel.png"),
-		"tooltip": "This territory will generate +1 gold per turn.",
+		"id": Building.Shrine,
+		"name": "Shrine",
+		"texture": preload("res://assets/icons/card.png"),
+		"tooltip": "This territory will generate one power every turn.",
 	},
 }
-
-const DEFAULT_BUILDINGS = [
-	Building.Barracks,
-	Building.Temple,
-	Building.Mine,
-	Building.Fort,
-]
 
 ## Scenarios
 const scenarios = [

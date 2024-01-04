@@ -1,89 +1,152 @@
-[gd_scene load_steps=13 format=3 uid="uid://beikk7xheic6m"]
+[gd_scene load_steps=22 format=3 uid="uid://beikk7xheic6m"]
 
-[ext_resource type="Texture2D" uid="uid://xad6qoadhk7s" path="res://assets/tiles/01.png" id="1_ayo81"]
+[ext_resource type="Texture2D" uid="uid://cniqd3lwqrvyu" path="res://assets/tiles/00.png" id="1_ltovn"]
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_3anwm"]
-atlas = ExtResource("1_ayo81")
-region = Rect2(0, 384, 64, 64)
+[sub_resource type="AtlasTexture" id="AtlasTexture_hd52s"]
+atlas = ExtResource("1_ltovn")
+region = Rect2(0, 128, 64, 64)
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_jes5m"]
-atlas = ExtResource("1_ayo81")
-region = Rect2(64, 384, 64, 64)
+[sub_resource type="AtlasTexture" id="AtlasTexture_5ocus"]
+atlas = ExtResource("1_ltovn")
+region = Rect2(64, 128, 64, 64)
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_tt4ly"]
-atlas = ExtResource("1_ayo81")
-region = Rect2(128, 384, 64, 64)
+[sub_resource type="AtlasTexture" id="AtlasTexture_r0gw4"]
+atlas = ExtResource("1_ltovn")
+region = Rect2(128, 128, 64, 64)
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_6owkj"]
-atlas = ExtResource("1_ayo81")
-region = Rect2(192, 384, 64, 64)
+[sub_resource type="AtlasTexture" id="AtlasTexture_k800s"]
+atlas = ExtResource("1_ltovn")
+region = Rect2(192, 128, 64, 64)
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_v2gsy"]
-atlas = ExtResource("1_ayo81")
-region = Rect2(256, 384, 64, 64)
+[sub_resource type="AtlasTexture" id="AtlasTexture_6lovc"]
+atlas = ExtResource("1_ltovn")
+region = Rect2(256, 128, 64, 64)
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_sodfd"]
-atlas = ExtResource("1_ayo81")
-region = Rect2(320, 384, 64, 64)
+[sub_resource type="AtlasTexture" id="AtlasTexture_hho18"]
+atlas = ExtResource("1_ltovn")
+region = Rect2(320, 128, 64, 64)
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_svv4h"]
-atlas = ExtResource("1_ayo81")
-region = Rect2(384, 384, 64, 64)
+[sub_resource type="AtlasTexture" id="AtlasTexture_5o47a"]
+atlas = ExtResource("1_ltovn")
+region = Rect2(384, 128, 64, 64)
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_saddr"]
-atlas = ExtResource("1_ayo81")
-region = Rect2(448, 384, 64, 64)
+[sub_resource type="AtlasTexture" id="AtlasTexture_d6unc"]
+atlas = ExtResource("1_ltovn")
+region = Rect2(448, 128, 64, 64)
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_x1djw"]
-atlas = ExtResource("1_ayo81")
-region = Rect2(512, 384, 64, 64)
+[sub_resource type="AtlasTexture" id="AtlasTexture_bg7h8"]
+atlas = ExtResource("1_ltovn")
+region = Rect2(512, 128, 64, 64)
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_u8rng"]
-atlas = ExtResource("1_ayo81")
-region = Rect2(576, 384, 64, 64)
+[sub_resource type="AtlasTexture" id="AtlasTexture_h48wh"]
+atlas = ExtResource("1_ltovn")
+region = Rect2(576, 128, 64, 64)
 
-[sub_resource type="SpriteFrames" id="SpriteFrames_vaavt"]
+[sub_resource type="AtlasTexture" id="AtlasTexture_c47gf"]
+atlas = ExtResource("1_ltovn")
+region = Rect2(640, 128, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ycwc4"]
+atlas = ExtResource("1_ltovn")
+region = Rect2(704, 128, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_6hntk"]
+atlas = ExtResource("1_ltovn")
+region = Rect2(768, 128, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_0tf8s"]
+atlas = ExtResource("1_ltovn")
+region = Rect2(832, 128, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_7hu28"]
+atlas = ExtResource("1_ltovn")
+region = Rect2(896, 128, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_6r1qr"]
+atlas = ExtResource("1_ltovn")
+region = Rect2(960, 128, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_o2ksn"]
+atlas = ExtResource("1_ltovn")
+region = Rect2(1024, 128, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_p6mxs"]
+atlas = ExtResource("1_ltovn")
+region = Rect2(1088, 128, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_wprqc"]
+atlas = ExtResource("1_ltovn")
+region = Rect2(1152, 128, 64, 64)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_6ic82"]
 animations = [{
 "frames": [{
 "duration": 1.0,
-"texture": SubResource("AtlasTexture_3anwm")
+"texture": SubResource("AtlasTexture_hd52s")
 }, {
 "duration": 1.0,
-"texture": SubResource("AtlasTexture_jes5m")
+"texture": SubResource("AtlasTexture_5ocus")
 }, {
 "duration": 1.0,
-"texture": SubResource("AtlasTexture_tt4ly")
+"texture": SubResource("AtlasTexture_r0gw4")
 }, {
 "duration": 1.0,
-"texture": SubResource("AtlasTexture_6owkj")
+"texture": SubResource("AtlasTexture_k800s")
 }, {
 "duration": 1.0,
-"texture": SubResource("AtlasTexture_v2gsy")
+"texture": SubResource("AtlasTexture_6lovc")
 }, {
 "duration": 1.0,
-"texture": SubResource("AtlasTexture_sodfd")
+"texture": SubResource("AtlasTexture_hho18")
 }, {
 "duration": 1.0,
-"texture": SubResource("AtlasTexture_svv4h")
+"texture": SubResource("AtlasTexture_5o47a")
 }, {
 "duration": 1.0,
-"texture": SubResource("AtlasTexture_saddr")
+"texture": SubResource("AtlasTexture_d6unc")
 }, {
 "duration": 1.0,
-"texture": SubResource("AtlasTexture_x1djw")
+"texture": SubResource("AtlasTexture_bg7h8")
 }, {
 "duration": 1.0,
-"texture": SubResource("AtlasTexture_u8rng")
+"texture": SubResource("AtlasTexture_h48wh")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_c47gf")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_ycwc4")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_6hntk")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_0tf8s")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_7hu28")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_6r1qr")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_o2ksn")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_p6mxs")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_wprqc")
 }],
 "loop": false,
 "name": &"sink",
-"speed": 10.0
+"speed": 12.0
 }]
 
 [node name="SinkingAnimation" type="AnimatedSprite2D"]
 scale = Vector2(0.5, 0.5)
-sprite_frames = SubResource("SpriteFrames_vaavt")
+sprite_frames = SubResource("SpriteFrames_6ic82")
 animation = &"sink"
 autoplay = "sink"
-frame = 9
+frame = 18
 frame_progress = 1.0

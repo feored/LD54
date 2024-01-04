@@ -47,7 +47,7 @@ var teams = []
 var current_region_id = 0
 
 ## placing buildings
-var selected_building = Constants.Building.None
+var selected_building = Constants.Building.Barracks
 
 
 
@@ -61,7 +61,7 @@ func _ready():
 	
 
 func init_building_button():
-	for b in Constants.DEFAULT_BUILDINGS:
+	for b in Constants.BUILDINGS.keys():
 		self.pick_building_btn.add_icon_item(Constants.BUILDINGS[b].texture, Constants.BUILDINGS[b].name, b as int)
 
 func set_stage(new_stage):
@@ -91,7 +91,7 @@ func set_state(state):
 			self.cursor.modulate = COLOR_REGION
 		State.PlacingBuilding:
 			self.cursor.scale = Vector2(1, 1)
-			self.cursor.texture = Constants.BUILDING[self.selected_building].texture
+			self.cursor.texture = Constants.BUILDINGS[self.selected_building].texture
 			self.cursor.visible = true
 			self.cursor.modulate = COLOR_DEFAULT
 		State.Drawing:
@@ -142,6 +142,19 @@ func _unhandled_input(event):
 				place_team(event)
 			State.PlacingRegion:
 				place_region(event)
+			State.PlacingBuilding:
+				place_building(event)
+
+func place_building(event):
+	var coords = self.world.global_pos_to_coords(event.position)
+	if world.tiles.has(coords) and self.world.tiles[coords].data.building == Constants.Building.None:
+		self.cursor.modulate = COLOR_VALID
+	else:
+		self.cursor.modulate = COLOR_INVALID
+		return
+	if clicking:
+		self.world.tiles[coords].set_building(Constants.BUILDINGS[self.selected_building].id)
+		self.set_state(State.None)
 
 func place_region(event):
 	var coords = self.world.global_pos_to_coords(event.position)
@@ -293,12 +306,12 @@ func _on_load_btn_2_pressed():
 
 func _on_previous_stage_btn_pressed():
 	self.set_stage(EditStage.Drawing)
+	
 
-
-
-func _on_building_btn_item_selected(index):
+func _on_buildingbtn_pressed():
 	self.set_state(State.PlacingBuilding)
 
 
-func _on_buildingbtn_pressed():
-	pass # Replace with function body.
+func _on_pick_building_btn_item_selected(index):
+	self.selected_building = index+1
+

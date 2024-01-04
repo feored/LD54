@@ -189,6 +189,7 @@ text = "Load Saved Map"
 [connection signal="pressed" from="MapEditorUI/TeamsUI/MarginContainer/HBoxContainer/HBoxContainer/PreviousStageBtn" to="." method="_on_previous_stage_btn_pressed"]
 [connection signal="pressed" from="MapEditorUI/TeamsUI/MarginContainer/HBoxContainer/HBoxContainer/PlaceTeamBtn" to="." method="_on_place_team_btn_pressed"]
 [connection signal="value_changed" from="MapEditorUI/TeamsUI/MarginContainer/HBoxContainer/HBoxContainer/PlaceTeamNum" to="." method="_on_place_team_num_value_changed"]
+[connection signal="item_selected" from="MapEditorUI/TeamsUI/MarginContainer/HBoxContainer/HBoxContainer/PickBuildingBtn" to="." method="_on_pick_building_btn_item_selected"]
 [connection signal="pressed" from="MapEditorUI/TeamsUI/MarginContainer/HBoxContainer/HBoxContainer/Buildingbtn" to="." method="_on_buildingbtn_pressed"]
 [connection signal="pressed" from="MapEditorUI/TeamsUI/MarginContainer/HBoxContainer/HBoxContainer2/PlayBtn" to="." method="_on_play_btn_pressed"]
 [connection signal="pressed" from="MapEditorUI/TeamsUI/MarginContainer/HBoxContainer/HBoxContainer2/SaveBtn" to="." method="_on_save_btn_pressed"]

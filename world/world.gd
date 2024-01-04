@@ -169,6 +169,10 @@ func recalculate_region(region: int):
 	var tilesets = get_contiguous_tilesets(region_tile_coords)
 	if tilesets.size() == 1:
 		self.regions[region].update()
+		self.adjacencies[region] = self.adjacent_regions(region)
+		for r in self.adjacencies:
+			if region in self.adjacencies[r] and r not in self.adjacencies[region]:
+				self.adjacencies[r].erase(region)
 		return ## all contiguous
 	
 	var new_regions = []

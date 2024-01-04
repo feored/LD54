@@ -1,103 +1,13 @@
-[gd_scene load_steps=18 format=3 uid="uid://ceoqtlfuehsvd"]
+[gd_scene load_steps=12 format=3 uid="uid://ceoqtlfuehsvd"]
 
 [ext_resource type="Script" path="res://scenes/main/main.gd" id="1_osaxm"]
 [ext_resource type="PackedScene" uid="uid://pu46mkcjdswb" path="res://ui/esc_menu/esc_menu.tscn" id="2_pam5e"]
 [ext_resource type="PackedScene" uid="uid://b8opucxucl032" path="res://world/world.tscn" id="2_unfjm"]
 [ext_resource type="Theme" uid="uid://3t61g0061mea" path="res://assets/theme.tres" id="5_5yrco"]
 [ext_resource type="Texture2D" uid="uid://vv0nl83x0ldq" path="res://assets/icons/forward.png" id="6_7usvn"]
-[ext_resource type="Texture2D" uid="uid://bp83kj0l0ow8x" path="res://assets/icons/coin_05d.png" id="6_lerbj"]
 [ext_resource type="Texture2D" uid="uid://bxqvi5615lj3b" path="res://assets/icons/trident.png" id="6_mkg7a"]
 [ext_resource type="Script" path="res://ui/Message.gd" id="7_y3mfw"]
-[ext_resource type="Script" path="res://ui/resources/resources_panel.gd" id="10_i46yg"]
-[ext_resource type="Texture2D" uid="uid://fh2aaiw6vrwi" path="res://assets/tiles/hex_shape.png" id="10_v8075"]
-[ext_resource type="PackedScene" uid="uid://iwefd7llwk5t" path="res://ui/region_info/region_info.tscn" id="12_wvvkd"]
-
-[sub_resource type="Animation" id="Animation_7xbpu"]
-resource_name = "appear"
-length = 0.1
-step = 0.01
-tracks/0/type = "value"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath(".:visible")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 1,
-"values": [true]
-}
-tracks/1/type = "value"
-tracks/1/imported = false
-tracks/1/enabled = true
-tracks/1/path = NodePath(".:scale")
-tracks/1/interp = 1
-tracks/1/loop_wrap = true
-tracks/1/keys = {
-"times": PackedFloat32Array(0, 0.1),
-"transitions": PackedFloat32Array(1, 1),
-"update": 0,
-"values": [Vector2(1, 0), Vector2(1, 1)]
-}
-tracks/2/type = "value"
-tracks/2/imported = false
-tracks/2/enabled = true
-tracks/2/path = NodePath(".:busy")
-tracks/2/interp = 1
-tracks/2/loop_wrap = true
-tracks/2/keys = {
-"times": PackedFloat32Array(0, 0.1),
-"transitions": PackedFloat32Array(1, 1),
-"update": 1,
-"values": [true, false]
-}
-
-[sub_resource type="Animation" id="Animation_6t1w2"]
-resource_name = "disappear"
-length = 0.1
-tracks/0/type = "value"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath(".:busy")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"times": PackedFloat32Array(0, 0.1),
-"transitions": PackedFloat32Array(1, 1),
-"update": 1,
-"values": [true, false]
-}
-tracks/1/type = "value"
-tracks/1/imported = false
-tracks/1/enabled = true
-tracks/1/path = NodePath(".:visible")
-tracks/1/interp = 1
-tracks/1/loop_wrap = true
-tracks/1/keys = {
-"times": PackedFloat32Array(0, 0.1),
-"transitions": PackedFloat32Array(1, 1),
-"update": 1,
-"values": [true, false]
-}
-tracks/2/type = "value"
-tracks/2/imported = false
-tracks/2/enabled = true
-tracks/2/path = NodePath(".:scale")
-tracks/2/interp = 1
-tracks/2/loop_wrap = true
-tracks/2/keys = {
-"times": PackedFloat32Array(0, 0.1),
-"transitions": PackedFloat32Array(1, 1),
-"update": 0,
-"values": [Vector2(1, 1), Vector2(1, 0)]
-}
-
-[sub_resource type="AnimationLibrary" id="AnimationLibrary_hb5yl"]
-_data = {
-"appear": SubResource("Animation_7xbpu"),
-"disappear": SubResource("Animation_6t1w2")
-}
+[ext_resource type="PackedScene" uid="uid://bcmyj6p1buj71" path="res://ui/power/card_selector.tscn" id="8_1lhgu"]
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_7ox3a"]
 
@@ -116,36 +26,7 @@ script = ExtResource("1_osaxm")
 unique_name_in_owner = true
 layer = 2
 
-[node name="ResourcesPanel" type="PanelContainer" parent="UI"]
-unique_name_in_owner = true
-visible = false
-custom_minimum_size = Vector2(240, 0)
-offset_left = 720.0
-offset_top = 260.0
-offset_right = 960.0
-offset_bottom = 500.0
-pivot_offset = Vector2(120, 240)
-size_flags_horizontal = 8
-size_flags_vertical = 10
-size_flags_stretch_ratio = 0.33
-theme = ExtResource("5_5yrco")
-script = ExtResource("10_i46yg")
-
-[node name="ShapeContainer" type="ScrollContainer" parent="UI/ResourcesPanel"]
-unique_name_in_owner = true
-layout_mode = 2
-
-[node name="ShapeVBox" type="VBoxContainer" parent="UI/ResourcesPanel/ShapeContainer"]
-unique_name_in_owner = true
-layout_mode = 2
-size_flags_horizontal = 3
-
-[node name="AnimationPlayer" type="AnimationPlayer" parent="UI/ResourcesPanel"]
-libraries = {
-"": SubResource("AnimationLibrary_hb5yl")
-}
-
-[node name="Panel" type="PanelContainer" parent="UI"]
+[node name="Bar" type="PanelContainer" parent="UI"]
 anchors_preset = 12
 anchor_top = 1.0
 anchor_right = 1.0
@@ -155,21 +36,21 @@ grow_horizontal = 2
 grow_vertical = 0
 theme = ExtResource("5_5yrco")
 
-[node name="MarginContainer" type="MarginContainer" parent="UI/Panel"]
+[node name="MarginContainer" type="MarginContainer" parent="UI/Bar"]
 layout_mode = 2
 theme_override_constants/margin_left = 0
 theme_override_constants/margin_top = 0
 theme_override_constants/margin_right = 0
 theme_override_constants/margin_bottom = 0
 
-[node name="HBoxContainer" type="HBoxContainer" parent="UI/Panel/MarginContainer"]
+[node name="HBoxContainer" type="HBoxContainer" parent="UI/Bar/MarginContainer"]
 layout_mode = 2
 
-[node name="HBoxContainer" type="HBoxContainer" parent="UI/Panel/MarginContainer/HBoxContainer"]
+[node name="HBoxContainer" type="HBoxContainer" parent="UI/Bar/MarginContainer/HBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="FastForwardButton" type="Button" parent="UI/Panel/MarginContainer/HBoxContainer/HBoxContainer"]
+[node name="FastForwardButton" type="Button" parent="UI/Bar/MarginContainer/HBoxContainer/HBoxContainer"]
 unique_name_in_owner = true
 layout_mode = 2
 tooltip_text = "Fast forward"
@@ -178,23 +59,7 @@ toggle_mode = true
 icon = ExtResource("6_7usvn")
 icon_alignment = 1
 
-[node name="VBoxContainer" type="VBoxContainer" parent="UI/Panel/MarginContainer/HBoxContainer/HBoxContainer"]
-visible = false
-layout_mode = 2
-
-[node name="TurnLabel" type="Label" parent="UI/Panel/MarginContainer/HBoxContainer/HBoxContainer/VBoxContainer"]
-unique_name_in_owner = true
-visible = false
-layout_mode = 2
-text = "Turn 0"
-horizontal_alignment = 1
-vertical_alignment = 1
-
-[node name="TurnContainer" type="HBoxContainer" parent="UI/Panel/MarginContainer/HBoxContainer/HBoxContainer/VBoxContainer"]
-unique_name_in_owner = true
-layout_mode = 2
-
-[node name="Message" type="Label" parent="UI/Panel/MarginContainer/HBoxContainer/HBoxContainer"]
+[node name="Message" type="Label" parent="UI/Bar/MarginContainer/HBoxContainer/HBoxContainer"]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
@@ -203,76 +68,57 @@ vertical_alignment = 1
 autowrap_mode = 3
 script = ExtResource("7_y3mfw")
 
-[node name="ResContainer" type="PanelContainer" parent="UI/Panel/MarginContainer/HBoxContainer/HBoxContainer"]
+[node name="ResContainer" type="PanelContainer" parent="UI/Bar/MarginContainer/HBoxContainer/HBoxContainer"]
 layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBoxEmpty_bwln7")
 
-[node name="HBoxContainer" type="HBoxContainer" parent="UI/Panel/MarginContainer/HBoxContainer/HBoxContainer/ResContainer"]
+[node name="HBoxContainer" type="HBoxContainer" parent="UI/Bar/MarginContainer/HBoxContainer/HBoxContainer/ResContainer"]
 layout_mode = 2
 
-[node name="HBoxContainer" type="HBoxContainer" parent="UI/Panel/MarginContainer/HBoxContainer/HBoxContainer/ResContainer/HBoxContainer"]
+[node name="HBoxContainer2" type="HBoxContainer" parent="UI/Bar/MarginContainer/HBoxContainer/HBoxContainer/ResContainer/HBoxContainer"]
 layout_mode = 2
 
-[node name="GoldLabel" type="Label" parent="UI/Panel/MarginContainer/HBoxContainer/HBoxContainer/ResContainer/HBoxContainer/HBoxContainer"]
+[node name="FaithLabel" type="Label" parent="UI/Bar/MarginContainer/HBoxContainer/HBoxContainer/ResContainer/HBoxContainer/HBoxContainer2"]
 unique_name_in_owner = true
 layout_mode = 2
-text = "5"
-horizontal_alignment = 1
-vertical_alignment = 1
+text = "0"
 
-[node name="TextureRect" type="TextureRect" parent="UI/Panel/MarginContainer/HBoxContainer/HBoxContainer/ResContainer/HBoxContainer/HBoxContainer"]
-layout_mode = 2
-texture = ExtResource("6_lerbj")
-stretch_mode = 5
-
-[node name="HBoxContainer2" type="HBoxContainer" parent="UI/Panel/MarginContainer/HBoxContainer/HBoxContainer/ResContainer/HBoxContainer"]
-layout_mode = 2
-
-[node name="FaithLabel" type="Label" parent="UI/Panel/MarginContainer/HBoxContainer/HBoxContainer/ResContainer/HBoxContainer/HBoxContainer2"]
-unique_name_in_owner = true
-layout_mode = 2
-text = "5"
-
-[node name="TextureRect" type="TextureRect" parent="UI/Panel/MarginContainer/HBoxContainer/HBoxContainer/ResContainer/HBoxContainer/HBoxContainer2"]
+[node name="TextureRect" type="TextureRect" parent="UI/Bar/MarginContainer/HBoxContainer/HBoxContainer/ResContainer/HBoxContainer/HBoxContainer2"]
 layout_mode = 2
 texture = ExtResource("6_mkg7a")
 stretch_mode = 5
 
-[node name="ShapeButton" type="Button" parent="UI/Panel/MarginContainer/HBoxContainer/HBoxContainer/ResContainer/HBoxContainer"]
-unique_name_in_owner = true
-custom_minimum_size = Vector2(32, 0)
-layout_mode = 2
-icon = ExtResource("10_v8075")
-icon_alignment = 1
-expand_icon = true
-
-[node name="TurnButton" type="Button" parent="UI/Panel/MarginContainer/HBoxContainer"]
+[node name="TurnButton" type="Button" parent="UI/Bar/MarginContainer/HBoxContainer"]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 0
 theme_override_styles/focus = SubResource("StyleBoxEmpty_u2eju")
 text = "End Turn"
 
-[node name="TurnInfo" type="PanelContainer" parent="UI"]
-visible = false
-offset_right = 40.0
-offset_bottom = 40.0
-
-[node name="VBoxContainer" type="VBoxContainer" parent="UI/TurnInfo"]
-layout_mode = 2
-
-[node name="RegionInfo" type="CanvasLayer" parent="."]
-layer = 50
-follow_viewport_enabled = true
-
-[node name="RegionInfo" parent="RegionInfo" instance=ExtResource("12_wvvkd")]
+[node name="Deck" type="VBoxContainer" parent="UI"]
 unique_name_in_owner = true
+anchors_preset = 11
+anchor_left = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -99.0
+offset_bottom = -40.0
+grow_horizontal = 0
+grow_vertical = 2
+size_flags_vertical = 4
+theme = ExtResource("5_5yrco")
+alignment = 1
 
-[connection signal="mouse_entered" from="UI/ResourcesPanel" to="UI/ResourcesPanel" method="_on_mouse_entered"]
-[connection signal="mouse_exited" from="UI/ResourcesPanel" to="UI/ResourcesPanel" method="_on_mouse_exited"]
-[connection signal="toggled" from="UI/Panel/MarginContainer/HBoxContainer/HBoxContainer/FastForwardButton" to="." method="_on_fast_forward_button_toggled"]
-[connection signal="pressed" from="UI/Panel/MarginContainer/HBoxContainer/HBoxContainer/ResContainer/HBoxContainer/ShapeButton" to="UI/ResourcesPanel" method="_on_shape_button_pressed"]
-[connection signal="pressed" from="UI/Panel/MarginContainer/HBoxContainer/TurnButton" to="." method="_on_turn_button_pressed"]
-[connection signal="building_bought" from="RegionInfo/RegionInfo" to="." method="_on_region_info_building_bought"]
-[connection signal="tile_sacrificed" from="RegionInfo/RegionInfo" to="." method="_on_region_info_tile_sacrificed"]
-[connection signal="tile_unselected" from="RegionInfo/RegionInfo" to="." method="_on_region_info_tile_unselected"]
+[node name="DeckCount" type="Label" parent="UI/Deck"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "0 / 3"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="CardSelector" parent="UI" instance=ExtResource("8_1lhgu")]
+unique_name_in_owner = true
+visible = false
+
+[connection signal="toggled" from="UI/Bar/MarginContainer/HBoxContainer/HBoxContainer/FastForwardButton" to="." method="_on_fast_forward_button_toggled"]
+[connection signal="pressed" from="UI/Bar/MarginContainer/HBoxContainer/TurnButton" to="." method="_on_turn_button_pressed"]
