@@ -143,13 +143,18 @@ func _on_turn_button_pressed():
 
 func _on_card_selected(card):
 	if card != null:
-		self.deck.add_child(card)
+		card.disconnect_picked()
+		card.picked.connect(func(): use_card(card))
+		self.deck.add_card(card)
 	self.card_selector.hide()
 	Settings.input_locked = false
 	lock_controls(false)
 	
 
-	
+func use_card(c):
+	var power = c.power
+	print("Using power %s" % power)
+	self.deck.remove_card(c)
 
 func closest_player_tile_coords():
 	var closest_player_tile = Constants.NULL_COORDS
