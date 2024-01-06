@@ -126,6 +126,39 @@ func handle_sink(tile_hovered):
 		messenger.set_message("You cannot sink that which has already sunk, my lord.")
 		clear_mouse_state()
 
+func handle_building(event):
+	var coords_hovered = world.global_pos_to_coords(event.position)
+	var buildable = func(coords):
+		return world.tiles.has(coords)\
+		and world.tiles[coords].data.team == self.teams[self.player_team_index]\
+		and world.tiles[coords].data.building == Constants.Building.None
+	if event is InputEventMouseMotion:
+		if buildable.call(coords_hovered):
+			self.mouse_item.self_modulate = Color(0.5, 1, 0.5)
+		else:
+			self.mouse_item.self_modulate = Color(1, 0.5, 0.5)
+		self.mouse_item.position = self.world.map_to_local(coords_hovered)
+	elif event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT and event.pressed:
+		if !world.tiles.has(coords_hovered):
+			messenger.set_message("You can only build on land, my lord.")
+			clear_mouse_state()
+			return
+		if self.world.tiles[coords_hovered].data.team != self.teams[self.player_team_index]:
+			messenger.set_message("You cam only build on territory you own, my lord.")
+			clear_mouse_state()
+			return
+		if self.world.tiles[coords_hovered].data.building != Constants.Building.None:
+			messenger.set_message("There is already a construction there, my lord.")
+			clear_mouse_state()
+			return
+		var region_built = self.world.tiles[coords_hovered].data.region
+		var action = Action.new(self.teams[self.player_team_index], Action.Type.Build, region_built, Constants.NULL_REGION, [coords_hovered], self.used_card.power.get_building())
+		actions_history.append(action)
+		self.apply_action(action)
+		card_used(self.used_card)
+		clear_mouse_state()
+			
+
 func handle_sacrifice(event):
 	var coords_hovered = world.global_pos_to_coords(event.position)
 	if event is InputEventMouseMotion:
@@ -135,21 +168,22 @@ func handle_sacrifice(event):
 			self.mouse_item.self_modulate = Color(1, 0.5, 0.5)
 		self.mouse_item.position = self.world.map_to_local(coords_hovered)
 	elif event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT and event.pressed:
-		if world.tiles.has(coords_hovered):
-			if self.world.tiles[coords_hovered].data.team == self.teams[self.player_team_index]:
-				var region_sacrificed = self.world.tiles[coords_hovered].data.region
-				var action = Action.new(self.teams[self.player_team_index], Action.Type.Sacrifice, region_sacrificed)
-				actions_history.append(action)
-				self.apply_action(action)
-				if self.used_card != null:
-					card_used(self.used_card)
-				clear_mouse_state()
-			else:
-				messenger.set_message("You cannot sacrifice the people of a territory you don't own, my lord.")
-				clear_mouse_state()
-		else:
+		if !world.tiles.has(coords_hovered):
 			messenger.set_message("There are no people to sacrifice here, my lord.")
 			clear_mouse_state()
+			return
+		if self.world.tiles[coords_hovered].data.team != self.teams[self.player_team_index]:
+			messenger.set_message("You cannot sacrifice the people of a territory you don't own, my lord.")
+			clear_mouse_state()
+			return
+		var region_sacrificed = self.world.tiles[coords_hovered].data.region
+		var action = Action.new(self.teams[self.player_team_index], Action.Type.Sacrifice, region_sacrificed)
+		actions_history.append(action)
+		self.apply_action(action)
+		if self.used_card != null:
+			card_used(self.used_card)
+		clear_mouse_state()
+			
 		
 
 func _unhandled_input(event):
@@ -173,6 +207,9 @@ func _unhandled_input(event):
 					return
 				MouseState.Sacrifice:
 					handle_sacrifice(event)
+					return
+				MouseState.Build:
+					handle_building(event)
 					return
 				_:
 					pass
@@ -220,20 +257,29 @@ func _on_card_selected(card):
 	
 
 func use_card(c):
-	var power = c.power
-	print("Using power %s" % power.id)
 	self.used_card = c
 	c.highlight(true)
-	match power.id:
+	match c.power.id:
 		Power.Type.Faith:
-			self.add_faith(self.teams[self.player_team_index], power.strength)
+			self.add_faith(self.teams[self.player_team_index], c.power.strength)
 			self.card_used(c)
 		Power.Type.Sink:
-			set_shape(power.shape.coords.keys(), MouseState.Sink)
+			set_shape(c.power.shape.coords.keys(), MouseState.Sink)
 		Power.Type.Emerge:
-			set_shape(power.shape.coords.keys(), MouseState.Emerge)
+			set_shape(c.power.shape.coords.keys(), MouseState.Emerge)
 		Power.Type.Sacrifice:
 			set_sacrifice()
+		Power.Type.Barracks:
+			set_building(c.power.get_building())
+		Power.Type.Temple:
+			set_building(c.power.get_building())
+		Power.Type.Fort:
+			set_building(c.power.get_building())
+		Power.Type.Shrine:
+			set_building(c.power.get_building())
+		_:
+			Utils.log("Unknown power type: %s, %s" % [c.power.id, c.power.name])
+			self.card_used(c)
 			
 	
 func card_used(c):
@@ -291,7 +337,7 @@ func apply_building(tile_coords, building):
 	var team_id = self.world.tiles[tile_coords].data.team
 	match building:
 		Constants.Building.Temple:
-			pass
+			self.add_faith(team_id, Constants.TEMPLE_FAITH_PER_TURN)
 
 
 func clear_selected_region():
@@ -391,6 +437,8 @@ func apply_action(action : Action):
 			await self.world.emerge_tiles(action.tiles)
 		Action.Type.Sacrifice:
 			sacrifice_region(action.region_from, action.team)
+		Action.Type.Build:
+			self.world.tiles[action.tiles[0]].set_building(action.misc)
 		Action.Type.None:
 			pass
 		_:
@@ -429,6 +477,13 @@ func set_sacrifice():
 	self.world.add_child(mouse_item)
 	self.mouse_item.global_position = get_viewport().get_mouse_position()
 	self.mouse_state = MouseState.Sacrifice
+
+func set_building(building):
+	self.mouse_item = Sprite2D.new()
+	self.mouse_item.texture = Constants.BUILDINGS[building].texture
+	self.world.add_child(mouse_item)
+	self.mouse_item.global_position = get_viewport().get_mouse_position()
+	self.mouse_state = MouseState.Build
 
 func fast_forward(val):
 	Settings.skip(val)

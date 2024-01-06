@@ -26,14 +26,15 @@ func set_buyable(b : bool):
 	self.buyable = b
 	self.power_cost.modulate = COLOR_VALID if b else COLOR_INVALID
 
-const ICONS = {
+var ICONS = {
 	Power.Type.Faith: preload("res://assets/icons/trident.png"),
 	Power.Type.Sacrifice: preload("res://assets/icons/skull.png"),
 	Power.Type.Sink : preload("res://assets/tiles/hex_shape.png"),
 	Power.Type.Emerge : preload("res://assets/tiles/hex_shape.png"),
-	Power.Type.Barracks: preload("res://assets/icons/person.png"),
-	Power.Type.Temple: preload("res://assets/icons/temple.png"),
-	Power.Type.Fort: preload("res://assets/icons/castle.png"),
+	Power.Type.Barracks: Constants.BUILDINGS[Constants.Building.Barracks].texture,
+	Power.Type.Temple: Constants.BUILDINGS[Constants.Building.Temple].texture,
+	Power.Type.Fort: Constants.BUILDINGS[Constants.Building.Fort].texture,
+	Power.Type.Shrine: Constants.BUILDINGS[Constants.Building.Shrine].texture,
 }
 
 func clear_tweens():
