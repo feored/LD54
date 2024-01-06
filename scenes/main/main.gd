@@ -55,6 +55,13 @@ func _ready():
 	self.card_selector.card_picked.connect(Callable(self, "_on_card_selected"))
 	self.load_map(Settings.current_map.teams, Settings.current_map.regions)
 	self.add_teams()
+
+	# init cards
+	for i in range(5):
+		var power = Power.new(randi() % Power.Type.size(), (randi() % 5) + 1)
+		var card = card_prefab.instantiate()
+		card.init(power)
+		self.deck.add_card(card)
 	
 	self.game_started = true
 	self.world.camera.move_instant(self.world.map_to_local(closest_player_tile_coords()))

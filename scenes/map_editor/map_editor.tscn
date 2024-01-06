@@ -1,4 +1,4 @@
-[gd_scene load_steps=7 format=3 uid="uid://jphqct536elm"]
+[gd_scene load_steps=8 format=3 uid="uid://jphqct536elm"]
 
 [ext_resource type="Script" path="res://scenes/map_editor/map_editor.gd" id="1_fr50u"]
 [ext_resource type="PackedScene" uid="uid://b8opucxucl032" path="res://world/world.tscn" id="1_w0dbr"]
@@ -17,6 +17,9 @@ height = 8
 fill = 1
 fill_from = Vector2(0.5, 0.5)
 fill_to = Vector2(1, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_8q531"]
+bg_color = Color(0, 0, 0, 0.752941)
 
 [node name="MapEditor" type="Node2D"]
 script = ExtResource("1_fr50u")
@@ -164,19 +167,73 @@ text = "Build"
 [node name="HBoxContainer2" type="HBoxContainer" parent="MapEditorUI/TeamsUI/MarginContainer/HBoxContainer"]
 layout_mode = 2
 
-[node name="PlayBtn" type="Button" parent="MapEditorUI/TeamsUI/MarginContainer/HBoxContainer/HBoxContainer2"]
-unique_name_in_owner = true
+[node name="Label" type="Label" parent="MapEditorUI/TeamsUI/MarginContainer/HBoxContainer/HBoxContainer2"]
 layout_mode = 2
-text = "Play Map"
+text = "Map Name"
+
+[node name="MapNameEdit" type="LineEdit" parent="MapEditorUI/TeamsUI/MarginContainer/HBoxContainer/HBoxContainer2"]
+layout_mode = 2
+placeholder_text = "savegame"
+max_length = 20
+expand_to_text_length = true
 
 [node name="SaveBtn" type="Button" parent="MapEditorUI/TeamsUI/MarginContainer/HBoxContainer/HBoxContainer2"]
 unique_name_in_owner = true
 layout_mode = 2
 text = "Save Map"
 
-[node name="LoadBtn2" type="Button" parent="MapEditorUI/TeamsUI/MarginContainer/HBoxContainer/HBoxContainer2"]
+[node name="PlayBtn" type="Button" parent="MapEditorUI/TeamsUI/MarginContainer/HBoxContainer/HBoxContainer2"]
+unique_name_in_owner = true
 layout_mode = 2
-text = "Load Saved Map"
+text = "Play Map"
+
+[node name="LoadButton" type="Button" parent="MapEditorUI"]
+offset_top = 472.0
+offset_right = 40.0
+offset_bottom = 493.0
+theme = ExtResource("2_kvbud")
+text = "Load"
+
+[node name="Loader" type="PanelContainer" parent="MapEditorUI"]
+unique_name_in_owner = true
+visible = false
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_8q531")
+
+[node name="LoaderPanel" type="PanelContainer" parent="MapEditorUI/Loader"]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+theme = ExtResource("2_kvbud")
+
+[node name="MarginContainer" type="MarginContainer" parent="MapEditorUI/Loader/LoaderPanel"]
+layout_mode = 2
+theme_override_constants/margin_left = 5
+theme_override_constants/margin_top = 5
+theme_override_constants/margin_right = 5
+theme_override_constants/margin_bottom = 5
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MapEditorUI/Loader/LoaderPanel/MarginContainer"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="MapEditorUI/Loader/LoaderPanel/MarginContainer/VBoxContainer"]
+layout_mode = 2
+text = "Saved Maps"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="SavedMapsGrid" type="GridContainer" parent="MapEditorUI/Loader/LoaderPanel/MarginContainer/VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+columns = 2
+
+[node name="ReturnButton" type="Button" parent="MapEditorUI/Loader/LoaderPanel/MarginContainer/VBoxContainer"]
+layout_mode = 2
+text = "Return"
 
 [connection signal="pressed" from="MapEditorUI/DrawingUI/MarginContainer/HBoxContainer/HBoxContainer2/CenterBtn" to="." method="_on_center_btn_pressed"]
 [connection signal="pressed" from="MapEditorUI/DrawingUI/MarginContainer/HBoxContainer2/HBoxContainer/DrawBtn" to="." method="_on_draw_btn_pressed"]
@@ -191,6 +248,8 @@ text = "Load Saved Map"
 [connection signal="value_changed" from="MapEditorUI/TeamsUI/MarginContainer/HBoxContainer/HBoxContainer/PlaceTeamNum" to="." method="_on_place_team_num_value_changed"]
 [connection signal="item_selected" from="MapEditorUI/TeamsUI/MarginContainer/HBoxContainer/HBoxContainer/PickBuildingBtn" to="." method="_on_pick_building_btn_item_selected"]
 [connection signal="pressed" from="MapEditorUI/TeamsUI/MarginContainer/HBoxContainer/HBoxContainer/Buildingbtn" to="." method="_on_buildingbtn_pressed"]
-[connection signal="pressed" from="MapEditorUI/TeamsUI/MarginContainer/HBoxContainer/HBoxContainer2/PlayBtn" to="." method="_on_play_btn_pressed"]
+[connection signal="text_changed" from="MapEditorUI/TeamsUI/MarginContainer/HBoxContainer/HBoxContainer2/MapNameEdit" to="." method="_on_map_name_edit_text_changed"]
 [connection signal="pressed" from="MapEditorUI/TeamsUI/MarginContainer/HBoxContainer/HBoxContainer2/SaveBtn" to="." method="_on_save_btn_pressed"]
-[connection signal="pressed" from="MapEditorUI/TeamsUI/MarginContainer/HBoxContainer/HBoxContainer2/LoadBtn2" to="." method="_on_load_btn_2_pressed"]
+[connection signal="pressed" from="MapEditorUI/TeamsUI/MarginContainer/HBoxContainer/HBoxContainer2/PlayBtn" to="." method="_on_play_btn_pressed"]
+[connection signal="pressed" from="MapEditorUI/LoadButton" to="." method="_on_load_button_pressed"]
+[connection signal="pressed" from="MapEditorUI/Loader/LoaderPanel/MarginContainer/VBoxContainer/ReturnButton" to="." method="_on_return_button_pressed"]

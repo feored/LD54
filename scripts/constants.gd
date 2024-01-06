@@ -25,6 +25,8 @@ const NO_BORDERS = {
 	TileSet.CELL_NEIGHBOR_TOP_RIGHT_SIDE: false
 }
 
+const USER_MAPS_PATH = "user://maps/"
+
 ## Game constants
 const PLAYER_ID = 1
 const REGION_MAX_SIZE = 6
@@ -150,5 +152,10 @@ const scenarios = [
 	{"title": "The Blob", "description": "All paths lead into the blob.", "path": "blob.json"},
 	{"title": "The Wheel", "description": "wheel", "path": "wheel.json"},
 	{"title": "Rings", "description": "Ring around the rosie", "path": "rings.json"},
-	{"title": "Triangles", "description": "Triangles", "path": "triangles.json"}
+	{"title": "Triangles", "description": "Triangles", "path": "triangles.json"},
+	{
+		"title": "Triforce",
+		"description": "Power is concentrated and all vye for it.",
+		"path": "triforce.json"
+	}
 ]

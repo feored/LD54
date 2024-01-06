@@ -34,7 +34,7 @@ func remove_cell(cell_coords):
 
 
 func simulate(action: Action):
-	match action:
+	match action.action:
 		Action.Type.Move:
 			self.move_units(action.region_from, action.region_to, action.team)
 			return

@@ -9,6 +9,8 @@ extends Node2D
 @onready var play_btn = %"PlayBtn"
 @onready var save_btn = %"SaveBtn"
 @onready var pick_building_btn = %"PickBuildingBtn"
+@onready var grid = %SavedMapsGrid
+@onready var loader = %Loader
 
 const COLOR_VALID = Color(0, 1, 0, 0.75)
 const COLOR_INVALID = Color(1, 0, 0, 0.75)
@@ -41,7 +43,7 @@ var highest_team_place = 1
 var clicking = false
 
 var teams = []
-
+var map_name = ""
 
 ## placing regions
 var current_region_id = 0
@@ -212,16 +214,18 @@ func place_team(event):
 			self.set_state(State.None)
 			self.check_teams_valid()
 
-func save():
-	var save_game = FileAccess.open("user://savegame.json", FileAccess.WRITE)
+func save(savename = "savegame.json"):
+	if !DirAccess.dir_exists_absolute(Constants.USER_MAPS_PATH):
+		DirAccess.make_dir_absolute(Constants.USER_MAPS_PATH)
+	var save_game = FileAccess.open(Constants.USER_MAPS_PATH + savename, FileAccess.WRITE)
 	save_game.store_line(JSON.stringify(Utils.get_save_data(self.world, self.teams)))
 	save_game.close()
 
 
 
 
-func load_saved_game():
-	var save_game = FileAccess.open("user://savegame.json", FileAccess.READ)
+func load_saved_game(filename):
+	var save_game = FileAccess.open(Constants.USER_MAPS_PATH + filename, FileAccess.READ)
 	var saved_state = JSON.parse_string(save_game.get_line())
 	save_game.close()
 	self.world.clear_island()
@@ -244,12 +248,25 @@ func check_teams_valid():
 
 
 func teams_valid():
+	if map_name == "":
+		return false
 	if self.teams.size() < 2:
 		return false
 	return true
 
-func _on_load_btn_pressed():
-	load_saved_game()
+
+func _on_load_button_pressed():
+	if DirAccess.dir_exists_absolute(Constants.USER_MAPS_PATH):
+		for m in DirAccess.get_files_at(Constants.USER_MAPS_PATH):
+			var l = Label.new()
+			l.text = m
+			grid.add_child(l)
+			var b = Button.new()
+			b.text = "Load"
+			b.pressed.connect(func(): load_saved_game(m); self.loader.hide())
+			grid.add_child(b)
+	self.loader.show()
+
 
 func _on_reset_btn_pressed():
 	self.world.clear_island()
@@ -280,7 +297,7 @@ func _on_place_team_btn_pressed():
 
 
 func _on_save_btn_pressed():
-	save()
+	save(self.map_name + ".json")
 
 func _on_center_btn_pressed():
 	await self.world.camera.move_smoothed(self.world.coords_to_pos(Constants.WORLD_CENTER), 5)
@@ -300,12 +317,6 @@ func _on_next_stage_pressed():
 	if drawing_valid():
 		self.set_stage(EditStage.Teams)
 
-
-
-func _on_load_btn_2_pressed():
-	load_saved_game()
-
-
 func _on_previous_stage_btn_pressed():
 	self.set_stage(EditStage.Drawing)
 	
@@ -317,3 +328,10 @@ func _on_buildingbtn_pressed():
 func _on_pick_building_btn_item_selected(index):
 	self.selected_building = index+1
 
+func _on_return_button_pressed():
+	self.loader.hide()
+
+
+func _on_map_name_edit_text_changed(new_text):
+	self.map_name = new_text
+	self.check_teams_valid()
