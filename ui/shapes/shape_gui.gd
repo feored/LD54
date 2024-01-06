@@ -5,14 +5,16 @@ extends Control
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
-	self.shape.init()
-	self.shape.highlight_center()
-	self.custom_control()
+	pass
 
+func roll_num(num: int, action_type: Action.Type = Action.Type.Sink):
+	self.shape.roll_num(num)
+	self.shape.highlight_type(action_type)
+	self.custom_control()
 
 func reroll():
 	self.shape.reroll()
-	self.shape.highlight_center()
+	self.shape.highlight_type()
 	self.custom_control()
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
@@ -23,7 +25,7 @@ func custom_control():
 	if not self.shape:
 		set_custom_minimum_size(Vector2.ZERO)
 		return 
-	var sorted_keys = self.shape.shape.values().duplicate()
+	var sorted_keys = self.shape.coords.values().duplicate()
 	sorted_keys.sort_custom(func(a,b): return a.position.x < b.position.x)
 	var offset_x = (-sorted_keys[0].position.x + Constants.TILE_SIZE/2) * self.shape.scale.x
 	var width = (Constants.TILE_SIZE + sorted_keys[sorted_keys.size()-1].position.x - sorted_keys[0].position.x) * self.shape.scale.x

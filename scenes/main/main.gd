@@ -10,10 +10,14 @@ const card_prefab = preload("res://ui/power/power_card.tscn")
 @onready var fastForwardButton = %FastForwardButton
 @onready var card_selector = %CardSelector
 @onready var deck = %Deck
+@onready var faith_label = %FaithLabel
 
+var used_card = null
 enum MouseState {
 	None,
 	Sink,
+	Emerge,
+	Build,
 	Move
 }
 
@@ -21,7 +25,7 @@ const player_team_index: int = 0
 
 var mouse_state = MouseState.None
 
-var sink_item : Shape = null
+var tile_item : Shape = null
 var selected_region = null
 
 var teams : Array[int] = []
@@ -68,31 +72,64 @@ func clear_mouse_state():
 	clear_sinking()
 	clear_selected_region()
 	self.mouse_state = MouseState.None
+	if self.used_card != null:
+		self.used_card.highlight(false)
+		self.used_card = null
 
 func clear_sinking():
-	if self.sink_item != null:
-		self.sink_item.queue_free()
-	self.sink_item = null
+	if self.tile_item != null:
+		self.tile_item.queue_free()
+	self.tile_item = null
 
-func sacrifice_tiles(coords):
-	var sink_action = Action.new(self.teams[self.player_team_index], Constants.Action.Sacrifice, 0, 0, coords )
-	actions_history.append(sink_action)
-	self.apply_action(sink_action)
+func sink_tiles(coords):
+	var action = Action.new(self.teams[self.player_team_index], Action.Type.Sink, 0, 0, coords )
+	actions_history.append(action)
+	self.apply_action(action)
 
+func emerge_tiles(coords):
+	var action = Action.new(self.teams[self.player_team_index], Action.Type.Emerge, 0, 0, coords )
+	actions_history.append(action)
+	self.apply_action(action)
 
-func handle_sinking(event):
+func handle_tile_card(event):
 	if event is InputEventMouseMotion:
 		var tile_hovered = world.global_pos_to_coords(event.position)
-		self.sink_item.try_place(tile_hovered, self.world.tiles.keys())
-		self.sink_item.position = self.world.map_to_local(tile_hovered)
+		if mouse_state == MouseState.Sink:
+			self.tile_item.try_place(tile_hovered, self.world.tiles.keys())
+		elif mouse_state == MouseState.Emerge:
+			self.tile_item.try_emerge(tile_hovered, self.world.tiles.keys())
+		self.tile_item.position = self.world.map_to_local(tile_hovered)
 	elif event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT and event.pressed:
 		var tile_hovered = world.global_pos_to_coords(event.position)
-		if self.sink_item.placeable(tile_hovered, self.world.tiles.keys()):
-			sacrifice_tiles(self.sink_item.adjusted_shape_coords(tile_hovered))
-			self.clear_mouse_state()
+		if self.mouse_state == MouseState.Sink:
+			handle_sink(tile_hovered)
+		elif self.mouse_state == MouseState.Emerge:
+			handle_emerge(tile_hovered)
 		else:
-			messenger.set_message("You cannot sink that which has already sunk, my lord.")
 			clear_mouse_state()
+
+func handle_emerge(tile_hovered):
+	if self.tile_item.emergeable(tile_hovered, self.world.tiles.keys()):
+		emerge_tiles(self.tile_item.adjusted_shape_coords(tile_hovered))
+		if self.used_card != null:
+			card_used(self.used_card)
+		self.clear_mouse_state()
+	else:
+		messenger.set_message("You can only raise land from the sea, my lord.")
+		clear_mouse_state()
+
+func handle_sink(tile_hovered):
+	if self.tile_item.placeable(tile_hovered, self.world.tiles.keys()):
+		sink_tiles(self.tile_item.adjusted_shape_coords(tile_hovered))
+		if self.used_card != null:
+			print("CALLING CARD USED")
+			card_used(self.used_card)
+		else:
+			print("CARD IS NULL")
+		self.clear_mouse_state()
+	else:
+		messenger.set_message("You cannot sink that which has already sunk, my lord.")
+		clear_mouse_state()
 
 func _unhandled_input(event):
 	if event.is_action_pressed("skip"):
@@ -106,8 +143,8 @@ func _unhandled_input(event):
 		if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_RIGHT and event.pressed:
 			clear_mouse_state()
 		elif event is InputEventMouse:
-			if self.mouse_state == MouseState.Sink:
-				handle_sinking(event)
+			if self.mouse_state == MouseState.Sink or self.mouse_state == MouseState.Emerge:
+				handle_tile_card(event)
 			else:
 				var coords_clicked = world.global_pos_to_coords(event.position)
 				if world.tiles.has(coords_clicked):
@@ -146,6 +183,7 @@ func _on_card_selected(card):
 		card.disconnect_picked()
 		card.picked.connect(func(): use_card(card))
 		self.deck.add_card(card)
+		self.deck.update_faith(self.faith[self.teams[self.player_team_index]])
 	self.card_selector.hide()
 	Settings.input_locked = false
 	lock_controls(false)
@@ -153,8 +191,23 @@ func _on_card_selected(card):
 
 func use_card(c):
 	var power = c.power
-	print("Using power %s" % power)
+	print("Using power %s" % power.id)
+	self.used_card = c
+	c.highlight(true)
+	match power.id:
+		Power.Type.Faith:
+			self.add_faith(self.teams[self.player_team_index], power.strength)
+			self.card_used(c)
+		Power.Type.Sink:
+			set_shape(power.shape.coords.keys(), MouseState.Sink)
+		Power.Type.Emerge:
+			set_shape(power.shape.coords.keys(), MouseState.Emerge)
+			
+	
+func card_used(c):
+	self.add_faith(self.teams[self.player_team_index], -c.power.cost)
 	self.deck.remove_card(c)
+	self.used_card = null
 
 func closest_player_tile_coords():
 	var closest_player_tile = Constants.NULL_COORDS
@@ -238,7 +291,7 @@ func handle_move(clicked_region):
 			self.world.regions[selected_region].update()
 			clicked_region.update()
 			if self.world.regions[selected_region].data.units > 1:
-				var move = Action.new(self.teams[self.player_team_index], Constants.Action.Move, selected_region, clicked_region.data.id )
+				var move = Action.new(self.teams[self.player_team_index], Action.Type.Move, selected_region, clicked_region.data.id )
 				actions_history.append(move)
 				self.apply_action(move)
 			else:
@@ -272,7 +325,7 @@ func play_turn(team_id):
 			await Utils.wait(0.1)
 		var bot_actions = thread.wait_to_finish()
 		for bot_action in bot_actions:
-			if bot_action.action == Constants.Action.None:
+			if bot_action.action == Action.Type.None:
 				playing = false
 				break
 			await apply_action(bot_action)
@@ -298,15 +351,29 @@ func generate_units(team):
 
 func apply_action(action : Action):
 	match action.action:
-		Constants.Action.Move:
+		Action.Type.Move:
 			await self.world.move_units(action.region_from, action.region_to, action.team)
-		Constants.Action.Sacrifice:
+		Action.Type.Sink:
 			await self.world.sink_tiles(action.tiles)
-		Constants.Action.None:
+		Action.Type.Emerge:
+			await self.world.emerge_tiles(action.tiles)
+		Action.Type.None:
 			pass
 		_:
-			Utils.log("Unknown action: %s" % action.action)
+			Utils.log("Unknown action: %s" % action)
 	check_win_condition()
+
+func set_faith(team_id, amount):
+	self.faith[team_id] = amount
+	self.deck.update_faith(self.faith[team_id])
+	if team_id == self.teams[self.player_team_index]:
+		self.faith_label.set_text(str(amount))
+
+func add_faith(team_id, amount):
+	self.faith[team_id] += amount
+	self.deck.update_faith(self.faith[team_id])
+	if team_id == self.teams[self.player_team_index]:
+		self.faith_label.set_text(str(self.faith[team_id]))
 
 func load_map(map_teams, map_regions):
 	self.world.clear_island()
@@ -315,13 +382,12 @@ func load_map(map_teams, map_regions):
 		self.teams.append(int(t)) ## json is parsed as floats
 	self.world.load_regions(map_regions)
 
-func pick_shape_to_sink(shape_coords):
-	self.clear_mouse_state()
-	self.sink_item = shapePrefab.instantiate()
-	self.sink_item.init_with_coords(shape_coords)
-	self.world.add_child(sink_item)
-	self.sink_item.global_position = get_viewport().get_mouse_position()
-	self.mouse_state = MouseState.Sink
+func set_shape(shape_coords, mode):
+	self.tile_item = shapePrefab.instantiate()
+	self.tile_item.init_with_coords(shape_coords)
+	self.world.add_child(tile_item)
+	self.tile_item.global_position = get_viewport().get_mouse_position()
+	self.mouse_state = mode
 
 func fast_forward(val):
 	Settings.skip(val)

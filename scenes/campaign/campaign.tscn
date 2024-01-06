@@ -4,8 +4,8 @@
 [ext_resource type="Script" path="res://scenes/campaign/campaign.gd" id="1_uyg8v"]
 [ext_resource type="PackedScene" uid="uid://pu46mkcjdswb" path="res://ui/esc_menu/esc_menu.tscn" id="2_5qe7g"]
 [ext_resource type="Theme" uid="uid://3t61g0061mea" path="res://assets/theme.tres" id="3_71aav"]
-[ext_resource type="Texture2D" uid="uid://db3bht83hhsgb" path="res://assets/ui/left.png" id="4_bmyya"]
-[ext_resource type="Texture2D" uid="uid://djyq8pin6esph" path="res://assets/ui/right.png" id="5_0euq5"]
+[ext_resource type="Texture2D" uid="uid://d38dt7djpildn" path="res://assets/ui/left.png" id="4_bmyya"]
+[ext_resource type="Texture2D" uid="uid://bllil20ixoep1" path="res://assets/ui/right.png" id="5_0euq5"]
 
 [node name="Campaign" type="Node2D"]
 script = ExtResource("1_uyg8v")

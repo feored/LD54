@@ -1,21 +1,24 @@
-[gd_scene load_steps=6 format=3 uid="uid://bgm1rdglwaad5"]
+[gd_scene load_steps=8 format=3 uid="uid://bgm1rdglwaad5"]
 
 [ext_resource type="Theme" uid="uid://3t61g0061mea" path="res://assets/theme.tres" id="1_k1qef"]
+[ext_resource type="Texture2D" uid="uid://dbhcxfrm6mdyp" path="res://assets/ui/card_border_gold.png" id="2_5br05"]
 [ext_resource type="Script" path="res://ui/power/power_card.gd" id="2_i2460"]
 [ext_resource type="Texture2D" uid="uid://bmpm2kp3lr23y" path="res://assets/icons/castle.png" id="2_volv3"]
+[ext_resource type="PackedScene" uid="uid://r53ogglkfpl1" path="res://ui/shapes/shape_gui.tscn" id="3_5y38j"]
 [ext_resource type="Texture2D" uid="uid://bxqvi5615lj3b" path="res://assets/icons/trident.png" id="3_kq5p4"]
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_t1ma0"]
-bg_color = Color(0.458824, 0.345098, 0.32549, 1)
-border_width_left = 2
-border_width_top = 2
-border_width_right = 2
-border_width_bottom = 2
-border_color = Color(0.1875, 0.21875, 0.261719, 1)
-corner_radius_top_left = 5
-corner_radius_top_right = 5
-corner_radius_bottom_right = 5
-corner_radius_bottom_left = 5
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_cts28"]
+content_margin_left = 2.0
+content_margin_top = 2.0
+content_margin_right = 2.0
+content_margin_bottom = 2.0
+texture = ExtResource("2_5br05")
+texture_margin_left = 16.0
+texture_margin_top = 16.0
+texture_margin_right = 16.0
+texture_margin_bottom = 16.0
+axis_stretch_horizontal = 2
+axis_stretch_vertical = 2
 
 [node name="PowerCard" type="PanelContainer"]
 custom_minimum_size = Vector2(125, 0)
@@ -23,7 +26,7 @@ offset_right = 125.0
 offset_bottom = 165.0
 pivot_offset = Vector2(62.5, 82.5)
 theme = ExtResource("1_k1qef")
-theme_override_styles/panel = SubResource("StyleBoxFlat_t1ma0")
+theme_override_styles/panel = SubResource("StyleBoxTexture_cts28")
 script = ExtResource("2_i2460")
 
 [node name="MarginContainer" type="MarginContainer" parent="."]
@@ -53,10 +56,19 @@ theme_type_variation = &"GoldPanel"
 
 [node name="PowerIcon" type="TextureRect" parent="MarginContainer/HBoxContainer/PanelContainer"]
 unique_name_in_owner = true
+visible = false
 layout_mode = 2
 mouse_filter = 2
 texture = ExtResource("2_volv3")
 stretch_mode = 5
+
+[node name="CenterContainer" type="CenterContainer" parent="MarginContainer/HBoxContainer/PanelContainer"]
+layout_mode = 2
+
+[node name="ShapeGUI" parent="MarginContainer/HBoxContainer/PanelContainer/CenterContainer" instance=ExtResource("3_5y38j")]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
 
 [node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer/HBoxContainer"]
 layout_mode = 2

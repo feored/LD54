@@ -15,7 +15,6 @@ var cards = []
 func _ready():
 	pass  # Replace with function body.
 
-
 func add_card(card):
 	card.mouse_entered.connect(func(): try_hover(cards.find(card)))
 	card.mouse_exited.connect(func(): try_unhover(cards.find(card)))
@@ -85,6 +84,6 @@ func unhover(card_id):
 	self.cards[card_id].animate(card_placement[0], card_placement[1], BASE_Z_INDEX)
 	self.cards[card_id].state = PowerCard.State.Base
 
-# Called every frame. 'delta' is the elapsed time since the previous frame.
-func _process(delta):
-	pass
+func update_faith(new_faith):
+	for card in cards:
+		card.set_buyable(card.power.cost <= new_faith)

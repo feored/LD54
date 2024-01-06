@@ -1,8 +1,10 @@
 extends RefCounted
 class_name Action
 
+enum Type { None, Move, Sink, Emerge }
+
 var team: int = 0
-var action: int = Constants.Action.None
+var action: int = Action.Type.None
 var region_from: int = Constants.NULL_REGION
 var region_to: int = Constants.NULL_REGION
 var tiles: Array = []
@@ -31,7 +33,7 @@ func _to_string():
 		"Action: "
 		+ Constants.TEAM_NAMES[self.team]
 		+ " "
-		+ Constants.Action.keys()[self.action]
+		+ Action.Type.keys()[self.action]
 		+ " From: "
 		+ str(self.region_from)
 		+ " To: "

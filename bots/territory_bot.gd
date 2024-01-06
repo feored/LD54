@@ -145,7 +145,7 @@ func play_turn(world):
 
 	Utils.log("Calculated possible moves %s" % possible_moves.size())
 
-	var best_move = [Action.new(self.team, Constants.Action.None)]
+	var best_move = [Action.new(self.team, Action.Type.None)]
 	var best_score = default_score
 	for move in possible_moves.keys():
 		if possible_moves[move] > best_score:
@@ -159,7 +159,7 @@ func get_region_moves(region, adjacent_regions):
 	# Utils.log("Getting moves for region ", region, " adjacent regions: ", adjacent_regions.size())
 	var moves = []
 	for adjacent_region in adjacent_regions:
-		moves.append(Action.new(self.team, Constants.Action.Move, region, adjacent_region))
+		moves.append(Action.new(self.team, Action.Type.Move, region, adjacent_region))
 	#Utils.log("Moves for region ", region, ": ", moves)
 	return moves
 

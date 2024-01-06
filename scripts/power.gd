@@ -16,6 +16,7 @@ var strength: int = 0
 var cost: int = 0
 var name: String = ""
 var description: String = ""
+var shape: Shape = null
 
 var faith_icon_BBCode: String = "[img]res://assets/icons/trident.png[/img]"
 
@@ -26,6 +27,7 @@ func _init(init_id: Type, init_strength: int) -> void:
 	self.cost = get_cost()
 	self.name = get_name()
 	self.description = "[center]" + get_description() + "[/center]"
+
 
 
 func get_cost() -> int:

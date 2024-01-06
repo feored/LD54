@@ -153,6 +153,13 @@ func sink_tiles(coords_array: Array):
 	await self.camera.move_smoothed(self.coords_to_pos(coords_array[0]), 5)
 	for coords in coords_array:
 		self.tiles[coords].sink()
+
+func emerge_tiles(coords_array: Array):
+	var region_id = region_new_id()
+	spawn_region(region_id)
+	for coords in coords_array:
+		self.tiles[coords] = self.regions[region_id].spawn_cell(coords, Constants.NULL_TEAM)
+	self.regions[region_id].update()
 	
 func region_new_id():
 	if self.regions.size() == 0:
