@@ -257,6 +257,8 @@ func teams_valid():
 
 
 func _on_load_button_pressed():
+	for c in grid.get_children():
+		c.queue_free()
 	var load_save = func(m):
 		load_saved_game(m + ".json")
 		self.map_name = m
