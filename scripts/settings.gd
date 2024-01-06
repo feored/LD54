@@ -25,7 +25,7 @@ var input_locked: bool = false
 var current_map = null
 var turn_time = Constants.TURN_TIME
 var skipping = false
-var editor_mode = false
+var editor_tile_distinct_mode = false
 
 
 func _ready():

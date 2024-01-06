@@ -90,7 +90,7 @@ func init_from_save(init_data):
 
 func _ready():
 	self.position = init_position
-	self.update_cell()
+	self.update()
 
 func delete():
 	deleted.emit(self.data.coords)
@@ -104,7 +104,7 @@ func _process(delta):
 		elapsed += delta
 		self.material.set_shader_parameter("sensitivity", elapsed)
 
-func update_cell():
+func update():
 	const fake_colors = [
 		Color.WEB_GRAY,
 		Color.WEB_GREEN,
@@ -171,7 +171,7 @@ func update_cell():
 		for b in self.borders.keys():
 			self.border_objects[b].self_modulate = Color(Constants.TEAM_BORDER_COLORS[self.data.team])
 	
-	# if Settings.editor_mode:
+	# if Settings.editor_tile_distinct_mode:
 		# if self.data.region == Constants.NULL_REGION:
 		# 	self.modulate = Color(1, 0.25, 0.25, 0.75)
 		# else:
@@ -181,7 +181,10 @@ func update_cell():
 		self.self_modulate = NEUTRAL_COLOR
 	else:
 		self.self_modulate = Color(Constants.TEAM_COLORS[self.data.team])
-	#self.modulate = fake_colors[self.data.region % fake_colors.size()
+	if Settings.editor_tile_distinct_mode:
+		self.self_modulate = fake_colors[self.data.region % fake_colors.size()]
+	
+
 
 func sink():
 	animation_player.play("sink")
@@ -197,19 +200,19 @@ func sink():
 
 func set_team(new_team: int):
 	self.data.team = new_team
-	self.update_cell()
+	self.update()
 
 func set_borders(new_borders: Dictionary):
 	self.borders = new_borders.duplicate()
-	self.update_cell()
+	self.update()
 
 func set_single_border(border_changed: int , value: bool):
 	self.borders[border_changed] = value
-	self.update_cell()
+	self.update()
 
 func set_region(new_region):
 	self.data.region = new_region
-	self.update_cell()
+	self.update()
 
 func set_barred(barred_val:bool):
 	self.barred.visible = barred_val
@@ -227,12 +230,12 @@ func mark():
 	self.data.marked = true
 	#self.texture = CRACKED_TEXTURE
 	#self.modulate = Color.hex(0xacacacac)
-	self.update_cell()
+	self.update()
 	
 func set_building(new_building):
 	self.data.building = new_building
-	self.update_cell()
+	self.update()
 
 func remove_building():
 	self.data.building = Constants.Building.None
-	self.update_cell()
+	self.update()

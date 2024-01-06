@@ -28,17 +28,17 @@ func get_cost() -> int:
 		Type.Sacrifice:
 			return 0
 		Type.Sink:
-			return self.strength
+			return self.strength * 5
 		Type.Emerge:
-			return self.strength
+			return self.strength * 5
 		Type.Barracks:
-			return 2
-		Type.Temple:
 			return 5
+		Type.Temple:
+			return 20
 		Type.Fort:
-			return 10
+			return 200
 		Type.Shrine:
-			return 10
+			return 100
 		_:
 			return 0
 

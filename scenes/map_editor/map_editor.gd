@@ -70,13 +70,15 @@ func set_stage(new_stage):
 		EditStage.Drawing:
 			self.drawing_UI.show()
 			self.teams_UI.hide()
-			Settings.editor_mode = true
+			Settings.editor_tile_distinct_mode = true
 			check_drawing_valid()
 		EditStage.Teams:
 			self.drawing_UI.hide()
 			self.teams_UI.show()
-			Settings.editor_mode = false
+			Settings.editor_tile_distinct_mode = false
 			check_teams_valid()
+	for t in self.world.tiles.values():
+		t.update()
 	self.set_state(State.None)
 
 func set_state(state):
