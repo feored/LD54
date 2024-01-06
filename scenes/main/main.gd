@@ -16,6 +16,7 @@ var used_card = null
 enum MouseState {
 	None,
 	Sink,
+	Sacrifice,
 	Emerge,
 	Build,
 	Move
@@ -25,7 +26,7 @@ const player_team_index: int = 0
 
 var mouse_state = MouseState.None
 
-var tile_item : Shape = null
+var mouse_item : Node = null
 var selected_region = null
 
 var teams : Array[int] = []
@@ -69,17 +70,14 @@ func add_teams():
 			
 
 func clear_mouse_state():
-	clear_sinking()
+	if self.mouse_item != null:
+		self.mouse_item.queue_free()
+	self.mouse_item = null
 	clear_selected_region()
 	self.mouse_state = MouseState.None
 	if self.used_card != null:
 		self.used_card.highlight(false)
-		self.used_card = null
-
-func clear_sinking():
-	if self.tile_item != null:
-		self.tile_item.queue_free()
-	self.tile_item = null
+		self.used_card = null	
 
 func sink_tiles(coords):
 	var action = Action.new(self.teams[self.player_team_index], Action.Type.Sink, 0, 0, coords )
@@ -95,10 +93,10 @@ func handle_tile_card(event):
 	if event is InputEventMouseMotion:
 		var tile_hovered = world.global_pos_to_coords(event.position)
 		if mouse_state == MouseState.Sink:
-			self.tile_item.try_place(tile_hovered, self.world.tiles.keys())
+			self.mouse_item.try_place(tile_hovered, self.world.tiles.keys())
 		elif mouse_state == MouseState.Emerge:
-			self.tile_item.try_emerge(tile_hovered, self.world.tiles.keys())
-		self.tile_item.position = self.world.map_to_local(tile_hovered)
+			self.mouse_item.try_emerge(tile_hovered, self.world.tiles.keys())
+		self.mouse_item.position = self.world.map_to_local(tile_hovered)
 	elif event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT and event.pressed:
 		var tile_hovered = world.global_pos_to_coords(event.position)
 		if self.mouse_state == MouseState.Sink:
@@ -109,8 +107,8 @@ func handle_tile_card(event):
 			clear_mouse_state()
 
 func handle_emerge(tile_hovered):
-	if self.tile_item.emergeable(tile_hovered, self.world.tiles.keys()):
-		emerge_tiles(self.tile_item.adjusted_shape_coords(tile_hovered))
+	if self.mouse_item.emergeable(tile_hovered, self.world.tiles.keys()):
+		emerge_tiles(self.mouse_item.adjusted_shape_coords(tile_hovered))
 		if self.used_card != null:
 			card_used(self.used_card)
 		self.clear_mouse_state()
@@ -119,17 +117,40 @@ func handle_emerge(tile_hovered):
 		clear_mouse_state()
 
 func handle_sink(tile_hovered):
-	if self.tile_item.placeable(tile_hovered, self.world.tiles.keys()):
-		sink_tiles(self.tile_item.adjusted_shape_coords(tile_hovered))
+	if self.mouse_item.placeable(tile_hovered, self.world.tiles.keys()):
+		sink_tiles(self.mouse_item.adjusted_shape_coords(tile_hovered))
 		if self.used_card != null:
-			print("CALLING CARD USED")
 			card_used(self.used_card)
-		else:
-			print("CARD IS NULL")
 		self.clear_mouse_state()
 	else:
 		messenger.set_message("You cannot sink that which has already sunk, my lord.")
 		clear_mouse_state()
+
+func handle_sacrifice(event):
+	var coords_hovered = world.global_pos_to_coords(event.position)
+	if event is InputEventMouseMotion:
+		if world.tiles.has(coords_hovered) and self.world.tiles[coords_hovered].data.team == self.teams[self.player_team_index]:
+			self.mouse_item.self_modulate = Color(0.5, 1, 0.5)
+		else:
+			self.mouse_item.self_modulate = Color(1, 0.5, 0.5)
+		self.mouse_item.position = self.world.map_to_local(coords_hovered)
+	elif event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT and event.pressed:
+		if world.tiles.has(coords_hovered):
+			if self.world.tiles[coords_hovered].data.team == self.teams[self.player_team_index]:
+				var region_sacrificed = self.world.tiles[coords_hovered].data.region
+				var action = Action.new(self.teams[self.player_team_index], Action.Type.Sacrifice, region_sacrificed)
+				actions_history.append(action)
+				self.apply_action(action)
+				if self.used_card != null:
+					card_used(self.used_card)
+				clear_mouse_state()
+			else:
+				messenger.set_message("You cannot sacrifice the people of a territory you don't own, my lord.")
+				clear_mouse_state()
+		else:
+			messenger.set_message("There are no people to sacrifice here, my lord.")
+			clear_mouse_state()
+		
 
 func _unhandled_input(event):
 	if event.is_action_pressed("skip"):
@@ -143,15 +164,24 @@ func _unhandled_input(event):
 		if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_RIGHT and event.pressed:
 			clear_mouse_state()
 		elif event is InputEventMouse:
-			if self.mouse_state == MouseState.Sink or self.mouse_state == MouseState.Emerge:
-				handle_tile_card(event)
-			else:
-				var coords_clicked = world.global_pos_to_coords(event.position)
-				if world.tiles.has(coords_clicked):
-					if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT and event.pressed:
-						if mouse_state != MouseState.Move:
-							clear_mouse_state()
-						handle_move(self.world.get_tile_region(coords_clicked))
+			match self.mouse_state:
+				MouseState.Sink:
+					handle_tile_card(event)
+					return
+				MouseState.Emerge:
+					handle_tile_card(event)
+					return
+				MouseState.Sacrifice:
+					handle_sacrifice(event)
+					return
+				_:
+					pass
+		var coords_clicked = world.global_pos_to_coords(event.position)
+		if world.tiles.has(coords_clicked):
+			if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT and event.pressed:
+				if mouse_state != MouseState.Move:
+					clear_mouse_state()
+				handle_move(self.world.get_tile_region(coords_clicked))
 
 func lock_controls(val : bool):
 	self.endTurnButton.disabled = val
@@ -202,6 +232,8 @@ func use_card(c):
 			set_shape(power.shape.coords.keys(), MouseState.Sink)
 		Power.Type.Emerge:
 			set_shape(power.shape.coords.keys(), MouseState.Emerge)
+		Power.Type.Sacrifice:
+			set_sacrifice()
 			
 	
 func card_used(c):
@@ -357,6 +389,8 @@ func apply_action(action : Action):
 			await self.world.sink_tiles(action.tiles)
 		Action.Type.Emerge:
 			await self.world.emerge_tiles(action.tiles)
+		Action.Type.Sacrifice:
+			sacrifice_region(action.region_from, action.team)
 		Action.Type.None:
 			pass
 		_:
@@ -383,11 +417,18 @@ func load_map(map_teams, map_regions):
 	self.world.load_regions(map_regions)
 
 func set_shape(shape_coords, mode):
-	self.tile_item = shapePrefab.instantiate()
-	self.tile_item.init_with_coords(shape_coords)
-	self.world.add_child(tile_item)
-	self.tile_item.global_position = get_viewport().get_mouse_position()
+	self.mouse_item = shapePrefab.instantiate()
+	self.mouse_item.init_with_coords(shape_coords)
+	self.world.add_child(mouse_item)
+	self.mouse_item.global_position = get_viewport().get_mouse_position()
 	self.mouse_state = mode
+
+func set_sacrifice():
+	self.mouse_item = Sprite2D.new()
+	self.mouse_item.texture = load("res://assets/icons/skull.png")
+	self.world.add_child(mouse_item)
+	self.mouse_item.global_position = get_viewport().get_mouse_position()
+	self.mouse_state = MouseState.Sacrifice
 
 func fast_forward(val):
 	Settings.skip(val)
@@ -405,9 +446,12 @@ func generate_cards():
 		cards.append(card)
 	return cards
 			
-func sacrifice_region(region_id):
-	if self.world.regions[region_id].data.team == self.teams[self.player_team_index]:
-		self.faith[self.player_team] += self.world.regions[region_id].sacrifice()
+func sacrifice_region(region_id, team_id):
+	if self.world.regions[region_id].data.team == team_id:
+		self.add_faith(team_id, self.world.regions[region_id].sacrifice())
+		messenger.set_message("%s has sacrificed a region's inhabitants to the gods!" % Constants.TEAM_NAMES[team_id])
+	else:
+		Utils.log("Trying to sacrifice region %s, but it belongs to team %s" % [region_id, self.world.regions[region_id].data.team])
 
 func _on_fast_forward_button_toggled(button_pressed:bool):
 	fast_forward(button_pressed)

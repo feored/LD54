@@ -1,7 +1,7 @@
 extends RefCounted
 class_name Action
 
-enum Type { None, Move, Sink, Emerge }
+enum Type { None, Move, Sink, Emerge, Sacrifice }
 
 var team: int = 0
 var action: int = Action.Type.None
