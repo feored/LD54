@@ -11,6 +11,7 @@ extends Node2D
 @onready var pick_building_btn = %"PickBuildingBtn"
 @onready var grid = %SavedMapsGrid
 @onready var loader = %Loader
+@onready var map_name_edit = %MapNameEdit
 
 const COLOR_VALID = Color(0, 1, 0, 0.75)
 const COLOR_INVALID = Color(1, 0, 0, 0.75)
@@ -256,16 +257,24 @@ func teams_valid():
 
 
 func _on_load_button_pressed():
+	var load_save = func(m):
+		load_saved_game(m + ".json")
+		self.map_name = m
+		self.map_name_edit.text = m
+		self.loader.hide()
+		self.check_teams_valid()
 	if DirAccess.dir_exists_absolute(Constants.USER_MAPS_PATH):
 		for m in DirAccess.get_files_at(Constants.USER_MAPS_PATH):
+			var m_no_ext = m.split(".")[0]
 			var l = Label.new()
-			l.text = m
+			l.text = m_no_ext
 			grid.add_child(l)
 			var b = Button.new()
 			b.text = "Load"
-			b.pressed.connect(func(): load_saved_game(m); self.loader.hide())
+			b.pressed.connect(func(): load_save.call(m_no_ext))
 			grid.add_child(b)
 	self.loader.show()
+
 
 
 func _on_reset_btn_pressed():
