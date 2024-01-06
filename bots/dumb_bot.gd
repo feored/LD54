@@ -10,19 +10,19 @@ func play_turn(world):
 				world.regions[adjacent].data.team != Constants.NULL_TEAM
 				and world.regions[adjacent].data.team != self.team
 			):
-				return Action.new(self.team, Constants.Action.Move, region, adjacent)
+				return Action.new(self.team, Action.Type.Move, region, adjacent)
 	for region in owned_regions:
 		for adjacent in world.adjacent_regions(region):
 			if world.regions[adjacent].data.team == Constants.NULL_TEAM:
-				return Action.new(self.team, Constants.Action.Move, region, adjacent)
+				return Action.new(self.team, Action.Type.Move, region, adjacent)
 	if not is_game_locked(world, owned_regions):
 		for region in owned_regions:
 			var neighbors = world.adjacent_regions(region)
 			if is_region_landlocked(world, region, neighbors):
 				for neighbor in neighbors:
 					if not world.regions[neighbor].is_used:
-						return Action.new(self.team, Constants.Action.Move, region, neighbor)
-	return Action.new(self.team, Constants.Action.None)
+						return Action.new(self.team, Action.Type.Move, region, neighbor)
+	return Action.new(self.team, Action.Type.None)
 
 
 func can_use_region(world, region):

@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://d38dt7djpildn"
-path="res://.godot/imported/left.png-ec0ec7d67b9256e8bbc167524c46fb3a.ctex"
+uid="uid://dqyla4djl2jyh"
+path="res://.godot/imported/bluesky.png-daadeee019a836a053ddcdc3e41ccf84.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/ui/left.png"
-dest_files=["res://.godot/imported/left.png-ec0ec7d67b9256e8bbc167524c46fb3a.ctex"]
+source_file="res://assets/icons/weather/bluesky.png"
+dest_files=["res://.godot/imported/bluesky.png-daadeee019a836a053ddcdc3e41ccf84.ctex"]
 
 [params]
 

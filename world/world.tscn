@@ -1,9 +1,11 @@
-[gd_scene load_steps=10 format=3 uid="uid://b8opucxucl032"]
+[gd_scene load_steps=14 format=3 uid="uid://b8opucxucl032"]
 
 [ext_resource type="TileSet" uid="uid://dswtp6vpo8tyt" path="res://world/tiles/tileset.tres" id="1_tacgr"]
 [ext_resource type="Script" path="res://world/camera/Camera2D.gd" id="2_cguu5"]
 [ext_resource type="Script" path="res://world/world.gd" id="2_priir"]
 [ext_resource type="Script" path="res://world/clouds/CloudGenerator.gd" id="3_55hig"]
+[ext_resource type="Shader" path="res://rain.gdshader" id="5_orjlo"]
+[ext_resource type="Shader" path="res://world/lightning.gdshader" id="6_nkaxu"]
 
 [sub_resource type="Animation" id="Animation_o4rvj"]
 resource_name = "float_from_left"
@@ -77,6 +79,24 @@ _data = {
 "float_right": SubResource("Animation_738tj")
 }
 
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_emiak"]
+shader = ExtResource("5_orjlo")
+shader_parameter/count = 150
+shader_parameter/slant = 0.1
+shader_parameter/speed = 40.427
+shader_parameter/blur = 0.0015
+shader_parameter/colour = Color(1, 1, 1, 1)
+shader_parameter/size = Vector2(0.005, 0.225)
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_bsjdk"]
+shader = ExtResource("6_nkaxu")
+shader_parameter/effect_color = Color(0.478431, 0.6, 0.972549, 1)
+shader_parameter/octave_count = 20
+shader_parameter/amp_start = 0.19
+shader_parameter/amp_coeff = 0.605
+shader_parameter/freq_coeff = 2.0
+shader_parameter/speed = 2.12
+
 [node name="World" type="TileMap"]
 tile_set = ExtResource("1_tacgr")
 format = 2
@@ -136,3 +156,47 @@ script = ExtResource("3_55hig")
 libraries = {
 "": SubResource("AnimationLibrary_rslaw")
 }
+
+[node name="Weather" type="CanvasLayer" parent="."]
+layer = 0
+visible = false
+
+[node name="Night" type="ColorRect" parent="Weather"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 1
+color = Color(0.0235294, 0.0862745, 0.321569, 0.556863)
+
+[node name="Rain" type="ColorRect" parent="Weather"]
+material = SubResource("ShaderMaterial_emiak")
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 1
+
+[node name="Lightning" type="ColorRect" parent="Weather"]
+visible = false
+material = SubResource("ShaderMaterial_bsjdk")
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 1
+
+[node name="Lightning2" type="ColorRect" parent="Weather"]
+visible = false
+material = SubResource("ShaderMaterial_bsjdk")
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 292.0
+offset_right = 292.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 1

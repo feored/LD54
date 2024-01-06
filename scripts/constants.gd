@@ -36,7 +36,6 @@ const CAMERA_SPEED = 5
 const ISLAND_SIZE_DEFAULT = 0.25
 const ISLAND_SIZE_MIN = 0.1
 const ISLAND_SIZE_MAX = 0.5
-const GOLD_PER_TURN_PER_REGION = 1
 const SACRIFICE_SHAPES = 3
 const SHAPE_REROLL_COST = 1
 const HOVER_TIME_BEFORE_POPUP = 0.5
@@ -44,8 +43,8 @@ const TEMPLE_FAITH_PER_TURN = 5
 const MINE_GOLD_PER_TURN = 2
 const CASTLE_UNITS_REMOVED = 10
 const BARRACKS_UNITS_PER_TURN = 3
-const DEFAULT_GOLD = 0
 const DEFAULT_FAITH = 0
+const DEFAULT_DECK_SIZE = 5
 
 ## Null values
 const NULL_COORDS = Vector2i(-9999, -9999)
@@ -61,7 +60,6 @@ const DEBUG_REGION = false
 
 ## Game enums
 enum GameMode { Play, MapEditor, Scenario }
-enum Action { None, Move, Sacrifice }
 
 ## Teams
 const TEAM_COLORS = [
@@ -111,14 +109,13 @@ const TURN_TIME = 0.3
 const MENU_WAIT_TIME = 1
 
 ## Buildings
-enum Building { None, Barracks, Temple, Mine, Fort, Test2, Test3, Test4 }
+enum Building { None, Barracks, Temple, Fort, Shrine }
 
 const BUILDINGS = {
 	Building.Barracks:
 	{
 		"id": Building.Barracks,
 		"name": "Barracks",
-		"cost": 5,
 		"texture": preload("res://assets/icons/person.png"),
 		"tooltip": "This territory will generate +%s unit per turn." % BARRACKS_UNITS_PER_TURN,
 	},
@@ -126,59 +123,25 @@ const BUILDINGS = {
 	{
 		"id": Building.Temple,
 		"name": "Temple",
-		"cost": 5,
 		"texture": preload("res://assets/icons/temple.png"),
 		"tooltip": "This territory will generate +%s faith per turn." % TEMPLE_FAITH_PER_TURN,
-	},
-	Building.Mine:
-	{
-		"id": Building.Mine,
-		"name": "Mine",
-		"cost": 5,
-		"texture": preload("res://assets/icons/shovel.png"),
-		"tooltip": "This territory will generate +%s gold per turn." % MINE_GOLD_PER_TURN,
 	},
 	Building.Fort:
 	{
 		"id": Building.Fort,
 		"name": "Fort",
-		"cost": 20,
 		"texture": preload("res://assets/icons/castle.png"),
 		"tooltip":
 		"Enemies invading this territory lose %s units instantly." % CASTLE_UNITS_REMOVED,
 	},
-	Building.Test2:
+	Building.Shrine:
 	{
-		"id": Building.Test2,
-		"name": "Test2",
-		"cost": 5,
-		"texture": preload("res://assets/icons/shovel.png"),
-		"tooltip": "This territory will generate +1 gold per turn.",
-	},
-	Building.Test3:
-	{
-		"id": Building.Test3,
-		"name": "Test3",
-		"cost": 5,
-		"texture": preload("res://assets/icons/shovel.png"),
-		"tooltip": "This territory will generate +1 gold per turn.",
-	},
-	Building.Test4:
-	{
-		"id": Building.Test4,
-		"name": "Test4",
-		"cost": 5,
-		"texture": preload("res://assets/icons/shovel.png"),
-		"tooltip": "This territory will generate +1 gold per turn.",
+		"id": Building.Shrine,
+		"name": "Shrine",
+		"texture": preload("res://assets/icons/card.png"),
+		"tooltip": "This territory will generate one power every turn.",
 	},
 }
-
-const DEFAULT_BUILDINGS = [
-	Building.Barracks,
-	Building.Temple,
-	Building.Mine,
-	Building.Fort,
-]
 
 ## Scenarios
 const scenarios = [

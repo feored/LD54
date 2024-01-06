@@ -27,7 +27,7 @@ func spawn_region(id: int, from_save: Dictionary = {}):
 	region.coords_to_pos = Callable(self, "coords_to_pos")
 	region.tile_deleted.connect(Callable(self, "on_tile_deleted"))
 	region.region_deleted.connect(Callable(self, "on_region_deleted"))
-	region.tile_added.connect(func(tile): self.tiles[tile.data.coords] = tile)
+	region.tile_added.connect(Callable(self, "on_tile_added"))
 	if from_save.size() > 0:
 		region.init_from_save(from_save)
 	self.regions_parent.add_child(region)
@@ -47,6 +47,8 @@ func on_region_deleted(id: int):
 		if self.adjacencies[r].has(id):
 			self.adjacencies[r].erase(id)
 			
+func on_tile_added(tile):
+	self.tiles[tile.data.coords] = tile
 
 func on_tile_deleted(coords):
 	self.tiles.erase(coords)
@@ -153,11 +155,27 @@ func sink_tiles(coords_array: Array):
 	await self.camera.move_smoothed(self.coords_to_pos(coords_array[0]), 5)
 	for coords in coords_array:
 		self.tiles[coords].sink()
+
+func emerge_tiles(coords_array: Array):
+	var region_id = region_new_id()
+	spawn_region(region_id)
+	for coords in coords_array:
+		self.tiles[coords] = self.regions[region_id].spawn_cell(coords, Constants.NULL_TEAM)
+	self.regions[region_id].update()
+	recalculate_adjacencies(region_id)
 	
 func region_new_id():
 	if self.regions.size() == 0:
 		return 0
 	return self.regions.keys().max() + 1
+
+func recalculate_adjacencies(region: int):
+	self.adjacencies[region] = self.adjacent_regions(region)
+	for r in self.adjacencies:
+		if region in self.adjacencies[r] and r not in self.adjacencies[region]:
+			self.adjacencies[r].erase(region)
+		if r in self.adjacencies[region] and region not in self.adjacencies[r]:
+			self.adjacencies[r].append(region)
 
 func recalculate_region(region: int):
 	if not self.regions.has(region):
@@ -169,6 +187,7 @@ func recalculate_region(region: int):
 	var tilesets = get_contiguous_tilesets(region_tile_coords)
 	if tilesets.size() == 1:
 		self.regions[region].update()
+		recalculate_adjacencies(region)
 		return ## all contiguous
 	
 	var new_regions = []

@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://d38dt7djpildn"
-path="res://.godot/imported/left.png-ec0ec7d67b9256e8bbc167524c46fb3a.ctex"
+uid="uid://dbhcxfrm6mdyp"
+path="res://.godot/imported/card_border_gold.png-e13d7e3afcd1f5988d3569f1457e0d6a.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/ui/left.png"
-dest_files=["res://.godot/imported/left.png-ec0ec7d67b9256e8bbc167524c46fb3a.ctex"]
+source_file="res://assets/ui/card_border_gold.png"
+dest_files=["res://.godot/imported/card_border_gold.png-e13d7e3afcd1f5988d3569f1457e0d6a.ctex"]
 
 [params]
 
