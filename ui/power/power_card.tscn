@@ -25,6 +25,8 @@ custom_minimum_size = Vector2(125, 0)
 offset_right = 125.0
 offset_bottom = 165.0
 pivot_offset = Vector2(62.5, 82.5)
+size_flags_horizontal = 6
+size_flags_vertical = 2
 theme = ExtResource("1_k1qef")
 theme_override_styles/panel = SubResource("StyleBoxTexture_cts28")
 script = ExtResource("2_i2460")
@@ -79,12 +81,13 @@ mouse_filter = 2
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_vertical = 3
+size_flags_stretch_ratio = 10.04
 bbcode_enabled = true
 text = "[center]Build a fort. The fort defends against 20 units when attacked."
-fit_content = true
 
 [node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer/HBoxContainer/VBoxContainer"]
 layout_mode = 2
+size_flags_stretch_ratio = 0.95
 mouse_filter = 2
 
 [node name="Label" type="Label" parent="MarginContainer/HBoxContainer/VBoxContainer/HBoxContainer"]

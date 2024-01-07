@@ -64,6 +64,9 @@ func mouse_inside():
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
+	self.config()
+
+func config():
 	if self.power == null:
 		return
 	self.power_name.text = self.power.name

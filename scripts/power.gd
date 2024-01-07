@@ -46,7 +46,7 @@ func get_cost() -> int:
 func get_description() -> String:
 	match self.id:
 		Type.Faith:
-			return "Gain " + str(self.strength) + faith_icon_BBCode
+			return "Gain " + str(self.strength * 10) + faith_icon_BBCode
 		Type.Sacrifice:
 			return "Sacrifice all units in a region to gain as much " + faith_icon_BBCode + " ."
 		Type.Sink:

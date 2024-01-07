@@ -105,50 +105,6 @@ func _process(delta):
 		self.material.set_shader_parameter("sensitivity", elapsed)
 
 func update():
-	const fake_colors = [
-		Color.WEB_GRAY,
-		Color.WEB_GREEN,
-		Color.ALICE_BLUE,
-		Color.ANTIQUE_WHITE,
-		Color.AQUA,
-		Color.AQUAMARINE,
-		Color.AZURE,
-		Color.BEIGE,
-		Color.BISQUE,
-		Color.BLACK,
-		Color.BLANCHED_ALMOND,
-		Color.BLUE,
-		Color.BLUE_VIOLET,
-		Color.BROWN,
-		Color.BURLYWOOD,
-		Color.CADET_BLUE,
-		Color.CHARTREUSE,
-		Color.CHOCOLATE,
-		Color.CORAL,
-		Color.CORNFLOWER_BLUE,
-		Color.CORNSILK,
-		Color.CRIMSON,
-		Color.CYAN,
-		Color.DARK_BLUE,
-		Color.DARK_CYAN,
-		Color.DARK_GOLDENROD,
-		Color.DARK_GRAY,
-		Color.DARK_GREEN,
-		Color.DARK_KHAKI,
-		Color.DARK_MAGENTA,
-		Color.DARK_OLIVE_GREEN,
-		Color.DARK_ORANGE,
-		Color.DARK_ORCHID,
-		Color.DARK_RED,
-		Color.DARK_SALMON,
-		Color.DARK_SEA_GREEN,
-		Color.DARK_SLATE_BLUE,
-		Color.DARK_SLATE_GRAY,
-		Color.DARK_TURQUOISE,
-		Color.DARK_VIOLET,
-		Color.DEEP_PINK,
-		Color.DEEP_SKY_BLUE,
-	]
 	if self.data.building != Constants.Building.None:
 		building_sprite.texture = Constants.BUILDINGS[self.data.building].texture
 		building_sprite.visible = true
@@ -182,7 +138,7 @@ func update():
 	else:
 		self.self_modulate = Color(Constants.TEAM_COLORS[self.data.team])
 	if Settings.editor_tile_distinct_mode:
-		self.self_modulate = fake_colors[self.data.region % fake_colors.size()]
+		self.self_modulate = Color.from_hsv((self.data.region) / 24.0, 1, 1)
 	
 
 

@@ -118,7 +118,7 @@ const BUILDINGS = {
 	{
 		"id": Building.Barracks,
 		"name": "Barracks",
-		"texture": preload("res://assets/icons/person.png"),
+		"texture": preload("res://assets/icons/sword.png"),
 		"tooltip": "This territory will generate +%s unit per turn." % BARRACKS_UNITS_PER_TURN,
 	},
 	Building.Temple:

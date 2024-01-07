@@ -43,7 +43,7 @@ var bots : Dictionary = {}
 var game_started : bool = false
 var spectating : bool = false
 
-
+var cards_to_pick = 1
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
@@ -52,16 +52,19 @@ func _ready():
 	self.world.init(Callable(self.messenger, "set_message"))
 	Music.play_track(Music.Track.World)
 	Sfx.enable_track(Sfx.Track.Boom)
-	self.card_selector.card_picked.connect(Callable(self, "_on_card_selected"))
+	self.card_selector.cards_picked.connect(Callable(self, "_on_cards_selected"))
 	self.load_map(Settings.current_map.teams, Settings.current_map.regions)
 	self.add_teams()
 
 	# init cards
+	var cards = []
 	for i in range(5):
 		var power = Power.new(randi() % Power.Type.size(), (randi() % 5) + 1)
 		var card = card_prefab.instantiate()
 		card.init(power)
-		self.deck.add_card(card)
+		cards.append(card)
+		
+	self.card_selector.init(cards, 3)
 	
 	self.game_started = true
 	self.world.camera.move_instant(self.world.map_to_local(closest_player_tile_coords()))
@@ -248,17 +251,16 @@ func _on_turn_button_pressed():
 
 	var cards = generate_cards()
 	if cards.size() > 0:
-		self.card_selector.init(cards)
+		self.card_selector.init(cards, 1)
 	else:
-		_on_card_selected(null)
+		_on_cards_selected([])
 
-func _on_card_selected(card):
-	if card != null:
+func _on_cards_selected(cards):
+	for card in cards:
 		card.disconnect_picked()
 		card.picked.connect(func(): use_card(card))
 		self.deck.add_card(card)
 		self.deck.update_faith(self.faith[self.teams[self.player_team_index]])
-	self.card_selector.hide()
 	Settings.input_locked = false
 	lock_controls(false)
 	
@@ -268,7 +270,7 @@ func use_card(c):
 	c.highlight(true)
 	match c.power.id:
 		Power.Type.Faith:
-			self.add_faith(self.teams[self.player_team_index], c.power.strength)
+			self.add_faith(self.teams[self.player_team_index], c.power.strength * 10)
 			self.card_used(c)
 		Power.Type.Sink:
 			set_shape(c.power.shape.coords.keys(), MouseState.Sink)

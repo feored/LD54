@@ -23,6 +23,7 @@ func _ready():
 	self.show_state(State.Main)
 	Music.play_track(Music.Track.Menu)
 	Sfx.disable_track(Sfx.Track.Boom)
+	Settings.editor_tile_distinct_mode = false
 
 	self.world.init(Callable(self, "no_message"))
 #	self.world.regionLabelsParent.hide()
