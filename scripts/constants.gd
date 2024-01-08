@@ -176,5 +176,11 @@ const scenarios = [
 		"title": "Triforce",
 		"description": "Power is concentrated and all vye for it.",
 		"path": "triforce.json"
+	},
+	{
+		"title": "Tarp",
+		"description":
+		"This is a land of borg, worm, and love for nergkun. Isn't this a hidden map?",
+		"path": "tarp.json"
 	}
 ]
