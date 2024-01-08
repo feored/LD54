@@ -56,15 +56,9 @@ func _ready():
 	self.load_map(Settings.current_map.teams, Settings.current_map.regions)
 	self.add_teams()
 
-	# init cards
-	var cards = []
-	for i in range(5):
-		var power = Power.new(randi() % Power.Type.size(), (randi() % 5) + 1)
-		var card = card_prefab.instantiate()
-		card.init(power)
-		cards.append(card)
+	pick_cards()
 		
-	self.card_selector.init(cards, 3)
+	# self.card_selector.init(cards, 3)
 	
 	self.game_started = true
 	self.world.camera.move_instant(self.world.map_to_local(closest_player_tile_coords()))
@@ -234,6 +228,7 @@ func lock_controls(val : bool):
 	self.endTurnButton.disabled = val
 
 func _on_turn_button_pressed():
+	self.deck.clear()
 	self.apply_buildings(self.teams[self.player_team_index])
 	
 	lock_controls(true)
@@ -249,11 +244,21 @@ func _on_turn_button_pressed():
 	if tile_camera_move != Constants.NULL_COORDS:
 		await self.world.camera.move_smoothed(self.world.map_to_local(tile_camera_move), 5)
 
-	var cards = generate_cards()
-	if cards.size() > 0:
-		self.card_selector.init(cards, 1)
-	else:
-		_on_cards_selected([])
+	pick_cards()
+	self.set_faith(self.teams[self.player_team_index], self.world.tiles.values().filter(func(t): return t.data.team == self.teams[self.player_team_index] and t.data.building == Constants.Building.Shrine).size())
+	Settings.input_locked = false
+	lock_controls(false)
+
+func add_cards(num):
+	var cards = generate_cards(num)
+	for c in cards:
+		c.picked.connect(func(): use_card(c))
+		self.deck.add_card(c)
+	self.deck.update_faith(self.faith[self.teams[self.player_team_index]])
+
+func pick_cards():
+	var cards_to_generate = 3 + self.world.tiles.values().filter(func(t): return t.data.team == self.teams[self.player_team_index] and t.data.building == Constants.Building.Temple).size()
+	add_cards(cards_to_generate)
 
 func _on_cards_selected(cards):
 	for card in cards:
@@ -270,7 +275,7 @@ func use_card(c):
 	c.highlight(true)
 	match c.power.id:
 		Power.Type.Faith:
-			self.add_faith(self.teams[self.player_team_index], c.power.strength * 10)
+			self.add_faith(self.teams[self.player_team_index], 1)
 			self.card_used(c)
 		Power.Type.Sink:
 			set_shape(c.power.shape.coords.keys(), MouseState.Sink)
@@ -345,10 +350,12 @@ func apply_buildings(team):
 
 
 func apply_building(tile_coords, building):
-	var team_id = self.world.tiles[tile_coords].data.team
+	# var team_id = self.world.tiles[tile_coords].data.team
 	match building:
-		Constants.Building.Temple:
-			self.add_faith(team_id, Constants.TEMPLE_FAITH_PER_TURN)
+		_:
+			pass
+		# Constants.Building.Temple:
+		# 	self.add_faith(team_id, Constants.TEMPLE_FAITH_PER_TURN)
 
 
 func clear_selected_region():
@@ -501,11 +508,11 @@ func fast_forward(val):
 	self.world.camera.skip(val)
 	self.fastForwardButton.button_pressed = val
 
-func generate_cards():
+func generate_cards(cards_num = 3):
 	var cards = []
-	var cards_to_generate = self.world.tiles.values()\
-	.filter(func(t): return t.data.team == self.teams[self.player_team_index] and t.data.building == Constants.Building.Shrine).size()
-	for _i in range(cards_to_generate):
+	# var cards_to_generate = self.world.tiles.values()\
+	# .filter(func(t): return t.data.team == self.teams[self.player_team_index] and t.data.building == Constants.Building.Shrine).size()
+	for _i in range(cards_num):
 		var power = Power.new(randi() % Power.Type.size(), (randi() % 5) + 1)
 		var card = card_prefab.instantiate()
 		card.init(power)
@@ -514,7 +521,8 @@ func generate_cards():
 			
 func sacrifice_region(region_id, team_id):
 	if self.world.regions[region_id].data.team == team_id:
-		self.add_faith(team_id, self.world.regions[region_id].sacrifice())
+		# self.add_faith(team_id, self.world.regions[region_id].sacrifice())
+		self.add_cards(2)
 		messenger.set_message("%s has sacrificed a region's inhabitants to the gods!" % Constants.TEAM_NAMES[team_id])
 	else:
 		Utils.log("Trying to sacrifice region %s, but it belongs to team %s" % [region_id, self.world.regions[region_id].data.team])

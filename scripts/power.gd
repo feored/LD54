@@ -28,19 +28,19 @@ func get_cost() -> int:
 		Type.Sacrifice:
 			return 0
 		Type.Sink:
-			return self.strength * 5
+			return 1
 		Type.Emerge:
-			return self.strength * 5
+			return 1
 		Type.Barracks:
-			return 5
+			return 1
 		Type.Temple:
-			return 20
+			return 1
 		Type.Fort:
-			return 100
+			return 2
 		Type.Shrine:
-			return 50
+			return 2
 		Type.Seal:
-			return 50
+			return 1
 		_:
 			return 0
 
@@ -48,9 +48,9 @@ func get_cost() -> int:
 func get_description() -> String:
 	match self.id:
 		Type.Faith:
-			return "Gain " + str(self.strength * 10) + faith_icon_BBCode
+			return "Gain 1 " + faith_icon_BBCode
 		Type.Sacrifice:
-			return "Sacrifice all units in a region to gain as much " + faith_icon_BBCode + " ."
+			return "Sacrifice all units in a region to draw 2 cards."
 		Type.Sink:
 			return "Sink " + str(self.strength) + " tiles."
 		Type.Emerge:
@@ -62,11 +62,7 @@ func get_description() -> String:
 				+ " units per turn."
 			)
 		Type.Temple:
-			return (
-				"Build a temple. The temple generates "
-				+ str(Constants.TEMPLE_FAITH_PER_TURN)
-				+ " faith per turn."
-			)
+			return "Build a temple. The temple lets you draw 1 additional card per turn."
 		Type.Fort:
 			return "Build a fort. The fort defends against 20 units when attacked."
 		Type.Shrine:
