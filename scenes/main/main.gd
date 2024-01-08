@@ -522,6 +522,7 @@ func generate_cards(cards_num = 3):
 func sacrifice_region(region_id, team_id):
 	if self.world.regions[region_id].data.team == team_id:
 		# self.add_faith(team_id, self.world.regions[region_id].sacrifice())
+		self.world.regions[region_id].sacrifice()
 		self.add_cards(2)
 		messenger.set_message("%s has sacrificed a region's inhabitants to the gods!" % Constants.TEAM_NAMES[team_id])
 	else:
