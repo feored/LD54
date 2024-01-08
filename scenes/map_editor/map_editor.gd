@@ -231,7 +231,7 @@ func load_saved_game(filename):
 	save_game.close()
 	self.world.clear_island()
 	self.teams = saved_state.teams
-	self.world.load_regions(saved_state.regions)
+	self.world.load_regions(saved_state.regions, false)
 	self.set_stage(EditStage.Teams)
 
 func drawing_valid():

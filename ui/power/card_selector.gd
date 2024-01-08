@@ -31,10 +31,13 @@ func init(init_cards, init_nb):
 func _on_card_picked(c):
 	self.cards.append(c)
 	self.grid.remove_child(c)
-	if self.cards.size() == self.to_pick:
+	var cards_left = self.to_pick - self.cards.size()
+	label.text = "Select " + str(cards_left) + " card(s) to add to your deck."
+	if cards_left < 1:
 		self.hide()
 		self.cards_picked.emit(self.cards)
-
+		
 
 func _on_skip_button_pressed():
 	self.cards_picked.emit([])
+	self.hide()

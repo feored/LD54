@@ -1,7 +1,7 @@
 class_name Power
 extends RefCounted
 
-enum Type { Faith, Sacrifice, Sink, Emerge, Barracks, Temple, Fort, Shrine }
+enum Type { Faith, Sacrifice, Sink, Emerge, Barracks, Temple, Fort, Shrine, Seal }
 
 var id: Type
 var strength: int = 0
@@ -36,9 +36,11 @@ func get_cost() -> int:
 		Type.Temple:
 			return 20
 		Type.Fort:
-			return 200
-		Type.Shrine:
 			return 100
+		Type.Shrine:
+			return 50
+		Type.Seal:
+			return 50
 		_:
 			return 0
 
@@ -69,6 +71,8 @@ func get_description() -> String:
 			return "Build a fort. The fort defends against 20 units when attacked."
 		Type.Shrine:
 			return "Build a shrine. The shrine generates 1 card per turn."
+		Type.Seal:
+			return "The region this seal belongs to can resist one marking of Neptune."
 		_:
 			return "Unknown power."
 
@@ -91,6 +95,8 @@ func get_name() -> String:
 			return "Fort"
 		Type.Shrine:
 			return "Shrine"
+		Type.Seal:
+			return "Seal"
 		_:
 			return "Unknown power."
 
@@ -105,5 +111,7 @@ func get_building():
 			return Constants.Building.Fort
 		Type.Shrine:
 			return Constants.Building.Shrine
+		Type.Seal:
+			return Constants.Building.Seal
 		_:
 			return Constants.Building.None

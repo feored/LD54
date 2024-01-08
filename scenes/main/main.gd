@@ -286,6 +286,8 @@ func use_card(c):
 			set_building(c.power.get_building())
 		Power.Type.Shrine:
 			set_building(c.power.get_building())
+		Power.Type.Seal:
+			set_building(c.power.get_building())
 		_:
 			Utils.log("Unknown power type: %s, %s" % [c.power.id, c.power.name])
 			self.card_used(c)

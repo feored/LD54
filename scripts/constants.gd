@@ -111,7 +111,7 @@ const TURN_TIME = 0.3
 const MENU_WAIT_TIME = 1
 
 ## Buildings
-enum Building { None, Barracks, Temple, Fort, Shrine }
+enum Building { None, Barracks, Temple, Fort, Shrine, Seal }
 
 const BUILDINGS = {
 	Building.Barracks:
@@ -143,16 +143,35 @@ const BUILDINGS = {
 		"texture": preload("res://assets/icons/card.png"),
 		"tooltip": "This territory will generate one power every turn.",
 	},
+	Building.Seal:
+	{
+		"id": Building.Seal,
+		"name": "Seal",
+		"texture": preload("res://assets/icons/seal.png"),
+		"tooltip":
+		"If this territory is marked by Neptune, it will resist sinking. The seal will be destroyed.",
+	},
 }
 
 ## Scenarios
 const scenarios = [
 	{"title": "Confrontation", "description": "One on one.", "path": "confrontation.json"},
-	{"title": "Flower", "description": "The Flower", "path": "flower.json"},
+	# {"title": "Flower", "description": "The Flower", "path": "flower.json"},
 	{"title": "The Blob", "description": "All paths lead into the blob.", "path": "blob.json"},
-	{"title": "The Wheel", "description": "wheel", "path": "wheel.json"},
-	{"title": "Rings", "description": "Ring around the rosie", "path": "rings.json"},
+	# {"title": "The Wheel", "description": "wheel", "path": "wheel.json"},
 	{"title": "Triangles", "description": "Triangles", "path": "triangles.json"},
+	{
+		"title": "The Fortress",
+		"description":
+		"You are outnumbered, surrounded by powerful enemies. Only by the grace of the gods may you survive this trial.",
+		"path": "fortress.json"
+	},
+	{
+		"title": "Six Bases",
+		"description": "A free for all, but every kingdom starts with an established base.",
+		"path": "homebase.json"
+	},
+	{"title": "Rings", "description": "Ring around the rosie", "path": "rings.json"},
 	{
 		"title": "Triforce",
 		"description": "Power is concentrated and all vye for it.",

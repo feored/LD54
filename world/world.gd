@@ -251,8 +251,28 @@ func mark_tiles(global_turn):
 		await Utils.wait(Settings.turn_time)
 
 func sink_marked():
-	var marked_coords = self.tiles.values().filter(func(x): return x.data.marked).map(func(x): return x.data.coords)
 	var affected_regions = []
+	var deleted_seals = false
+	for r in self.regions:
+		var marked = false
+		var sealed = null
+		for t in self.regions[r].data.tiles:
+			if self.tiles[t].data.marked:
+				marked = true
+			if sealed == null && self.tiles[t].data.building == Constants.Building.Seal:
+				sealed = t
+			if sealed != null  && marked:
+				break
+		if sealed != null  && marked:
+			for t in self.regions[r].data.tiles:
+				self.tiles[t].data.marked = false
+				self.tiles[t].update()
+			self.tiles[sealed].data.building = Constants.Building.None
+			self.tiles[sealed].update()
+			deleted_seals = true
+	if deleted_seals:
+		self.messenger.call("Seals are being destroyed by Neptune's wrath!")
+	var marked_coords = self.tiles.values().filter(func(x): return x.data.marked).map(func(x): return x.data.coords)
 	for coords in marked_coords:
 		var region = self.tiles[coords].data.region
 		if not affected_regions.has(region):
@@ -341,11 +361,11 @@ func reset_regions_team():
 	for region in self.regions:
 		self.regions[region].set_team(Constants.NULL_TEAM)
 
-func load_regions(new_regions):
+func load_regions(new_regions, gen_units = true):
 	for region in new_regions:
 		var region_id = int(region.id)
 		self.spawn_region(region_id, region)
-		if region.team != Constants.NULL_TEAM:
+		if gen_units && region.team != Constants.NULL_TEAM:
 			self.regions[region_id].generate_units()
 		self.regions[region_id].update()
 	for r in self.regions:

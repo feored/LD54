@@ -35,6 +35,7 @@ var ICONS = {
 	Power.Type.Temple: Constants.BUILDINGS[Constants.Building.Temple].texture,
 	Power.Type.Fort: Constants.BUILDINGS[Constants.Building.Fort].texture,
 	Power.Type.Shrine: Constants.BUILDINGS[Constants.Building.Shrine].texture,
+	Power.Type.Seal: Constants.BUILDINGS[Constants.Building.Seal].texture,
 }
 
 func clear_tweens():
