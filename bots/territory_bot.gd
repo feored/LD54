@@ -10,7 +10,7 @@ func evaluate_state(world_state, world):
 		if rt != self.team and world_state.team_regions[rt] == 0:
 			score += (1.0/world_state.team_regions.size()) * self.personality.teams_alive
 	var n_regions = world.regions.size()
-	var n_tiles = world.tiles.size()
+	var n_tiles = world_state.tiles.filter(func(tile): return !tile.marked).size()
 	var bonus_regions_owned = regions_owned.size() / float(n_regions)
 	#Utils.log("Bonus regions owned: ", bonus_regions_owned)
 	score += bonus_regions_owned * self.personality.regions
@@ -23,12 +23,12 @@ func evaluate_state(world_state, world):
 	score += bonus_units_owned
 
 	## malus for landlocked regions
-	var malus_landlocked_regions = 0
-	for r in regions_owned:
-		if is_region_landlocked(world, r.id):
-			malus_landlocked_regions += r.units
-	malus_landlocked_regions = malus_landlocked_regions / (n_regions*50.0)
-	score -= malus_landlocked_regions * self.personality.landlocked
+	# var malus_landlocked_regions = 0
+	# for r in regions_owned:
+	# 	if is_region_landlocked(world, r.id):
+	# 		malus_landlocked_regions += r.units
+	# malus_landlocked_regions = malus_landlocked_regions / (n_regions*50.0)
+	# score -= malus_landlocked_regions * self.personality.landlocked
 
 	# score -= regions_owned.filter(func(region): return is_region_landlocked(world, region.id))\
 	# 						.map(func(region): return region.units)\

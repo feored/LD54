@@ -155,6 +155,15 @@ func sink_tiles(coords_array: Array):
 	await self.camera.move_smoothed(self.coords_to_pos(coords_array[0]), 5)
 	for coords in coords_array:
 		self.tiles[coords].sink()
+	var deleted = 0
+	while deleted < coords_array.size():
+		deleted = 0
+		await Utils.wait(0.1)
+		for coords in coords_array:
+			if not self.tiles.has(coords):
+				deleted += 1
+	for region in affected_regions:
+		self.recalculate_region(region)
 
 func emerge_tiles(coords_array: Array):
 	var region_id = region_new_id()
@@ -279,16 +288,6 @@ func sink_marked():
 			affected_regions.append(region)
 	if marked_coords.size() > 0:
 		await sink_tiles(marked_coords)
-	var deleted = 0
-	while deleted < marked_coords.size():
-		deleted = 0
-		await Utils.wait(0.1)
-		for coords in marked_coords:
-			if not self.tiles.has(coords):
-				deleted += 1
-	for region in affected_regions:
-		self.recalculate_region(region)
-	
 	
 	
 

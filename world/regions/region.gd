@@ -239,8 +239,10 @@ func spawn_cell(coords, team, save_data = {}):
 
 
 func delete_tile(coords):
+	var avg_pop = self.data.units / self.data.tiles.size()
 	self.data.tiles.erase(coords)
 	self.tile_objs.erase(coords)
+	self.data.units -= avg_pop
 	tile_deleted.emit(coords)
 	self.update()
 
