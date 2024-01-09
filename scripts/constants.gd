@@ -167,7 +167,7 @@ const scenarios = [
 		"path": "fortress.json"
 	},
 	{
-		"title": "Six Bases",
+		"title": "The Pretzel",
 		"description": "A free for all, but every kingdom starts with an established base.",
 		"path": "homebase.json"
 	},
