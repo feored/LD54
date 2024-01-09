@@ -1,13 +1,13 @@
 extends Node
 
-enum Setting { FullScreen, MasterVolume, MusicVolume, SfxVolume, InstantMap, NoCameraMovement }
+enum Setting { FullScreen, MasterVolume, MusicVolume, SfxVolume, InstantMap, AutoCameraFocus }
 const SETTING_NAMES = {
 	Setting.FullScreen: "full_screen",
 	Setting.MasterVolume: "master_volume",
 	Setting.MusicVolume: "music_volume",
 	Setting.SfxVolume: "sfx_volume",
 	Setting.InstantMap : "instant_map",
-	Setting.NoCameraMovement : "no_camera_movement"
+	Setting.AutoCameraFocus : "auto_camera_focus"
 }
 
 const DEFAULT_SECTION = "settings"
@@ -18,7 +18,7 @@ const DEFAULT_CONFIG = {
 	Setting.MusicVolume: 1,
 	Setting.SfxVolume: 1,
 	Setting.InstantMap: true,
-	Setting.NoCameraMovement: false
+	Setting.AutoCameraFocus: true
 }
 
 @onready var audio_bus = {

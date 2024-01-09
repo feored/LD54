@@ -197,7 +197,7 @@ func _unhandled_input(event):
 		fast_forward(true)
 	elif event.is_action_released("skip"):
 		fast_forward(false)
-	else:
+	elif event is InputEventMouse:
 		if Settings.input_locked or !game_started:
 			return
 		## Right click to cancel
