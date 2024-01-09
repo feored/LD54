@@ -285,6 +285,10 @@ func use_card(c):
 			set_shape(c.power.shape.coords.keys(), MouseState.Emerge)
 		Power.Type.Sacrifice:
 			set_sacrifice()
+		Power.Type.Prayer:
+			self.add_faith(self.teams[self.player_team_index], 1)
+			self.card_used(c)
+			self.deck.discard_random(2)
 		Power.Type.Barracks:
 			set_building(c.power.get_building())
 		Power.Type.Temple:

@@ -40,6 +40,12 @@ func remove_card(card):
 		card.queue_free()
 		self.place_all()
 
+func discard_random(amount: int):
+	var cards_copy = self.cards.duplicate()
+	cards_copy.shuffle()
+	var to_del = min(cards_copy.size(), amount)
+	for i in range(to_del):
+		self.remove_card(cards_copy[i])
 
 func place_card(id):
 	var total = cards.size()

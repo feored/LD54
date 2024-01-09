@@ -10,7 +10,7 @@ func evaluate_state(world_state, world):
 		if rt != self.team and world_state.team_regions[rt] == 0:
 			score += (1.0/world_state.team_regions.size()) * self.personality.teams_alive
 	var n_regions = world.regions.size()
-	var n_tiles = world_state.tiles.filter(func(tile): return !tile.marked).size()
+	var n_tiles = world_state.tiles.size()
 	var bonus_regions_owned = regions_owned.size() / float(n_regions)
 	#Utils.log("Bonus regions owned: ", bonus_regions_owned)
 	score += bonus_regions_owned * self.personality.regions

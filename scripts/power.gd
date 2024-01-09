@@ -1,7 +1,7 @@
 class_name Power
 extends RefCounted
 
-enum Type { Offering, Sacrifice, Sink, Emerge, Barracks, Temple, Fort, Oracle, Seal }
+enum Type { Offering, Sacrifice, Sink, Emerge, Barracks, Temple, Fort, Oracle, Seal, Prayer }
 
 var id: Type
 var strength: int = 0
@@ -41,6 +41,8 @@ func get_cost() -> int:
 			return 2
 		Type.Seal:
 			return 1
+		Type.Prayer:
+			return 0
 		_:
 			return 0
 
@@ -69,6 +71,8 @@ func get_description() -> String:
 			return "[Building] The oracle lets you draw 1 additional card per turn."
 		Type.Seal:
 			return "[Building] The region this seal belongs to can resist one marking of Neptune."
+		Type.Prayer:
+			return "Gain 1 " + faith_icon_BBCode + " but discard up to 2 other cards at random."
 		_:
 			return "Unknown power."
 
@@ -93,6 +97,8 @@ func get_name() -> String:
 			return "Oracle"
 		Type.Seal:
 			return "Seal"
+		Type.Prayer:
+			return "Prayer"
 		_:
 			return "Unknown power."
 
