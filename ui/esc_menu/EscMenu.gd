@@ -45,7 +45,7 @@ func disappear():
 
 func _unhandled_input(event):
 	if event.is_action_pressed("escmenu"):
-		self.disappear() if self.visible else self.appear()
+		self.disappear() if self.esc_panel.visible else self.appear()
 
 func _on_settings_button_pressed():
 	self.show_state(State.Settings)
