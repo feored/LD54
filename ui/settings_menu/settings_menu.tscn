@@ -48,15 +48,15 @@ theme_override_constants/margin_bottom = 10
 layout_mode = 2
 theme_override_constants/separation = 10
 
-[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer/CenterContainer/MainSettingsContainer/PanelContainer/MarginContainer/SettingsContainer"]
+[node name="FullScreen" type="HBoxContainer" parent="MarginContainer/CenterContainer/MainSettingsContainer/PanelContainer/MarginContainer/SettingsContainer"]
 layout_mode = 2
 
-[node name="fullScreenLabel" type="Label" parent="MarginContainer/CenterContainer/MainSettingsContainer/PanelContainer/MarginContainer/SettingsContainer/HBoxContainer"]
+[node name="fullScreenLabel" type="Label" parent="MarginContainer/CenterContainer/MainSettingsContainer/PanelContainer/MarginContainer/SettingsContainer/FullScreen"]
 layout_mode = 2
 size_flags_horizontal = 3
 text = "Full Screen"
 
-[node name="FullScreenButton" type="CheckButton" parent="MarginContainer/CenterContainer/MainSettingsContainer/PanelContainer/MarginContainer/SettingsContainer/HBoxContainer"]
+[node name="FullScreenButton" type="CheckButton" parent="MarginContainer/CenterContainer/MainSettingsContainer/PanelContainer/MarginContainer/SettingsContainer/FullScreen"]
 unique_name_in_owner = true
 layout_mode = 2
 
@@ -105,13 +105,28 @@ size_flags_horizontal = 3
 max_value = 1.0
 step = 0.01
 
+[node name="HBoxContainer5" type="HBoxContainer" parent="MarginContainer/CenterContainer/MainSettingsContainer/PanelContainer/MarginContainer/SettingsContainer"]
+layout_mode = 2
+
+[node name="MasterLabel" type="Label" parent="MarginContainer/CenterContainer/MainSettingsContainer/PanelContainer/MarginContainer/SettingsContainer/HBoxContainer5"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "SFX Volume"
+
+[node name="SFXVolumeSlider" type="HSlider" parent="MarginContainer/CenterContainer/MainSettingsContainer/PanelContainer/MarginContainer/SettingsContainer/HBoxContainer5"]
+layout_mode = 2
+size_flags_horizontal = 3
+max_value = 1.0
+step = 0.01
+
 [node name="SettingsReturnButton" type="Button" parent="MarginContainer/CenterContainer/MainSettingsContainer"]
 layout_mode = 2
 size_flags_horizontal = 4
 text = "Return"
 
-[connection signal="toggled" from="MarginContainer/CenterContainer/MainSettingsContainer/PanelContainer/MarginContainer/SettingsContainer/HBoxContainer/FullScreenButton" to="." method="_on_full_screen_button_toggled"]
+[connection signal="toggled" from="MarginContainer/CenterContainer/MainSettingsContainer/PanelContainer/MarginContainer/SettingsContainer/FullScreen/FullScreenButton" to="." method="_on_full_screen_button_toggled"]
 [connection signal="value_changed" from="MarginContainer/CenterContainer/MainSettingsContainer/PanelContainer/MarginContainer/SettingsContainer/HBoxContainer2/MasterVolumeSlider" to="." method="_on_master_volume_slider_value_changed"]
 [connection signal="value_changed" from="MarginContainer/CenterContainer/MainSettingsContainer/PanelContainer/MarginContainer/SettingsContainer/HBoxContainer3/MusicVolumeSlider" to="." method="_on_music_volume_slider_value_changed"]
 [connection signal="value_changed" from="MarginContainer/CenterContainer/MainSettingsContainer/PanelContainer/MarginContainer/SettingsContainer/HBoxContainer4/SFXVolumeSlider" to="." method="_on_sfx_volume_slider_value_changed"]
+[connection signal="value_changed" from="MarginContainer/CenterContainer/MainSettingsContainer/PanelContainer/MarginContainer/SettingsContainer/HBoxContainer5/SFXVolumeSlider" to="." method="_on_sfx_volume_slider_value_changed"]
 [connection signal="pressed" from="MarginContainer/CenterContainer/MainSettingsContainer/SettingsReturnButton" to="." method="_on_settings_return_button_pressed"]

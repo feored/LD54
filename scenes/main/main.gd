@@ -57,6 +57,8 @@ func _ready():
 	self.add_teams()
 
 	pick_cards()
+	self.set_faith(self.teams[self.player_team_index], self.world.tiles.values().filter(func(t): return t.data.team == self.teams[self.player_team_index] and t.data.building == Constants.Building.Shrine).size())
+
 		
 	# self.card_selector.init(cards, 3)
 	

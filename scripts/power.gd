@@ -66,7 +66,7 @@ func get_description() -> String:
 		Type.Fort:
 			return "Build a fort. The fort defends against 20 units when attacked."
 		Type.Shrine:
-			return "Build a shrine. The shrine generates 1 card per turn."
+			return "Build a shrine. The shrine generates 1 faith per turn."
 		Type.Seal:
 			return "The region this seal belongs to can resist one marking of Neptune."
 		_:

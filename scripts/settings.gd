@@ -1,18 +1,24 @@
 extends Node
 
-enum Setting { FullScreen, MasterVolume, MusicVolume, SfxVolume, InstantMap }
+enum Setting { FullScreen, MasterVolume, MusicVolume, SfxVolume, InstantMap, NoCameraMovement }
 const SETTING_NAMES = {
 	Setting.FullScreen: "full_screen",
 	Setting.MasterVolume: "master_volume",
 	Setting.MusicVolume: "music_volume",
 	Setting.SfxVolume: "sfx_volume",
-	Setting.InstantMap : "instant_map"
+	Setting.InstantMap : "instant_map",
+	Setting.NoCameraMovement : "no_camera_movement"
 }
 
 const DEFAULT_SECTION = "settings"
 const DEFAULT_PATH = "user://config.cfg"
 const DEFAULT_CONFIG = {
-	Setting.FullScreen: false, Setting.MasterVolume: 1, Setting.MusicVolume: 1, Setting.SfxVolume: 1, Setting.InstantMap: true
+	Setting.FullScreen: false,
+	Setting.MasterVolume: 1,
+	Setting.MusicVolume: 1,
+	Setting.SfxVolume: 1,
+	Setting.InstantMap: true,
+	Setting.NoCameraMovement: false
 }
 
 @onready var audio_bus = {
@@ -20,6 +26,7 @@ const DEFAULT_CONFIG = {
 	"Music": AudioServer.get_bus_index("Music"),
 	"SFX": AudioServer.get_bus_index("SFX"),
 }
+
 var settings = null
 var input_locked: bool = false
 var current_map = null
@@ -67,11 +74,12 @@ func set_setting(setting: Setting, value):
 	self.settings.set_value(DEFAULT_SECTION, SETTING_NAMES[setting], value)
 	save_config()
 
+
 func apply_config():
-	set_fullscreen(get_config_setting(Setting.FullScreen, self.settings))
-	change_volume("Master", get_config_setting(Setting.MasterVolume, self.settings))
-	change_volume("Music", get_config_setting(Setting.MusicVolume, self.settings))
-	change_volume("SFX", get_config_setting(Setting.SfxVolume, self.settings))
+	apply_fullscreen()
+	apply_volume_master()
+	apply_volume_music()
+	apply_volume_sfx()
 
 func skip(val: bool):
 	self.turn_time = 0.0 if val else Constants.TURN_TIME
@@ -81,5 +89,14 @@ func change_volume(bus_name, new_volume):
 	var db_volume =  linear_to_db(new_volume)
 	AudioServer.set_bus_volume_db(audio_bus[bus_name], db_volume)
 
-func set_fullscreen(val : bool):
-	DisplayServer.window_set_mode(DisplayServer.WINDOW_MODE_FULLSCREEN if val else DisplayServer.WINDOW_MODE_WINDOWED)
+func apply_volume_master():
+	change_volume("Master", get_config_setting(Setting.MasterVolume, self.settings))
+
+func apply_volume_music():
+	change_volume("Music", get_config_setting(Setting.MusicVolume, self.settings))
+
+func apply_volume_sfx():
+	change_volume("SFX", get_config_setting(Setting.SfxVolume, self.settings))
+	
+func apply_fullscreen():
+	DisplayServer.window_set_mode(DisplayServer.WINDOW_MODE_FULLSCREEN if get_config_setting(Setting.FullScreen, self.settings) else DisplayServer.WINDOW_MODE_WINDOWED)

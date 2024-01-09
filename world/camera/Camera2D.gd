@@ -84,6 +84,8 @@ func skip(val: bool):
 func move_smoothed(target, precision = 1):
 	if not active:
 		return
+	if Settings.get_setting(Settings.Setting.NoCameraMovement):
+		return
 	is_dragging = false
 	self.position_smoothing_enabled = true
 	self.position = target - Vector2(self.viewport_size/2)

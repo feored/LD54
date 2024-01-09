@@ -182,5 +182,6 @@ const scenarios = [
 		"description":
 		"This is a land of borg, worm, and love for nergkun. Isn't this a hidden map?",
 		"path": "tarp.json"
-	}
+	},
+	{"title": "Santa", "description": "This is a hidden map. Go away.", "path": "santa.json"}
 ]

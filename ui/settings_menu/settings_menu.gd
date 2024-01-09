@@ -22,19 +22,19 @@ func _process(delta):
 
 func _on_full_screen_button_toggled(button_pressed:bool):
 	Settings.set_setting(Settings.Setting.FullScreen, button_pressed)
-	Settings.apply_config()
+	Settings.apply_fullscreen()
 
 func _on_sfx_volume_slider_value_changed(value:float):
 	Settings.set_setting(Settings.Setting.SfxVolume, value)
-	Settings.apply_config()
+	Settings.apply_volume_sfx()
 
 func _on_music_volume_slider_value_changed(value:float):
 	Settings.set_setting(Settings.Setting.MusicVolume, value)
-	Settings.apply_config()
+	Settings.apply_volume_music()
 
 func _on_master_volume_slider_value_changed(value:float):
 	Settings.set_setting(Settings.Setting.MasterVolume, value)
-	Settings.apply_config()
+	Settings.apply_volume_master()
 
 
 func _on_settings_return_button_pressed():
