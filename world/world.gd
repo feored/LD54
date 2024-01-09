@@ -265,7 +265,7 @@ func sink_marked():
 				break
 		if sealed != null  && marked:
 			for t in self.regions[r].data.tiles:
-				self.tiles[t].data.marked = false
+				self.tiles[t].unmark()
 				self.tiles[t].update()
 			self.tiles[sealed].data.building = Constants.Building.None
 			self.tiles[sealed].update()

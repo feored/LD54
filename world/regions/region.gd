@@ -98,10 +98,9 @@ func clear():
 
 
 func sacrifice():
-	var faith = self.data.units - 1
-	self.data.units = 1
+	self.data.units = 0
+	self.set_team(Constants.NULL_TEAM)
 	self.update()
-	return faith
 
 
 func update():

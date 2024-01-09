@@ -28,15 +28,25 @@ func _ready():
 func _physics_process(_delta):
 	if not active or Settings.input_locked:
 		return
+	var new_position = self.position
 	if Input.is_action_pressed("map_left"):
-		position = Vector2(position.x - Constants.CAMERA_SPEED/2, position.y)
+		new_position = Vector2(self.position.x - Constants.CAMERA_SPEED/2, self.position.y)
 	elif Input.is_action_pressed("map_right"):
-		position = Vector2(position.x + Constants.CAMERA_SPEED/2, position.y)
+		new_position = Vector2(self.position.x + Constants.CAMERA_SPEED/2, self.position.y)
 	if Input.is_action_pressed("map_up"):
-		position = Vector2(position.x, position.y  - Constants.CAMERA_SPEED/2)
+		new_position = Vector2(self.position.x, self.position.y  - Constants.CAMERA_SPEED/2)
 	elif Input.is_action_pressed("map_down"):
-		position = Vector2(position.x,  position.y + Constants.CAMERA_SPEED/2)
-	
+		new_position = Vector2(self.position.x,  self.position.y + Constants.CAMERA_SPEED/2)
+	if new_position.x < LIMIT_X_NEGATIVE:
+		new_position.x = LIMIT_X_NEGATIVE
+	elif new_position.x > LIMIT_X_POSITIVE:
+		new_position.x = LIMIT_X_POSITIVE
+	if new_position.y < LIMIT_Y_NEGATIVE:
+		new_position.y = LIMIT_Y_NEGATIVE
+	elif new_position.y > LIMIT_Y_POSITIVE:
+		new_position.y = LIMIT_Y_POSITIVE
+	self.position = new_position
+
 
 
 func move():

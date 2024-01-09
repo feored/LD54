@@ -1,7 +1,7 @@
 class_name Power
 extends RefCounted
 
-enum Type { Faith, Sacrifice, Sink, Emerge, Barracks, Temple, Fort, Shrine, Seal }
+enum Type { Offering, Sacrifice, Sink, Emerge, Barracks, Temple, Fort, Oracle, Seal }
 
 var id: Type
 var strength: int = 0
@@ -23,7 +23,7 @@ func _init(init_id: Type, init_strength: int) -> void:
 
 func get_cost() -> int:
 	match self.id:
-		Type.Faith:
+		Type.Offering:
 			return 0
 		Type.Sacrifice:
 			return 0
@@ -34,10 +34,10 @@ func get_cost() -> int:
 		Type.Barracks:
 			return 1
 		Type.Temple:
-			return 1
+			return 2
 		Type.Fort:
 			return 2
-		Type.Shrine:
+		Type.Oracle:
 			return 2
 		Type.Seal:
 			return 1
@@ -47,8 +47,8 @@ func get_cost() -> int:
 
 func get_description() -> String:
 	match self.id:
-		Type.Faith:
-			return "Gain 1 " + faith_icon_BBCode
+		Type.Offering:
+			return "Make an offering to Neptune and gain 1 " + faith_icon_BBCode
 		Type.Sacrifice:
 			return "Sacrifice all units in a region to draw 2 cards."
 		Type.Sink:
@@ -57,26 +57,26 @@ func get_description() -> String:
 			return "Emerge " + str(self.strength) + " tiles."
 		Type.Barracks:
 			return (
-				"Build a barracks. The barracks generate "
+				"[Building] The barracks generate "
 				+ str(Constants.BARRACKS_UNITS_PER_TURN)
 				+ " units per turn."
 			)
 		Type.Temple:
-			return "Build a temple. The temple lets you draw 1 additional card per turn."
+			return "[Building] The temple generates 1 " + faith_icon_BBCode + " per turn."
 		Type.Fort:
-			return "Build a fort. The fort defends against 20 units when attacked."
-		Type.Shrine:
-			return "Build a shrine. The shrine generates 1 faith per turn."
+			return "[Building] The fort defends against 20 units when attacked."
+		Type.Oracle:
+			return "[Building] The oracle lets you draw 1 additional card per turn."
 		Type.Seal:
-			return "The region this seal belongs to can resist one marking of Neptune."
+			return "[Building] The region this seal belongs to can resist one marking of Neptune."
 		_:
 			return "Unknown power."
 
 
 func get_name() -> String:
 	match self.id:
-		Type.Faith:
-			return "Faith"
+		Type.Offering:
+			return "Offering"
 		Type.Sacrifice:
 			return "Sacrifice"
 		Type.Sink:
@@ -89,8 +89,8 @@ func get_name() -> String:
 			return "Temple"
 		Type.Fort:
 			return "Fort"
-		Type.Shrine:
-			return "Shrine"
+		Type.Oracle:
+			return "Oracle"
 		Type.Seal:
 			return "Seal"
 		_:
@@ -105,8 +105,8 @@ func get_building():
 			return Constants.Building.Temple
 		Type.Fort:
 			return Constants.Building.Fort
-		Type.Shrine:
-			return Constants.Building.Shrine
+		Type.Oracle:
+			return Constants.Building.Oracle
 		Type.Seal:
 			return Constants.Building.Seal
 		_:

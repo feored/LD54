@@ -57,7 +57,7 @@ func _ready():
 	self.add_teams()
 
 	pick_cards()
-	self.set_faith(self.teams[self.player_team_index], self.world.tiles.values().filter(func(t): return t.data.team == self.teams[self.player_team_index] and t.data.building == Constants.Building.Shrine).size())
+	self.set_faith(self.teams[self.player_team_index], self.world.tiles.values().filter(func(t): return t.data.team == self.teams[self.player_team_index] and t.data.building == Constants.Building.Temple).size())
 
 		
 	# self.card_selector.init(cards, 3)
@@ -247,7 +247,7 @@ func _on_turn_button_pressed():
 		await self.world.camera.move_smoothed(self.world.map_to_local(tile_camera_move), 5)
 
 	pick_cards()
-	self.set_faith(self.teams[self.player_team_index], self.world.tiles.values().filter(func(t): return t.data.team == self.teams[self.player_team_index] and t.data.building == Constants.Building.Shrine).size())
+	self.set_faith(self.teams[self.player_team_index], self.world.tiles.values().filter(func(t): return t.data.team == self.teams[self.player_team_index] and t.data.building == Constants.Building.Temple).size())
 	Settings.input_locked = false
 	lock_controls(false)
 
@@ -259,7 +259,7 @@ func add_cards(num):
 	self.deck.update_faith(self.faith[self.teams[self.player_team_index]])
 
 func pick_cards():
-	var cards_to_generate = 3 + self.world.tiles.values().filter(func(t): return t.data.team == self.teams[self.player_team_index] and t.data.building == Constants.Building.Temple).size()
+	var cards_to_generate = 3 + self.world.tiles.values().filter(func(t): return t.data.team == self.teams[self.player_team_index] and t.data.building == Constants.Building.Oracle).size()
 	add_cards(cards_to_generate)
 
 func _on_cards_selected(cards):
@@ -276,7 +276,7 @@ func use_card(c):
 	self.used_card = c
 	c.highlight(true)
 	match c.power.id:
-		Power.Type.Faith:
+		Power.Type.Offering:
 			self.add_faith(self.teams[self.player_team_index], 1)
 			self.card_used(c)
 		Power.Type.Sink:
@@ -291,7 +291,7 @@ func use_card(c):
 			set_building(c.power.get_building())
 		Power.Type.Fort:
 			set_building(c.power.get_building())
-		Power.Type.Shrine:
+		Power.Type.Oracle:
 			set_building(c.power.get_building())
 		Power.Type.Seal:
 			set_building(c.power.get_building())

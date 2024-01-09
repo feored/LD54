@@ -186,6 +186,12 @@ func mark():
 	self.data.marked = true
 	#self.texture = CRACKED_TEXTURE
 	#self.modulate = Color.hex(0xacacacac)
+	self.animation_player.play("quake")
+	self.update()
+
+func unmark():
+	self.data.marked = false
+	self.animation_player.stop()
 	self.update()
 	
 func set_building(new_building):
