@@ -371,35 +371,60 @@ func load_regions(new_regions, gen_units = true):
 		self.adjacencies[r] = self.adjacent_regions(r)
 
 
-func shortest_path_length(from_id, to_id):
-	var length = 0
-	var visited = [from_id]
-	for r in visited:
-		if to_id in adjacencies[r]:
-			return length
-		for neighbor in adjacencies[r]:
-			if not visited.has(neighbor):
-				visited.append(neighbor)
-				length += 1
-				if neighbor == to_id:
-					return length
-	return Constants.NULL_PATH_LENGTH
-	#Utils.log("Error: no path found between %s and %s" % [from_id, to_id])
-	#Utils.log("Adjacencies for region ", adjacencies[from_id])
+# func shortest_path_length(from_id, to_id):
+# 	var length = 1
+# 	var to_visit = []
+# 	var visited = [from_id]
+# 	while to_visit.size() > 0:
+# 		for r in to_visit: 
+# 			if to_id in adjacencies[r]:
+# 				return length
+# 			length += 1
+# 			for neighbor in adjacencies[r]:
+# 				if not visited.has(neighbor):
+# 					visited.append(neighbor)
+# 					if neighbor == to_id:
+# 						return length
+# 	return Constants.NULL_PATH_LENGTH
+# 	#Utils.log("Error: no path found between %s and %s" % [from_id, to_id])
+# 	#Utils.log("Adjacencies for region ", adjacencies[from_id])
+
+# func all_path_lengths():
+# 	var lengths = {}
+# 	for r in self.regions:
+# 		lengths[r] = {}
+# 	for r in self.regions:
+# 		for r2 in self.regions:
+# 			if r != r2:
+# 				if r2 in lengths and r in lengths[r2]:
+# 					lengths[r][r2] = lengths[r2][r]
+# 				else:
+# 					lengths[r][r2] = self.shortest_path_length(r, r2)
+# 	for i in lengths:
+# 		print(i, ": ", lengths[i])
+# 	return lengths
+
+func bfs(region):
+	var lengths = {region: 0}
+	var to_visit = [region]
+	var cur_length = 1
+	while to_visit.size() > 0:
+		var new_visit = []
+		for r in to_visit:
+			for neighbor in adjacencies[r]:
+				if lengths.has(neighbor):
+					continue
+				lengths[neighbor] = cur_length
+				new_visit.append(neighbor)
+		to_visit = new_visit
+		cur_length += 1
+	for r2 in self.regions.keys():
+		if !lengths.has(r2):
+			lengths[r2] = Constants.NULL_PATH_LENGTH
+	return lengths
 
 func all_path_lengths():
 	var lengths = {}
-	# Utils.log("all path lengths")
-	# Utils.log(self.regions.keys())
-	# Utils.log(self.regions.keys().size())
-	# Utils.log("all path lengths")
-	for r in self.regions:
-		lengths[r] = {}
-		for r2 in self.regions:
-			if r != r2:
-				if r2 in lengths and r in lengths[r2]:
-					lengths[r][r2] = lengths[r2][r]
-				else:
-					lengths[r][r2] = self.shortest_path_length(r, r2)
-	# Utils.log(lengths)
+	for r in self.regions.keys():
+		lengths[r] = bfs(r)
 	return lengths

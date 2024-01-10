@@ -37,6 +37,7 @@ var ICONS = {
 	Power.Type.Fort: Constants.BUILDINGS[Constants.Building.Fort].texture,
 	Power.Type.Oracle: Constants.BUILDINGS[Constants.Building.Oracle].texture,
 	Power.Type.Seal: Constants.BUILDINGS[Constants.Building.Seal].texture,
+	Power.Type.Reinforcements: preload("res://assets/icons/Plus.png"),
 }
 
 func clear_tweens():

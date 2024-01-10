@@ -17,6 +17,7 @@ enum MouseState {
 	None,
 	Sink,
 	Sacrifice,
+	Reinforce,
 	Emerge,
 	Build,
 	Move
@@ -163,7 +164,32 @@ func handle_building(event):
 		self.apply_action(action)
 		card_used(self.used_card)
 		clear_mouse_state()
-			
+	
+
+func handle_plus(event):
+	var coords_hovered = world.global_pos_to_coords(event.position)
+	if event is InputEventMouseMotion:
+		if world.tiles.has(coords_hovered) and self.world.tiles[coords_hovered].data.team == self.teams[self.player_team_index]:
+			self.mouse_item.self_modulate = Color(0.5, 1, 0.5)
+		else:
+			self.mouse_item.self_modulate = Color(1, 0.5, 0.5)
+		self.mouse_item.position = self.world.map_to_local(coords_hovered)
+	elif event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT and event.pressed:
+		if !world.tiles.has(coords_hovered):
+			messenger.set_message("You can't send reinforcements to the sea, my lord.")
+			clear_mouse_state()
+			return
+		if self.world.tiles[coords_hovered].data.team != self.teams[self.player_team_index]:
+			messenger.set_message("You cannot send reinforcements to the enemy!")
+			clear_mouse_state()
+			return
+		var region_reinforced = self.world.tiles[coords_hovered].data.region
+		var action = Action.new(self.teams[self.player_team_index], Action.Type.Reinforce, region_reinforced)
+		actions_history.append(action)
+		self.apply_action(action)
+		if self.used_card != null:
+			card_used(self.used_card)
+		clear_mouse_state()
 
 func handle_sacrifice(event):
 	var coords_hovered = world.global_pos_to_coords(event.position)
@@ -216,6 +242,9 @@ func _unhandled_input(event):
 					return
 				MouseState.Build:
 					handle_building(event)
+					return
+				MouseState.Reinforce:
+					handle_plus(event)
 					return
 				_:
 					pass
@@ -285,6 +314,8 @@ func use_card(c):
 			set_shape(c.power.shape.coords.keys(), MouseState.Emerge)
 		Power.Type.Sacrifice:
 			set_sacrifice()
+		Power.Type.Reinforcements:
+			set_reinforcements()
 		Power.Type.Prayer:
 			self.add_faith(self.teams[self.player_team_index], 1)
 			self.card_used(c)
@@ -425,7 +456,8 @@ func play_turn(team_id):
 		thread.start(self.bots[team_id].play_turn.bind(self.world))
 		while thread.is_alive():
 			await Utils.wait(0.1)
-		var bot_actions = thread.wait_to_finish()
+		# var bot_actions = thread.wait_to_finish()
+		var bot_actions = self.bots[team_id].play_turn(self.world) ## use for debugging
 		for bot_action in bot_actions:
 			if bot_action.action == Action.Type.None:
 				playing = false
@@ -463,6 +495,9 @@ func apply_action(action : Action):
 			sacrifice_region(action.region_from, action.team)
 		Action.Type.Build:
 			self.world.tiles[action.tiles[0]].set_building(action.misc)
+		Action.Type.Reinforce:
+			self.world.regions[action.region_from].data.units += 10
+			self.world.regions[action.region_from].update()
 		Action.Type.None:
 			pass
 		_:
@@ -501,6 +536,13 @@ func set_sacrifice():
 	self.world.add_child(mouse_item)
 	self.mouse_item.global_position = get_viewport().get_mouse_position()
 	self.mouse_state = MouseState.Sacrifice
+
+func set_reinforcements():
+	self.mouse_item = Sprite2D.new()
+	self.mouse_item.texture = load("res://assets/icons/Plus.png")
+	self.world.add_child(mouse_item)
+	self.mouse_item.global_position = get_viewport().get_mouse_position()
+	self.mouse_state = MouseState.Reinforce
 
 func set_building(building):
 	self.mouse_item = Sprite2D.new()

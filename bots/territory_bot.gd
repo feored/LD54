@@ -1,26 +1,34 @@
 class_name TerritoryBot extends BaseBot
 
 func evaluate_state(world_state, world):
-	var score = 0
+	var score = 0.0
 	var regions_owned = self.get_team_regions(world_state)
 	if regions_owned.size() == 0:
 		return -999
 	# ADD BACK THIS
+	var bonus_teams_beaten = 0.0
 	for rt in world_state.team_regions:
 		if rt != self.team and world_state.team_regions[rt] == 0:
-			score += (1.0/world_state.team_regions.size()) * self.personality.teams_alive
-	var n_regions = world.regions.size()
-	var n_tiles = world_state.tiles.size()
-	var bonus_regions_owned = regions_owned.size() / float(n_regions)
-	#Utils.log("Bonus regions owned: ", bonus_regions_owned)
+			bonus_teams_beaten += 1.0
+		
+	bonus_teams_beaten = bonus_teams_beaten / (world_state.team_regions.size() - 1)
+	Utils.log("Bonus teams beaten: ", bonus_teams_beaten)
+	score += bonus_teams_beaten * self.personality.teams_alive
+
+
+	var n_regions = float(world.regions.size())
+	var bonus_regions_owned = regions_owned.size() / n_regions
+	Utils.log("Bonus regions owned: ", bonus_regions_owned)
 	score += bonus_regions_owned * self.personality.regions
-	var bonus_tiles_owned = regions_owned.map(func(region): return region.tiles.size()).reduce(func(a, b): return a + b, 0) / float(n_tiles)
-	#Utils.log("Bonus tiles owned: ", bonus_tiles_owned)
+	
+	var total_tiles = float(world.tiles.size())
+	var bonus_tiles_owned = world.tiles.values().filter(func(tile): return tile.data.team == self.team && !tile.data.marked).size() / total_tiles
+	Utils.log("Bonus tiles owned: ", bonus_tiles_owned)
 	score += bonus_tiles_owned * self.personality.tiles
 	# either total units in map or delete
-	var bonus_units_owned = regions_owned.map(func(region): return region.units).reduce(func(a, b): return a + b, 0) / (n_regions * 50.0)
-	#Utils.log("Bonus units owned: ", bonus_units_owned)
-	score += bonus_units_owned
+	var bonus_units_owned = regions_owned.map(func(region): return region.units).reduce(func(a, b): return a + b, 0) 
+	Utils.log("Bonus units owned: ", bonus_units_owned)
+	score += bonus_units_owned * self.personality.units
 
 	## malus for landlocked regions
 	# var malus_landlocked_regions = 0
@@ -55,11 +63,12 @@ func evaluate_state(world_state, world):
 
 	var regions_not_owned = world_state.regions.values().filter(func(region): return region.team != self.team && region.team != Constants.NULL_TEAM)\
 	.map(func(region): return region.id)
-	var total_dist = 0
+	var total_dist = 0.0
 	if regions_not_owned.size() == 0:
 		return 999
 	for r in regions_owned:
 		regions_not_owned.sort_custom(func(a, b): return world.path_lengths[r.id][a] < world.path_lengths[r.id][b])
+		# print("Regions not owned: ", regions_not_owned)
 		#Utils.log("%s regions not owned: %s " % [regions_not_owned.size(), regions_not_owned])
 		var closest = regions_not_owned[0]
 		#Utils.log("Closest ", closest)
@@ -67,17 +76,21 @@ func evaluate_state(world_state, world):
 			## no enemy regions reachable from this region
 			continue
 		var dist = world.path_lengths[r.id][closest] * r.units
+		# print("Closest ", closest, " to ", r, " is ", dist, " units: ", r.units)
 		#Utils.log("Closest ", closest, " to ", r, " is ", dist)
 		total_dist += dist
+	# print("Total dist: ", total_dist)
 	var avg_dist = total_dist / regions_owned.size()
 	var max_dist = 0
 	for r in world.regions:
 		for y in world.regions:
 			if r!=y and world.path_lengths[r][y] > max_dist:
 				max_dist = world.path_lengths[r][y]
-	#Utils.log("Average distance: ", avg_dist)
-	score -= (avg_dist/(max_dist*50.0)) * self.personality.distance
-	
+	# Utils.log("Average distance: ", avg_dist, "max distance", max_dist)
+	var minus_dist = (avg_dist/(max_dist))
+	Utils.log("minust_dist", minus_dist)
+	score -= minus_dist * self.personality.distance
+	Utils.log("Final score: ", score)
 	return score
 		
 

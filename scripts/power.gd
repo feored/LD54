@@ -1,7 +1,77 @@
 class_name Power
 extends RefCounted
 
-enum Type { Offering, Sacrifice, Sink, Emerge, Barracks, Temple, Fort, Oracle, Seal, Prayer }
+enum Type {
+	Offering,
+	Sacrifice,
+	Sink,
+	Emerge,
+	Barracks,
+	Temple,
+	Fort,
+	Oracle,
+	Seal,
+	Prayer,
+	Reinforcements
+}
+
+const INFO = {
+	Type.Offering:
+	{
+		"cost": 0,
+		"name": "Offering",
+	},
+	Type.Sacrifice:
+	{
+		"cost": 0,
+		"name": "Sacrifice",
+	},
+	Type.Sink:
+	{
+		"cost": 1,
+		"name": "Sink",
+	},
+	Type.Emerge:
+	{
+		"cost": 1,
+		"name": "Emerge",
+	},
+	Type.Barracks:
+	{
+		"cost": 1,
+		"name": "Barracks",
+	},
+	Type.Temple:
+	{
+		"cost": 2,
+		"name": "Temple",
+	},
+	Type.Fort:
+	{
+		"cost": 3,
+		"name": "Fort",
+	},
+	Type.Oracle:
+	{
+		"cost": 2,
+		"name": "Oracle",
+	},
+	Type.Seal:
+	{
+		"cost": 1,
+		"name": "Seal",
+	},
+	Type.Prayer:
+	{
+		"cost": 0,
+		"name": "Prayer",
+	},
+	Type.Reinforcements:
+	{
+		"cost": 1,
+		"name": "Reinforcements",
+	},
+}
 
 var id: Type
 var strength: int = 0
@@ -16,35 +86,9 @@ var faith_icon_BBCode: String = "[img]res://assets/icons/trident.png[/img]"
 func _init(init_id: Type, init_strength: int) -> void:
 	self.id = init_id
 	self.strength = init_strength
-	self.cost = get_cost()
-	self.name = get_name()
+	self.cost = INFO[self.id].cost
+	self.name = INFO[self.id].name
 	self.description = "[center]" + get_description() + "[/center]"
-
-
-func get_cost() -> int:
-	match self.id:
-		Type.Offering:
-			return 0
-		Type.Sacrifice:
-			return 0
-		Type.Sink:
-			return 1
-		Type.Emerge:
-			return 1
-		Type.Barracks:
-			return 1
-		Type.Temple:
-			return 2
-		Type.Fort:
-			return 2
-		Type.Oracle:
-			return 2
-		Type.Seal:
-			return 1
-		Type.Prayer:
-			return 0
-		_:
-			return 0
 
 
 func get_description() -> String:
@@ -73,32 +117,8 @@ func get_description() -> String:
 			return "[Building] The region this seal belongs to can resist one marking of Neptune."
 		Type.Prayer:
 			return "Gain 1 " + faith_icon_BBCode + " but discard up to 2 other cards at random."
-		_:
-			return "Unknown power."
-
-
-func get_name() -> String:
-	match self.id:
-		Type.Offering:
-			return "Offering"
-		Type.Sacrifice:
-			return "Sacrifice"
-		Type.Sink:
-			return "Sink"
-		Type.Emerge:
-			return "Emerge"
-		Type.Barracks:
-			return "Barracks"
-		Type.Temple:
-			return "Temple"
-		Type.Fort:
-			return "Fort"
-		Type.Oracle:
-			return "Oracle"
-		Type.Seal:
-			return "Seal"
-		Type.Prayer:
-			return "Prayer"
+		Type.Reinforcements:
+			return "Reinforce a region with 10 units."
 		_:
 			return "Unknown power."
 
