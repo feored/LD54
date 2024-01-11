@@ -48,70 +48,83 @@ theme_override_constants/margin_bottom = 10
 layout_mode = 2
 theme_override_constants/separation = 10
 
-[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer/CenterContainer/MainSettingsContainer/PanelContainer/MarginContainer/SettingsContainer"]
+[node name="FullScreen" type="HBoxContainer" parent="MarginContainer/CenterContainer/MainSettingsContainer/PanelContainer/MarginContainer/SettingsContainer"]
 layout_mode = 2
 
-[node name="fullScreenLabel" type="Label" parent="MarginContainer/CenterContainer/MainSettingsContainer/PanelContainer/MarginContainer/SettingsContainer/HBoxContainer"]
+[node name="fullScreenLabel" type="Label" parent="MarginContainer/CenterContainer/MainSettingsContainer/PanelContainer/MarginContainer/SettingsContainer/FullScreen"]
 layout_mode = 2
 size_flags_horizontal = 3
 text = "Full Screen"
 
-[node name="FullScreenButton" type="CheckButton" parent="MarginContainer/CenterContainer/MainSettingsContainer/PanelContainer/MarginContainer/SettingsContainer/HBoxContainer"]
+[node name="FullScreenButton" type="CheckButton" parent="MarginContainer/CenterContainer/MainSettingsContainer/PanelContainer/MarginContainer/SettingsContainer/FullScreen"]
 unique_name_in_owner = true
 layout_mode = 2
 
-[node name="HBoxContainer2" type="HBoxContainer" parent="MarginContainer/CenterContainer/MainSettingsContainer/PanelContainer/MarginContainer/SettingsContainer"]
+[node name="MasterVolume" type="HBoxContainer" parent="MarginContainer/CenterContainer/MainSettingsContainer/PanelContainer/MarginContainer/SettingsContainer"]
 layout_mode = 2
 
-[node name="MasterLabel" type="Label" parent="MarginContainer/CenterContainer/MainSettingsContainer/PanelContainer/MarginContainer/SettingsContainer/HBoxContainer2"]
+[node name="MasterLabel" type="Label" parent="MarginContainer/CenterContainer/MainSettingsContainer/PanelContainer/MarginContainer/SettingsContainer/MasterVolume"]
 layout_mode = 2
 size_flags_horizontal = 3
 text = "Master Volume"
 
-[node name="MasterVolumeSlider" type="HSlider" parent="MarginContainer/CenterContainer/MainSettingsContainer/PanelContainer/MarginContainer/SettingsContainer/HBoxContainer2"]
+[node name="MasterVolumeSlider" type="HSlider" parent="MarginContainer/CenterContainer/MainSettingsContainer/PanelContainer/MarginContainer/SettingsContainer/MasterVolume"]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 max_value = 1.0
 step = 0.01
 
-[node name="HBoxContainer3" type="HBoxContainer" parent="MarginContainer/CenterContainer/MainSettingsContainer/PanelContainer/MarginContainer/SettingsContainer"]
+[node name="MusicVolume" type="HBoxContainer" parent="MarginContainer/CenterContainer/MainSettingsContainer/PanelContainer/MarginContainer/SettingsContainer"]
 layout_mode = 2
 
-[node name="MasterLabel" type="Label" parent="MarginContainer/CenterContainer/MainSettingsContainer/PanelContainer/MarginContainer/SettingsContainer/HBoxContainer3"]
+[node name="MasterLabel" type="Label" parent="MarginContainer/CenterContainer/MainSettingsContainer/PanelContainer/MarginContainer/SettingsContainer/MusicVolume"]
 layout_mode = 2
 size_flags_horizontal = 3
 text = "Music Volume"
 
-[node name="MusicVolumeSlider" type="HSlider" parent="MarginContainer/CenterContainer/MainSettingsContainer/PanelContainer/MarginContainer/SettingsContainer/HBoxContainer3"]
+[node name="MusicVolumeSlider" type="HSlider" parent="MarginContainer/CenterContainer/MainSettingsContainer/PanelContainer/MarginContainer/SettingsContainer/MusicVolume"]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 max_value = 1.0
 step = 0.01
 
-[node name="HBoxContainer4" type="HBoxContainer" parent="MarginContainer/CenterContainer/MainSettingsContainer/PanelContainer/MarginContainer/SettingsContainer"]
+[node name="SFXVolume" type="HBoxContainer" parent="MarginContainer/CenterContainer/MainSettingsContainer/PanelContainer/MarginContainer/SettingsContainer"]
 layout_mode = 2
 
-[node name="MasterLabel" type="Label" parent="MarginContainer/CenterContainer/MainSettingsContainer/PanelContainer/MarginContainer/SettingsContainer/HBoxContainer4"]
+[node name="MasterLabel" type="Label" parent="MarginContainer/CenterContainer/MainSettingsContainer/PanelContainer/MarginContainer/SettingsContainer/SFXVolume"]
 layout_mode = 2
 size_flags_horizontal = 3
 text = "SFX Volume"
 
-[node name="SFXVolumeSlider" type="HSlider" parent="MarginContainer/CenterContainer/MainSettingsContainer/PanelContainer/MarginContainer/SettingsContainer/HBoxContainer4"]
+[node name="SFXVolumeSlider" type="HSlider" parent="MarginContainer/CenterContainer/MainSettingsContainer/PanelContainer/MarginContainer/SettingsContainer/SFXVolume"]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 max_value = 1.0
 step = 0.01
+
+[node name="AutoCamera" type="HBoxContainer" parent="MarginContainer/CenterContainer/MainSettingsContainer/PanelContainer/MarginContainer/SettingsContainer"]
+layout_mode = 2
+
+[node name="AutoCameraLabel" type="Label" parent="MarginContainer/CenterContainer/MainSettingsContainer/PanelContainer/MarginContainer/SettingsContainer/AutoCamera"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Auto Camera Focus"
+
+[node name="AutoCameraFocusButton" type="CheckButton" parent="MarginContainer/CenterContainer/MainSettingsContainer/PanelContainer/MarginContainer/SettingsContainer/AutoCamera"]
+unique_name_in_owner = true
+layout_mode = 2
 
 [node name="SettingsReturnButton" type="Button" parent="MarginContainer/CenterContainer/MainSettingsContainer"]
 layout_mode = 2
 size_flags_horizontal = 4
 text = "Return"
 
-[connection signal="toggled" from="MarginContainer/CenterContainer/MainSettingsContainer/PanelContainer/MarginContainer/SettingsContainer/HBoxContainer/FullScreenButton" to="." method="_on_full_screen_button_toggled"]
-[connection signal="value_changed" from="MarginContainer/CenterContainer/MainSettingsContainer/PanelContainer/MarginContainer/SettingsContainer/HBoxContainer2/MasterVolumeSlider" to="." method="_on_master_volume_slider_value_changed"]
-[connection signal="value_changed" from="MarginContainer/CenterContainer/MainSettingsContainer/PanelContainer/MarginContainer/SettingsContainer/HBoxContainer3/MusicVolumeSlider" to="." method="_on_music_volume_slider_value_changed"]
-[connection signal="value_changed" from="MarginContainer/CenterContainer/MainSettingsContainer/PanelContainer/MarginContainer/SettingsContainer/HBoxContainer4/SFXVolumeSlider" to="." method="_on_sfx_volume_slider_value_changed"]
+[connection signal="toggled" from="MarginContainer/CenterContainer/MainSettingsContainer/PanelContainer/MarginContainer/SettingsContainer/FullScreen/FullScreenButton" to="." method="_on_full_screen_button_toggled"]
+[connection signal="value_changed" from="MarginContainer/CenterContainer/MainSettingsContainer/PanelContainer/MarginContainer/SettingsContainer/MasterVolume/MasterVolumeSlider" to="." method="_on_master_volume_slider_value_changed"]
+[connection signal="value_changed" from="MarginContainer/CenterContainer/MainSettingsContainer/PanelContainer/MarginContainer/SettingsContainer/MusicVolume/MusicVolumeSlider" to="." method="_on_music_volume_slider_value_changed"]
+[connection signal="value_changed" from="MarginContainer/CenterContainer/MainSettingsContainer/PanelContainer/MarginContainer/SettingsContainer/SFXVolume/SFXVolumeSlider" to="." method="_on_sfx_volume_slider_value_changed"]
+[connection signal="toggled" from="MarginContainer/CenterContainer/MainSettingsContainer/PanelContainer/MarginContainer/SettingsContainer/AutoCamera/AutoCameraFocusButton" to="." method="_on_auto_camera_focus_button_toggled"]
 [connection signal="pressed" from="MarginContainer/CenterContainer/MainSettingsContainer/SettingsReturnButton" to="." method="_on_settings_return_button_pressed"]

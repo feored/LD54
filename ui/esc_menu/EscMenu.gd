@@ -4,10 +4,11 @@ enum State {Esc, Settings}
 
 @onready var esc_menu = $"%EscMenu"
 @onready var settings_menu = $"%SettingsMenu"
+@onready var esc_panel = %EscPanel
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
-	self.hide()
+	self.esc_panel.hide()
 	settings_menu.disappear = func(): show_state(State.Esc)
 
 
@@ -36,15 +37,19 @@ func _on_resume_button_pressed():
 func appear():
 	show_state(State.Esc)
 	self.get_tree().paused = true
-	self.show()
+	self.esc_panel.show()
 
 func disappear():
 	self.get_tree().paused = false
-	self.hide()
+	self.esc_panel.hide()
 
 func _unhandled_input(event):
 	if event.is_action_pressed("escmenu"):
-		self.disappear() if self.visible else self.appear()
+		self.disappear() if self.esc_panel.visible else self.appear()
 
 func _on_settings_button_pressed():
 	self.show_state(State.Settings)
+
+
+func _on_esc_button_pressed():
+	self.appear()

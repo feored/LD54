@@ -111,7 +111,7 @@ const TURN_TIME = 0.3
 const MENU_WAIT_TIME = 1
 
 ## Buildings
-enum Building { None, Barracks, Temple, Fort, Shrine, Seal }
+enum Building { None, Barracks, Temple, Fort, Oracle, Seal }
 
 const BUILDINGS = {
 	Building.Barracks:
@@ -136,10 +136,10 @@ const BUILDINGS = {
 		"tooltip":
 		"Enemies invading this territory lose %s units instantly." % CASTLE_UNITS_REMOVED,
 	},
-	Building.Shrine:
+	Building.Oracle:
 	{
-		"id": Building.Shrine,
-		"name": "Shrine",
+		"id": Building.Oracle,
+		"name": "Oracle",
 		"texture": preload("res://assets/icons/card.png"),
 		"tooltip": "This territory will generate one power every turn.",
 	},
@@ -167,7 +167,7 @@ const scenarios = [
 		"path": "fortress.json"
 	},
 	{
-		"title": "Six Bases",
+		"title": "The Pretzel",
 		"description": "A free for all, but every kingdom starts with an established base.",
 		"path": "homebase.json"
 	},
@@ -182,5 +182,6 @@ const scenarios = [
 		"description":
 		"This is a land of borg, worm, and love for nergkun. Isn't this a hidden map?",
 		"path": "tarp.json"
-	}
+	},
+	{"title": "Santa", "description": "This is a hidden map. Go away.", "path": "santa.json"}
 ]

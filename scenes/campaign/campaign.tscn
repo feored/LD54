@@ -1,11 +1,9 @@
-[gd_scene load_steps=7 format=3 uid="uid://c5l0lewjbqm47"]
+[gd_scene load_steps=5 format=3 uid="uid://c5l0lewjbqm47"]
 
 [ext_resource type="PackedScene" uid="uid://b8opucxucl032" path="res://world/world.tscn" id="1_jtkqy"]
 [ext_resource type="Script" path="res://scenes/campaign/campaign.gd" id="1_uyg8v"]
 [ext_resource type="PackedScene" uid="uid://pu46mkcjdswb" path="res://ui/esc_menu/esc_menu.tscn" id="2_5qe7g"]
 [ext_resource type="Theme" uid="uid://3t61g0061mea" path="res://assets/theme.tres" id="3_71aav"]
-[ext_resource type="Texture2D" uid="uid://d38dt7djpildn" path="res://assets/ui/left.png" id="4_bmyya"]
-[ext_resource type="Texture2D" uid="uid://bllil20ixoep1" path="res://assets/ui/right.png" id="5_0euq5"]
 
 [node name="Campaign" type="Node2D"]
 script = ExtResource("1_uyg8v")
@@ -22,6 +20,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+theme = ExtResource("3_71aav")
 theme_override_constants/separation = 0
 
 [node name="ScenarioContainer" type="VBoxContainer" parent="CanvasLayer/VBoxContainer2"]
@@ -34,7 +33,6 @@ theme_override_constants/separation = 0
 [node name="Panel2" type="Panel" parent="CanvasLayer/VBoxContainer2/ScenarioContainer"]
 custom_minimum_size = Vector2(240, 0)
 layout_mode = 2
-size_flags_horizontal = 4
 size_flags_vertical = 3
 theme = ExtResource("3_71aav")
 theme_type_variation = &"GoldPanel"
@@ -62,62 +60,27 @@ size_flags_vertical = 1
 text = "Commander, Neptune's dominion awaits your strategic genius. Forge alliances wisely, navigate treacherous currents, and unleash Neptune's wrath upon those who challenge our rule. Assemble a mighty armada, exploit the planet's mysteries, and sink rival nations to secure Neptune's sovereignty. The fate of our aquatic empire rests in your cunning hands. Sink or be sunk!Commander, Neptune's dominion awaits your strategic genius. Forge alliances wisely, navigate treacherous currents, and unleash Neptune's wrath upon those who challenge our rule. Assemble a mighty armada, exploit the planet's mysteries, and sink rival nations to secure Neptune's sovereignty. The fate of our aquatic empire rests in your cunning hands. Sink or be sunk!Commander, Neptune's dominion awaits your strategic genius. Forge alliances wisely, navigate treacherous currents, and unleash Neptune's wrath upon those who challenge our rule. Assemble a mighty armada, exploit the planet's mysteries, and sink rival nations to secure Neptune's sovereignty. The fate of our aquatic empire rests in your cunning hands. Sink or be sunk!Commander, Neptune's dominion awaits your strategic genius. Forge alliances wisely, navigate treacherous currents, and unleash Neptune's wrath upon those who challenge our rule. Assemble a mighty armada, exploit the planet's mysteries, and sink rival nations to secure Neptune's sovereignty. The fate of our aquatic empire rests in your cunning hands. Sink or be sunk!"
 autowrap_mode = 3
 
-[node name="PickerContainer" type="PanelContainer" parent="CanvasLayer/VBoxContainer2"]
+[node name="PanelContainer" type="PanelContainer" parent="CanvasLayer/VBoxContainer2/ScenarioContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+size_flags_stretch_ratio = 0.89
+
+[node name="ScrollContainer" type="ScrollContainer" parent="CanvasLayer/VBoxContainer2/ScenarioContainer/PanelContainer"]
+layout_mode = 2
+
+[node name="OtherScenarios" type="VBoxContainer" parent="CanvasLayer/VBoxContainer2/ScenarioContainer/PanelContainer/ScrollContainer"]
 unique_name_in_owner = true
-layout_mode = 2
-theme = ExtResource("3_71aav")
-
-[node name="MarginContainer" type="MarginContainer" parent="CanvasLayer/VBoxContainer2/PickerContainer"]
-layout_mode = 2
-theme_override_constants/margin_left = 0
-theme_override_constants/margin_top = 0
-theme_override_constants/margin_right = 0
-theme_override_constants/margin_bottom = 0
-
-[node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer/VBoxContainer2/PickerContainer/MarginContainer"]
-layout_mode = 2
-
-[node name="HBoxContainer" type="HBoxContainer" parent="CanvasLayer/VBoxContainer2/PickerContainer/MarginContainer/VBoxContainer"]
-layout_mode = 2
-alignment = 1
-
-[node name="LeftButton" type="Button" parent="CanvasLayer/VBoxContainer2/PickerContainer/MarginContainer/VBoxContainer/HBoxContainer"]
-layout_mode = 2
-icon = ExtResource("4_bmyya")
-icon_alignment = 1
-
-[node name="CenterContainer" type="CenterContainer" parent="CanvasLayer/VBoxContainer2/PickerContainer/MarginContainer/VBoxContainer/HBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="HBoxContainer" type="HBoxContainer" parent="CanvasLayer/VBoxContainer2/PickerContainer/MarginContainer/VBoxContainer/HBoxContainer/CenterContainer"]
+[node name="PanelContainer2" type="PanelContainer" parent="CanvasLayer/VBoxContainer2/ScenarioContainer"]
 layout_mode = 2
 
-[node name="ScenarioNumber" type="Label" parent="CanvasLayer/VBoxContainer2/PickerContainer/MarginContainer/VBoxContainer/HBoxContainer/CenterContainer/HBoxContainer"]
-unique_name_in_owner = true
-layout_mode = 2
-text = "[1]"
-
-[node name="ScenarioTitle" type="Label" parent="CanvasLayer/VBoxContainer2/PickerContainer/MarginContainer/VBoxContainer/HBoxContainer/CenterContainer/HBoxContainer"]
-unique_name_in_owner = true
-layout_mode = 2
-text = "THE RINGS"
-
-[node name="HBoxContainer" type="HBoxContainer" parent="CanvasLayer/VBoxContainer2/PickerContainer/MarginContainer/VBoxContainer/HBoxContainer"]
-layout_mode = 2
-
-[node name="RightButton" type="Button" parent="CanvasLayer/VBoxContainer2/PickerContainer/MarginContainer/VBoxContainer/HBoxContainer/HBoxContainer"]
-layout_mode = 2
-icon = ExtResource("5_0euq5")
-icon_alignment = 1
-
-[node name="PlayButton" type="Button" parent="CanvasLayer/VBoxContainer2/PickerContainer/MarginContainer/VBoxContainer/HBoxContainer"]
+[node name="PlayButton" type="Button" parent="CanvasLayer/VBoxContainer2/ScenarioContainer/PanelContainer2"]
 custom_minimum_size = Vector2(230, 0)
 layout_mode = 2
 theme = ExtResource("3_71aav")
 theme_override_font_sizes/font_size = 0
 text = "Play"
 
-[connection signal="pressed" from="CanvasLayer/VBoxContainer2/PickerContainer/MarginContainer/VBoxContainer/HBoxContainer/LeftButton" to="." method="_on_left_button_pressed"]
-[connection signal="pressed" from="CanvasLayer/VBoxContainer2/PickerContainer/MarginContainer/VBoxContainer/HBoxContainer/HBoxContainer/RightButton" to="." method="_on_right_button_pressed"]
-[connection signal="pressed" from="CanvasLayer/VBoxContainer2/PickerContainer/MarginContainer/VBoxContainer/HBoxContainer/PlayButton" to="." method="_on_play_button_pressed"]
+[connection signal="pressed" from="CanvasLayer/VBoxContainer2/ScenarioContainer/PanelContainer2/PlayButton" to="." method="_on_play_button_pressed"]

@@ -98,10 +98,9 @@ func clear():
 
 
 func sacrifice():
-	var faith = self.data.units - 1
-	self.data.units = 1
+	self.data.units = 0
+	self.set_team(Constants.NULL_TEAM)
 	self.update()
-	return faith
 
 
 func update():
@@ -240,8 +239,10 @@ func spawn_cell(coords, team, save_data = {}):
 
 
 func delete_tile(coords):
+	var avg_pop = self.data.units / self.data.tiles.size()
 	self.data.tiles.erase(coords)
 	self.tile_objs.erase(coords)
+	self.data.units -= avg_pop
 	tile_deleted.emit(coords)
 	self.update()
 

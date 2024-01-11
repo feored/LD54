@@ -15,6 +15,11 @@ var cards = []
 func _ready():
 	pass  # Replace with function body.
 
+func clear():
+	for card in self.cards:
+		card.queue_free()
+	self.cards.clear()
+
 func add_card(card):
 	card.mouse_entered.connect(func(): try_hover(cards.find(card)))
 	card.mouse_exited.connect(func(): try_unhover(cards.find(card)))
@@ -32,10 +37,15 @@ func remove_card(card):
 	var card_id = cards.find(card)
 	if card_id != -1:
 		self.cards.remove_at(card_id)
-		self.remove_child(card)
 		card.queue_free()
 		self.place_all()
 
+func discard_random(amount: int):
+	var cards_copy = self.cards.duplicate()
+	cards_copy.shuffle()
+	var to_del = min(cards_copy.size(), amount)
+	for i in range(to_del):
+		self.remove_card(cards_copy[i])
 
 func place_card(id):
 	var total = cards.size()
