@@ -1,4 +1,4 @@
-[gd_scene load_steps=20 format=3 uid="uid://b8opucxucl032"]
+[gd_scene load_steps=22 format=3 uid="uid://b8opucxucl032"]
 
 [ext_resource type="TileSet" uid="uid://dswtp6vpo8tyt" path="res://world/tiles/tileset.tres" id="1_tacgr"]
 [ext_resource type="Script" path="res://world/world.gd" id="2_priir"]
@@ -118,6 +118,13 @@ volumetric_fog_emission = Color(0.913725, 0.541176, 0.792157, 1)
 volumetric_fog_emission_energy = 0.1
 volumetric_fog_gi_inject = 2.0
 
+[sub_resource type="ORMMaterial3D" id="ORMMaterial3D_gknps"]
+albedo_color = Color(0.364706, 0.498039, 0.788235, 1)
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_4mjyu"]
+material = SubResource("ORMMaterial3D_gknps")
+size = Vector2(400, 400)
+
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_k78jo"]
 render_priority = 0
 shader = ExtResource("7_7mse2")
@@ -132,8 +139,8 @@ shader_parameter/roughness = 0.2
 [sub_resource type="PlaneMesh" id="PlaneMesh_wggbv"]
 material = SubResource("ShaderMaterial_k78jo")
 size = Vector2(200, 200)
-subdivide_width = 200
-subdivide_depth = 200
+subdivide_width = 100
+subdivide_depth = 100
 
 [node name="World" type="TileMap"]
 tile_set = ExtResource("1_tacgr")
@@ -211,13 +218,13 @@ mouse_filter = 1
 
 [node name="MainCamera" type="Camera3D" parent="World3D/Environment"]
 unique_name_in_owner = true
-transform = Transform3D(0.99863, 0.0480316, -0.0207851, 0, 0.397148, 0.917755, 0.052336, -0.916497, 0.396603, 0, 8.74, 10)
+transform = Transform3D(1, 0, 0, 0, 0.397148, 0.917755, 0, -0.917755, 0.397148, 5, 10, 5)
 current = true
 script = ExtResource("6_5jfes")
 
 [node name="MainCamera2" type="Camera3D" parent="World3D/Environment"]
 transform = Transform3D(0.99863, 0.00962727, -0.0514429, 0, 0.982935, 0.183951, 0.052336, -0.183699, 0.981588, 0, 0.985, 14.87)
-current = true
+visible = false
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="World3D/Environment"]
 environment = SubResource("Environment_7v7o4")
@@ -233,5 +240,11 @@ shadow_transmittance_bias = 0.0
 shadow_opacity = 0.5
 directional_shadow_split_1 = 0.11
 
+[node name="MeshInstance3D2" type="MeshInstance3D" parent="World3D/Environment"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.015, 0)
+mesh = SubResource("PlaneMesh_4mjyu")
+
 [node name="MeshInstance3D" type="MeshInstance3D" parent="World3D/Environment"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
+visible = false
 mesh = SubResource("PlaneMesh_wggbv")

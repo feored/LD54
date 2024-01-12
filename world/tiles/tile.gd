@@ -4,13 +4,12 @@ class_name Tile
 
 signal deleted
 
-var NEUTRAL_COLOR = Color.hex(0x55d981ff)
-
 const SINK_ANIMATION = preload("res://world/tiles/sinking_animation.tscn")
 const NEUTRAL_TEXTURE = preload("res://assets/tiles/grass_neutral.png")
 const TEAM_TEXTURE = preload("res://assets/tiles/grass.png")
 const CRACKED_TEXTURE = preload("res://assets/tiles/grass_cracked_2.png")
 
+@onready var inner = $inner
 @onready var animation_player = $AnimationPlayer
 @onready var border_objects = {
 	TileSet.CELL_NEIGHBOR_RIGHT_SIDE: $east,
@@ -83,7 +82,6 @@ func init_cell(
 	self.data.team = init_team
 	self.data.region = init_region
 	self.set_name.call_deferred(StringName("Tile " + str(self.data.coords)))
-	Utils.log("Tile " + str(self.data.coords) + " , pos ", self.init_position)
 
 func init_from_save(init_data):
 	self.data.from_save(init_data)
@@ -113,20 +111,15 @@ func update():
 		building_sprite.visible = false
 	for b in self.borders.keys():
 		if self.borders[b]:
-			self.border_objects[b].show()
+			self.border_objects[b].get_active_material(0).albedo_color = Color.WHITE
+			# self.border_objects[b].get_active_material(0).albedo_color = Color(Constants.TEAM_BORDER_COLORS[self.data.team])
 		else:
-			self.border_objects[b].hide()
+			self.border_objects[b].get_active_material(0).albedo_color = Color(Constants.TEAM_COLORS[self.data.team])
 
 	# if self.data.marked:
 	# 	self.texture = CRACKED_TEXTURE
 	# else:
 	# 	self.texture = TEAM_TEXTURE
-	# if self.data.team == Constants.NULL_TEAM:
-	# 	for b in self.borders.keys():
-	# 		self.border_objects[b].self_modulate = Color.WHITE
-	# else:
-	# 	for b in self.borders.keys():
-	# 		self.border_objects[b].self_modulate = Color(Constants.TEAM_BORDER_COLORS[self.data.team])
 	
 	# # if Settings.editor_tile_distinct_mode:
 	# 	# if self.data.region == Constants.NULL_REGION:
@@ -134,10 +127,7 @@ func update():
 	# 	# else:
 	# 	# 	self.modulate = Color(1, 1, 1)
 	# # else:
-	# if self.data.team == Constants.NULL_TEAM:
-	# 	self.self_modulate = NEUTRAL_COLOR
-	# else:
-	# 	self.self_modulate = Color(Constants.TEAM_COLORS[self.data.team])
+	self.inner.get_active_material(0).albedo_color = Color(Constants.TEAM_COLORS[self.data.team])
 	# if Settings.editor_tile_distinct_mode:
 	# 	self.self_modulate = Color.from_hsv((self.data.region) / 24.0, 1, 1)
 	
@@ -187,7 +177,7 @@ func mark():
 	self.data.marked = true
 	#self.texture = CRACKED_TEXTURE
 	#self.modulate = Color.hex(0xacacacac)
-	self.animation_player.play("quake")
+	# self.animation_player.play("quake")
 	self.update()
 
 func unmark():

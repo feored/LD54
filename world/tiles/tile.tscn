@@ -1,12 +1,6 @@
-[gd_scene load_steps=21 format=3 uid="uid://d2tu4itgwxsmx"]
+[gd_scene load_steps=23 format=3 uid="uid://d2tu4itgwxsmx"]
 
 [ext_resource type="Script" path="res://world/tiles/tile.gd" id="2_m7fn7"]
-[ext_resource type="Texture2D" uid="uid://bvs77v2s4itrk" path="res://assets/tiles/southeast.png" id="3_7ni8f"]
-[ext_resource type="Texture2D" uid="uid://b7hnvo0cyyf8t" path="res://assets/tiles/southwest.png" id="4_mnixl"]
-[ext_resource type="Texture2D" uid="uid://ce2xmckrhuymw" path="res://assets/tiles/east.png" id="5_fyxxv"]
-[ext_resource type="Texture2D" uid="uid://dskvw8n0ialxq" path="res://assets/tiles/northeast.png" id="6_krmdv"]
-[ext_resource type="Texture2D" uid="uid://bgixgnfsvo7b8" path="res://assets/tiles/west.png" id="7_j7cmw"]
-[ext_resource type="Texture2D" uid="uid://lscvgckqsnqh" path="res://assets/tiles/northwest.png" id="8_rltnp"]
 [ext_resource type="Texture2D" uid="uid://cp2ykpdtmxnwf" path="res://assets/tiles/barred_2.png" id="9_220g0"]
 [ext_resource type="Texture2D" uid="uid://b5ytemdsbmim0" path="res://assets/icons/person.png" id="11_6lm02"]
 
@@ -77,46 +71,54 @@ color = Color(0.678431, 0.894118, 0.992157, 1)
 color_initial_ramp = SubResource("GradientTexture1D_t8ap8")
 turbulence_noise_strength = 2.65
 
-[sub_resource type="ORMMaterial3D" id="ORMMaterial3D_ejry4"]
-albedo_color = Color(0, 0.341176, 0.780392, 1)
+[sub_resource type="ORMMaterial3D" id="ORMMaterial3D_v41tv"]
+transparency = 1
 
-[sub_resource type="CylinderMesh" id="CylinderMesh_2hiu0"]
-material = SubResource("ORMMaterial3D_ejry4")
+[sub_resource type="CylinderMesh" id="CylinderMesh_xsn46"]
+resource_local_to_scene = true
+material = SubResource("ORMMaterial3D_v41tv")
+height = 0.98
+radial_segments = 6
+rings = 1
+
+[sub_resource type="BoxMesh" id="BoxMesh_dlt56"]
+size = Vector3(0.05, 0.95, 0.512)
+
+[sub_resource type="ORMMaterial3D" id="ORMMaterial3D_glmam"]
+resource_local_to_scene = true
+
+[sub_resource type="ORMMaterial3D" id="ORMMaterial3D_nstis"]
+resource_local_to_scene = true
+
+[sub_resource type="ORMMaterial3D" id="ORMMaterial3D_k8nhd"]
+resource_local_to_scene = true
+
+[sub_resource type="ORMMaterial3D" id="ORMMaterial3D_ck2nf"]
+resource_local_to_scene = true
+
+[sub_resource type="ORMMaterial3D" id="ORMMaterial3D_8o7w4"]
+resource_local_to_scene = true
+
+[sub_resource type="BoxMesh" id="BoxMesh_7iuau"]
+size = Vector3(0.05, 0.95, 0.512)
+
+[sub_resource type="ORMMaterial3D" id="ORMMaterial3D_t6osk"]
+resource_local_to_scene = true
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_w0d6y"]
+resource_local_to_scene = true
 top_radius = 0.45
 bottom_radius = 0.45
 height = 1.0
 radial_segments = 6
 rings = 1
 
-[sub_resource type="ORMMaterial3D" id="ORMMaterial3D_v41tv"]
-transparency = 1
-
-[sub_resource type="CylinderMesh" id="CylinderMesh_xsn46"]
-material = SubResource("ORMMaterial3D_v41tv")
-height = 0.98
-radial_segments = 6
-rings = 1
+[sub_resource type="ORMMaterial3D" id="ORMMaterial3D_1ymaj"]
+resource_local_to_scene = true
+albedo_color = Color(0.478431, 0.478431, 0.478431, 1)
 
 [node name="tile" type="Node3D"]
 script = ExtResource("2_m7fn7")
-
-[node name="southeast" type="Sprite2D" parent="."]
-texture = ExtResource("3_7ni8f")
-
-[node name="southwest" type="Sprite2D" parent="."]
-texture = ExtResource("4_mnixl")
-
-[node name="east" type="Sprite2D" parent="."]
-texture = ExtResource("5_fyxxv")
-
-[node name="northeast" type="Sprite2D" parent="."]
-texture = ExtResource("6_krmdv")
-
-[node name="west" type="Sprite2D" parent="."]
-texture = ExtResource("7_j7cmw")
-
-[node name="northwest" type="Sprite2D" parent="."]
-texture = ExtResource("8_rltnp")
 
 [node name="barred" type="Sprite2D" parent="."]
 visible = false
@@ -143,9 +145,41 @@ randomness = 0.67
 visible = false
 texture = ExtResource("11_6lm02")
 
-[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
-mesh = SubResource("CylinderMesh_2hiu0")
-
-[node name="MeshInstance3D2" type="MeshInstance3D" parent="."]
+[node name="outer" type="MeshInstance3D" parent="."]
+visible = false
 transparency = 0.42
 mesh = SubResource("CylinderMesh_xsn46")
+
+[node name="west" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.42, 0, 0)
+mesh = SubResource("BoxMesh_dlt56")
+surface_material_override/0 = SubResource("ORMMaterial3D_glmam")
+
+[node name="east" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.42, 0, 0)
+mesh = SubResource("BoxMesh_dlt56")
+surface_material_override/0 = SubResource("ORMMaterial3D_nstis")
+
+[node name="southwest" type="MeshInstance3D" parent="."]
+transform = Transform3D(0.5, 0, 0.866025, 0, 1, 0, -0.866025, 0, 0.5, -0.211, 0, 0.363)
+mesh = SubResource("BoxMesh_dlt56")
+surface_material_override/0 = SubResource("ORMMaterial3D_k8nhd")
+
+[node name="northwest" type="MeshInstance3D" parent="."]
+transform = Transform3D(0.5, 0, -0.866025, 0, 1, 0, 0.866025, 0, 0.5, -0.211, 0, -0.363)
+mesh = SubResource("BoxMesh_dlt56")
+surface_material_override/0 = SubResource("ORMMaterial3D_ck2nf")
+
+[node name="northeast" type="MeshInstance3D" parent="."]
+transform = Transform3D(0.5, 0, 0.866025, 0, 1, 0, -0.866025, 0, 0.5, 0.211, 0, -0.363)
+mesh = SubResource("BoxMesh_dlt56")
+surface_material_override/0 = SubResource("ORMMaterial3D_8o7w4")
+
+[node name="southeast" type="MeshInstance3D" parent="."]
+transform = Transform3D(0.5, 0, -0.866025, 0, 1, 0, 0.866025, 0, 0.5, 0.211, 0, 0.363)
+mesh = SubResource("BoxMesh_7iuau")
+surface_material_override/0 = SubResource("ORMMaterial3D_t6osk")
+
+[node name="inner" type="MeshInstance3D" parent="."]
+mesh = SubResource("CylinderMesh_w0d6y")
+surface_material_override/0 = SubResource("ORMMaterial3D_1ymaj")

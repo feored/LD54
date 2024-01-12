@@ -65,7 +65,7 @@ enum GameMode { Play, MapEditor, Scenario }
 
 ## Teams
 const TEAM_COLORS = [
-	0xffffffff,  # no team
+	0x55d981ff,  # no team
 	0x0056b5ff,  # blue
 	0xf0a818ff,  # orange
 	0xed79b0ff,  # pink
@@ -79,7 +79,7 @@ const TEAM_COLORS = [
 ]
 
 const TEAM_BORDER_COLORS = [
-	0x000000ff,  # no team
+	0xffffffff,  # no team
 	0x147ff7ff,  # blue
 	0xffa500ff,  # orange
 	0xff69b4ff,  # pink
