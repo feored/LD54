@@ -215,6 +215,10 @@ transform = Transform3D(0.99863, 0.0480316, -0.0207851, 0, 0.397148, 0.917755, 0
 current = true
 script = ExtResource("6_5jfes")
 
+[node name="MainCamera2" type="Camera3D" parent="World3D/Environment"]
+transform = Transform3D(0.99863, 0.00962727, -0.0514429, 0, 0.982935, 0.183951, 0.052336, -0.183699, 0.981588, 0, 0.985, 14.87)
+current = true
+
 [node name="WorldEnvironment" type="WorldEnvironment" parent="World3D/Environment"]
 environment = SubResource("Environment_7v7o4")
 
