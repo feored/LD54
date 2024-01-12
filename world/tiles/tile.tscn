@@ -82,7 +82,7 @@ radial_segments = 6
 rings = 1
 
 [sub_resource type="BoxMesh" id="BoxMesh_dlt56"]
-size = Vector3(0.05, 0.95, 0.512)
+size = Vector3(0.075, 0.98, 0.512)
 
 [sub_resource type="ORMMaterial3D" id="ORMMaterial3D_glmam"]
 resource_local_to_scene = true
@@ -100,7 +100,7 @@ resource_local_to_scene = true
 resource_local_to_scene = true
 
 [sub_resource type="BoxMesh" id="BoxMesh_7iuau"]
-size = Vector3(0.05, 0.95, 0.512)
+size = Vector3(0.075, 0.95, 0.512)
 
 [sub_resource type="ORMMaterial3D" id="ORMMaterial3D_t6osk"]
 resource_local_to_scene = true

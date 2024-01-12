@@ -4,8 +4,8 @@ var active = true
 
 var LIMIT_X_NEGATIVE = Constants.CAMERA_CENTER.x - Constants.VIEWPORT_SIZE.x * 0.5
 var LIMIT_X_POSITIVE = Constants.CAMERA_CENTER.x + Constants.VIEWPORT_SIZE.x * 0.5
-var LIMIT_Z_NEGATIVE = Constants.CAMERA_CENTER.y - Constants.VIEWPORT_SIZE.y * 0.5 * 16 / 9
-var LIMIT_Z_POSITIVE = Constants.CAMERA_CENTER.y + Constants.VIEWPORT_SIZE.y * 0.5 * 16 / 9
+var LIMIT_Z_NEGATIVE = Constants.CAMERA_CENTER.z - Constants.VIEWPORT_SIZE.y * 0.5 * 16 / 9
+var LIMIT_Z_POSITIVE = Constants.CAMERA_CENTER.z + Constants.VIEWPORT_SIZE.y * 0.5 * 16 / 9
 
 
 func _ready():

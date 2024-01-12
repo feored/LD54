@@ -1,4 +1,4 @@
-[gd_scene load_steps=22 format=3 uid="uid://b8opucxucl032"]
+[gd_scene load_steps=24 format=3 uid="uid://b8opucxucl032"]
 
 [ext_resource type="TileSet" uid="uid://dswtp6vpo8tyt" path="res://world/tiles/tileset.tres" id="1_tacgr"]
 [ext_resource type="Script" path="res://world/world.gd" id="2_priir"]
@@ -7,6 +7,7 @@
 [ext_resource type="Script" path="res://world/camera/Camera3D.gd" id="6_5jfes"]
 [ext_resource type="Shader" path="res://world/lightning.gdshader" id="6_nkaxu"]
 [ext_resource type="Shader" path="res://shaders/maiwn.gdshader" id="7_7mse2"]
+[ext_resource type="Material" uid="uid://bmv0ckrgpggo1" path="res://shaders/test.tres" id="7_op680"]
 
 [sub_resource type="Animation" id="Animation_o4rvj"]
 resource_name = "float_from_left"
@@ -125,6 +126,10 @@ albedo_color = Color(0.364706, 0.498039, 0.788235, 1)
 material = SubResource("ORMMaterial3D_gknps")
 size = Vector2(400, 400)
 
+[sub_resource type="PlaneMesh" id="PlaneMesh_l4fce"]
+material = ExtResource("7_op680")
+size = Vector2(400, 400)
+
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_k78jo"]
 render_priority = 0
 shader = ExtResource("7_7mse2")
@@ -218,8 +223,9 @@ mouse_filter = 1
 
 [node name="MainCamera" type="Camera3D" parent="World3D/Environment"]
 unique_name_in_owner = true
-transform = Transform3D(1, 0, 0, 0, 0.397148, 0.917755, 0, -0.917755, 0.397148, 5, 10, 5)
+transform = Transform3D(1, 0, 0, 0, 0.258819, 0.965926, 0, -0.965926, 0.258819, 5, 10, 5)
 current = true
+fov = 50.0
 script = ExtResource("6_5jfes")
 
 [node name="MainCamera2" type="Camera3D" parent="World3D/Environment"]
@@ -242,7 +248,12 @@ directional_shadow_split_1 = 0.11
 
 [node name="MeshInstance3D2" type="MeshInstance3D" parent="World3D/Environment"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.015, 0)
+visible = false
 mesh = SubResource("PlaneMesh_4mjyu")
+
+[node name="MeshInstance3D3" type="MeshInstance3D" parent="World3D/Environment"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.015, 0)
+mesh = SubResource("PlaneMesh_l4fce")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="World3D/Environment"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
