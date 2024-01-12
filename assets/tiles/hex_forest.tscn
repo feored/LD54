@@ -1,0 +1,5 @@
+[gd_scene load_steps=2 format=3 uid="uid://ctbrjs07s8voc"]
+
+[ext_resource type="PackedScene" uid="uid://ca3trc6l5ovrx" path="res://assets/tiles/hex_forest.gltf" id="1_mvxjv"]
+
+[node name="hex_forest" instance=ExtResource("1_mvxjv")]

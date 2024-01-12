@@ -1,10 +1,10 @@
 extends Node
 
 ## World constants
-const VIEWPORT_SIZE = Vector2(960, 540)
-const TILE_SIZE = 24
+const VIEWPORT_SIZE = Vector2(1920, 1080)
+const TILE_SIZE = 1
 const WORLD_CENTER = Vector2i(0, 0)  #Vector2i(VIEWPORT_SIZE.x / TILE_SIZE / 2, VIEWPORT_SIZE.y / TILE_SIZE / 2)
-const CAMERA_CENTER = -VIEWPORT_SIZE / 2
+const CAMERA_CENTER = Vector3(-VIEWPORT_SIZE.x / 2, 0, -VIEWPORT_SIZE.y / 2)
 const WORLD_BOUNDS = Vector2i(15, 15)
 const WORLD_CAMERA_BOUNDS = Vector2i(80, 45)
 const NEIGHBORS = [

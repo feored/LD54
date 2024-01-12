@@ -1,4 +1,4 @@
-[gd_scene load_steps=13 format=3 uid="uid://ceoqtlfuehsvd"]
+[gd_scene load_steps=14 format=3 uid="uid://ceoqtlfuehsvd"]
 
 [ext_resource type="Script" path="res://scenes/main/main.gd" id="1_osaxm"]
 [ext_resource type="PackedScene" uid="uid://pu46mkcjdswb" path="res://ui/esc_menu/esc_menu.tscn" id="2_pam5e"]
@@ -9,6 +9,7 @@
 [ext_resource type="Texture2D" uid="uid://bxqvi5615lj3b" path="res://assets/icons/trident.png" id="6_mkg7a"]
 [ext_resource type="Script" path="res://ui/Message.gd" id="7_y3mfw"]
 [ext_resource type="PackedScene" uid="uid://bcmyj6p1buj71" path="res://ui/power/card_selector.tscn" id="8_1lhgu"]
+[ext_resource type="Script" path="res://ui/fpscounter.gd" id="10_2nwq2"]
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_7ox3a"]
 
@@ -121,6 +122,15 @@ text = "End Turn"
 [node name="CardSelector" parent="UI" instance=ExtResource("8_1lhgu")]
 unique_name_in_owner = true
 visible = false
+
+[node name="Label" type="Label" parent="UI"]
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -40.0
+offset_bottom = 23.0
+grow_horizontal = 0
+script = ExtResource("10_2nwq2")
 
 [connection signal="toggled" from="UI/Bar/MarginContainer/HBoxContainer/HBoxContainer/FastForwardButton" to="." method="_on_fast_forward_button_toggled"]
 [connection signal="pressed" from="UI/Bar/MarginContainer/HBoxContainer/TurnButton" to="." method="_on_turn_button_pressed"]

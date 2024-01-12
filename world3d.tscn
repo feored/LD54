@@ -1,0 +1,98 @@
+[gd_scene load_steps=10 format=3 uid="uid://dwdocvi0oaym2"]
+
+[ext_resource type="Shader" path="res://shaders/world3d.gdshader" id="1_hnu0b"]
+[ext_resource type="PackedScene" path="res://ui/settings_menu/hex_water.gltf" id="2_1pjdy"]
+[ext_resource type="PackedScene" path="res://ui/settings_menu/hex_forest.gltf" id="3_haomo"]
+
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_rfphx"]
+sky_top_color = Color(0.733333, 0.615686, 0.984314, 1)
+sky_horizon_color = Color(0.921569, 0.52549, 0.498039, 1)
+ground_bottom_color = Color(0.308594, 0.65625, 0.996094, 1)
+ground_horizon_color = Color(0.316406, 0.648438, 0.996094, 1)
+
+[sub_resource type="Sky" id="Sky_ew1s3"]
+sky_material = SubResource("ProceduralSkyMaterial_rfphx")
+
+[sub_resource type="Environment" id="Environment_e3lwf"]
+background_mode = 2
+sky = SubResource("Sky_ew1s3")
+reflected_light_source = 2
+tonemap_mode = 2
+tonemap_exposure = 0.26
+tonemap_white = 0.41
+sdfgi_enabled = true
+volumetric_fog_enabled = true
+volumetric_fog_density = 0.0095
+volumetric_fog_albedo = Color(0.988235, 0.631373, 0.466667, 1)
+volumetric_fog_emission = Color(0.913725, 0.541176, 0.792157, 1)
+volumetric_fog_emission_energy = 0.1
+volumetric_fog_gi_inject = 2.0
+
+[sub_resource type="CameraAttributesPractical" id="CameraAttributesPractical_thvxg"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_82lrg"]
+render_priority = 0
+shader = ExtResource("1_hnu0b")
+shader_parameter/WATER_COL = Color(0.04, 0.38, 0.88, 1)
+shader_parameter/WATER2_COL = Color(0.04, 0.35, 0.78, 1)
+shader_parameter/FOAM_COL = Color(0.8125, 0.9609, 0.9648, 1)
+shader_parameter/distortion_speed = 2.0
+shader_parameter/tile = Vector2(100, 100)
+shader_parameter/height = 2.0
+shader_parameter/wave_size = Vector2(2, 2)
+shader_parameter/wave_speed = 1.5
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_q5o0v"]
+material = SubResource("ShaderMaterial_82lrg")
+size = Vector2(100, 100)
+
+[node name="World" type="Node3D"]
+
+[node name="Environment" type="Node3D" parent="."]
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="Environment"]
+transform = Transform3D(-0.711403, 0.663277, 0.232312, 0.607733, 0.414596, 0.677326, 0.352939, 0.623036, -0.69804, 16.5231, 10.5949, 3.83348)
+light_color = Color(0.933333, 0.870588, 0.564706, 1)
+light_volumetric_fog_energy = 0.5
+light_angular_distance = 2.0
+shadow_enabled = true
+shadow_normal_bias = 3.0
+shadow_transmittance_bias = 0.0
+shadow_opacity = 0.5
+directional_shadow_split_1 = 0.11
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="Environment"]
+environment = SubResource("Environment_e3lwf")
+camera_attributes = SubResource("CameraAttributesPractical_thvxg")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Environment"]
+mesh = SubResource("PlaneMesh_q5o0v")
+
+[node name="Camera3D" type="Camera3D" parent="."]
+transform = Transform3D(-0.716936, 0.138397, 0.683263, -0.0941203, -0.990339, 0.101838, 0.690756, 0.00870219, 0.723036, 15.1257, 10.0002, -15.8671)
+fov = 11.9816
+
+[node name="hex_water" parent="." instance=ExtResource("2_1pjdy")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.53554, 0, -3.29785)
+visible = false
+
+[node name="hex_water2" parent="." instance=ExtResource("2_1pjdy")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.79637, 0, 0)
+visible = false
+
+[node name="hex_water3" parent="." instance=ExtResource("2_1pjdy")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.54842, 0, 0)
+visible = false
+
+[node name="hex_water4" parent="." instance=ExtResource("2_1pjdy")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.54704, 0, -1.59806)
+visible = false
+
+[node name="hex_forest" parent="." instance=ExtResource("3_haomo")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.185208, 0, 0)
+
+[node name="hex_forest2" parent="." instance=ExtResource("3_haomo")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.21068, 0, -1.69568)
+
+[node name="hex_forest3" parent="." instance=ExtResource("3_haomo")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.784093, 0, -1.69568)

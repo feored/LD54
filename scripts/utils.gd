@@ -90,3 +90,9 @@ func timestamp():
 func log(message, message2 = "", message3 = "", message4 = "", message5 = "", message6 = "", message7 = ""):
 	## handmade variadic function lol
 	print(timestamp()," ", message, message2, message3, message4, message5, message6, message7)
+
+func vec2to3(vec2):
+	return Vector3(vec2.x, 0, vec2.y)
+
+func vec3to2(vec3):
+	return Vector2(vec3.x, vec3.z)

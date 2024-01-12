@@ -1,0 +1,21 @@
+[remap]
+
+importer="wavefront_obj"
+importer_version=1
+type="Mesh"
+uid="uid://dxsmbqqa0xmju"
+path="res://.godot/imported/hex_forest.obj-a420b93bb50e66695b9ed3c2601c7df4.mesh"
+
+[deps]
+
+files=["res://.godot/imported/hex_forest.obj-a420b93bb50e66695b9ed3c2601c7df4.mesh"]
+
+source_file="res://assets/tiles/hex_forest.obj"
+dest_files=["res://.godot/imported/hex_forest.obj-a420b93bb50e66695b9ed3c2601c7df4.mesh", "res://.godot/imported/hex_forest.obj-a420b93bb50e66695b9ed3c2601c7df4.mesh"]
+
+[params]
+
+generate_tangents=true
+scale_mesh=Vector3(1, 1, 1)
+offset_mesh=Vector3(0, 0, 0)
+optimize_mesh=true

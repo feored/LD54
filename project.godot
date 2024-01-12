@@ -36,11 +36,10 @@ Personalities="*res://bots/personalities.gd"
 
 [display]
 
-window/size/viewport_width=960
-window/size/viewport_height=540
-window/size/window_width_override=1920
-window/size/window_height_override=1080
-window/stretch/mode="viewport"
+window/size/viewport_width=1920
+window/size/viewport_height=1080
+window/stretch/mode="canvas_items"
+window/stretch/aspect="keep_height"
 mouse_cursor/custom_image="res://assets/ui/cursor_triangle_16.png"
 mouse_cursor/tooltip_position_offset=Vector2(4, 4)
 
@@ -100,9 +99,3 @@ right_click={
 "events": [Object(InputEventMouseButton,"resource_local_to_scene":false,"resource_name":"","device":-1,"window_id":0,"alt_pressed":false,"shift_pressed":false,"ctrl_pressed":false,"meta_pressed":false,"button_mask":0,"position":Vector2(0, 0),"global_position":Vector2(0, 0),"factor":1.0,"button_index":2,"canceled":false,"pressed":false,"double_click":false,"script":null)
 ]
 }
-
-[rendering]
-
-textures/canvas_textures/default_texture_filter=0
-textures/default_filters/use_nearest_mipmap_filter=true
-2d/snap/snap_2d_transforms_to_pixel=true

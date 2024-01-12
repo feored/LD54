@@ -1,4 +1,4 @@
-extends Node
+extends Node3D
 
 class_name Tile
 
@@ -79,17 +79,18 @@ func init_cell(
 	init_region : int,
 ):
 	self.data.coords = init_coords
-	self.init_position = init_pos
+	self.init_position = init_pos/8
 	self.data.team = init_team
 	self.data.region = init_region
 	self.set_name.call_deferred(StringName("Tile " + str(self.data.coords)))
+	Utils.log("Tile " + str(self.data.coords) + " , pos ", self.init_position)
 
 func init_from_save(init_data):
 	self.data.from_save(init_data)
 	
 
 func _ready():
-	self.position = init_position
+	self.position = Vector3(init_position.x,0 , init_position.y)
 	self.update()
 
 func delete():
@@ -106,7 +107,7 @@ func _process(delta):
 
 func update():
 	if self.data.building != Constants.Building.None:
-		building_sprite.texture = Constants.BUILDINGS[self.data.building].texture
+		# building_sprite.texture = Constants.BUILDINGS[self.data.building].texture
 		building_sprite.visible = true
 	else:
 		building_sprite.visible = false
@@ -116,29 +117,29 @@ func update():
 		else:
 			self.border_objects[b].hide()
 
-	if self.data.marked:
-		self.texture = CRACKED_TEXTURE
-	else:
-		self.texture = TEAM_TEXTURE
-	if self.data.team == Constants.NULL_TEAM:
-		for b in self.borders.keys():
-			self.border_objects[b].self_modulate = Color.WHITE
-	else:
-		for b in self.borders.keys():
-			self.border_objects[b].self_modulate = Color(Constants.TEAM_BORDER_COLORS[self.data.team])
-	
-	# if Settings.editor_tile_distinct_mode:
-		# if self.data.region == Constants.NULL_REGION:
-		# 	self.modulate = Color(1, 0.25, 0.25, 0.75)
-		# else:
-		# 	self.modulate = Color(1, 1, 1)
+	# if self.data.marked:
+	# 	self.texture = CRACKED_TEXTURE
 	# else:
-	if self.data.team == Constants.NULL_TEAM:
-		self.self_modulate = NEUTRAL_COLOR
-	else:
-		self.self_modulate = Color(Constants.TEAM_COLORS[self.data.team])
-	if Settings.editor_tile_distinct_mode:
-		self.self_modulate = Color.from_hsv((self.data.region) / 24.0, 1, 1)
+	# 	self.texture = TEAM_TEXTURE
+	# if self.data.team == Constants.NULL_TEAM:
+	# 	for b in self.borders.keys():
+	# 		self.border_objects[b].self_modulate = Color.WHITE
+	# else:
+	# 	for b in self.borders.keys():
+	# 		self.border_objects[b].self_modulate = Color(Constants.TEAM_BORDER_COLORS[self.data.team])
+	
+	# # if Settings.editor_tile_distinct_mode:
+	# 	# if self.data.region == Constants.NULL_REGION:
+	# 	# 	self.modulate = Color(1, 0.25, 0.25, 0.75)
+	# 	# else:
+	# 	# 	self.modulate = Color(1, 1, 1)
+	# # else:
+	# if self.data.team == Constants.NULL_TEAM:
+	# 	self.self_modulate = NEUTRAL_COLOR
+	# else:
+	# 	self.self_modulate = Color(Constants.TEAM_COLORS[self.data.team])
+	# if Settings.editor_tile_distinct_mode:
+	# 	self.self_modulate = Color.from_hsv((self.data.region) / 24.0, 1, 1)
 	
 
 

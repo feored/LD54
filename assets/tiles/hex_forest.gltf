@@ -1,0 +1,167 @@
+{
+  "accessors": [
+    {
+      "name": "hex_forest_Cylinder.506-Mesh_0_positions",
+      "componentType": 5126,
+      "count": 68,
+      "min": [
+        -1,
+        0,
+        -1.1547000408172607
+      ],
+      "max": [
+        1,
+        1,
+        1.1547000408172607
+      ],
+      "type": "VEC3",
+      "bufferView": 0,
+      "byteOffset": 0
+    },
+    {
+      "name": "hex_forest_Cylinder.506-Mesh_0_normals",
+      "componentType": 5126,
+      "count": 68,
+      "min": [
+        -1,
+        -1,
+        -0.866019070148468
+      ],
+      "max": [
+        1,
+        0.9885650873184204,
+        0.866019070148468
+      ],
+      "type": "VEC3",
+      "bufferView": 1,
+      "byteOffset": 0
+    },
+    {
+      "name": "hex_forest_Cylinder.506-Mesh_0_texcoords",
+      "componentType": 5126,
+      "count": 68,
+      "min": [
+        0.10018900036811829,
+        0.3469510078430176
+      ],
+      "max": [
+        0.8792179822921753,
+        1
+      ],
+      "type": "VEC2",
+      "bufferView": 2,
+      "byteOffset": 0
+    },
+    {
+      "name": "hex_forest_Cylinder.506-Mesh_0_indices",
+      "componentType": 5123,
+      "count": 168,
+      "min": [
+        0
+      ],
+      "max": [
+        67
+      ],
+      "type": "SCALAR",
+      "bufferView": 3,
+      "byteOffset": 0
+    }
+  ],
+  "asset": {
+    "generator": "obj2gltf",
+    "version": "2.0"
+  },
+  "buffers": [
+    {
+      "name": "hex_forest",
+      "byteLength": 2512,
+      "uri": "data:application/octet-stream;base64,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"
+    }
+  ],
+  "bufferViews": [
+    {
+      "name": "bufferView_0",
+      "buffer": 0,
+      "byteLength": 816,
+      "byteOffset": 0,
+      "byteStride": 12,
+      "target": 34962
+    },
+    {
+      "name": "bufferView_1",
+      "buffer": 0,
+      "byteLength": 816,
+      "byteOffset": 816,
+      "byteStride": 12,
+      "target": 34962
+    },
+    {
+      "name": "bufferView_2",
+      "buffer": 0,
+      "byteLength": 544,
+      "byteOffset": 1632,
+      "byteStride": 8,
+      "target": 34962
+    },
+    {
+      "name": "bufferView_3",
+      "buffer": 0,
+      "byteLength": 336,
+      "byteOffset": 2176,
+      "target": 34963
+    }
+  ],
+  "materials": [
+    {
+      "name": "Green",
+      "pbrMetallicRoughness": {
+        "baseColorFactor": [
+          0.065342,
+          0.500543,
+          0.265645,
+          1
+        ],
+        "metallicFactor": 0,
+        "roughnessFactor": 0.676000006
+      },
+      "emissiveFactor": [
+        0,
+        0,
+        0
+      ],
+      "alphaMode": "OPAQUE",
+      "doubleSided": false
+    }
+  ],
+  "meshes": [
+    {
+      "name": "hex_forest_Cylinder.506-Mesh",
+      "primitives": [
+        {
+          "attributes": {
+            "POSITION": 0,
+            "NORMAL": 1,
+            "TEXCOORD_0": 2
+          },
+          "indices": 3,
+          "material": 0,
+          "mode": 4
+        }
+      ]
+    }
+  ],
+  "nodes": [
+    {
+      "name": "hex_forest_Cylinder.506",
+      "mesh": 0
+    }
+  ],
+  "scene": 0,
+  "scenes": [
+    {
+      "nodes": [
+        0
+      ]
+    }
+  ]
+}

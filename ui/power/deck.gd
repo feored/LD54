@@ -2,7 +2,7 @@ extends Control
 
 const CARD_SIZE = Vector2(125, 165)
 const CARD_SPACING = 100
-const CENTER = Vector2(Constants.VIEWPORT_SIZE.x / 2.0 - CARD_SIZE.x/2.0, 425.0)
+const CENTER = Vector2(Constants.VIEWPORT_SIZE.x / 2.0 - CARD_SIZE.x/2.0, Constants.VIEWPORT_SIZE.y - 125)
 const POSITION_CURVE = preload("res://ui/power/position_curve.tres")
 
 const BASE_Z_INDEX = 0

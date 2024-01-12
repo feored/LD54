@@ -64,7 +64,7 @@ func _ready():
 	# self.card_selector.init(cards, 3)
 	
 	self.game_started = true
-	self.world.camera.move_instant(self.world.map_to_local(closest_player_tile_coords()))
+	#self.world.camera.move_instant(self.world.map_to_local(closest_player_tile_coords()))
 
 func add_teams():
 	self.bots.clear()
@@ -343,7 +343,7 @@ func card_used(c):
 func closest_player_tile_coords():
 	var closest_player_tile = Constants.NULL_COORDS
 	var closest_tile_distance = 100000
-	var camera_tile = self.world.local_to_map(self.world.camera.position)
+	var camera_tile = self.world.local_to_map(Utils.vec3to2(self.world.camera.position))
 	for region in self.world.regions:
 		if self.world.regions[region].data.team == self.teams[self.player_team_index]:
 			var center_tile = self.world.regions[region].center_tile()

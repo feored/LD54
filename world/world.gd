@@ -3,7 +3,7 @@ extends TileMap
 signal world_ready
 var messenger = null
 @onready var regions_parent = $Regions
-@onready var camera = $"%MainCamera"
+@onready var camera = %MainCamera
 @onready var animation_player = $AnimationPlayer
 
 var tiles = {}
@@ -13,7 +13,7 @@ var path_lengths = {}
 
 func init(messengerCallable):
 	self.messenger = messengerCallable
-	tile_water()
+	# tile_water()
 
 func get_tiles():
 	var total = []

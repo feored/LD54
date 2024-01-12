@@ -1,4 +1,4 @@
-extends Node2D
+extends Node3D
 
 
 var scenarioPrefab = preload("res://ui/scenario/scenario.tscn")

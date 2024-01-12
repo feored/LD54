@@ -13,7 +13,7 @@ corner_radius_top_right = 20
 corner_radius_bottom_right = 20
 corner_radius_bottom_left = 20
 
-[node name="main_menu" type="Node2D"]
+[node name="main_menu" type="Node3D"]
 script = ExtResource("1_so4mp")
 
 [node name="World" parent="." instance=ExtResource("2_lh8t0")]
