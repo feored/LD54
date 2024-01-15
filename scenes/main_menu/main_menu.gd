@@ -40,6 +40,9 @@ func _ready():
 		scenario_obj.init(scenario)
 		allScenarios.add_child(scenario_obj)
 
+func _physics_process(delta):
+	self.world.camera.pivot.rotation_degrees.y += delta * self.world.camera.CAMERA_ROTATION_SPEED/4;
+
 func no_message(_message):
 	pass
 

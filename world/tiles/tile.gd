@@ -78,7 +78,7 @@ func init_cell(
 	init_region : int,
 ):
 	self.data.coords = init_coords
-	self.init_position = init_pos/8
+	self.init_position = init_pos
 	self.data.team = init_team
 	self.data.region = init_region
 	self.set_name.call_deferred(StringName("Tile " + str(self.data.coords)))
@@ -111,25 +111,22 @@ func update():
 		building_sprite.visible = false
 	for b in self.borders.keys():
 		if self.borders[b]:
+			self.border_objects[b].show()
 			self.border_objects[b].get_active_material(0).albedo_color = Color.WHITE
 			# self.border_objects[b].get_active_material(0).albedo_color = Color(Constants.TEAM_BORDER_COLORS[self.data.team])
 		else:
-			self.border_objects[b].get_active_material(0).albedo_color = Color(Constants.TEAM_COLORS[self.data.team])
+			self.border_objects[b].hide()
+			# self.border_objects[b].get_active_material(0).albedo_color = Color(Constants.TEAM_COLORS[self.data.team])
 
 	# if self.data.marked:
 	# 	self.texture = CRACKED_TEXTURE
 	# else:
 	# 	self.texture = TEAM_TEXTURE
 	
-	# # if Settings.editor_tile_distinct_mode:
-	# 	# if self.data.region == Constants.NULL_REGION:
-	# 	# 	self.modulate = Color(1, 0.25, 0.25, 0.75)
-	# 	# else:
-	# 	# 	self.modulate = Color(1, 1, 1)
-	# # else:
+
 	self.inner.get_active_material(0).albedo_color = Color(Constants.TEAM_COLORS[self.data.team])
-	# if Settings.editor_tile_distinct_mode:
-	# 	self.self_modulate = Color.from_hsv((self.data.region) / 24.0, 1, 1)
+	if Settings.editor_tile_distinct_mode:
+		self.inner.get_active_material(0).albedo_color = Color.from_hsv((self.data.region) / 24.0, 1, 1)
 	
 
 
@@ -167,10 +164,10 @@ func set_barred(barred_val:bool):
 func set_selected(selected: bool):
 	if selected:
 		self.tween = self.create_tween().set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN).set_loops()
-		self.tween.tween_property(self, "self_modulate", Color(2, 2, 2), 0.5)
-		self.tween.tween_property(self, "self_modulate", Color(Constants.TEAM_COLORS[self.data.team]), 0.5)
+		self.tween.tween_property(self.inner.get_active_material(0), "albedo_color", Color(2, 2, 2), 0.5)
+		self.tween.tween_property(self.inner.get_active_material(0), "albedo_color", Color(Constants.TEAM_COLORS[self.data.team]), 0.5)
 	else:
-		self.self_modulate = Color(Constants.TEAM_COLORS[self.data.team])
+		self.inner.get_active_material(0).albedo_color = Color(Constants.TEAM_COLORS[self.data.team])
 		self.tween.kill()
 
 func mark():

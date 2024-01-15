@@ -1,98 +1,68 @@
 extends Camera3D
 
+signal target_reached
+
+@onready var pivot = get_parent()
+@onready var socket = pivot.get_parent()
+
+const EPSILON = 0.005
+const NULL_POSITION = Vector3(-9999, -9999, -9999)
+const FOV_MIN = 15
+const FOV_MAX = 100
+const CAMERA_ZOOM_SPEED = 500
+const CAMERA_MOVE_SPEED = 5
+const CAMERA_ROTATION_SPEED = 10
+
+enum State { IDLE, AUTOMOVE, DRAGGING, ROTATING }
+var state = State.IDLE
+
+var target = NULL_POSITION
 var active = true
 
-var LIMIT_X_NEGATIVE = Constants.CAMERA_CENTER.x - Constants.VIEWPORT_SIZE.x * 0.5
-var LIMIT_X_POSITIVE = Constants.CAMERA_CENTER.x + Constants.VIEWPORT_SIZE.x * 0.5
-var LIMIT_Z_NEGATIVE = Constants.CAMERA_CENTER.z - Constants.VIEWPORT_SIZE.y * 0.5 * 16 / 9
-var LIMIT_Z_POSITIVE = Constants.CAMERA_CENTER.z + Constants.VIEWPORT_SIZE.y * 0.5 * 16 / 9
-
-
-func _ready():
-	if self.position == Vector3.ZERO:
-		self.position = Constants.CAMERA_CENTER
-
-
-# Called every frame. 'delta' is the elapsed time since the previous frame.
-func _physics_process(_delta):
-	if not active or Settings.input_locked:
-		pass  #return
-	var new_position = self.position
-	if Input.is_action_pressed("map_left"):
-		new_position = Vector3(
-			self.position.x - Constants.CAMERA_SPEED / 2, self.position.y, self.position.z
-		)
-	elif Input.is_action_pressed("map_right"):
-		new_position = Vector3(
-			self.position.x + Constants.CAMERA_SPEED / 2, self.position.y, self.position.z
-		)
-	if Input.is_action_pressed("map_up"):
-		new_position = Vector3(
-			self.position.x, self.position.y, self.position.z - Constants.CAMERA_SPEED / 2
-		)
-	elif Input.is_action_pressed("map_down"):
-		new_position = Vector3(
-			self.position.x, self.position.y, self.position.z + Constants.CAMERA_SPEED / 2
-		)
-	if new_position.x < LIMIT_X_NEGATIVE:
-		new_position.x = LIMIT_X_NEGATIVE
-	elif new_position.x > LIMIT_X_POSITIVE:
-		new_position.x = LIMIT_X_POSITIVE
-	if new_position.z < LIMIT_Z_NEGATIVE:
-		new_position.z = LIMIT_Z_NEGATIVE
-	elif new_position.z > LIMIT_Z_POSITIVE:
-		new_position.z = LIMIT_Z_POSITIVE
-	self.position = new_position
-
-
-func move():
-	if not active:
-		return
-	pass
-
+func _process(delta):
+	if state == State.AUTOMOVE && target != NULL_POSITION:
+		var new_pos = pivot.position.lerp(target, delta * CAMERA_MOVE_SPEED)
+		if new_pos.distance_to(target) < EPSILON:
+			self.pivot.position = target
+			self.state = State.IDLE
+			self.target_reached.emit()
+		else:
+			self.pivot.position = new_pos
 
 func _unhandled_input(event):
-	if Settings.input_locked:
+	if !active:
 		return
-	# if event is InputEventMouseButton:
-	# 	if event.button_index == MOUSE_BUTTON_LEFT:
-	# 		if event.pressed:
-	# 			start_position = get_viewport().get_mouse_position()
+	var delta = get_process_delta_time()
+	if event is InputEventMouseButton:
+		if event.button_index == MOUSE_BUTTON_MIDDLE:
+			if event.pressed:
+				self.state = State.ROTATING
+			else:
+				self.state = State.IDLE
+		if event.button_index == MOUSE_BUTTON_LEFT:
+			if event.pressed:
+				self.state = State.DRAGGING
+			else:
+				self.state = State.IDLE
+		if event.button_index == MOUSE_BUTTON_WHEEL_UP:
+			self.fov = max(self.fov - delta * CAMERA_ZOOM_SPEED, FOV_MIN)
+		elif event.button_index == MOUSE_BUTTON_WHEEL_DOWN:
+			self.fov = min(self.fov + delta * CAMERA_ZOOM_SPEED, FOV_MAX)
+	elif event is InputEventMouseMotion and self.state != State.IDLE:
+		if self.state == State.ROTATING:
+			self.pivot.rotation_degrees.y -= event.relative.x * delta * CAMERA_ROTATION_SPEED
+			# self.rotation_degrees.x -= event.relative.y * delta * CAMERA_ROTATION_SPEED
+		elif self.state == State.DRAGGING:
+			var dx = (event.relative.x * delta * CAMERA_MOVE_SPEED * fov / FOV_MAX)
+			var dy = (event.relative.y * delta * CAMERA_MOVE_SPEED * fov / FOV_MAX)
+			self.pivot.position.x -= ( dx * cos(self.pivot.rotation.y) - dy * sin(self.pivot.rotation.y))
+			self.pivot.position.z -= ( dy * cos(self.pivot.rotation.y) + dx * sin(self.pivot.rotation.y))
 
-	# 			is_dragging = true
-	# 		else:
-	# 			start_position = NULL_POS
-	# 			is_dragging = false
-	# elif event is InputEventMouseMotion and is_dragging:
-	# 	if start_position != NULL_POS:
-	# 		start_position = move()
-
-
-func move_instant(target):
-	if not active:
+func move(new_pos, smoothed = false):
+	if !smoothed:
+		self.pivot.position = new_pos
 		return
-	pass
-	# is_dragging = false
-	# self.position = Utils.vec2to3(target - Vector2(self.viewport_size/2))
-
-
-func skip(val: bool):
-	pass
-	# if self.position_smoothing_enabled:
-	# 	self.position_smoothing_speed = POSITION_SMOOTHED_SPEED_SKIP if val else POSITION_SMOOTHED_SPEED
-
-
-func move_smoothed(target, precision = 1):
-	if not active:
-		return
-	if !Settings.get_setting(Settings.Setting.AutoCameraFocus):
-		return
-	pass
-	# is_dragging = false
-	# self.position_smoothing_enabled = true
-	# self.position = target - Vector2(self.viewport_size/2)
-	# self.position_smoothing_speed = POSITION_SMOOTHED_SPEED_SKIP if Settings.skipping else POSITION_SMOOTHED_SPEED
-	# var arrived_center = target
-	# while abs((arrived_center - self.viewport.get_screen_center_position()).length_squared()) > precision:
-	# 	await Utils.wait(0.1)
-	# self.position_smoothing_enabled = false
+	Utils.log("Camera current position: " + str(self.pivot.position))
+	self.target = Vector3(new_pos.x, self.pivot.position.y, new_pos.y)
+	Utils.log("Camera target position: " + str(self.target))
+	self.state = State.AUTOMOVE

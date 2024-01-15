@@ -1,13 +1,7 @@
-[gd_scene load_steps=2 format=3 uid="uid://bqg467fcdgrbb"]
+[gd_scene format=3 uid="uid://bqg467fcdgrbb"]
 
-[ext_resource type="Theme" uid="uid://3t61g0061mea" path="res://assets/theme.tres" id="1_103ft"]
-
-[node name="Label" type="Label"]
-offset_right = 6.0
-offset_bottom = 16.0
-theme = ExtResource("1_103ft")
-theme_override_colors/font_color = Color(1, 1, 1, 1)
-theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
-theme_override_constants/outline_size = 3
-text = "0"
-horizontal_alignment = 1
+[node name="Label" type="Label3D"]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0.6, 0)
+pixel_size = 0.0067
+billboard = 1
+font_size = 64

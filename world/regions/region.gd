@@ -1,4 +1,4 @@
-extends Node2D
+extends Node3D
 class_name Region
 
 signal tile_added
@@ -71,7 +71,6 @@ func _init(init_id):
 	self.data.id = init_id
 	self.label = regionLabelPrefab.instantiate()
 	self.add_child(self.label)
-	self.label.z_index = 100
 
 func _ready():
 	self.name = StringName("Region " + str(self.data.id))
@@ -109,7 +108,8 @@ func update():
 	if self.data.tiles.size() < 1:
 		self.delete()
 		return
-	self.label.position = self.coords_to_pos.call(self.center_tile()) - self.label.size / 2  ## size of the label
+	var new_label_pos = self.coords_to_pos.call(self.center_tile())
+	self.label.position = Vector3(new_label_pos.x, self.label.position.y, new_label_pos.y)
 	if Constants.DEBUG_REGION:
 		self.label.set_text(str(self.data.units) + "(" + str(self.data.id) + ")")
 	else:

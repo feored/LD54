@@ -17,7 +17,7 @@
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_u2eju"]
 
-[node name="Main" type="Node2D"]
+[node name="Main" type="Node3D"]
 script = ExtResource("1_osaxm")
 
 [node name="EscMenu" parent="." instance=ExtResource("2_pam5e")]
@@ -132,5 +132,4 @@ offset_bottom = 23.0
 grow_horizontal = 0
 script = ExtResource("10_2nwq2")
 
-[connection signal="toggled" from="UI/Bar/MarginContainer/HBoxContainer/HBoxContainer/FastForwardButton" to="." method="_on_fast_forward_button_toggled"]
 [connection signal="pressed" from="UI/Bar/MarginContainer/HBoxContainer/TurnButton" to="." method="_on_turn_button_pressed"]

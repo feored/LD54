@@ -16,7 +16,7 @@ func _ready():
 	Settings.skipping = false
 	var offset_y = 0
 	var offset_x = scenario_container.size.x/2
-	self.world.camera.position += Vector3(offset_x, 0, offset_y)
+	self.world.camera.position = self.world.camera.project_position(Vector2(offset_x, offset_y), 0)
 	self.world.init(func(): pass)
 
 	self.load_scenario(0)

@@ -304,7 +304,8 @@ func move_units(region_from : int, region_to: int, team: int):
 
 	# success
 	if not is_player:
-		await self.camera.move_smoothed(self.coords_to_pos(self.regions[region_from].center_tile()), 5)
+		self.camera.move(self.coords_to_pos(self.regions[region_from].center_tile()), true)
+		await self.camera.target_reached
 
 	var moved_units = regions[region_from].data.units - 1 #max(1, regions[region_from].units/2)
 	regions[region_from].set_units(regions[region_from].data.units - moved_units)
@@ -336,7 +337,7 @@ func global_pos_to_coords(pos):
 	return self.local_to_map(self.to_local(get_real_pos(pos)))
 
 func coords_to_pos(coords):
-	return self.map_to_local(coords)
+	return self.map_to_local(coords)/1000
 
 func hex_distance(a, b):
 	return Vector2(map_to_local(a)).distance_squared_to(Vector2(map_to_local(b)))

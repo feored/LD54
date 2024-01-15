@@ -1,4 +1,4 @@
-[gd_scene load_steps=24 format=3 uid="uid://b8opucxucl032"]
+[gd_scene load_steps=26 format=3 uid="uid://b8opucxucl032"]
 
 [ext_resource type="TileSet" uid="uid://dswtp6vpo8tyt" path="res://world/tiles/tileset.tres" id="1_tacgr"]
 [ext_resource type="Script" path="res://world/world.gd" id="2_priir"]
@@ -99,9 +99,16 @@ shader_parameter/amp_coeff = 0.605
 shader_parameter/freq_coeff = 2.0
 shader_parameter/speed = 2.12
 
+[sub_resource type="BoxMesh" id="BoxMesh_od2gr"]
+size = Vector3(0.5, 0.5, 0.5)
+
+[sub_resource type="SphereMesh" id="SphereMesh_goen2"]
+radius = 1.0
+
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_wu0g0"]
 sky_top_color = Color(0.52549, 0.807843, 0.968627, 1)
 sky_horizon_color = Color(0.835294, 0.839216, 0.847059, 1)
+sun_angle_max = 27.6
 
 [sub_resource type="Sky" id="Sky_5wwnv"]
 sky_material = SubResource("ProceduralSkyMaterial_wu0g0")
@@ -109,10 +116,11 @@ radiance_size = 0
 
 [sub_resource type="Environment" id="Environment_7v7o4"]
 background_mode = 2
+background_energy_multiplier = 1.14
 sky = SubResource("Sky_5wwnv")
-sky_custom_fov = 100.5
 tonemap_white = 0.41
-volumetric_fog_enabled = true
+fog_aerial_perspective = 0.135
+fog_height_density = -0.067
 volumetric_fog_density = 0.0095
 volumetric_fog_albedo = Color(0.988235, 0.631373, 0.466667, 1)
 volumetric_fog_emission = Color(0.913725, 0.541176, 0.792157, 1)
@@ -120,7 +128,7 @@ volumetric_fog_emission_energy = 0.1
 volumetric_fog_gi_inject = 2.0
 
 [sub_resource type="ORMMaterial3D" id="ORMMaterial3D_gknps"]
-albedo_color = Color(0.364706, 0.498039, 0.788235, 1)
+albedo_color = Color(0.301961, 0.580392, 0.631373, 1)
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_4mjyu"]
 material = SubResource("ORMMaterial3D_gknps")
@@ -165,8 +173,7 @@ script = ExtResource("2_priir")
 visible = false
 script = ExtResource("3_55hig")
 
-[node name="Regions" type="Node2D" parent="."]
-visible = false
+[node name="Regions" type="Node3D" parent="."]
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
 libraries = {
@@ -221,38 +228,46 @@ mouse_filter = 1
 
 [node name="Environment" type="Node3D" parent="World3D"]
 
-[node name="MainCamera" type="Camera3D" parent="World3D/Environment"]
+[node name="Socket" type="Node3D" parent="World3D/Environment"]
+
+[node name="Pivot" type="Node3D" parent="World3D/Environment/Socket"]
+
+[node name="MainCamera" type="Camera3D" parent="World3D/Environment/Socket/Pivot"]
 unique_name_in_owner = true
-transform = Transform3D(1, 0, 0, 0, 0.258819, 0.965926, 0, -0.965926, 0.258819, 5, 10, 5)
+transform = Transform3D(1, 0, 0, 0, 0.397148, 0.917755, 0, -0.917755, 0.397148, 0, 20, 10)
 current = true
-fov = 50.0
+fov = 41.6
 script = ExtResource("6_5jfes")
 
-[node name="MainCamera2" type="Camera3D" parent="World3D/Environment"]
-transform = Transform3D(0.99863, 0.00962727, -0.0514429, 0, 0.982935, 0.183951, 0.052336, -0.183699, 0.981588, 0, 0.985, 14.87)
+[node name="MeshInstance3D" type="MeshInstance3D" parent="World3D/Environment/Socket/Pivot/MainCamera"]
+transform = Transform3D(1, 0, 0, 0, 0.318959, -0.947769, 0, 0.947769, 0.318959, 0, 0, -9.215)
 visible = false
+mesh = SubResource("BoxMesh_od2gr")
+skeleton = NodePath("../..")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="World3D/Environment/Socket/Pivot"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2, 0)
+visible = false
+mesh = SubResource("SphereMesh_goen2")
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="World3D/Environment"]
 environment = SubResource("Environment_7v7o4")
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="World3D/Environment"]
 transform = Transform3D(-0.711403, 0.663277, 0.232312, 0.607733, 0.414596, 0.677326, 0.352939, 0.623036, -0.69804, 16.5231, 10.5949, 3.83348)
-light_color = Color(0.933333, 0.870588, 0.564706, 1)
-light_volumetric_fog_energy = 0.5
-light_angular_distance = 2.0
+light_color = Color(1, 1, 0.780392, 1)
+light_energy = 1.734
 shadow_enabled = true
 shadow_normal_bias = 3.0
 shadow_transmittance_bias = 0.0
 shadow_opacity = 0.5
-directional_shadow_split_1 = 0.11
 
 [node name="MeshInstance3D2" type="MeshInstance3D" parent="World3D/Environment"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.015, 0)
-visible = false
 mesh = SubResource("PlaneMesh_4mjyu")
 
 [node name="MeshInstance3D3" type="MeshInstance3D" parent="World3D/Environment"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.015, 0)
+visible = false
 mesh = SubResource("PlaneMesh_l4fce")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="World3D/Environment"]

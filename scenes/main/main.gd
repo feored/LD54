@@ -1,4 +1,4 @@
-extends Node2D
+extends Node3D
 
 const gameOverScreenPrefab = preload("res://ui/game_over_menu/game_over_screen.tscn")
 const shapePrefab = preload("res://world/tiles/highlight/shape.tscn")
@@ -216,9 +216,9 @@ func handle_sacrifice(event):
 			card_used(self.used_card)
 		clear_mouse_state()
 			
-		
 
 func _unhandled_input(event):
+	
 	if event.is_action_pressed("skip"):
 		fast_forward(true)
 	elif event.is_action_released("skip"):
@@ -248,17 +248,36 @@ func _unhandled_input(event):
 					return
 				_:
 					pass
-		var coords_clicked = world.global_pos_to_coords(event.position)
-		if world.tiles.has(coords_clicked):
-			if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT and event.pressed:
-				if mouse_state != MouseState.Move:
-					clear_mouse_state()
-				handle_move(self.world.get_tile_region(coords_clicked))
+		
+		if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT and event.pressed:
+			var collided = get_selection(event.position)
+			if collided.size() == 0:
+				clear_mouse_state()
+				return
+			var pos = Utils.vec3to2(collided.position)
+			var coords_clicked = self.world.local_to_map(pos*1000)
+			if !world.tiles.has(coords_clicked):
+				clear_mouse_state()
+				return
+			if mouse_state != MouseState.Move:
+				clear_mouse_state()
+			handle_move(self.world.get_tile_region(coords_clicked))
+			
+
+func get_selection(mouse_pos):
+	var worldspace = get_world_3d().direct_space_state
+	var start = self.world.camera.project_ray_origin(mouse_pos)
+	var end = self.world.camera.project_position(mouse_pos, 1000)
+	var query = PhysicsRayQueryParameters3D.create(start, end)
+	query.collide_with_areas = true
+	var result = worldspace.intersect_ray(query)
+	return result
 
 func lock_controls(val : bool):
 	self.endTurnButton.disabled = val
 
 func _on_turn_button_pressed():
+	Utils.log("Turn button pressed")
 	self.deck.clear()
 	self.apply_buildings(self.teams[self.player_team_index])
 	
@@ -273,7 +292,7 @@ func _on_turn_button_pressed():
 
 	var tile_camera_move = closest_player_tile_coords()
 	if tile_camera_move != Constants.NULL_COORDS:
-		await self.world.camera.move_smoothed(self.world.map_to_local(tile_camera_move), 5)
+		await self.world.camera.move(self.world.coords_to_pos(tile_camera_move), true)
 
 	pick_cards()
 	self.set_faith(self.teams[self.player_team_index], self.world.tiles.values().filter(func(t): return t.data.team == self.teams[self.player_team_index] and t.data.building == Constants.Building.Temple).size())
