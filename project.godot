@@ -38,6 +38,8 @@ Personalities="*res://bots/personalities.gd"
 
 window/size/viewport_width=1920
 window/size/viewport_height=1080
+window/size/window_width_override=1920
+window/size/window_height_override=1080
 window/stretch/mode="canvas_items"
 window/stretch/aspect="keep_height"
 mouse_cursor/custom_image="res://assets/ui/cursor_triangle_16.png"

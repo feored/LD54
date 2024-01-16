@@ -3,13 +3,13 @@
 importer="scene"
 importer_version=1
 type="PackedScene"
-uid="uid://dc1bwb057lufa"
-path="res://.godot/imported/hexagon.glb-dc8d14866fa463ae1786b95b02411346.scn"
+uid="uid://c26blp7tdeof2"
+path="res://.godot/imported/Watchtower.fbx-154b770fb3a152452d9ac29f94b7d1bd.scn"
 
 [deps]
 
-source_file="res://assets/tiles/hexagon.glb"
-dest_files=["res://.godot/imported/hexagon.glb-dc8d14866fa463ae1786b95b02411346.scn"]
+source_file="res://assets/buildings/Watchtower.fbx"
+dest_files=["res://.godot/imported/Watchtower.fbx-154b770fb3a152452d9ac29f94b7d1bd.scn"]
 
 [params]
 

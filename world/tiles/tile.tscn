@@ -1,6 +1,7 @@
-[gd_scene load_steps=27 format=3 uid="uid://d2tu4itgwxsmx"]
+[gd_scene load_steps=28 format=3 uid="uid://d2tu4itgwxsmx"]
 
 [ext_resource type="Script" path="res://world/tiles/tile.gd" id="2_m7fn7"]
+[ext_resource type="PackedScene" uid="uid://cevp3rqp8mlgu" path="res://assets/tiles/Grass.fbx" id="4_asc7f"]
 [ext_resource type="Texture2D" uid="uid://cp2ykpdtmxnwf" path="res://assets/tiles/barred_2.png" id="9_220g0"]
 [ext_resource type="Texture2D" uid="uid://b5ytemdsbmim0" path="res://assets/icons/person.png" id="11_6lm02"]
 
@@ -211,3 +212,8 @@ shape = SubResource("CylinderShape3D_a2w53")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.075, 0)
 mesh = SubResource("CylinderMesh_a0kfg")
 surface_material_override/0 = SubResource("StandardMaterial3D_3gpua")
+
+[node name="building" type="MeshInstance3D" parent="."]
+
+[node name="Grass" parent="." instance=ExtResource("4_asc7f")]
+transform = Transform3D(0.25, 0, 0, 0, 0.25, 0, 0, 0, 0.25, 0, 0.5, 0)

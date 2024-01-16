@@ -158,15 +158,6 @@ subdivide_depth = 100
 [node name="World" type="TileMap"]
 tile_set = ExtResource("1_tacgr")
 format = 2
-layer_0/name = "Water"
-layer_0/z_index = -999
-layer_1/name = "Land"
-layer_1/enabled = true
-layer_1/modulate = Color(1, 1, 1, 1)
-layer_1/y_sort_enabled = false
-layer_1/y_sort_origin = 0
-layer_1/z_index = 0
-layer_1/tile_data = PackedInt32Array()
 script = ExtResource("2_priir")
 
 [node name="CloudGenerator" type="Node2D" parent="."]

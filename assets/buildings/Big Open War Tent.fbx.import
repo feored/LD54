@@ -3,13 +3,13 @@
 importer="scene"
 importer_version=1
 type="PackedScene"
-uid="uid://bnm0evggajcrv"
-path="res://.godot/imported/hex_forest.gltf.glb-ae813bb13858ac942e1d3936726d70b7.scn"
+uid="uid://dvuhegsgqyckg"
+path="res://.godot/imported/Big Open War Tent.fbx-a36c2bf48849a5511ef4ebb3543f6d0f.scn"
 
 [deps]
 
-source_file="res://assets/tiles/hex_forest.gltf.glb"
-dest_files=["res://.godot/imported/hex_forest.gltf.glb-ae813bb13858ac942e1d3936726d70b7.scn"]
+source_file="res://assets/buildings/Big Open War Tent.fbx"
+dest_files=["res://.godot/imported/Big Open War Tent.fbx-a36c2bf48849a5511ef4ebb3543f6d0f.scn"]
 
 [params]
 

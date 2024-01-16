@@ -1,7 +1,11 @@
-[gd_scene format=3 uid="uid://bqg467fcdgrbb"]
+[gd_scene load_steps=2 format=3 uid="uid://bqg467fcdgrbb"]
+
+[ext_resource type="FontFile" uid="uid://hfpfc7xrpteo" path="res://assets/Roboto-Regular.ttf" id="1_wyjrq"]
 
 [node name="Label" type="Label3D"]
 transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0.6, 0)
-pixel_size = 0.0067
+pixel_size = 0.0025
 billboard = 1
-font_size = 64
+font = ExtResource("1_wyjrq")
+font_size = 96
+outline_size = 24

@@ -9,7 +9,7 @@ const EPSILON = 0.005
 const NULL_POSITION = Vector3(-9999, -9999, -9999)
 const FOV_MIN = 15
 const FOV_MAX = 100
-const CAMERA_ZOOM_SPEED = 500
+const CAMERA_ZOOM_STEP = 5
 const CAMERA_MOVE_SPEED = 5
 const CAMERA_ROTATION_SPEED = 10
 
@@ -45,9 +45,9 @@ func _unhandled_input(event):
 			else:
 				self.state = State.IDLE
 		if event.button_index == MOUSE_BUTTON_WHEEL_UP:
-			self.fov = max(self.fov - delta * CAMERA_ZOOM_SPEED, FOV_MIN)
+			self.fov = max(self.fov - CAMERA_ZOOM_STEP, FOV_MIN)
 		elif event.button_index == MOUSE_BUTTON_WHEEL_DOWN:
-			self.fov = min(self.fov + delta * CAMERA_ZOOM_SPEED, FOV_MAX)
+			self.fov = min(self.fov + CAMERA_ZOOM_STEP, FOV_MAX)
 	elif event is InputEventMouseMotion and self.state != State.IDLE:
 		if self.state == State.ROTATING:
 			self.pivot.rotation_degrees.y -= event.relative.x * delta * CAMERA_ROTATION_SPEED
@@ -55,14 +55,14 @@ func _unhandled_input(event):
 		elif self.state == State.DRAGGING:
 			var dx = (event.relative.x * delta * CAMERA_MOVE_SPEED * fov / FOV_MAX)
 			var dy = (event.relative.y * delta * CAMERA_MOVE_SPEED * fov / FOV_MAX)
-			self.pivot.position.x -= ( dx * cos(self.pivot.rotation.y) - dy * sin(self.pivot.rotation.y))
-			self.pivot.position.z -= ( dy * cos(self.pivot.rotation.y) + dx * sin(self.pivot.rotation.y))
+			var translated_x = dx * cos(self.pivot.rotation.y) +  dy * sin(self.pivot.rotation.y)
+			var translated_y = -dx * sin(self.pivot.rotation.y) + dy * cos(self.pivot.rotation.y)
+			self.pivot.position.x -= translated_x
+			self.pivot.position.z -= translated_y
 
 func move(new_pos, smoothed = false):
 	if !smoothed:
 		self.pivot.position = new_pos
 		return
-	Utils.log("Camera current position: " + str(self.pivot.position))
 	self.target = Vector3(new_pos.x, self.pivot.position.y, new_pos.y)
-	Utils.log("Camera target position: " + str(self.target))
 	self.state = State.AUTOMOVE

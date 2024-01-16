@@ -3,13 +3,13 @@
 importer="scene"
 importer_version=1
 type="PackedScene"
-uid="uid://ca3trc6l5ovrx"
-path="res://.godot/imported/hex_forest.gltf-cee46f873628137a89916ea1bfae20f3.scn"
+uid="uid://d1y231w38serg"
+path="res://.godot/imported/Altar.fbx-bba7453e0b765af9d87895468faa9e71.scn"
 
 [deps]
 
-source_file="res://assets/tiles/hex_forest.gltf"
-dest_files=["res://.godot/imported/hex_forest.gltf-cee46f873628137a89916ea1bfae20f3.scn"]
+source_file="res://assets/buildings/Altar.fbx"
+dest_files=["res://.godot/imported/Altar.fbx-bba7453e0b765af9d87895468faa9e71.scn"]
 
 [params]
 
