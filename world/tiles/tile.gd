@@ -20,7 +20,7 @@ const CRACKED_TEXTURE = preload("res://assets/tiles/grass_cracked_2.png")
 	TileSet.CELL_NEIGHBOR_TOP_RIGHT_SIDE: $northeast
 }
 @onready var barred = $barred
-@onready var building_sprite = $Building
+@onready var building_mesh = $building
 
 class TileWorldData:
 	var coords: Vector2i
@@ -106,9 +106,9 @@ func _process(delta):
 func update():
 	if self.data.building != Constants.Building.None:
 		# building_sprite.texture = Constants.BUILDINGS[self.data.building].texture
-		building_sprite.visible = true
+		building_mesh.mesh = Constants.BUILDINGS[self.data.building].mesh
 	else:
-		building_sprite.visible = false
+		building_mesh.mesh = null
 	for b in self.borders.keys():
 		if self.borders[b]:
 			self.border_objects[b].show()

@@ -119,6 +119,7 @@ const BUILDINGS = {
 		"id": Building.Barracks,
 		"name": "Barracks",
 		"texture": preload("res://assets/icons/sword.png"),
+		"mesh": preload("res://assets/buildings/barracks.res"),
 		"tooltip": "This territory will generate +%s unit per turn." % BARRACKS_UNITS_PER_TURN,
 	},
 	Building.Temple:
@@ -126,6 +127,7 @@ const BUILDINGS = {
 		"id": Building.Temple,
 		"name": "Temple",
 		"texture": preload("res://assets/icons/temple.png"),
+		"mesh": preload("res://assets/buildings/temple.res"),
 		"tooltip": "This territory will generate +%s faith per turn." % TEMPLE_FAITH_PER_TURN,
 	},
 	Building.Fort:
@@ -133,6 +135,7 @@ const BUILDINGS = {
 		"id": Building.Fort,
 		"name": "Fort",
 		"texture": preload("res://assets/icons/castle.png"),
+		"mesh": preload("res://assets/buildings/stable.res"),
 		"tooltip":
 		"Enemies invading this territory lose %s units instantly." % CASTLE_UNITS_REMOVED,
 	},
@@ -141,6 +144,7 @@ const BUILDINGS = {
 		"id": Building.Oracle,
 		"name": "Oracle",
 		"texture": preload("res://assets/icons/card.png"),
+		"mesh": preload("res://assets/buildings/oracle.res"),
 		"tooltip": "This territory will generate one power every turn.",
 	},
 	Building.Seal:
@@ -148,6 +152,7 @@ const BUILDINGS = {
 		"id": Building.Seal,
 		"name": "Seal",
 		"texture": preload("res://assets/icons/seal.png"),
+		"mesh": preload("res://assets/buildings/torch.res"),
 		"tooltip":
 		"If this territory is marked by Neptune, it will resist sinking. The seal will be destroyed.",
 	},

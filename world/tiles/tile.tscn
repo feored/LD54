@@ -1,7 +1,6 @@
-[gd_scene load_steps=28 format=3 uid="uid://d2tu4itgwxsmx"]
+[gd_scene load_steps=27 format=3 uid="uid://d2tu4itgwxsmx"]
 
 [ext_resource type="Script" path="res://world/tiles/tile.gd" id="2_m7fn7"]
-[ext_resource type="PackedScene" uid="uid://cevp3rqp8mlgu" path="res://assets/tiles/Grass.fbx" id="4_asc7f"]
 [ext_resource type="Texture2D" uid="uid://cp2ykpdtmxnwf" path="res://assets/tiles/barred_2.png" id="9_220g0"]
 [ext_resource type="Texture2D" uid="uid://b5ytemdsbmim0" path="res://assets/icons/person.png" id="11_6lm02"]
 
@@ -83,7 +82,7 @@ radial_segments = 6
 rings = 1
 
 [sub_resource type="BoxMesh" id="BoxMesh_dlt56"]
-size = Vector3(0.05, 0.05, 0.5)
+size = Vector3(0.05, 0.001, 0.5)
 
 [sub_resource type="ORMMaterial3D" id="ORMMaterial3D_glmam"]
 resource_local_to_scene = true
@@ -93,7 +92,7 @@ resource_local_to_scene = true
 clearcoat_enabled = true
 
 [sub_resource type="BoxMesh" id="BoxMesh_dmleg"]
-size = Vector3(0.05, 0.05, 0.5)
+size = Vector3(0.05, 0.001, 0.5)
 
 [sub_resource type="ORMMaterial3D" id="ORMMaterial3D_k8nhd"]
 resource_local_to_scene = true
@@ -105,7 +104,7 @@ resource_local_to_scene = true
 resource_local_to_scene = true
 
 [sub_resource type="BoxMesh" id="BoxMesh_7iuau"]
-size = Vector3(0.05, 0.05, 0.5)
+size = Vector3(0.05, 0.001, 0.5)
 
 [sub_resource type="ORMMaterial3D" id="ORMMaterial3D_t6osk"]
 resource_local_to_scene = true
@@ -116,11 +115,11 @@ height = 0.15
 radial_segments = 6
 rings = 1
 
-[sub_resource type="ORMMaterial3D" id="ORMMaterial3D_1ymaj"]
+[sub_resource type="ORMMaterial3D" id="ORMMaterial3D_0vry2"]
 resource_local_to_scene = true
-albedo_color = Color(0.435294, 0.788235, 0.364706, 1)
-clearcoat = 0.45
-clearcoat_roughness = 1.0
+albedo_color = Color(0.184314, 0.301961, 0.141176, 1)
+anisotropy_enabled = true
+uv1_scale = Vector3(2, 2, 2)
 
 [sub_resource type="CylinderShape3D" id="CylinderShape3D_a2w53"]
 margin = 0.956
@@ -169,39 +168,39 @@ transparency = 0.42
 mesh = SubResource("CylinderMesh_xsn46")
 
 [node name="west" type="MeshInstance3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.408012, 0.5, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.408012, 0.477, 0)
 mesh = SubResource("BoxMesh_dlt56")
 surface_material_override/0 = SubResource("ORMMaterial3D_glmam")
 
 [node name="east" type="MeshInstance3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.408, 0.5, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.408, 0.477, 0)
 mesh = SubResource("BoxMesh_dlt56")
 surface_material_override/0 = SubResource("ORMMaterial3D_nstis")
 
 [node name="southwest" type="MeshInstance3D" parent="."]
-transform = Transform3D(0.5, 0, 0.866025, 0, 1, 0, -0.866025, 0, 0.5, -0.205489, 0.5, 0.353759)
+transform = Transform3D(0.5, 0, 0.866025, 0, 1, 0, -0.866025, 0, 0.5, -0.205489, 0.477, 0.353759)
 mesh = SubResource("BoxMesh_dmleg")
 surface_material_override/0 = SubResource("ORMMaterial3D_k8nhd")
 
 [node name="northwest" type="MeshInstance3D" parent="."]
-transform = Transform3D(0.5, 0, -0.866025, 0, 1, 0, 0.866025, 0, 0.5, -0.205723, 0.5, -0.353015)
+transform = Transform3D(0.5, 0, -0.866025, 0, 1, 0, 0.866025, 0, 0.5, -0.205723, 0.477, -0.353015)
 mesh = SubResource("BoxMesh_dlt56")
 surface_material_override/0 = SubResource("ORMMaterial3D_ck2nf")
 
 [node name="northeast" type="MeshInstance3D" parent="."]
-transform = Transform3D(0.5, 0, 0.866025, 0, 1, 0, -0.866025, 0, 0.5, 0.199482, 0.5, -0.354263)
+transform = Transform3D(0.5, 0, 0.866025, 0, 1, 0, -0.866025, 0, 0.5, 0.199482, 0.477, -0.354263)
 mesh = SubResource("BoxMesh_dlt56")
 surface_material_override/0 = SubResource("ORMMaterial3D_8o7w4")
 
 [node name="southeast" type="MeshInstance3D" parent="."]
-transform = Transform3D(0.5, 0, -0.866025, 0, 1, 0, 0.866025, 0, 0.5, 0.202814, 0.499997, 0.353447)
+transform = Transform3D(0.5, 0, -0.866025, 0, 1, 0, 0.866025, 0, 0.5, 0.202814, 0.477, 0.353447)
 mesh = SubResource("BoxMesh_7iuau")
 surface_material_override/0 = SubResource("ORMMaterial3D_t6osk")
 
 [node name="inner" type="MeshInstance3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.4, 0)
 mesh = SubResource("CylinderMesh_w0d6y")
-surface_material_override/0 = SubResource("ORMMaterial3D_1ymaj")
+surface_material_override/0 = SubResource("ORMMaterial3D_0vry2")
 
 [node name="Area3D" type="Area3D" parent="."]
 
@@ -214,6 +213,4 @@ mesh = SubResource("CylinderMesh_a0kfg")
 surface_material_override/0 = SubResource("StandardMaterial3D_3gpua")
 
 [node name="building" type="MeshInstance3D" parent="."]
-
-[node name="Grass" parent="." instance=ExtResource("4_asc7f")]
-transform = Transform3D(0.25, 0, 0, 0, 0.25, 0, 0, 0, 0.25, 0, 0.5, 0)
+transform = Transform3D(0.015, 0, 0, 0, 0.015, 0, 0, 0, 0.015, 0, 0.48, 0)

@@ -3,13 +3,13 @@
 importer="scene"
 importer_version=1
 type="PackedScene"
-uid="uid://c26blp7tdeof2"
-path="res://.godot/imported/Watchtower.fbx-154b770fb3a152452d9ac29f94b7d1bd.scn"
+uid="uid://b01wn25moh6k0"
+path="res://.godot/imported/Barracks.fbx-369c608644279698f5a95627826f3f29.scn"
 
 [deps]
 
-source_file="res://assets/buildings/Watchtower.fbx"
-dest_files=["res://.godot/imported/Watchtower.fbx-154b770fb3a152452d9ac29f94b7d1bd.scn"]
+source_file="res://assets/buildings/Barracks.fbx"
+dest_files=["res://.godot/imported/Barracks.fbx-369c608644279698f5a95627826f3f29.scn"]
 
 [params]
 
@@ -30,7 +30,7 @@ animation/remove_immutable_tracks=true
 import_script/path=""
 _subresources={
 "meshes": {
-"Root Scene_Watchtower": {
+"Root Scene_Barracks": {
 "generate/lightmap_uv": 0,
 "generate/lods": 0,
 "generate/shadow_meshes": 0,
@@ -38,7 +38,7 @@ _subresources={
 "lods/normal_split_angle": 25.0,
 "save_to_file/enabled": true,
 "save_to_file/make_streamable": "",
-"save_to_file/path": "res://assets/buildings/watchtower.res"
+"save_to_file/path": "res://assets/buildings/barracks.res"
 }
 }
 }
