@@ -5,12 +5,16 @@ signal target_reached
 @onready var pivot = get_parent()
 @onready var socket = pivot.get_parent()
 
-const EPSILON = 0.005
+const EPSILON = 0.05
 const NULL_POSITION = Vector3(-9999, -9999, -9999)
 const FOV_MIN = 15
 const FOV_MAX = 100
-const CAMERA_ZOOM_STEP = 5
-const CAMERA_MOVE_SPEED = 5
+const HEIGHT_MIN = 50
+const HEIGHT_MAX = 750
+const Z_FACTOR = 10.0/200
+
+const CAMERA_ZOOM_STEP = 10
+const CAMERA_MOVE_SPEED = 200
 const CAMERA_ROTATION_SPEED = 10
 
 enum State { IDLE, AUTOMOVE, DRAGGING, ROTATING }
@@ -21,7 +25,7 @@ var active = true
 
 func _process(delta):
 	if state == State.AUTOMOVE && target != NULL_POSITION:
-		var new_pos = pivot.position.lerp(target, delta * CAMERA_MOVE_SPEED)
+		var new_pos = pivot.position.lerp(target, delta * 10)
 		if new_pos.distance_to(target) < EPSILON:
 			self.pivot.position = target
 			self.state = State.IDLE
@@ -45,16 +49,18 @@ func _unhandled_input(event):
 			else:
 				self.state = State.IDLE
 		if event.button_index == MOUSE_BUTTON_WHEEL_UP:
-			self.fov = max(self.fov - CAMERA_ZOOM_STEP, FOV_MIN)
+			self.position.y = max(self.position.y - CAMERA_ZOOM_STEP, HEIGHT_MIN)
+			self.position.z = self.position.y * Z_FACTOR
 		elif event.button_index == MOUSE_BUTTON_WHEEL_DOWN:
-			self.fov = min(self.fov + CAMERA_ZOOM_STEP, FOV_MAX)
+			self.position.y = min(self.position.y + CAMERA_ZOOM_STEP, HEIGHT_MAX)
+			self.position.z = self.position.y * Z_FACTOR
 	elif event is InputEventMouseMotion and self.state != State.IDLE:
 		if self.state == State.ROTATING:
 			self.pivot.rotation_degrees.y -= event.relative.x * delta * CAMERA_ROTATION_SPEED
 			# self.rotation_degrees.x -= event.relative.y * delta * CAMERA_ROTATION_SPEED
 		elif self.state == State.DRAGGING:
-			var dx = (event.relative.x * delta * CAMERA_MOVE_SPEED * fov / FOV_MAX)
-			var dy = (event.relative.y * delta * CAMERA_MOVE_SPEED * fov / FOV_MAX)
+			var dx = (event.relative.x * delta * CAMERA_MOVE_SPEED * self.position.y / HEIGHT_MAX)
+			var dy = (event.relative.y * delta * CAMERA_MOVE_SPEED * self.position.y / HEIGHT_MAX)
 			var translated_x = dx * cos(self.pivot.rotation.y) +  dy * sin(self.pivot.rotation.y)
 			var translated_y = -dx * sin(self.pivot.rotation.y) + dy * cos(self.pivot.rotation.y)
 			self.pivot.position.x -= translated_x

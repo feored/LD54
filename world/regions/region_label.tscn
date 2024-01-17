@@ -3,9 +3,9 @@
 [ext_resource type="FontFile" uid="uid://hfpfc7xrpteo" path="res://assets/Roboto-Regular.ttf" id="1_wyjrq"]
 
 [node name="Label" type="Label3D"]
-transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0.6, 0)
-pixel_size = 0.0025
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 8, 0)
+pixel_size = 0.1
 billboard = 1
 font = ExtResource("1_wyjrq")
-font_size = 96
+font_size = 64
 outline_size = 24

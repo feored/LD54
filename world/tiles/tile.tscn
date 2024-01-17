@@ -1,8 +1,8 @@
-[gd_scene load_steps=27 format=3 uid="uid://d2tu4itgwxsmx"]
+[gd_scene load_steps=26 format=3 uid="uid://d2tu4itgwxsmx"]
 
 [ext_resource type="Script" path="res://world/tiles/tile.gd" id="2_m7fn7"]
+[ext_resource type="ArrayMesh" uid="uid://dmeqwdhkeuvle" path="res://assets/buildings/temple.res" id="4_5rtvu"]
 [ext_resource type="Texture2D" uid="uid://cp2ykpdtmxnwf" path="res://assets/tiles/barred_2.png" id="9_220g0"]
-[ext_resource type="Texture2D" uid="uid://b5ytemdsbmim0" path="res://assets/icons/person.png" id="11_6lm02"]
 
 [sub_resource type="Animation" id="Animation_1xy5g"]
 resource_name = "quake"
@@ -10,31 +10,45 @@ length = 3.0
 loop_mode = 1
 tracks/0/type = "value"
 tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath(".:offset")
+tracks/0/enabled = false
+tracks/0/path = NodePath(".:position")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/keys = {
-"times": PackedFloat32Array(0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1, 1.6, 1.7, 1.8, 1.9, 2, 2.0001, 2.1),
-"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1),
+"times": PackedFloat32Array(0.04, 0.14, 0.24, 0.34, 0.44, 0.54, 0.74, 0.84, 0.93, 1.02, 1.63, 1.73, 1.82, 1.91, 2, 2.1),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1),
 "update": 0,
-"values": [Vector2(0, 0), Vector2(0, 1), Vector2(0, -1), Vector2(-1, 1), Vector2(1, -1), Vector2(-1, 1), Vector2(-1, 1), Vector2(1, 0), Vector2(-1, 0), Vector2(1, 1), Vector2(0, 1), Vector2(1, 1), Vector2(-1, -1), Vector2(0, 0), Vector2(1, 0), Vector2(-1, 0), Vector2(-0.9, 0), Vector2(0, 0)]
+"values": [Vector3(0, 1, 0), Vector3(0, 1, 1), Vector3(0, 1, -1), Vector3(-1, 1, 1), Vector3(1, 1, -1), Vector3(-1, 1, 1), Vector3(1, 1, 0), Vector3(-1, 1, 0), Vector3(1, 1, 1), Vector3(0, 1, 1), Vector3(1, 1, 1), Vector3(-1, 1, -1), Vector3(0, 1, 0), Vector3(1, 1, 0), Vector3(-1, 1, 0), Vector3(0, 1, 0)]
 }
+tracks/1/type = "position_3d"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("pos")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = PackedFloat32Array(0, 1, 0, 0, 0, 0.5, 1, -5.6, 0, 7.135, 2.1, 1, 0, 0, 0)
 
 [sub_resource type="Animation" id="Animation_824x5"]
 resource_name = "sink"
 tracks/0/type = "value"
 tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath(".:offset")
-tracks/0/interp = 0
+tracks/0/enabled = false
+tracks/0/path = NodePath(".:position")
+tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/keys = {
-"times": PackedFloat32Array(0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9),
-"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1, 1, 1, 1),
+"times": PackedFloat32Array(0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 1),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1, 1, 1),
 "update": 0,
-"values": [Vector2(0, 0), Vector2(1, 0), Vector2(-1, 0), Vector2(1, 0), Vector2(-1, 0), Vector2(0, -1), Vector2(1, 1), Vector2(0, 0), Vector2(0, 0), Vector2(0, -1)]
+"values": [Vector3(0, 1, 0), Vector3(1, 1, 0), Vector3(-1, 1, 0), Vector3(1, 1, 0), Vector3(-1, 1, 0), Vector3(0.413, 1, -1), Vector3(1, 1, 1), Vector3(0, 1, 0), Vector3(0, -20, 0)]
 }
+tracks/1/type = "position_3d"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("pos")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = PackedFloat32Array(0, 1, 0, 0, 0, 1, 1, 0, -20, 0)
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_j2aig"]
 _data = {
@@ -71,18 +85,8 @@ color = Color(0.678431, 0.894118, 0.992157, 1)
 color_initial_ramp = SubResource("GradientTexture1D_t8ap8")
 turbulence_noise_strength = 2.65
 
-[sub_resource type="ORMMaterial3D" id="ORMMaterial3D_v41tv"]
-transparency = 1
-
-[sub_resource type="CylinderMesh" id="CylinderMesh_xsn46"]
-resource_local_to_scene = true
-material = SubResource("ORMMaterial3D_v41tv")
-height = 0.98
-radial_segments = 6
-rings = 1
-
 [sub_resource type="BoxMesh" id="BoxMesh_dlt56"]
-size = Vector3(0.05, 0.001, 0.5)
+size = Vector3(0.875, 0.001, 20)
 
 [sub_resource type="ORMMaterial3D" id="ORMMaterial3D_glmam"]
 resource_local_to_scene = true
@@ -92,7 +96,7 @@ resource_local_to_scene = true
 clearcoat_enabled = true
 
 [sub_resource type="BoxMesh" id="BoxMesh_dmleg"]
-size = Vector3(0.05, 0.001, 0.5)
+size = Vector3(0.875, 0.001, 20)
 
 [sub_resource type="ORMMaterial3D" id="ORMMaterial3D_k8nhd"]
 resource_local_to_scene = true
@@ -104,14 +108,16 @@ resource_local_to_scene = true
 resource_local_to_scene = true
 
 [sub_resource type="BoxMesh" id="BoxMesh_7iuau"]
-size = Vector3(0.05, 0.001, 0.5)
+size = Vector3(0.875, 0.001, 20)
 
 [sub_resource type="ORMMaterial3D" id="ORMMaterial3D_t6osk"]
 resource_local_to_scene = true
 
 [sub_resource type="CylinderMesh" id="CylinderMesh_w0d6y"]
 resource_local_to_scene = true
-height = 0.15
+top_radius = 20.0
+bottom_radius = 20.0
+height = 1.5
 radial_segments = 6
 rings = 1
 
@@ -123,18 +129,23 @@ uv1_scale = Vector3(2, 2, 2)
 
 [sub_resource type="CylinderShape3D" id="CylinderShape3D_a2w53"]
 margin = 0.956
-height = 1.0
-radius = 0.45
+height = 10.0
+radius = 20.0
 
 [sub_resource type="CylinderMesh" id="CylinderMesh_a0kfg"]
-height = 0.8
+top_radius = 20.0
+bottom_radius = 20.0
+height = 10.0
 radial_segments = 6
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_3gpua"]
 albedo_color = Color(0.290196, 0.184314, 0.0509804, 1)
 metallic_specular = 0.29
 
+[sub_resource type="ORMMaterial3D" id="ORMMaterial3D_o2yr2"]
+
 [node name="tile" type="Node3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
 script = ExtResource("2_m7fn7")
 
 [node name="barred" type="Sprite2D" parent="."]
@@ -158,59 +169,63 @@ speed_scale = 1.7
 explosiveness = 0.62
 randomness = 0.67
 
-[node name="Building" type="Sprite2D" parent="."]
-visible = false
-texture = ExtResource("11_6lm02")
+[node name="pos" type="Node3D" parent="."]
 
-[node name="outer" type="MeshInstance3D" parent="."]
-visible = false
-transparency = 0.42
-mesh = SubResource("CylinderMesh_xsn46")
-
-[node name="west" type="MeshInstance3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.408012, 0.477, 0)
+[node name="west" type="MeshInstance3D" parent="pos"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -16.88, 7, 0)
 mesh = SubResource("BoxMesh_dlt56")
+skeleton = NodePath("../..")
 surface_material_override/0 = SubResource("ORMMaterial3D_glmam")
 
-[node name="east" type="MeshInstance3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.408, 0.477, 0)
+[node name="east" type="MeshInstance3D" parent="pos"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 16.88, 7, 0)
 mesh = SubResource("BoxMesh_dlt56")
+skeleton = NodePath("../..")
 surface_material_override/0 = SubResource("ORMMaterial3D_nstis")
 
-[node name="southwest" type="MeshInstance3D" parent="."]
-transform = Transform3D(0.5, 0, 0.866025, 0, 1, 0, -0.866025, 0, 0.5, -0.205489, 0.477, 0.353759)
+[node name="southwest" type="MeshInstance3D" parent="pos"]
+transform = Transform3D(0.5, 0, 0.866025, 0, 1, 0, -0.866025, 0, 0.5, -8.389, 7, 14.64)
 mesh = SubResource("BoxMesh_dmleg")
+skeleton = NodePath("../..")
 surface_material_override/0 = SubResource("ORMMaterial3D_k8nhd")
 
-[node name="northwest" type="MeshInstance3D" parent="."]
-transform = Transform3D(0.5, 0, -0.866025, 0, 1, 0, 0.866025, 0, 0.5, -0.205723, 0.477, -0.353015)
+[node name="northwest" type="MeshInstance3D" parent="pos"]
+transform = Transform3D(0.5, 0, -0.866025, 0, 1, 0, 0.866025, 0, 0.5, -8.389, 7, -14.64)
 mesh = SubResource("BoxMesh_dlt56")
+skeleton = NodePath("../..")
 surface_material_override/0 = SubResource("ORMMaterial3D_ck2nf")
 
-[node name="northeast" type="MeshInstance3D" parent="."]
-transform = Transform3D(0.5, 0, 0.866025, 0, 1, 0, -0.866025, 0, 0.5, 0.199482, 0.477, -0.354263)
+[node name="northeast" type="MeshInstance3D" parent="pos"]
+transform = Transform3D(0.5, 0, 0.866025, 0, 1, 0, -0.866025, 0, 0.5, 8.38876, 7, -14.6398)
 mesh = SubResource("BoxMesh_dlt56")
+skeleton = NodePath("../..")
 surface_material_override/0 = SubResource("ORMMaterial3D_8o7w4")
 
-[node name="southeast" type="MeshInstance3D" parent="."]
-transform = Transform3D(0.5, 0, -0.866025, 0, 1, 0, 0.866025, 0, 0.5, 0.202814, 0.477, 0.353447)
+[node name="southeast" type="MeshInstance3D" parent="pos"]
+transform = Transform3D(0.5, 0, -0.866025, 0, 1, 0, 0.866025, 0, 0.5, 8.389, 7, 14.64)
 mesh = SubResource("BoxMesh_7iuau")
+skeleton = NodePath("../..")
 surface_material_override/0 = SubResource("ORMMaterial3D_t6osk")
 
-[node name="inner" type="MeshInstance3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.4, 0)
+[node name="inner" type="MeshInstance3D" parent="pos"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 5.7, 0)
 mesh = SubResource("CylinderMesh_w0d6y")
+skeleton = NodePath("../..")
 surface_material_override/0 = SubResource("ORMMaterial3D_0vry2")
 
-[node name="Area3D" type="Area3D" parent="."]
+[node name="Area3D" type="Area3D" parent="pos"]
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="Area3D"]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="pos/Area3D"]
 shape = SubResource("CylinderShape3D_a2w53")
 
-[node name="base" type="MeshInstance3D" parent="."]
+[node name="base" type="MeshInstance3D" parent="pos"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.075, 0)
 mesh = SubResource("CylinderMesh_a0kfg")
+skeleton = NodePath("../..")
 surface_material_override/0 = SubResource("StandardMaterial3D_3gpua")
 
-[node name="building" type="MeshInstance3D" parent="."]
-transform = Transform3D(0.015, 0, 0, 0, 0.015, 0, 0, 0, 0.015, 0, 0.48, 0)
+[node name="building" type="MeshInstance3D" parent="pos"]
+transform = Transform3D(0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, 0, 6.475, 0)
+mesh = ExtResource("4_5rtvu")
+skeleton = NodePath("../..")
+surface_material_override/0 = SubResource("ORMMaterial3D_o2yr2")

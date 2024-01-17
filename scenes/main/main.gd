@@ -252,11 +252,15 @@ func _unhandled_input(event):
 		if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT and event.pressed:
 			var collided = get_selection(event.position)
 			if collided.size() == 0:
+				print("No collision")
 				clear_mouse_state()
 				return
 			var pos = Utils.vec3to2(collided.position)
-			var coords_clicked = self.world.local_to_map(pos*1000)
+			var coords_clicked = self.world.local_to_map(pos*(1000/Constants.TILE_SIZE_FACTOR))
+			print("Clicked on %s" % coords_clicked)
 			if !world.tiles.has(coords_clicked):
+				print(world.tiles.keys())
+				print("Clicked on empty tile")
 				clear_mouse_state()
 				return
 			if mouse_state != MouseState.Move:
@@ -475,8 +479,8 @@ func play_turn(team_id):
 		thread.start(self.bots[team_id].play_turn.bind(self.world))
 		while thread.is_alive():
 			await Utils.wait(0.1)
-		# var bot_actions = thread.wait_to_finish()
-		var bot_actions = self.bots[team_id].play_turn(self.world) ## use for debugging
+		var bot_actions = thread.wait_to_finish()
+		# var bot_actions = self.bots[team_id].play_turn(self.world) ## use for debugging
 		for bot_action in bot_actions:
 			if bot_action.action == Action.Type.None:
 				playing = false

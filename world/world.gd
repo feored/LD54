@@ -152,7 +152,7 @@ func sink_tiles(coords_array: Array):
 		if not affected_regions.has(region):
 			affected_regions.append(region)
 	self.messenger.call("A patch of land sinks somewhere...")
-	await self.camera.move_smoothed(self.coords_to_pos(coords_array[0]), 5)
+	await self.camera.move(self.coords_to_pos(coords_array[0]), true)
 	for coords in coords_array:
 		self.tiles[coords].sink()
 	var deleted = 0
@@ -337,7 +337,7 @@ func global_pos_to_coords(pos):
 	return self.local_to_map(self.to_local(get_real_pos(pos)))
 
 func coords_to_pos(coords):
-	return self.map_to_local(coords)/1000
+	return self.map_to_local(coords)/(1000/Constants.TILE_SIZE_FACTOR)
 
 func hex_distance(a, b):
 	return Vector2(map_to_local(a)).distance_squared_to(Vector2(map_to_local(b)))

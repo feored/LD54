@@ -4,23 +4,22 @@ class_name Tile
 
 signal deleted
 
-const SINK_ANIMATION = preload("res://world/tiles/sinking_animation.tscn")
 const NEUTRAL_TEXTURE = preload("res://assets/tiles/grass_neutral.png")
 const TEAM_TEXTURE = preload("res://assets/tiles/grass.png")
 const CRACKED_TEXTURE = preload("res://assets/tiles/grass_cracked_2.png")
 
-@onready var inner = $inner
+@onready var inner = $pos/inner
 @onready var animation_player = $AnimationPlayer
 @onready var border_objects = {
-	TileSet.CELL_NEIGHBOR_RIGHT_SIDE: $east,
-	TileSet.CELL_NEIGHBOR_BOTTOM_LEFT_SIDE: $southwest,
-	TileSet.CELL_NEIGHBOR_BOTTOM_RIGHT_SIDE: $southeast,
-	TileSet.CELL_NEIGHBOR_LEFT_SIDE: $west,
-	TileSet.CELL_NEIGHBOR_TOP_LEFT_SIDE: $northwest,
-	TileSet.CELL_NEIGHBOR_TOP_RIGHT_SIDE: $northeast
+	TileSet.CELL_NEIGHBOR_RIGHT_SIDE: $pos/east,
+	TileSet.CELL_NEIGHBOR_BOTTOM_LEFT_SIDE: $pos/southwest,
+	TileSet.CELL_NEIGHBOR_BOTTOM_RIGHT_SIDE: $pos/southeast,
+	TileSet.CELL_NEIGHBOR_LEFT_SIDE: $pos/west,
+	TileSet.CELL_NEIGHBOR_TOP_LEFT_SIDE: $pos/northwest,
+	TileSet.CELL_NEIGHBOR_TOP_RIGHT_SIDE: $pos/northeast
 }
 @onready var barred = $barred
-@onready var building_mesh = $building
+@onready var building_mesh = $pos/building
 
 class TileWorldData:
 	var coords: Vector2i
@@ -95,14 +94,6 @@ func delete():
 	deleted.emit(self.data.coords)
 	self.queue_free()
 
-func _process(delta):
-	if dissolving:
-		if elapsed > 1.0:
-			delete()
-			dissolving = false
-		elapsed += delta
-		self.material.set_shader_parameter("sensitivity", elapsed)
-
 func update():
 	if self.data.building != Constants.Building.None:
 		# building_sprite.texture = Constants.BUILDINGS[self.data.building].texture
@@ -133,14 +124,10 @@ func update():
 func sink():
 	animation_player.play("sink")
 	await animation_player.animation_finished
-	## dissolve
-	$GPUParticles2D.emitting = true
 	for b in self.borders.keys():
 		self.border_objects[b].hide()
 	Sfx.play(Sfx.Track.Boom)
-	self.add_child(SINK_ANIMATION.instantiate())
-	self.dissolving = true
-	self.material.set_shader_parameter("active", true)
+	self.delete()
 
 func set_team(new_team: int):
 	self.data.team = new_team
