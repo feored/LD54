@@ -62,6 +62,7 @@ const DEBUG_REGION = false
 
 ## Game enums
 enum GameMode { Play, MapEditor, Scenario }
+enum Event { None, Move, Attack, Build, Sacrifice, EndTurn, DrawCard, PlayCard, Discard }
 
 ## Teams
 const TEAM_COLORS = [

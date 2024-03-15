@@ -1,5 +1,5 @@
 extends Control
-class_name PowerCard
+class_name CardView
 
 signal picked()
 
@@ -9,36 +9,22 @@ const COLOR_INVALID = Color(1, 0.5, 0.5)
 const COLOR_VALID = Color(1, 1, 1)
 const ANIMATION_TIMER = 0.15
 
-@onready var power_icon : TextureRect = %PowerIcon
-@onready var power_name : Label = %PowerName
-@onready var power_description : RichTextLabel = %PowerDescription
-@onready var power_cost : Label = %PowerCost
+@onready var card_icon : TextureRect = %PowerIcon
+@onready var card_name : Label = %PowerName
+@onready var card_description : RichTextLabel = %PowerDescription
+@onready var card_cost : Label = %PowerCost
 @onready var shape_gui = %ShapeGUI
 
 var shape_prefab = preload("res://ui/shapes/shape_gui.tscn")
 
 var buyable: bool = true
 var tweens = []
-var power : Power
+var card : Card
 var state : State = State.Base
 
 func set_buyable(b : bool):
 	self.buyable = b
-	self.power_cost.modulate = COLOR_VALID if b else COLOR_INVALID
-
-var ICONS = {
-	Power.Type.Offering: preload("res://assets/icons/trident.png"),
-	Power.Type.Sacrifice: preload("res://assets/icons/skull.png"),
-	Power.Type.Sink : preload("res://assets/tiles/hex_shape.png"),
-	Power.Type.Emerge : preload("res://assets/tiles/hex_shape.png"),
-	Power.Type.Prayer: preload("res://assets/icons/prayer.png"),
-	Power.Type.Barracks: Constants.BUILDINGS[Constants.Building.Barracks].texture,
-	Power.Type.Temple: Constants.BUILDINGS[Constants.Building.Temple].texture,
-	Power.Type.Fort: Constants.BUILDINGS[Constants.Building.Fort].texture,
-	Power.Type.Oracle: Constants.BUILDINGS[Constants.Building.Oracle].texture,
-	Power.Type.Seal: Constants.BUILDINGS[Constants.Building.Seal].texture,
-	Power.Type.Reinforcements: preload("res://assets/icons/Plus.png"),
-}
+	self.card_cost.modulate = COLOR_VALID if b else COLOR_INVALID
 
 func clear_tweens():
 	for tween in self.tweens:
@@ -70,24 +56,24 @@ func _ready():
 	self.config()
 
 func config():
-	if self.power == null:
+	if self.card == null:
 		return
-	self.power_name.text = self.power.name
-	self.power_icon.texture = ICONS[self.power.id]
-	if self.power.id in [Power.Type.Sink, Power.Type.Emerge]:
-		self.shape_gui.roll_num(self.power.strength, self.power.id)
-		self.power.shape = self.shape_gui.shape
-		self.shape_gui.show()
-		self.power_icon.hide()
-	else:
-		self.shape_gui.hide()
-		self.power_icon.show()
+	self.card_name.text = self.card.name
+	self.card_icon.texture = self.card.icon
+	# if self.power.id in [Power.Type.Sink, Power.Type.Emerge]:
+	# 	self.shape_gui.roll_num(self.power.strength, self.power.id)
+	# 	self.power.shape = self.shape_gui.shape
+	# 	self.shape_gui.show()
+	# 	self.card_icon.hide()
+	# else:
+	self.shape_gui.hide()
+	self.card_icon.show()
 	# self.btn.tooltip_text = self.power.description
-	self.power_description.text = self.power.description
-	self.power_cost.text = str(self.power.cost)
+	self.card_description.text = self.card.description
+	self.card_cost.text = str(self.card.cost)
 
-func init(p : Power):
-	self.power = p
+func init(c : Card):
+	self.card = c
 	
 func _gui_input(event):
 	if event is InputEventMouseButton:

@@ -3,12 +3,12 @@
 [ext_resource type="Script" path="res://scenes/main/main.gd" id="1_osaxm"]
 [ext_resource type="PackedScene" uid="uid://pu46mkcjdswb" path="res://ui/esc_menu/esc_menu.tscn" id="2_pam5e"]
 [ext_resource type="PackedScene" uid="uid://b8opucxucl032" path="res://world/world.tscn" id="2_unfjm"]
-[ext_resource type="Script" path="res://ui/power/deck.gd" id="4_nj60x"]
+[ext_resource type="Script" path="res://ui/cards/deck.gd" id="4_nj60x"]
 [ext_resource type="Theme" uid="uid://3t61g0061mea" path="res://assets/theme.tres" id="5_5yrco"]
 [ext_resource type="Texture2D" uid="uid://vv0nl83x0ldq" path="res://assets/icons/forward.png" id="6_7usvn"]
 [ext_resource type="Texture2D" uid="uid://bxqvi5615lj3b" path="res://assets/icons/trident.png" id="6_mkg7a"]
 [ext_resource type="Script" path="res://ui/Message.gd" id="7_y3mfw"]
-[ext_resource type="PackedScene" uid="uid://bcmyj6p1buj71" path="res://ui/power/card_selector.tscn" id="8_1lhgu"]
+[ext_resource type="PackedScene" uid="uid://bcmyj6p1buj71" path="res://ui/cards/card_selector.tscn" id="8_1lhgu"]
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_7ox3a"]
 

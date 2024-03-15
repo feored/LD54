@@ -2,7 +2,7 @@
 
 [ext_resource type="Theme" uid="uid://3t61g0061mea" path="res://assets/theme.tres" id="1_k1qef"]
 [ext_resource type="Texture2D" uid="uid://dbhcxfrm6mdyp" path="res://assets/ui/card_border_gold.png" id="2_5br05"]
-[ext_resource type="Script" path="res://ui/power/power_card.gd" id="2_i2460"]
+[ext_resource type="Script" path="res://ui/cards/card_view.gd" id="2_i2460"]
 [ext_resource type="Texture2D" uid="uid://bmpm2kp3lr23y" path="res://assets/icons/castle.png" id="2_volv3"]
 [ext_resource type="PackedScene" uid="uid://r53ogglkfpl1" path="res://ui/shapes/shape_gui.tscn" id="3_5y38j"]
 [ext_resource type="Texture2D" uid="uid://bxqvi5615lj3b" path="res://assets/icons/trident.png" id="3_kq5p4"]

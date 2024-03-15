@@ -2,7 +2,7 @@ extends Node2D
 
 const gameOverScreenPrefab = preload("res://ui/game_over_menu/game_over_screen.tscn")
 const shapePrefab = preload("res://world/tiles/highlight/shape.tscn")
-const card_prefab = preload("res://ui/power/power_card.tscn")
+const card_prefab = preload("res://ui/cards/card_view.tscn")
 
 @onready var world = $"World"
 @onready var messenger = %Message
@@ -11,6 +11,8 @@ const card_prefab = preload("res://ui/power/power_card.tscn")
 @onready var card_selector = %CardSelector
 @onready var deck = %Deck
 @onready var faith_label = %FaithLabel
+
+
 
 var used_card = null
 enum MouseState {
@@ -32,11 +34,11 @@ var selected_region = null
 
 var teams : Array[int] = []
 var eliminated_teams : Array[int] = []
-var faith: Dictionary = {}
-var powers: Dictionary = {}
+var resources: Dictionary = {}
 
 var turn : int = 0
 var global_turn = 0
+var current_team_id = Utils.to_team_id(self.turn)
 
 var actions_history : Array[Action] = []
 var bots : Dictionary = {}
@@ -45,6 +47,8 @@ var game_started : bool = false
 var spectating : bool = false
 
 var cards_to_pick = 1
+
+
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
@@ -72,8 +76,7 @@ func add_teams():
 		if team_id != Constants.PLAYER_ID:
 			self.bots[team_id] = TerritoryBot.new(team_id, Personalities.AGGRESSIVE_PERSONALITY)
 	for team_id in teams:
-		self.faith[team_id] = 0
-		self.powers[team_id] = []
+		self.resources[team_id] = {"faith": 0}
 			
 
 func clear_mouse_state():
@@ -285,7 +288,7 @@ func add_cards(num):
 	for c in cards:
 		c.picked.connect(func(): use_card(c))
 		self.deck.add_card(c)
-	self.deck.update_faith(self.faith[self.teams[self.player_team_index]])
+	self.deck.update_faith(self.resources[self.current_team_id]["faith"])
 
 func pick_cards():
 	var cards_to_generate = 3 + self.world.tiles.values().filter(func(t): return t.data.team == self.teams[self.player_team_index] and t.data.building == Constants.Building.Oracle).size()
@@ -296,47 +299,63 @@ func _on_cards_selected(cards):
 		card.disconnect_picked()
 		card.picked.connect(func(): use_card(card))
 		self.deck.add_card(card)
-		self.deck.update_faith(self.faith[self.teams[self.player_team_index]])
+		self.deck.update_faith(self.resources[self.current_team_id]["faith"])
 	Settings.input_locked = false
 	lock_controls(false)
 	
 
-func use_card(c):
-	self.used_card = c
-	c.highlight(true)
-	match c.power.id:
-		Power.Type.Offering:
-			self.add_faith(self.teams[self.player_team_index], 1)
-			self.card_used(c)
-		Power.Type.Sink:
-			set_shape(c.power.shape.coords.keys(), MouseState.Sink)
-		Power.Type.Emerge:
-			set_shape(c.power.shape.coords.keys(), MouseState.Emerge)
-		Power.Type.Sacrifice:
-			set_sacrifice()
-		Power.Type.Reinforcements:
-			set_reinforcements()
-		Power.Type.Prayer:
-			self.add_faith(self.teams[self.player_team_index], 1)
-			self.card_used(c)
-			self.deck.discard_random(2)
-		Power.Type.Barracks:
-			set_building(c.power.get_building())
-		Power.Type.Temple:
-			set_building(c.power.get_building())
-		Power.Type.Fort:
-			set_building(c.power.get_building())
-		Power.Type.Oracle:
-			set_building(c.power.get_building())
-		Power.Type.Seal:
-			set_building(c.power.get_building())
-		_:
-			Utils.log("Unknown power type: %s, %s" % [c.power.id, c.power.name])
-			self.card_used(c)
+func apply_effect(effect):
+	if effect.type == "resource":
+		var expression = Expression.new()
+		expression.parse(effect.value, self.resources[self.current_team_id].keys())
+		var result = expression.execute(self.resources[self.current_team_id].values())
+		self.resources[self.current_team_id][effect.resource] = result
+		Utils.log("Resource %s changed to %s" % [effect.resource, result])
+		if effect.resource == "faith":
+			update_faith_player()
+			
+
+func use_card(cardView):
+	self.used_card = cardView
+	cardView.highlight(true)
+	for effect in cardView.card.effects.filter(func(e): return e.event == "play"):
+		apply_effect(effect)
+	self.card_used(cardView)
+
+	
+	# match c.power.id:
+	# 	Power.Type.Offering:
+	# 		self.add_faith(self.teams[self.player_team_index], 1)
+	# 		self.card_used(c)
+	# 	Power.Type.Sink:
+	# 		set_shape(c.power.shape.coords.keys(), MouseState.Sink)
+	# 	Power.Type.Emerge:
+	# 		set_shape(c.power.shape.coords.keys(), MouseState.Emerge)
+	# 	Power.Type.Sacrifice:
+	# 		set_sacrifice()
+	# 	Power.Type.Reinforcements:
+	# 		set_reinforcements()
+	# 	Power.Type.Prayer:
+	# 		self.add_faith(self.teams[self.player_team_index], 1)
+	# 		self.card_used(c)
+	# 		self.deck.discard_random(2)
+	# 	Power.Type.Barracks:
+	# 		set_building(c.power.get_building())
+	# 	Power.Type.Temple:
+	# 		set_building(c.power.get_building())
+	# 	Power.Type.Fort:
+	# 		set_building(c.power.get_building())
+	# 	Power.Type.Oracle:
+	# 		set_building(c.power.get_building())
+	# 	Power.Type.Seal:
+	# 		set_building(c.power.get_building())
+	# 	_:
+	# 		Utils.log("Unknown power type: %s, %s" % [c.power.id, c.power.name])
+	# 		self.card_used(c)
 			
 	
 func card_used(c):
-	self.add_faith(self.teams[self.player_team_index], -c.power.cost)
+	self.add_faith(self.teams[self.player_team_index], -c.card.cost)
 	self.deck.remove_card(c)
 	self.used_card = null
 
@@ -446,8 +465,10 @@ func play_global_turn():
 	await self.world.sink_marked()
 	check_win_condition()
 	await self.world.mark_tiles(self.global_turn)
+	self.current_team_id = Utils.to_team_id(self.turn)
 
 func play_turn(team_id):
+	self.current_team_id = team_id
 	if team_id in self.eliminated_teams:
 		return
 	var playing = true
@@ -504,17 +525,19 @@ func apply_action(action : Action):
 			Utils.log("Unknown action: %s" % action)
 	check_win_condition()
 
+func update_faith_player():
+	self.deck.update_faith(self.resources[self.teams[self.player_team_index]]["faith"])
+	self.faith_label.set_text(str(self.resources[self.teams[self.player_team_index]]["faith"]))
+
 func set_faith(team_id, amount):
-	self.faith[team_id] = amount
-	self.deck.update_faith(self.faith[team_id])
+	self.resources[team_id]["faith"] = amount
 	if team_id == self.teams[self.player_team_index]:
-		self.faith_label.set_text(str(amount))
+		update_faith_player()
 
 func add_faith(team_id, amount):
-	self.faith[team_id] += amount
-	self.deck.update_faith(self.faith[team_id])
+	self.resources[team_id]["faith"] += amount
 	if team_id == self.teams[self.player_team_index]:
-		self.faith_label.set_text(str(self.faith[team_id]))
+		update_faith_player()
 
 func load_map(map_teams, map_regions):
 	self.world.clear_island()
@@ -558,13 +581,11 @@ func fast_forward(val):
 
 func generate_cards(cards_num = 3):
 	var cards = []
-	# var cards_to_generate = self.world.tiles.values()\
-	# .filter(func(t): return t.data.team == self.teams[self.player_team_index] and t.data.building == Constants.Building.Shrine).size()
 	for _i in range(cards_num):
-		var power = Power.new(randi() % Power.Type.size(), (randi() % 5) + 1)
-		var card = card_prefab.instantiate()
-		card.init(power)
-		cards.append(card)
+		var card = Card.new(Card.DEFAULT_CARD)
+		var card_view = card_prefab.instantiate()
+		card_view.init(card)
+		cards.append(card_view)
 	return cards
 			
 func sacrifice_region(region_id, team_id):

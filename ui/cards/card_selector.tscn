@@ -1,7 +1,7 @@
 [gd_scene load_steps=4 format=3 uid="uid://bcmyj6p1buj71"]
 
 [ext_resource type="Theme" uid="uid://3t61g0061mea" path="res://assets/theme.tres" id="1_5stht"]
-[ext_resource type="Script" path="res://ui/power/card_selector.gd" id="2_u5w3x"]
+[ext_resource type="Script" path="res://ui/cards/card_selector.gd" id="2_u5w3x"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_jydyv"]
 bg_color = Color(0, 0, 0, 0.752941)
