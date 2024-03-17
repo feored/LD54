@@ -1,7 +1,7 @@
 extends Control
 class_name CardView
 
-signal picked()
+signal picked(card : CardView)
 
 enum State {Base, Hovering}
 
@@ -50,7 +50,6 @@ func animate(new_pos, new_rotation, new_z_index):
 func mouse_inside():
 	return Rect2(Vector2(), self.size).has_point(get_local_mouse_position())
 
-
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	self.config()
@@ -77,8 +76,11 @@ func init(c : Card):
 	
 func _gui_input(event):
 	if event is InputEventMouseButton:
+		Utils.log("Mouse event")
+		Utils.log(str(event.button_index) + " " + str(event.pressed) + " " + str(self.buyable))
 		if event.button_index == MOUSE_BUTTON_LEFT and event.pressed and self.buyable:
-			picked.emit()
+			Utils.log("Emitting picked")
+			self.picked.emit(self)
 
 
 func disconnect_picked():

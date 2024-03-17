@@ -8,48 +8,68 @@ const POSITION_CURVE = preload("res://ui/cards/position_curve.tres")
 const BASE_Z_INDEX = 0
 const HOVER_Z_INDEX = 1
 
+const DRAWN_MAX = 8
+
+const card_prefab = preload("res://ui/cards/card_view.tscn")
+var card_played : Callable
 
 var cards = []
-
+var drawn = []
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
-	pass  # Replace with function body.
+	for card_id in CardData.Cards.values():
+		for i in range(2):
+			var card  = CardData.get_instance(card_id)
+			self.cards.push_back(card)
+	self.cards.shuffle()
 
-func clear():
-	for card in self.cards:
-		card.queue_free()
-	self.cards.clear()
+func draw(amount: int):
+	var to_draw = min(min(amount, cards.size()), DRAWN_MAX - drawn.size())
+	for i in range(to_draw):
+		var cardView = card_prefab.instantiate()
+		cardView.card = cards.pop_front()
+		self.add_card(cardView)
 
 func add_card(card):
-	card.mouse_entered.connect(func(): try_hover(cards.find(card)))
-	card.mouse_exited.connect(func(): try_unhover(cards.find(card)))
-	cards.append(card)
+	card.mouse_entered.connect(func(): try_hover(card))
+	card.mouse_exited.connect(func(): try_unhover(card))
+	card.disconnect_picked()
+	card.picked.connect(func(card): card_played.call(card))
+	drawn.append(card)
 	add_child(card)
 	self.place_all()
 
 func place_all():
-	for i in range(cards.size()):
+	for i in range(drawn.size()):
 		var card_placement = place_card(i)
-		self.cards[i].set_position(card_placement[0])
-		#self.cards[i].rotation_degrees = card_placement[1]
+		self.drawn[i].set_position(card_placement[0])
+		#self.drawn[i].rotation_degrees = card_placement[1]
 
-func remove_card(card):
-	var card_id = cards.find(card)
+func discard(cardView):
+	var card_id = drawn.find(cardView)
 	if card_id != -1:
-		self.cards.remove_at(card_id)
-		card.queue_free()
+		self.drawn.remove_at(card_id)
+		self.cards.push_back(cardView.card)
+		cardView.queue_free()
 		self.place_all()
 
 func discard_random(amount: int):
-	var cards_copy = self.cards.duplicate()
-	cards_copy.shuffle()
-	var to_del = min(cards_copy.size(), amount)
+	var drawn_copy = self.drawn.duplicate()
+	drawn_copy.shuffle()
+	var to_del = min(drawn_copy.size(), amount)
 	for i in range(to_del):
-		self.remove_card(cards_copy[i])
+		self.discard(drawn_copy[i])
 
-func place_card(id):
-	var total = cards.size()
+func discard_all():
+	while drawn.size() > 0:
+		discard(drawn[0])
+	drawn.clear()
+
+
+func place_card(card):
+	var id = drawn.find(card)
+	var total = drawn.size()
 	var middle = floor(total / 2.0)
 	var num = id - middle
 	var x = CENTER.x + num * CARD_SPACING
@@ -64,37 +84,36 @@ func place_card(id):
 	
 
 
-func try_hover(card_id):
-	if self.cards[card_id].state == CardView.State.Base:
-		hover(card_id)
+func try_hover(card):
+	if card.state == CardView.State.Base:
+		hover(card)
 		#print("Start hovering ", card_id, " at ", card.position, " with mouse position : ", get_global_mouse_position())
 		
 
-func hover(card_id):
-	for i in range(cards.size()):
-		if i != card_id:
-			unhover(i)
-	var new_pos = self.cards[card_id].position
+func hover(card):
+	for i in range(drawn.size()):
+		if drawn[i] != card:
+			unhover(drawn[i])
+	var new_pos = card.position
 	new_pos.y -= 100
-	self.cards[card_id].animate(new_pos, 0, HOVER_Z_INDEX)
-	self.cards[card_id].state = CardView.State.Hovering
+	card.animate(new_pos, 0, HOVER_Z_INDEX)
+	card.state = CardView.State.Hovering
 
 
-func try_unhover(card_id):
-	var card = self.cards[card_id]
+func try_unhover(card):
 	if card.state == CardView.State.Hovering:
 		# check that the mouse is not just caught in a child
 		if not card.mouse_inside():
-			unhover(card_id)
+			unhover(card)
 			# print("Start unhovering ", card_id, " at ", card.position, " with mouse position : ", get_global_mouse_position())
 			
 
-func unhover(card_id):
-	self.cards[card_id].z_index = BASE_Z_INDEX
-	var card_placement = self.place_card(card_id)
-	self.cards[card_id].animate(card_placement[0], card_placement[1], BASE_Z_INDEX)
-	self.cards[card_id].state = CardView.State.Base
+func unhover(card):
+	card.z_index = BASE_Z_INDEX
+	var card_placement = self.place_card(card)
+	card.animate(card_placement[0], card_placement[1], BASE_Z_INDEX)
+	card.state = CardView.State.Base
 
 func update_faith(new_faith):
-	for card in cards:
+	for card in drawn:
 		card.set_buyable(card.card.cost <= new_faith)

@@ -2,7 +2,6 @@ extends Node2D
 
 const gameOverScreenPrefab = preload("res://ui/game_over_menu/game_over_screen.tscn")
 const shapePrefab = preload("res://world/tiles/highlight/shape.tscn")
-const card_prefab = preload("res://ui/cards/card_view.tscn")
 
 @onready var world = $"World"
 @onready var messenger = %Message
@@ -48,7 +47,7 @@ var spectating : bool = false
 
 var cards_to_pick = 1
 
-
+const CARDS_TO_DRAW = 5
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
@@ -61,7 +60,6 @@ func _ready():
 	self.load_map(Settings.current_map.teams, Settings.current_map.regions)
 	self.add_teams()
 
-	pick_cards()
 	self.set_faith(self.teams[self.player_team_index], self.world.tiles.values().filter(func(t): return t.data.team == self.teams[self.player_team_index] and t.data.building == Constants.Building.Temple).size())
 
 		
@@ -69,6 +67,9 @@ func _ready():
 	
 	self.game_started = true
 	self.world.camera.move_instant(self.world.map_to_local(closest_player_tile_coords()))
+	self.deck.card_played = Callable(self, "use_card")
+	self.deck.draw(5)
+	self.deck.update_faith(self.resources[self.current_team_id]["faith"])
 
 func add_teams():
 	self.bots.clear()
@@ -262,7 +263,7 @@ func lock_controls(val : bool):
 	self.endTurnButton.disabled = val
 
 func _on_turn_button_pressed():
-	self.deck.clear()
+	self.deck.discard_all()
 	self.apply_buildings(self.teams[self.player_team_index])
 	
 	lock_controls(true)
@@ -278,21 +279,15 @@ func _on_turn_button_pressed():
 	if tile_camera_move != Constants.NULL_COORDS:
 		await self.world.camera.move_smoothed(self.world.map_to_local(tile_camera_move), 5)
 
-	pick_cards()
 	self.set_faith(self.teams[self.player_team_index], self.world.tiles.values().filter(func(t): return t.data.team == self.teams[self.player_team_index] and t.data.building == Constants.Building.Temple).size())
 	Settings.input_locked = false
 	lock_controls(false)
 
-func add_cards(num):
-	var cards = generate_cards(num)
-	for c in cards:
-		c.picked.connect(func(): use_card(c))
-		self.deck.add_card(c)
-	self.deck.update_faith(self.resources[self.current_team_id]["faith"])
 
 func pick_cards():
+	return
 	var cards_to_generate = 3 + self.world.tiles.values().filter(func(t): return t.data.team == self.teams[self.player_team_index] and t.data.building == Constants.Building.Oracle).size()
-	add_cards(cards_to_generate)
+	# add_cards(cards_to_generate)
 
 func _on_cards_selected(cards):
 	for card in cards:
@@ -313,14 +308,29 @@ func apply_effect(effect):
 		Utils.log("Resource %s changed to %s" % [effect.resource, result])
 		if effect.resource == "faith":
 			update_faith_player()
+	elif effect.type == "action":
+		match effect.action:
+			"random_discard":
+				self.deck.discard_random(effect.value)
+			"draw":
+				self.deck.draw(effect.value)
 			
 
 func use_card(cardView):
 	self.used_card = cardView
 	cardView.highlight(true)
-	for effect in cardView.card.effects.filter(func(e): return e.event == "play"):
-		apply_effect(effect)
-	self.card_used(cardView)
+	
+	Utils.log("Card %s used" % cardView.card.name)
+	var play_powers = cardView.card.effects.filter(func(e): return e.event == "play" and e.type == "power")
+	if play_powers.size() > 0:
+		var play_power = play_powers[0]
+		match play_power.power:
+			"reinforcements":
+				set_reinforcements()
+			"sacrifice":
+				set_sacrifice()
+	else:
+		self.card_used(cardView)
 
 	
 	# match c.power.id:
@@ -355,8 +365,10 @@ func use_card(cardView):
 			
 	
 func card_used(c):
+	for effect in c.card.effects.filter(func(e): return e.event == "play" and e.type != "power"):
+		apply_effect(effect)
 	self.add_faith(self.teams[self.player_team_index], -c.card.cost)
-	self.deck.remove_card(c)
+	self.deck.discard(c)
 	self.used_card = null
 
 func closest_player_tile_coords():
@@ -466,6 +478,8 @@ func play_global_turn():
 	check_win_condition()
 	await self.world.mark_tiles(self.global_turn)
 	self.current_team_id = Utils.to_team_id(self.turn)
+	self.deck.draw(CARDS_TO_DRAW)
+	self.deck.update_faith(self.resources[self.current_team_id]["faith"])
 
 func play_turn(team_id):
 	self.current_team_id = team_id
@@ -579,20 +593,12 @@ func fast_forward(val):
 	self.world.camera.skip(val)
 	self.fastForwardButton.button_pressed = val
 
-func generate_cards(cards_num = 3):
-	var cards = []
-	for _i in range(cards_num):
-		var card = Card.new(Card.DEFAULT_CARD)
-		var card_view = card_prefab.instantiate()
-		card_view.init(card)
-		cards.append(card_view)
-	return cards
 			
 func sacrifice_region(region_id, team_id):
 	if self.world.regions[region_id].data.team == team_id:
 		# self.add_faith(team_id, self.world.regions[region_id].sacrifice())
 		self.world.regions[region_id].sacrifice()
-		self.add_cards(2)
+		#self.add_cards(2)
 		messenger.set_message("%s has sacrificed a region's inhabitants to the gods!" % Constants.TEAM_NAMES[team_id])
 	else:
 		Utils.log("Trying to sacrifice region %s, but it belongs to team %s" % [region_id, self.world.regions[region_id].data.team])
