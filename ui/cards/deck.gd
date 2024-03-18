@@ -42,7 +42,7 @@ func add_card(card):
 
 func place_all():
 	for i in range(drawn.size()):
-		var card_placement = place_card(i)
+		var card_placement = place_card(drawn[i])
 		self.drawn[i].set_position(card_placement[0])
 		#self.drawn[i].rotation_degrees = card_placement[1]
 
