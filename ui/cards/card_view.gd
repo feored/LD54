@@ -79,7 +79,6 @@ func _gui_input(event):
 		Utils.log("Mouse event")
 		Utils.log(str(event.button_index) + " " + str(event.pressed) + " " + str(self.buyable))
 		if event.button_index == MOUSE_BUTTON_LEFT and event.pressed and self.buyable:
-			Utils.log("Emitting picked")
 			self.picked.emit(self)
 
 

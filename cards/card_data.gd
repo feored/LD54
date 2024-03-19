@@ -1,7 +1,7 @@
 extends RefCounted
 class_name CardData
 
-enum Cards { Offering, Prayer, Garrison, LuckOfTheDraw, Sacrifice }
+enum Cards { Offering, Prayer, Garrison, LuckOfTheDraw, Sacrifice, Abundance }
 
 const data = {
 	Cards.Offering:
@@ -22,7 +22,7 @@ const data = {
 			{"event": "play", "type": "resource", "resource": "faith", "value": "faith + 2"},
 			{"event": "play", "type": "action", "action": "random_discard", "value": 2}
 		],
-		"description": "Gain 2 faith and discard up to 2 cards.",
+		"description": "Gain 2 faith and discard up to 2 random cards.",
 		"cost": 0,
 		"requirements": [],
 		"icon": "res://assets/icons/prayer.png"
@@ -53,11 +53,20 @@ const data = {
 			{"event": "play", "type": "power", "power": "sacrifice", "value": 0},
 			{"event": "play", "type": "action", "action": "draw", "value": 2}
 		],
-		"description": "Sacrifice all troops in a region to draw 2 cards.",
+		"description": "Sacrifice a region to draw 2 cards.",
 		"cost": 0,
 		"requirements": [],
 		"icon": "res://assets/icons/skull.png"
 	},
+	Cards.Abundance:
+	{
+		"name": "Abundance",
+		"effects": [{"event": "draw", "type": "action", "action": "draw", "value": 1}],
+		"description": "Draw 1 extra card every time you draw a card for 3 turns.",
+		"cost": 0,
+		"requirements": [],
+		"icon": "res://assets/icons/Plus.png"
+	}
 }
 
 

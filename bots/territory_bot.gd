@@ -1,4 +1,4 @@
-class_name TerritoryBot extends BaseBot
+class_name TerritoryBot extends Bot
 
 func evaluate_state(world_state, world):
 	var score = 0.0
