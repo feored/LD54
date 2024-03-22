@@ -4,9 +4,7 @@ enum Type { None, Move, Attack, Build, Sacrifice, EndTurn, DrawCard, PlayCard, D
 
 var duration_left : float;
 var type : Type;
-var effect : Effect;
 
-func _init(p_duration : float, p_type : Type, p_effect : Effect) -> void:
-	duration_left = p_duration;
+func _init(p_duration : float, p_type : Type) -> void:
+	self.duration_left = p_duration;
 	self.type = p_type;
-	self.effect = p_effect;

@@ -11,9 +11,8 @@ const shapePrefab = preload("res://world/tiles/highlight/shape.tscn")
 @onready var deck = %Deck
 @onready var faith_label = %FaithLabel
 
-
-
 var used_card = null
+
 enum MouseState {
 	None,
 	Sink,
@@ -24,30 +23,18 @@ enum MouseState {
 	Move
 }
 
-const player_team_index: int = 0
-
 var mouse_state = MouseState.None
 
 var mouse_item : Node = null
 var selected_region = null
 
-var teams : Array[int] = []
-var eliminated_teams : Array[int] = []
-var resources: Dictionary = {}
-
-var turn : int = 0
-var global_turn = 0
-var current_team_id = Utils.to_team_id(self.turn)
-
-var actions_history : Array[Action] = []
-var bots : Dictionary = {}
-
-var game_started : bool = false
 var spectating : bool = false
 
 var cards_to_pick = 1
 
 const CARDS_TO_DRAW = 5
+
+var game : Game
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
@@ -58,27 +45,13 @@ func _ready():
 	Sfx.enable_track(Sfx.Track.Boom)
 	self.card_selector.cards_picked.connect(Callable(self, "_on_cards_selected"))
 	self.load_map(Settings.current_map.teams, Settings.current_map.regions)
-	self.add_teams()
-
-	self.set_faith(self.teams[self.player_team_index], self.world.tiles.values().filter(func(t): return t.data.team == self.teams[self.player_team_index] and t.data.building == Constants.Building.Temple).size())
-
-		
-	# self.card_selector.init(cards, 3)
-	
-	self.game_started = true
+			
+	self.game.started = true
 	self.world.camera.move_instant(self.world.map_to_local(closest_player_tile_coords()))
 	self.deck.card_played = Callable(self, "use_card")
 	self.deck.draw(5)
-	self.deck.update_faith(self.resources[self.current_team_id]["faith"])
+	self.deck.update_faith(self.game.human.resources.faith)
 
-func add_teams():
-	self.bots.clear()
-	for team_id in teams:
-		if team_id != Constants.PLAYER_ID:
-			self.bots[team_id] = TerritoryBot.new(team_id, Personalities.AGGRESSIVE_PERSONALITY)
-	for team_id in teams:
-		self.resources[team_id] = {"faith": 0}
-			
 
 func clear_mouse_state():
 	if self.mouse_item != null:
@@ -91,13 +64,13 @@ func clear_mouse_state():
 		self.used_card = null	
 
 func sink_tiles(coords):
-	var action = Action.new(self.teams[self.player_team_index], Action.Type.Sink, 0, 0, coords )
-	actions_history.append(action)
+	var action = Action.new(self.game.human.team, Action.Type.Sink, 0, 0, coords )
+	self.game.actions_history.append(action)
 	self.apply_action(action)
 
 func emerge_tiles(coords):
-	var action = Action.new(self.teams[self.player_team_index], Action.Type.Emerge, 0, 0, coords )
-	actions_history.append(action)
+	var action = Action.new(self.game.human.team, Action.Type.Emerge, 0, 0, coords )
+	self.game.actions_history.append(action)
 	self.apply_action(action)
 
 func handle_tile_card(event):
@@ -141,7 +114,7 @@ func handle_building(event):
 	var coords_hovered = world.global_pos_to_coords(event.position)
 	var buildable = func(coords):
 		return world.tiles.has(coords)\
-		and world.tiles[coords].data.team == self.teams[self.player_team_index]\
+		and world.tiles[coords].data.team == self.game.human.team\
 		and world.tiles[coords].data.building == Constants.Building.None
 	if event is InputEventMouseMotion:
 		if buildable.call(coords_hovered):
@@ -154,7 +127,7 @@ func handle_building(event):
 			messenger.set_message("You can only build on land, my lord.")
 			clear_mouse_state()
 			return
-		if self.world.tiles[coords_hovered].data.team != self.teams[self.player_team_index]:
+		if self.world.tiles[coords_hovered].data.team != self.game.human.team:
 			messenger.set_message("You cam only build on territory you own, my lord.")
 			clear_mouse_state()
 			return
@@ -163,8 +136,8 @@ func handle_building(event):
 			clear_mouse_state()
 			return
 		var region_built = self.world.tiles[coords_hovered].data.region
-		var action = Action.new(self.teams[self.player_team_index], Action.Type.Build, region_built, Constants.NULL_REGION, [coords_hovered], self.used_card.power.get_building())
-		actions_history.append(action)
+		var action = Action.new(self.game.human.team, Action.Type.Build, region_built, Constants.NULL_REGION, [coords_hovered], self.used_card.power.get_building())
+		self.game.actions_history.append(action)
 		self.apply_action(action)
 		card_used(self.used_card)
 		clear_mouse_state()
@@ -173,7 +146,7 @@ func handle_building(event):
 func handle_plus(event):
 	var coords_hovered = world.global_pos_to_coords(event.position)
 	if event is InputEventMouseMotion:
-		if world.tiles.has(coords_hovered) and self.world.tiles[coords_hovered].data.team == self.teams[self.player_team_index]:
+		if world.tiles.has(coords_hovered) and self.world.tiles[coords_hovered].data.team == self.game.human.team:
 			self.mouse_item.self_modulate = Color(0.5, 1, 0.5)
 		else:
 			self.mouse_item.self_modulate = Color(1, 0.5, 0.5)
@@ -183,13 +156,13 @@ func handle_plus(event):
 			messenger.set_message("You can't send reinforcements to the sea, my lord.")
 			clear_mouse_state()
 			return
-		if self.world.tiles[coords_hovered].data.team != self.teams[self.player_team_index]:
+		if self.world.tiles[coords_hovered].data.team != self.game.human.team:
 			messenger.set_message("You cannot send reinforcements to the enemy!")
 			clear_mouse_state()
 			return
 		var region_reinforced = self.world.tiles[coords_hovered].data.region
-		var action = Action.new(self.teams[self.player_team_index], Action.Type.Reinforce, region_reinforced)
-		actions_history.append(action)
+		var action = Action.new(self.game.human.team, Action.Type.Reinforce, region_reinforced)
+		self.game.actions_history.append(action)
 		self.apply_action(action)
 		if self.used_card != null:
 			card_used(self.used_card)
@@ -198,7 +171,7 @@ func handle_plus(event):
 func handle_sacrifice(event):
 	var coords_hovered = world.global_pos_to_coords(event.position)
 	if event is InputEventMouseMotion:
-		if world.tiles.has(coords_hovered) and self.world.tiles[coords_hovered].data.team == self.teams[self.player_team_index]:
+		if world.tiles.has(coords_hovered) and self.world.tiles[coords_hovered].data.team == self.game.human.team:
 			self.mouse_item.self_modulate = Color(0.5, 1, 0.5)
 		else:
 			self.mouse_item.self_modulate = Color(1, 0.5, 0.5)
@@ -208,13 +181,13 @@ func handle_sacrifice(event):
 			messenger.set_message("There are no people to sacrifice here, my lord.")
 			clear_mouse_state()
 			return
-		if self.world.tiles[coords_hovered].data.team != self.teams[self.player_team_index]:
+		if self.world.tiles[coords_hovered].data.team != self.game.human.team:
 			messenger.set_message("You cannot sacrifice the people of a territory you don't own, my lord.")
 			clear_mouse_state()
 			return
 		var region_sacrificed = self.world.tiles[coords_hovered].data.region
-		var action = Action.new(self.teams[self.player_team_index], Action.Type.Sacrifice, region_sacrificed)
-		actions_history.append(action)
+		var action = Action.new(self.game.human.team, Action.Type.Sacrifice, region_sacrificed)
+		self.game.actions_history.append(action)
 		self.apply_action(action)
 		if self.used_card != null:
 			card_used(self.used_card)
@@ -228,7 +201,7 @@ func _unhandled_input(event):
 	elif event.is_action_released("skip"):
 		fast_forward(false)
 	elif event is InputEventMouse:
-		if Settings.input_locked or !game_started:
+		if Settings.input_locked or !self.game.started:
 			return
 		## Right click to cancel
 		if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_RIGHT and event.pressed:
@@ -264,7 +237,7 @@ func lock_controls(val : bool):
 
 func _on_turn_button_pressed():
 	self.deck.discard_all()
-	self.apply_buildings(self.teams[self.player_team_index])
+	self.apply_buildings(self.game.human.team)
 	
 	lock_controls(true)
 	clear_mouse_state()
@@ -272,21 +245,22 @@ func _on_turn_button_pressed():
 	Settings.input_locked = true
 
 	await play_global_turn()
-	generate_units(self.teams[self.player_team_index])
+	generate_units(self.game.human.team)
 	
 
 	var tile_camera_move = closest_player_tile_coords()
 	if tile_camera_move != Constants.NULL_COORDS:
 		await self.world.camera.move_smoothed(self.world.map_to_local(tile_camera_move), 5)
 
-	self.set_faith(self.teams[self.player_team_index], self.world.tiles.values().filter(func(t): return t.data.team == self.teams[self.player_team_index] and t.data.building == Constants.Building.Temple).size())
+	self.game.human.resources.faith += self.world.tiles.values().filter(func(t): return t.data.team == self.game.human.team and t.data.building == Constants.Building.Temple).size()
+	self.update_faith_player()
 	Settings.input_locked = false
 	lock_controls(false)
 
 
 func pick_cards():
 	return
-	var cards_to_generate = 3 + self.world.tiles.values().filter(func(t): return t.data.team == self.teams[self.player_team_index] and t.data.building == Constants.Building.Oracle).size()
+	var cards_to_generate = 3 + self.world.tiles.values().filter(func(t): return t.data.team == self.game.human.team and t.data.building == Constants.Building.Oracle).size()
 	# add_cards(cards_to_generate)
 
 func _on_cards_selected(cards):
@@ -302,11 +276,11 @@ func _on_cards_selected(cards):
 func apply_effect(effect):
 	if effect.type == "resource":
 		var expression = Expression.new()
-		expression.parse(effect.value, self.resources[self.current_team_id].keys())
-		var result = expression.execute(self.resources[self.current_team_id].values())
-		self.resources[self.current_team_id][effect.resource] = result
+		expression.parse(effect.value, self.game.current_player.resources.keys())
+		var result = expression.execute(self.game.current_player.resources.values())
+		self.game.current_player.resources[effect.resource] = result
 		Utils.log("Resource %s changed to %s" % [effect.resource, result])
-		if effect.resource == "faith":
+		if effect.resource == "faith" and !self.game.current_player.is_bot:
 			update_faith_player()
 	elif effect.type == "action":
 		match effect.action:
@@ -335,7 +309,7 @@ func use_card(cardView):
 	
 	# match c.power.id:
 	# 	Power.Type.Offering:
-	# 		self.add_faith(self.teams[self.player_team_index], 1)
+	# 		self.add_faith(self.game.human.team, 1)
 	# 		self.card_used(c)
 	# 	Power.Type.Sink:
 	# 		set_shape(c.power.shape.coords.keys(), MouseState.Sink)
@@ -346,9 +320,9 @@ func use_card(cardView):
 	# 	Power.Type.Reinforcements:
 	# 		set_reinforcements()
 	# 	Power.Type.Prayer:
-	# 		self.add_faith(self.teams[self.player_team_index], 1)
+	# 		self.add_faith(self.game.human.team, 1)
 	# 		self.card_used(c)
-	# 		self.deck.discard_random(2)
+	# 		self.deck.discard_random(2)f
 	# 	Power.Type.Barracks:
 	# 		set_building(c.power.get_building())
 	# 	Power.Type.Temple:
@@ -367,7 +341,8 @@ func use_card(cardView):
 func card_used(c):
 	for effect in c.card.effects.filter(func(e): return e.event == "play" and e.type != "power"):
 		apply_effect(effect)
-	self.add_faith(self.teams[self.player_team_index], -c.card.cost)
+	self.game.human.resources.faith -= c.card.cost
+	self.update_faith_player()
 	self.deck.discard(c)
 	self.used_card = null
 
@@ -376,7 +351,7 @@ func closest_player_tile_coords():
 	var closest_tile_distance = 100000
 	var camera_tile = self.world.local_to_map(self.world.camera.position)
 	for region in self.world.regions:
-		if self.world.regions[region].data.team == self.teams[self.player_team_index]:
+		if self.world.regions[region].data.team == self.game.human.team:
 			var center_tile = self.world.regions[region].center_tile()
 			var distance = Utils.distance(center_tile, camera_tile)
 			if distance < closest_tile_distance:
@@ -389,33 +364,21 @@ func check_global_turn_over():
 	return self.turn == self.teams.size() - 1
 
 func check_win_condition():
-	for team in self.teams:
-		if not regions_left(team) and team not in eliminated_teams:
-			eliminated_teams.append(team)
-			messenger.set_message(Constants.TEAM_NAMES[team] + " has been wiped from the island!")
-	var teams_alive = get_teams_alive()
-	if self.teams[self.player_team_index] not in teams_alive and teams_alive.size() > 1 and not spectating:
-		var game_won = self.teams[self.player_team_index] in teams_alive
+	for player in self.game.players:
+		if not regions_left(player.team) and not player.eliminated:
+			player.eliminated = true
+			messenger.set_message(Constants.TEAM_NAMES[player.team] + " has been wiped from the island!")
+	if self.game.human.eliminated and not spectating:
 		var gameOverScreen = gameOverScreenPrefab.instantiate()
-		gameOverScreen.init(game_won, self, true)
+		gameOverScreen.init(false, self, true)
 		self.add_child(gameOverScreen)
-	elif teams_alive.size() < 2:
-		var game_won = self.teams[self.player_team_index] in teams_alive
+	elif self.game.players.filter(func(p): return !p.eliminated).size() < 2:
 		var gameOverScreen = gameOverScreenPrefab.instantiate()
-		gameOverScreen.init(game_won, self, false)
+		gameOverScreen.init(true, self, false)
 		self.add_child(gameOverScreen)
-
-func get_teams_alive():
-	var teams_alive = []
-	for team in teams:
-		if regions_left(team):
-			teams_alive.append(team)
-	return teams_alive
-	
 
 func apply_buildings(team):
 	self.world.tiles.values().filter(func(t): return t.data.team == team and t.data.building != Constants.Building.None).map(func(t): apply_building(t.data.coords, t.data.building))
-
 
 func apply_building(tile_coords, building):
 	# var team_id = self.world.tiles[tile_coords].data.team
@@ -433,7 +396,7 @@ func clear_selected_region():
 	
 func handle_move(clicked_region):
 	mouse_state = MouseState.Move
-	if !(self.turn == self.player_team_index):
+	if self.game.current_player.is_bot:
 		clear_mouse_state()
 		return
 	if clicked_region.data.is_used:
@@ -443,7 +406,7 @@ func handle_move(clicked_region):
 		clear_mouse_state()
 		return
 	if selected_region == null:
-		if clicked_region.data.team == self.teams[self.player_team_index]:
+		if clicked_region.data.team == self.game.human.team:
 			self.selected_region = clicked_region.data.id
 			self.world.regions[selected_region].set_selected(true)
 			Sfx.play(Sfx.Track.Select)
@@ -455,52 +418,46 @@ func handle_move(clicked_region):
 			self.world.regions[selected_region].update()
 			clicked_region.update()
 			if self.world.regions[selected_region].data.units > 1:
-				var move = Action.new(self.teams[self.player_team_index], Action.Type.Move, selected_region, clicked_region.data.id )
-				actions_history.append(move)
+				var move = Action.new(self.game.human.team, Action.Type.Move, selected_region, clicked_region.data.id )
+				self.game.actions_history.append(move)
 				self.apply_action(move)
 			else:
 				messenger.set_message("My lord, we cannot leave this region undefended!")
 			clear_mouse_state()
 
 func play_global_turn():
-	self.turn += 1
+	self.game.next_turn()
 	world.path_lengths.clear()
 	world.path_lengths = world.all_path_lengths()
-	while not self.turn == 0:
-		self.messenger.set_message(Constants.TEAM_NAMES[self.teams[self.turn]] + " is making their move...")
-		generate_units(self.teams[self.turn])
-		await play_turn(Utils.to_team_id(self.turn))
-		self.turn = (self.turn + 1) % (self.teams.size())
-	
-	self.global_turn += 1
+	while self.game.current_player != self.game.human:
+		self.messenger.set_message(Constants.TEAM_NAMES[self.current_player.team] + " is making their move...")
+		generate_units(self.current_player.team)
+		await play_turn()
+		self.game.next_player()
 
 	await self.world.sink_marked()
 	check_win_condition()
 	await self.world.mark_tiles(self.global_turn)
-	self.current_team_id = Utils.to_team_id(self.turn)
 	self.deck.draw(CARDS_TO_DRAW)
 	self.deck.update_faith(self.resources[self.current_team_id]["faith"])
 
-func play_turn(team_id):
-	self.current_team_id = team_id
-	if team_id in self.eliminated_teams:
-		return
+func play_turn():
 	var playing = true
 	while playing:
 		var thread = Thread.new()
-		thread.start(self.bots[team_id].play_turn.bind(self.world))
+		thread.start(self.game.current_player.bot.play_turn.bind(self.world))
 		while thread.is_alive():
 			await Utils.wait(0.1)
 		# var bot_actions = thread.wait_to_finish()
-		var bot_actions = self.bots[team_id].play_turn(self.world) ## use for debugging
+		var bot_actions = self.game.current_player.bot.play_turn(self.world) ## use for debugging
 		for bot_action in bot_actions:
 			if bot_action.action == Action.Type.None:
 				playing = false
 				break
 			await apply_action(bot_action)
-			self.actions_history.append(bot_action)
+			self.game.actions_history.append(bot_action)
 			await Utils.wait(Settings.turn_time)
-	self.apply_buildings(self.teams[self.turn])
+	self.apply_buildings(self.current_player.team)
 	self.world.clear_regions_used()
 	await Utils.wait(Settings.turn_time)
 
@@ -540,24 +497,12 @@ func apply_action(action : Action):
 	check_win_condition()
 
 func update_faith_player():
-	self.deck.update_faith(self.resources[self.teams[self.player_team_index]]["faith"])
-	self.faith_label.set_text(str(self.resources[self.teams[self.player_team_index]]["faith"]))
-
-func set_faith(team_id, amount):
-	self.resources[team_id]["faith"] = amount
-	if team_id == self.teams[self.player_team_index]:
-		update_faith_player()
-
-func add_faith(team_id, amount):
-	self.resources[team_id]["faith"] += amount
-	if team_id == self.teams[self.player_team_index]:
-		update_faith_player()
+	self.deck.update_faith(self.game.human.resources.faith)
+	self.faith_label.set_text(str(self.game.human.resources.faith))
 
 func load_map(map_teams, map_regions):
 	self.world.clear_island()
-	self.teams.clear()
-	for t in map_teams:
-		self.teams.append(int(t)) ## json is parsed as floats
+	self.game = Game.new(map_teams.map(func(t): return int(t)))
 	self.world.load_regions(map_regions)
 
 func set_shape(shape_coords, mode):

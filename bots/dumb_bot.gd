@@ -1,4 +1,4 @@
-extends BaseBot
+extends Bot
 class_name DumbBot
 
 

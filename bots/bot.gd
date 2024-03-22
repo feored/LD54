@@ -1,5 +1,5 @@
 extends RefCounted
-class_name BaseBot
+class_name Bot
 
 var team = 0
 var personality: BotPersonality
