@@ -11,65 +11,84 @@ const HOVER_Z_INDEX = 1
 const DRAWN_MAX = 8
 
 const card_prefab = preload("res://ui/cards/card_view.tscn")
+
+@onready var draw_pile_label : Label = %DrawPileLabel
+@onready var discard_pile_label : Label = %DiscardPileLabel
+@onready var deck_view = %DeckView
+@onready var deck_view_popup : Popup = %DeckViewPopup
+
 var card_played : Callable
 
-var cards = []
-var drawn = []
+var draw_pile = []
+var discard_pile = []
+var play_pile = []
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	for card_id in CardData.Cards.values():
 		for i in range(2):
 			var card  = CardData.get_instance(card_id)
-			self.cards.push_back(card)
-	self.cards.shuffle()
+			self.draw_pile.push_back(card)
+	self.draw_pile.shuffle()
 
 func draw(amount: int):
-	var to_draw = min(min(amount, cards.size()), DRAWN_MAX - drawn.size())
-	for i in range(to_draw):
+	var to_draw = min(amount, DRAWN_MAX - self.play_pile.size())
+	var can_draw = min(to_draw, self.draw_pile.size())
+	for i in range(can_draw):
 		var cardView = card_prefab.instantiate()
-		cardView.card = cards.pop_front()
+		cardView.card = self.draw_pile.pop_front()
 		self.add_card(cardView)
+	if to_draw > can_draw:
+		for c in self.discard_pile:
+			self.draw_pile.push_back(c)
+		self.discard_pile.clear()
+		var can_still_draw = min(to_draw - can_draw, self.draw_pile.size())
+		for i in range(can_still_draw):
+			var cardView = card_prefab.instantiate()
+			cardView.card = self.draw_pile.pop_front()
+			self.add_card(cardView)
 
 func add_card(card):
 	card.mouse_entered.connect(func(): try_hover(card))
 	card.mouse_exited.connect(func(): try_unhover(card))
 	card.disconnect_picked()
 	card.picked.connect(func(card): card_played.call(card))
-	drawn.append(card)
+	self.play_pile.append(card)
 	add_child(card)
 	self.place_all()
+	update_display()
 
 func place_all():
-	for i in range(drawn.size()):
-		var card_placement = place_card(drawn[i])
-		self.drawn[i].set_position(card_placement[0])
-		#self.drawn[i].rotation_degrees = card_placement[1]
+	for i in range(self.play_pile.size()):
+		var card_placement = place_card(self.play_pile[i])
+		self.play_pile[i].set_position(card_placement[0])
+		#self.play_pile[i].rotation_degrees = card_placement[1]
 
 func discard(cardView):
-	var card_id = drawn.find(cardView)
+	var card_id = self.play_pile.find(cardView)
 	if card_id != -1:
-		self.drawn.remove_at(card_id)
-		self.cards.push_back(cardView.card)
+		self.play_pile.remove_at(card_id)
+		self.discard_pile.push_back(cardView.card)
 		cardView.queue_free()
 		self.place_all()
+	update_display()
 
 func discard_random(amount: int):
-	var drawn_copy = self.drawn.duplicate()
+	var drawn_copy = self.play_pile.duplicate()
 	drawn_copy.shuffle()
 	var to_del = min(drawn_copy.size(), amount)
 	for i in range(to_del):
 		self.discard(drawn_copy[i])
 
 func discard_all():
-	while drawn.size() > 0:
-		discard(drawn[0])
-	drawn.clear()
+	while self.play_pile.size() > 0:
+		discard(self.play_pile[0])
+	self.play_pile.clear()
 
 
 func place_card(card):
-	var id = drawn.find(card)
-	var total = drawn.size()
+	var id = self.play_pile.find(card)
+	var total = self.play_pile.size()
 	var middle = floor(total / 2.0)
 	var num = id - middle
 	var x = CENTER.x + num * CARD_SPACING
@@ -91,9 +110,9 @@ func try_hover(card):
 		
 
 func hover(card):
-	for i in range(drawn.size()):
-		if drawn[i] != card:
-			unhover(drawn[i])
+	for i in range(self.play_pile.size()):
+		if self.play_pile[i] != card:
+			unhover(self.play_pile[i])
 	var new_pos = card.position
 	new_pos.y -= 100
 	card.animate(new_pos, 0, HOVER_Z_INDEX)
@@ -115,5 +134,18 @@ func unhover(card):
 	card.state = CardView.State.Base
 
 func update_faith(new_faith):
-	for card in drawn:
+	for card in self.play_pile:
 		card.set_buyable(card.card.cost <= new_faith)
+
+
+func update_display():
+	self.draw_pile_label.text = str(self.draw_pile.size())
+	self.discard_pile_label.text = str(self.discard_pile.size())
+
+func _on_discard_pile_button_pressed():
+	self.deck_view.init(self.discard_pile)
+	self.deck_view_popup.show()
+
+func _on_draw_pile_button_pressed():
+	self.deck_view.init(self.draw_pile)
+	self.deck_view_popup.show()

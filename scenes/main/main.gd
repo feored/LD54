@@ -268,7 +268,7 @@ func _on_cards_selected(cards):
 		card.disconnect_picked()
 		card.picked.connect(func(): use_card(card))
 		self.deck.add_card(card)
-		self.deck.update_faith(self.resources[self.current_team_id]["faith"])
+		self.deck.update_faith(self.game.human.resources.faith)
 	Settings.input_locked = false
 	lock_controls(false)
 	
@@ -430,16 +430,16 @@ func play_global_turn():
 	world.path_lengths.clear()
 	world.path_lengths = world.all_path_lengths()
 	while self.game.current_player != self.game.human:
-		self.messenger.set_message(Constants.TEAM_NAMES[self.current_player.team] + " is making their move...")
-		generate_units(self.current_player.team)
+		self.messenger.set_message(Constants.TEAM_NAMES[self.game.current_player.team] + " is making their move...")
+		generate_units(self.game.current_player.team)
 		await play_turn()
 		self.game.next_player()
 
 	await self.world.sink_marked()
 	check_win_condition()
-	await self.world.mark_tiles(self.global_turn)
+	await self.world.mark_tiles(self.game.global_turn)
 	self.deck.draw(CARDS_TO_DRAW)
-	self.deck.update_faith(self.resources[self.current_team_id]["faith"])
+	self.deck.update_faith(self.game.human.resources.faith)
 
 func play_turn():
 	var playing = true
@@ -457,7 +457,7 @@ func play_turn():
 			await apply_action(bot_action)
 			self.game.actions_history.append(bot_action)
 			await Utils.wait(Settings.turn_time)
-	self.apply_buildings(self.current_player.team)
+	self.apply_buildings(self.game.current_player.team)
 	self.world.clear_regions_used()
 	await Utils.wait(Settings.turn_time)
 

@@ -1,10 +1,11 @@
-[gd_scene load_steps=13 format=3 uid="uid://ceoqtlfuehsvd"]
+[gd_scene load_steps=14 format=3 uid="uid://ceoqtlfuehsvd"]
 
 [ext_resource type="Script" path="res://scenes/main/main.gd" id="1_osaxm"]
 [ext_resource type="PackedScene" uid="uid://pu46mkcjdswb" path="res://ui/esc_menu/esc_menu.tscn" id="2_pam5e"]
 [ext_resource type="PackedScene" uid="uid://b8opucxucl032" path="res://world/world.tscn" id="2_unfjm"]
 [ext_resource type="Script" path="res://ui/cards/deck.gd" id="4_nj60x"]
 [ext_resource type="Theme" uid="uid://3t61g0061mea" path="res://assets/theme.tres" id="5_5yrco"]
+[ext_resource type="PackedScene" uid="uid://drjdjumbfief5" path="res://ui/cards/deck_view.tscn" id="6_7d42u"]
 [ext_resource type="Texture2D" uid="uid://vv0nl83x0ldq" path="res://assets/icons/forward.png" id="6_7usvn"]
 [ext_resource type="Texture2D" uid="uid://bxqvi5615lj3b" path="res://assets/icons/trident.png" id="6_mkg7a"]
 [ext_resource type="Script" path="res://ui/Message.gd" id="7_y3mfw"]
@@ -30,24 +31,82 @@ layer = 2
 [node name="Deck" type="Control" parent="UI"]
 unique_name_in_owner = true
 layout_mode = 3
-anchors_preset = 0
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme = ExtResource("5_5yrco")
 script = ExtResource("4_nj60x")
 
-[node name="DeckCount" type="Label" parent="UI/Deck"]
-unique_name_in_owner = true
-visible = false
-layout_mode = 0
-offset_left = 920.0
-offset_top = 469.0
-offset_right = 953.0
-offset_bottom = 495.0
-size_flags_vertical = 0
+[node name="DiscardPileButton" type="Button" parent="UI/Deck"]
+layout_mode = 2
+offset_left = 858.0
+offset_top = 478.0
+offset_right = 958.0
+offset_bottom = 499.0
 theme = ExtResource("5_5yrco")
-theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
-theme_override_constants/outline_size = 5
-text = "0 / 5"
-horizontal_alignment = 1
+text = "Discard Pile"
+alignment = 2
+
+[node name="DiscardPileLabel" type="Label" parent="UI/Deck/DiscardPileButton"]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 10.0
+offset_right = 10.0
+grow_horizontal = 2
+grow_vertical = 2
+text = "0"
 vertical_alignment = 1
+
+[node name="DrawPileButton" type="Button" parent="UI/Deck"]
+layout_mode = 2
+offset_left = 3.0
+offset_top = 477.0
+offset_right = 103.0
+offset_bottom = 498.0
+theme = ExtResource("5_5yrco")
+text = "Draw Pile"
+alignment = 2
+
+[node name="DrawPileLabel" type="Label" parent="UI/Deck/DrawPileButton"]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 10.0
+offset_right = 10.0
+grow_horizontal = 2
+grow_vertical = 2
+text = "0"
+vertical_alignment = 1
+
+[node name="DeckViewPopup" type="PopupPanel" parent="UI/Deck"]
+unique_name_in_owner = true
+position = Vector2i(60, 30)
+size = Vector2i(840, 400)
+transparent = true
+theme = ExtResource("5_5yrco")
+
+[node name="DeckViewContainer" type="PanelContainer" parent="UI/Deck/DeckViewPopup"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 4.0
+offset_top = 4.0
+offset_right = 836.0
+offset_bottom = 396.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="DeckView" parent="UI/Deck/DeckViewPopup/DeckViewContainer" instance=ExtResource("6_7d42u")]
+unique_name_in_owner = true
+layout_mode = 2
 
 [node name="Bar" type="PanelContainer" parent="UI"]
 anchors_preset = 12
@@ -122,5 +181,7 @@ text = "End Turn"
 unique_name_in_owner = true
 visible = false
 
+[connection signal="pressed" from="UI/Deck/DiscardPileButton" to="UI/Deck" method="_on_discard_pile_button_pressed"]
+[connection signal="pressed" from="UI/Deck/DrawPileButton" to="UI/Deck" method="_on_draw_pile_button_pressed"]
 [connection signal="toggled" from="UI/Bar/MarginContainer/HBoxContainer/HBoxContainer/FastForwardButton" to="." method="_on_fast_forward_button_toggled"]
 [connection signal="pressed" from="UI/Bar/MarginContainer/HBoxContainer/TurnButton" to="." method="_on_turn_button_pressed"]
