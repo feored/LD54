@@ -1,7 +1,7 @@
 extends RefCounted
 class_name CardData
 
-enum Cards { Offering, Prayer, Garrison, LuckOfTheDraw, Sacrifice, Abundance }
+enum Cards { Offering, Prayer, Garrison, LuckOfTheDraw, Sacrifice, Abundance, TrialAndError, Seal }
 
 const data = {
 	Cards.Offering:
@@ -13,6 +13,36 @@ const data = {
 		"cost": 0,
 		"requirements": [],
 		"icon": "res://assets/icons/trident.png"
+	},
+	Cards.Seal:
+	{
+		"name": "Seal",
+		"effects":
+		[
+			{
+				"event": "play",
+				"type": "power",
+				"power": "build",
+				"building": Constants.Building.Seal
+			},
+		],
+		"description": "Seal a region to make it resist one of Neptune's Marks.",
+		"cost": 1,
+		"requirements": [],
+		"icon": "res://assets/icons/seal.png"
+	},
+	Cards.TrialAndError:
+	{
+		"name": "Trial and Error",
+		"effects":
+		[
+			{"event": "play", "type": "action", "action": "draw", "value": 1},
+			{"event": "play", "type": "action", "action": "random_discard", "value": 1}
+		],
+		"description": "Draw 1 card and discard a random card.",
+		"cost": 1,
+		"requirements": [],
+		"icon": "res://assets/icons/card.png"
 	},
 	Cards.Prayer:
 	{

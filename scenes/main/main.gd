@@ -12,6 +12,7 @@ const shapePrefab = preload("res://world/tiles/highlight/shape.tscn")
 @onready var faith_label = %FaithLabel
 
 var used_card = null
+var current_building = Constants.Building.None
 
 enum MouseState {
 	None,
@@ -136,7 +137,8 @@ func handle_building(event):
 			clear_mouse_state()
 			return
 		var region_built = self.world.tiles[coords_hovered].data.region
-		var action = Action.new(self.game.human.team, Action.Type.Build, region_built, Constants.NULL_REGION, [coords_hovered], self.used_card.power.get_building())
+		var action = Action.new(self.game.human.team, Action.Type.Build, region_built, Constants.NULL_REGION, [coords_hovered], self.current_building)
+		current_building = Constants.Building.None
 		self.game.actions_history.append(action)
 		self.apply_action(action)
 		card_used(self.used_card)
@@ -303,6 +305,8 @@ func use_card(cardView):
 				set_reinforcements()
 			"sacrifice":
 				set_sacrifice()
+			"build":
+				set_building(play_power["building"])
 	else:
 		self.card_used(cardView)
 
@@ -529,6 +533,7 @@ func set_reinforcements():
 func set_building(building):
 	self.mouse_item = Sprite2D.new()
 	self.mouse_item.texture = Constants.BUILDINGS[building].texture
+	self.current_building = building
 	self.world.add_child(mouse_item)
 	self.mouse_item.global_position = get_viewport().get_mouse_position()
 	self.mouse_state = MouseState.Build
