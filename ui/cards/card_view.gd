@@ -76,8 +76,6 @@ func init(c : Card):
 	
 func _gui_input(event):
 	if event is InputEventMouseButton:
-		Utils.log("Mouse event")
-		Utils.log(str(event.button_index) + " " + str(event.pressed) + " " + str(self.buyable))
 		if event.button_index == MOUSE_BUTTON_LEFT and event.pressed and self.buyable:
 			self.picked.emit(self)
 
