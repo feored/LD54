@@ -59,7 +59,7 @@ func _on_generate_btn_pressed():
 
 
 func _on_play_btn_pressed():
-	Settings.current_map = Utils.get_save_data(self.world, self.teams)
+	Info.current_map = Utils.get_save_data(self.world, self.teams)
 	await SceneTransition.change_scene(SceneTransition.SCENE_MAIN_GAME)
 
 

@@ -21,10 +21,7 @@ func init(scenario):
 
 
 func _on_button_pressed():
-	var save_game = FileAccess.open("res://maps/" + self.path, FileAccess.READ)
-	var saved_state = JSON.parse_string(save_game.get_line())
-	save_game.close()
-	Settings.current_map = saved_state
+	Info.set_map(self.path)
 	await SceneTransition.change_scene(SceneTransition.SCENE_MAIN_GAME)
 
 

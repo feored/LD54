@@ -38,9 +38,6 @@ layout_mode = 2
 [node name="SuccessLabel" type="Label" parent="PanelContainer/MarginContainer/CenterContainer/VBoxContainer/VBoxContainer"]
 unique_name_in_owner = true
 layout_mode = 2
-theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
-theme_override_constants/outline_size = 3
-theme_override_font_sizes/font_size = 32
 text = "Victory!"
 horizontal_alignment = 1
 vertical_alignment = 1
@@ -64,8 +61,15 @@ layout_mode = 2
 text = "Spectate to the End"
 
 [node name="MenuButton" type="Button" parent="PanelContainer/MarginContainer/CenterContainer/VBoxContainer"]
+unique_name_in_owner = true
 layout_mode = 2
 text = "Main Menu"
 
+[node name="ContinueRunButton" type="Button" parent="PanelContainer/MarginContainer/CenterContainer/VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Continue Run"
+
 [connection signal="pressed" from="PanelContainer/MarginContainer/CenterContainer/VBoxContainer/Spectate" to="." method="_on_spectate_pressed"]
 [connection signal="pressed" from="PanelContainer/MarginContainer/CenterContainer/VBoxContainer/MenuButton" to="." method="_on_menu_button_pressed"]
+[connection signal="pressed" from="PanelContainer/MarginContainer/CenterContainer/VBoxContainer/ContinueRunButton" to="." method="_on_continue_run_button_pressed"]

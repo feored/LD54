@@ -43,7 +43,7 @@ func load_scenario(scenario_id):
 	var save_game = FileAccess.open("res://maps/" + Constants.scenarios[scenario_id].path, FileAccess.READ)
 	var saved_state = JSON.parse_string(save_game.get_line())
 	save_game.close()
-	Settings.current_map = saved_state
+	Info.current_map = saved_state
 	self.world.clear_island()
 	self.world.load_regions(saved_state["regions"])
 	self.scenario_description.text = Constants.scenarios[scenario_id].description

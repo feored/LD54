@@ -65,13 +65,19 @@ layout_mode = 2
 layout_mode = 2
 theme_override_constants/separation = 10
 
-[node name="PlayScenarioBtn" type="Button" parent="CanvasLayer/Control/CenterContainer/VBoxContainer/ButtonContainer/buttons"]
+[node name="NewRunBtn" type="Button" parent="CanvasLayer/Control/CenterContainer/VBoxContainer/ButtonContainer/buttons"]
 layout_mode = 2
-text = "Play Scenario"
+text = "New Run"
+
+[node name="PlayScenarioBtn" type="Button" parent="CanvasLayer/Control/CenterContainer/VBoxContainer/ButtonContainer/buttons"]
+visible = false
+layout_mode = 2
+text = "Scenario"
 
 [node name="PlayBtn" type="Button" parent="CanvasLayer/Control/CenterContainer/VBoxContainer/ButtonContainer/buttons"]
+visible = false
 layout_mode = 2
-text = "Play Random Map"
+text = "Random Map"
 
 [node name="SettingsBtn" type="Button" parent="CanvasLayer/Control/CenterContainer/VBoxContainer/ButtonContainer/buttons"]
 layout_mode = 2
@@ -116,6 +122,7 @@ unique_name_in_owner = true
 visible = false
 layout_mode = 2
 
+[connection signal="pressed" from="CanvasLayer/Control/CenterContainer/VBoxContainer/ButtonContainer/buttons/NewRunBtn" to="." method="_on_new_run_btn_pressed"]
 [connection signal="pressed" from="CanvasLayer/Control/CenterContainer/VBoxContainer/ButtonContainer/buttons/PlayScenarioBtn" to="." method="_on_play_scenario_btn_pressed"]
 [connection signal="pressed" from="CanvasLayer/Control/CenterContainer/VBoxContainer/ButtonContainer/buttons/PlayBtn" to="." method="_on_play_btn_pressed"]
 [connection signal="pressed" from="CanvasLayer/Control/CenterContainer/VBoxContainer/ButtonContainer/buttons/SettingsBtn" to="." method="_on_settings_btn_pressed"]

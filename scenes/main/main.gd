@@ -45,7 +45,7 @@ func _ready():
 	Music.play_track(Music.Track.World)
 	Sfx.enable_track(Sfx.Track.Boom)
 	self.card_selector.cards_picked.connect(Callable(self, "_on_cards_selected"))
-	self.load_map(Settings.current_map.teams, Settings.current_map.regions)
+	self.load_map(Info.current_map.teams, Info.current_map.regions)
 			
 	self.game.started = true
 	self.world.camera.move_instant(self.world.map_to_local(closest_player_tile_coords()))
@@ -254,7 +254,7 @@ func _on_turn_button_pressed():
 	if tile_camera_move != Constants.NULL_COORDS:
 		await self.world.camera.move_smoothed(self.world.map_to_local(tile_camera_move), 5)
 
-	self.game.human.resources.faith += self.world.tiles.values().filter(func(t): return t.data.team == self.game.human.team and t.data.building == Constants.Building.Temple).size()
+	self.game.human.resources.faith = self.world.tiles.values().filter(func(t): return t.data.team == self.game.human.team and t.data.building == Constants.Building.Temple).size()
 	self.update_faith_player()
 	Settings.input_locked = false
 	lock_controls(false)

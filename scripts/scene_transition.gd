@@ -5,6 +5,7 @@ const SCENE_MAIN_MENU = "res://scenes/main_menu/main_menu.tscn"
 const SCENE_MAP_GENERATOR = "res://scenes/map_generator/map_generator.tscn"
 const SCENE_MAP_EDITOR = "res://scenes/map_editor/map_editor.tscn"
 const SCENE_CAMPAIGN = "res://scenes/campaign/campaign.tscn"
+const SCENE_OVERWORLD = "res://scenes/overworld/overworld.tscn"
 
 @onready var animation_player = $AnimationPlayer
 # Called when the node enters the scene tree for the first time.

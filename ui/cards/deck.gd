@@ -25,10 +25,8 @@ var play_pile = []
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
-	for card_id in CardData.Cards.values():
-		for i in range(2):
-			var card  = CardData.get_instance(card_id)
-			self.draw_pile.push_back(card)
+	for c in Info.run.deck:
+		self.draw_pile.push_back(c)
 	self.draw_pile.shuffle()
 
 func draw(amount: int):

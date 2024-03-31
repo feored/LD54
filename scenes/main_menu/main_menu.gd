@@ -97,3 +97,8 @@ func _on_quit_button_pressed():
 
 func _on_map_editor_btn_pressed():
 	await SceneTransition.change_scene(SceneTransition.SCENE_MAP_EDITOR)
+
+
+func _on_new_run_btn_pressed():
+	Info.run = Run.new()
+	await SceneTransition.change_scene(SceneTransition.SCENE_OVERWORLD)
