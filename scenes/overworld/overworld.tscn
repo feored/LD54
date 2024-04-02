@@ -63,7 +63,7 @@ size_flags_vertical = 3
 
 [node name="LinesPanel" type="Panel" parent="VBoxContainer/ScrollContainer"]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(0, 600)
+custom_minimum_size = Vector2(0, 1200)
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
@@ -100,6 +100,8 @@ theme_override_styles/panel = SubResource("StyleBoxFlat_rxt7w")
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
+offset_right = 840.0
+offset_bottom = 400.0
 grow_horizontal = 2
 grow_vertical = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_67ue3")
