@@ -58,17 +58,19 @@ func config():
 	if self.card == null:
 		return
 	self.card_name.text = self.card.name
-	self.card_icon.texture = self.card.icon
-	# if self.power.id in [Power.Type.Sink, Power.Type.Emerge]:
-	# 	self.shape_gui.roll_num(self.power.strength, self.power.id)
-	# 	self.power.shape = self.shape_gui.shape
+	if self.card.icon != null:
+		self.card_icon.texture = self.card.icon
+	
+	# if self.card.power in ["emerge", "sink"]:
+	# 	var action_type : Action.Type = Action.Type.Emerge if self.card.power == "emerge" else Action.Type.Sink
+	# 	self.shape_gui.init_with_coords(self.card., action_type)
 	# 	self.shape_gui.show()
 	# 	self.card_icon.hide()
 	# else:
-	self.shape_gui.hide()
-	self.card_icon.show()
+	# 	self.shape_gui.hide()
+	# 	self.card_icon.show()
 	# self.btn.tooltip_text = self.power.description
-	self.card_description.text = self.card.description
+	self.card_description.text = "[center]" + self.card.description + "[/center]"
 	self.card_cost.text = str(self.card.cost)
 
 func init(c : Card):

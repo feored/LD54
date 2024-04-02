@@ -1,0 +1,191 @@
+{
+	"Offering": {
+		"name": "Offering",
+		"effects": [
+			{
+				"event": "play",
+				"type": "resource",
+				"resource": "faith",
+				"value": "faith + 1"
+			}
+		],
+		"description": "Make an offering to Neptune and gain 1 faith.",
+		"cost": 0,
+		"requirements": [],
+		"icon": "res://ui/cards/images/tridentsun.png"
+	},
+	"Seal": {
+		"name": "Seal",
+		"effects": [
+			{
+				"event": "play",
+				"type": "power",
+				"power": "build",
+				"building": "seal"
+			}
+		],
+		"description": "Seal a region to make it resist one of Neptune's Marks.",
+		"cost": 1,
+		"requirements": [],
+		"icon": "res://ui/cards/images/seal.png"
+	},
+	"TrialAndError": {
+		"name": "Trial and Error",
+		"effects": [
+			{
+				"event": "play",
+				"type": "action",
+				"action": "draw",
+				"value": 1
+			},
+			{
+				"event": "play",
+				"type": "action",
+				"action": "random_discard",
+				"value": 1
+			}
+		],
+		"description": "Draw 1 card and discard a random card.",
+		"cost": 1,
+		"requirements": [],
+		"icon": "res://assets/icons/card.png"
+	},
+	"Prayer": {
+		"name": "Prayer",
+		"effects": [
+			{
+				"event": "play",
+				"type": "resource",
+				"resource": "faith",
+				"value": "faith + 2"
+			},
+			{
+				"event": "play",
+				"type": "action",
+				"action": "random_discard",
+				"value": 2
+			}
+		],
+		"description": "Gain 2 faith and discard up to 2 random ",
+		"cost": 0,
+		"requirements": [],
+		"icon": "res://ui/cards/images/prayer.png"
+	},
+	"Garrison": {
+		"name": "Garrison",
+		"effects": [
+			{
+				"event": "play",
+				"type": "power",
+				"power": "reinforcements",
+				"value": 10
+			}
+		],
+		"description": "Summon 10 troops to the selected region.",
+		"cost": 1,
+		"requirements": [],
+		"icon": "res://ui/cards/images/warrior.png"
+	},
+	"LuckOfTheDraw": {
+		"name": "Luck of the Draw",
+		"effects": [
+			{
+				"event": "play",
+				"type": "action",
+				"action": "draw",
+				"value": 1
+			}
+		],
+		"description": "Draw 1 card.",
+		"cost": 1,
+		"requirements": [],
+		"icon": "res://ui/cards/images/questionmark.png"
+	},
+	"Sacrifice": {
+		"name": "Sacrifice",
+		"effects": [
+			{
+				"event": "play",
+				"type": "power",
+				"power": "sacrifice",
+				"value": 0
+			},
+			{
+				"event": "play",
+				"type": "action",
+				"action": "draw",
+				"value": 2
+			}
+		],
+		"description": "Sacrifice a region to draw 2 ",
+		"cost": 0,
+		"requirements": [],
+		"icon": "res://ui/cards/images/skull.png"
+	},
+	"SmallFlood": {
+		"name": "Small Flood",
+		"effects": [
+			{
+				"event": "play",
+				"type": "power",
+				"power": "sink",
+				"value": [
+					[
+						0,
+						0
+					]
+				]
+			}
+		],
+		"description": "Flood a single tile. The affected region will lose units in proportion.",
+		"icon": "res://ui/cards/images/wave.png",
+		"cost": 1,
+		"requirements": []
+	},
+	"PrimevalFlood": {
+		"name": "Primeval Flood",
+		"effects": [
+			{
+				"event": "play",
+				"type": "power",
+				"power": "sink",
+				"value": [
+					[
+						0,
+						0
+					],
+					[
+						0,
+						1
+					],
+					[
+						0,
+						-1
+					]
+				]
+			}
+		],
+		"description": "Flood three tiles. The affected region(s) will lose units in proportion.",
+		"cost": 3,
+		"requirements": []
+	},
+	"Creation": {
+		"name": "Creation",
+		"effects": [
+			{
+				"event": "play",
+				"type": "power",
+				"power": "emerge",
+				"value": [
+					[
+						0,
+						0
+					]
+				]
+			}
+		],
+		"description": "Emerge a single tile from the sea.",
+		"cost": 1,
+		"requirements": []
+	}
+}

@@ -34,6 +34,7 @@ Music="*res://scenes/music/music.tscn"
 Sfx="*res://scenes/music/sfx.gd"
 Personalities="*res://bots/personalities.gd"
 Info="*res://scripts/info.gd"
+Cards="*res://cards/cards.gd"
 
 [display]
 

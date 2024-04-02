@@ -12,6 +12,11 @@ func roll_num(num: int, action_type: Action.Type = Action.Type.Sink):
 	self.shape.highlight_type(action_type)
 	self.custom_control()
 
+func init_with_coords(coords: Array, action_type: Action.Type = Action.Type.Sink):
+	self.shape.init_with_coords(coords)
+	self.shape.highlight_type(action_type)
+	self.custom_control()
+
 func reroll():
 	self.shape.reroll()
 	self.shape.highlight_type()

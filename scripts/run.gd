@@ -8,11 +8,10 @@ var coords : Vector2i = Map.START
 
 func _init():
 	map = Map.new()
-	for card_id in CardData.Cards.values():
+	for card_id in Cards.data.keys():
 		for i in range(2):
-			var card  = CardData.get_instance(card_id)
+			var card  = Cards.get_instance(card_id)
 			self.deck.push_back(card)
-			self.deck.push_back(CardData.get_instance(CardData.Cards.Offering))
 
 func get_open_nodes():
 	if self.coords == Map.START:
