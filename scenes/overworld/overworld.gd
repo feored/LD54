@@ -39,7 +39,7 @@ func choose_location(k):
 	Info.run.map.map[k].visited = true
 	if Info.run.map.map[k].location == Map.Location.Map:
 		print("Picking random map")
-		Info.set_map(Constants.scenarios[0].path)#Utils.rng.randi() % Constants.scenarios.size()].path)
+		Info.set_map(Constants.scenarios[Utils.rng.randi() % Constants.scenarios.size()].path)
 		await SceneTransition.change_scene(SceneTransition.SCENE_MAIN_GAME)
 
 		

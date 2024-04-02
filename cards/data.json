@@ -137,7 +137,7 @@
 				]
 			}
 		],
-		"description": "Flood a single tile. The affected region will lose units in proportion.",
+		"description": "Sink a single tile. The affected region will lose units in proportion.",
 		"icon": "res://ui/cards/images/wave.png",
 		"cost": 1,
 		"requirements": []
@@ -165,7 +165,7 @@
 				]
 			}
 		],
-		"description": "Flood three tiles. The affected region(s) will lose units in proportion.",
+		"description": "Sink three tiles. The affected region(s) will lose units in proportion.",
 		"cost": 3,
 		"requirements": []
 	},

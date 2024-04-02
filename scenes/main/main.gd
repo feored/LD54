@@ -308,6 +308,14 @@ func use_card(cardView):
 				set_sacrifice()
 			"build":
 				set_building(play_power["building"])
+			"sink":
+				var s = Shape.new()
+				s.init_with_json_coords(play_power["value"])
+				set_shape(s.coords.keys(), MouseState.Sink)
+			"emerge":
+				var s = Shape.new()
+				s.init_with_json_coords(play_power["value"])
+				set_shape(s.coords.keys(), MouseState.Sink)
 	else:
 		self.card_used(cardView)
 
