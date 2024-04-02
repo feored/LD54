@@ -315,7 +315,7 @@ func use_card(cardView):
 			"emerge":
 				var s = Shape.new()
 				s.init_with_json_coords(play_power["value"])
-				set_shape(s.coords.keys(), MouseState.Sink)
+				set_shape(s.coords.keys(), MouseState.Emerge)
 	else:
 		self.card_used(cardView)
 

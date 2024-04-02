@@ -29,27 +29,6 @@
 		"requirements": [],
 		"icon": "res://ui/cards/images/seal.png"
 	},
-	"TrialAndError": {
-		"name": "Trial and Error",
-		"effects": [
-			{
-				"event": "play",
-				"type": "action",
-				"action": "draw",
-				"value": 1
-			},
-			{
-				"event": "play",
-				"type": "action",
-				"action": "random_discard",
-				"value": 1
-			}
-		],
-		"description": "Draw 1 card and discard a random card.",
-		"cost": 1,
-		"requirements": [],
-		"icon": "res://assets/icons/card.png"
-	},
 	"Prayer": {
 		"name": "Prayer",
 		"effects": [
@@ -66,7 +45,7 @@
 				"value": 2
 			}
 		],
-		"description": "Gain 2 faith and discard up to 2 random ",
+		"description": "Gain 2 faith and discard up to 2 randomly chosen cards.",
 		"cost": 0,
 		"requirements": [],
 		"icon": "res://ui/cards/images/prayer.png"
@@ -186,6 +165,7 @@
 		],
 		"description": "Emerge a single tile from the sea.",
 		"cost": 1,
+		"icon": "res://ui/cards/images/landemerge.png",
 		"requirements": []
 	}
 }
