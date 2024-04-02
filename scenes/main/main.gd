@@ -50,7 +50,7 @@ func _ready():
 	self.game.started = true
 	self.world.camera.move_instant(self.world.map_to_local(closest_player_tile_coords()))
 	self.deck.card_played = Callable(self, "use_card")
-	self.deck.draw(5)
+	await self.deck.draw(5)
 	self.deck.update_faith(self.game.human.resources.faith)
 
 
@@ -238,7 +238,7 @@ func lock_controls(val : bool):
 	self.endTurnButton.disabled = val
 
 func _on_turn_button_pressed():
-	self.deck.discard_all()
+	await self.deck.discard_all()
 	self.apply_buildings(self.game.human.team)
 	
 	lock_controls(true)
@@ -288,9 +288,9 @@ func apply_effect(effect):
 	elif effect.type == "action":
 		match effect.action:
 			"random_discard":
-				self.deck.discard_random(effect.value)
+				await self.deck.discard_random(effect.value)
 			"draw":
-				self.deck.draw(effect.value)
+				await self.deck.draw(effect.value)
 			
 
 func use_card(cardView):
@@ -353,7 +353,7 @@ func use_card(cardView):
 	
 func card_used(c):
 	for effect in c.card.effects.filter(func(e): return e.event == "play" and e.type != "power"):
-		apply_effect(effect)
+		await apply_effect(effect)
 	self.game.human.resources.faith -= c.card.cost
 	self.update_faith_player()
 	self.deck.discard(c)
@@ -451,7 +451,7 @@ func play_global_turn():
 	await self.world.sink_marked()
 	check_win_condition()
 	await self.world.mark_tiles(self.game.global_turn)
-	self.deck.draw(CARDS_TO_DRAW)
+	await self.deck.draw(CARDS_TO_DRAW)
 	self.deck.update_faith(self.game.human.resources.faith)
 
 func play_turn():

@@ -12,22 +12,22 @@ func evaluate_state(world_state, world):
 			bonus_teams_beaten += 1.0
 		
 	bonus_teams_beaten = bonus_teams_beaten / (world_state.team_regions.size() - 1)
-	Utils.log("Bonus teams beaten: ", bonus_teams_beaten)
+	# Utils.log("Bonus teams beaten: ", bonus_teams_beaten)
 	score += bonus_teams_beaten * self.personality.teams_alive
 
 
 	var n_regions = float(world.regions.size())
 	var bonus_regions_owned = regions_owned.size() / n_regions
-	Utils.log("Bonus regions owned: ", bonus_regions_owned)
+	# Utils.log("Bonus regions owned: ", bonus_regions_owned)
 	score += bonus_regions_owned * self.personality.regions
 	
 	var total_tiles = float(world.tiles.size())
 	var bonus_tiles_owned = world.tiles.values().filter(func(tile): return tile.data.team == self.team && !tile.data.marked).size() / total_tiles
-	Utils.log("Bonus tiles owned: ", bonus_tiles_owned)
+	# Utils.log("Bonus tiles owned: ", bonus_tiles_owned)
 	score += bonus_tiles_owned * self.personality.tiles
 	# either total units in map or delete
 	var bonus_units_owned = regions_owned.map(func(region): return region.units).reduce(func(a, b): return a + b, 0) 
-	Utils.log("Bonus units owned: ", bonus_units_owned)
+	# Utils.log("Bonus units owned: ", bonus_units_owned)
 	score += bonus_units_owned * self.personality.units
 
 	## malus for landlocked regions
@@ -156,7 +156,7 @@ func play_turn(world):
 		possible_moves = new_moves 
 		number_of_moves -= minus_moves
 
-	Utils.log("Calculated possible moves %s" % possible_moves.size())
+	# Utils.log("Calculated possible moves %s" % possible_moves.size())
 
 	var best_move = [Action.new(self.team, Action.Type.None)]
 	var best_score = default_score
@@ -164,7 +164,7 @@ func play_turn(world):
 		if possible_moves[move] > best_score:
 			best_move = move
 			best_score = possible_moves[move]
-	Utils.log("Best move %s / %s" % [best_move, best_score])
+	# Utils.log("Best move %s / %s" % [best_move, best_score])
 	return best_move
 
 

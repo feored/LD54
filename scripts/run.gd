@@ -1,6 +1,7 @@
 extends RefCounted
 class_name Run
 
+const STARTING_DECK = ["Offering", "Sacrifice", "SmallFlood", "Creation", "Hoplites", "CretanArchers", "CretanArchers"]
 
 var deck : Array[Card] = []
 var map : Map
@@ -8,10 +9,9 @@ var coords : Vector2i = Map.START
 
 func _init():
 	map = Map.new()
-	for card_id in Cards.data.keys():
-		for i in range(2):
-			var card  = Cards.get_instance(card_id)
-			self.deck.push_back(card)
+	for card_id in STARTING_DECK:
+		var card  = Cards.get_instance(card_id)
+		self.deck.push_back(card)
 
 func get_open_nodes():
 	if self.coords == Map.START:

@@ -36,6 +36,7 @@ func draw(amount: int):
 		var cardView = card_prefab.instantiate()
 		cardView.card = self.draw_pile.pop_front()
 		self.add_card(cardView)
+		await Utils.wait(0.1)
 	if to_draw > can_draw:
 		for c in self.discard_pile:
 			self.draw_pile.push_back(c)
@@ -45,6 +46,7 @@ func draw(amount: int):
 			var cardView = card_prefab.instantiate()
 			cardView.card = self.draw_pile.pop_front()
 			self.add_card(cardView)
+			await Utils.wait(0.1)
 
 func add_card(card):
 	card.mouse_entered.connect(func(): try_hover(card))
@@ -69,6 +71,7 @@ func discard(cardView):
 		self.discard_pile.push_back(cardView.card)
 		cardView.queue_free()
 		self.place_all()
+	await Utils.wait(0.1)
 	update_display()
 
 func discard_random(amount: int):
@@ -76,11 +79,11 @@ func discard_random(amount: int):
 	drawn_copy.shuffle()
 	var to_del = min(drawn_copy.size(), amount)
 	for i in range(to_del):
-		self.discard(drawn_copy[i])
+		await self.discard(drawn_copy[i])
 
 func discard_all():
 	while self.play_pile.size() > 0:
-		discard(self.play_pile[0])
+		await discard(self.play_pile[0])
 	self.play_pile.clear()
 
 

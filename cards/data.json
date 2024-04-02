@@ -50,17 +50,32 @@
 		"requirements": [],
 		"icon": "res://ui/cards/images/prayer.png"
 	},
-	"Garrison": {
-		"name": "Garrison",
+	"Hoplites": {
+		"name": "Hoplites",
 		"effects": [
 			{
 				"event": "play",
 				"type": "power",
 				"power": "reinforcements",
-				"value": 10
+				"value": 20
 			}
 		],
-		"description": "Summon 10 troops to the selected region.",
+		"description": "Summon 15 troops to the selected region.",
+		"cost": 3,
+		"requirements": [],
+		"icon": "res://ui/cards/images/warrior.png"
+	},
+	"CretanArchers": {
+		"name": "Cretan Archers",
+		"effects": [
+			{
+				"event": "play",
+				"type": "power",
+				"power": "reinforcements",
+				"value": 5
+			}
+		],
+		"description": "Summon 5 troops to the selected region.",
 		"cost": 1,
 		"requirements": [],
 		"icon": "res://ui/cards/images/warrior.png"
