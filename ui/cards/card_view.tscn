@@ -1,10 +1,11 @@
-[gd_scene load_steps=8 format=3 uid="uid://bgm1rdglwaad5"]
+[gd_scene load_steps=9 format=3 uid="uid://bgm1rdglwaad5"]
 
 [ext_resource type="Theme" uid="uid://3t61g0061mea" path="res://assets/theme.tres" id="1_k1qef"]
 [ext_resource type="Script" path="res://ui/cards/card_view.gd" id="2_i2460"]
 [ext_resource type="PackedScene" uid="uid://r53ogglkfpl1" path="res://ui/shapes/shape_gui.tscn" id="3_5y38j"]
 [ext_resource type="Texture2D" uid="uid://cndgawjlwcsaq" path="res://ui/cards/images/wave.png" id="3_kmydv"]
 [ext_resource type="Texture2D" uid="uid://bxqvi5615lj3b" path="res://assets/icons/trident.png" id="3_kq5p4"]
+[ext_resource type="Texture2D" uid="uid://cat4q0bmpcct" path="res://assets/tiles/grass.png" id="6_fuhhm"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_giqqo"]
 bg_color = Color(0.0756, 0.09114, 0.12, 1)
@@ -35,21 +36,23 @@ script = ExtResource("2_i2460")
 
 [node name="MarginContainer" type="MarginContainer" parent="."]
 layout_mode = 2
+mouse_filter = 2
 theme_override_constants/margin_left = 2
 theme_override_constants/margin_top = 2
 theme_override_constants/margin_right = 2
 theme_override_constants/margin_bottom = 2
 
-[node name="HBoxContainer" type="VBoxContainer" parent="MarginContainer"]
+[node name="Front" type="VBoxContainer" parent="MarginContainer"]
+unique_name_in_owner = true
 layout_mode = 2
 mouse_filter = 2
 
-[node name="PanelContainer" type="PanelContainer" parent="MarginContainer/HBoxContainer"]
+[node name="PanelContainer" type="PanelContainer" parent="MarginContainer/Front"]
 layout_mode = 2
 mouse_filter = 2
 theme_override_styles/panel = SubResource("StyleBoxEmpty_xvcwb")
 
-[node name="PowerIcon" type="TextureRect" parent="MarginContainer/HBoxContainer/PanelContainer"]
+[node name="PowerIcon" type="TextureRect" parent="MarginContainer/Front/PanelContainer"]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(85, 48)
 layout_mode = 2
@@ -58,21 +61,21 @@ texture = ExtResource("3_kmydv")
 expand_mode = 3
 stretch_mode = 6
 
-[node name="CenterContainer" type="CenterContainer" parent="MarginContainer/HBoxContainer/PanelContainer"]
+[node name="CenterContainer" type="CenterContainer" parent="MarginContainer/Front/PanelContainer"]
 visible = false
 layout_mode = 2
 
-[node name="ShapeGUI" parent="MarginContainer/HBoxContainer/PanelContainer/CenterContainer" instance=ExtResource("3_5y38j")]
+[node name="ShapeGUI" parent="MarginContainer/Front/PanelContainer/CenterContainer" instance=ExtResource("3_5y38j")]
 unique_name_in_owner = true
 visible = false
 layout_mode = 2
 
-[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer/HBoxContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer/Front"]
 layout_mode = 2
 size_flags_vertical = 3
 mouse_filter = 2
 
-[node name="PowerName" type="Label" parent="MarginContainer/HBoxContainer/VBoxContainer"]
+[node name="PowerName" type="Label" parent="MarginContainer/Front/VBoxContainer"]
 unique_name_in_owner = true
 layout_mode = 2
 theme_override_colors/font_color = Color(0.54902, 0.721569, 1, 1)
@@ -80,15 +83,16 @@ text = "Sink"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="PowerDescription" type="RichTextLabel" parent="MarginContainer/HBoxContainer/VBoxContainer"]
+[node name="PowerDescription" type="RichTextLabel" parent="MarginContainer/Front/VBoxContainer"]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_vertical = 3
 size_flags_stretch_ratio = 10.04
+mouse_filter = 2
 bbcode_enabled = true
 text = "Build a fort. The fort defends against 20 units when attacked."
 
-[node name="MarginContainer" type="MarginContainer" parent="MarginContainer/HBoxContainer/VBoxContainer"]
+[node name="MarginContainer" type="MarginContainer" parent="MarginContainer/Front/VBoxContainer"]
 layout_mode = 2
 mouse_filter = 2
 theme_override_constants/margin_left = 2
@@ -96,25 +100,42 @@ theme_override_constants/margin_top = 0
 theme_override_constants/margin_right = 2
 theme_override_constants/margin_bottom = 0
 
-[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer/HBoxContainer/VBoxContainer/MarginContainer"]
+[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer/Front/VBoxContainer/MarginContainer"]
 layout_mode = 2
 size_flags_stretch_ratio = 0.95
 mouse_filter = 2
 
-[node name="Label" type="Label" parent="MarginContainer/HBoxContainer/VBoxContainer/MarginContainer/HBoxContainer"]
+[node name="Label" type="Label" parent="MarginContainer/Front/VBoxContainer/MarginContainer/HBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
 text = "Cost"
 
-[node name="PowerCost" type="Label" parent="MarginContainer/HBoxContainer/VBoxContainer/MarginContainer/HBoxContainer"]
+[node name="PowerCost" type="Label" parent="MarginContainer/Front/VBoxContainer/MarginContainer/HBoxContainer"]
 unique_name_in_owner = true
 layout_mode = 2
 text = "3"
 
-[node name="Faith" type="TextureRect" parent="MarginContainer/HBoxContainer/VBoxContainer/MarginContainer/HBoxContainer"]
+[node name="Faith" type="TextureRect" parent="MarginContainer/Front/VBoxContainer/MarginContainer/HBoxContainer"]
 custom_minimum_size = Vector2(12, 0)
 layout_mode = 2
 mouse_filter = 2
 texture = ExtResource("3_kq5p4")
 expand_mode = 5
 stretch_mode = 5
+
+[node name="Back" type="PanelContainer" parent="MarginContainer"]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+theme_type_variation = &"GoldPanel"
+
+[node name="CenterContainer" type="CenterContainer" parent="MarginContainer/Back"]
+layout_mode = 2
+
+[node name="TextureRect" type="TextureRect" parent="MarginContainer/Back/CenterContainer"]
+layout_mode = 2
+texture = ExtResource("6_fuhhm")
+
+[node name="TextureRect2" type="TextureRect" parent="MarginContainer/Back/CenterContainer"]
+layout_mode = 2
+texture = ExtResource("3_kq5p4")

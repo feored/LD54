@@ -1,12 +1,10 @@
 extends Control
 
+
 const CARD_SIZE = Vector2(125, 165)
 const CARD_SPACING = 100
 const CENTER = Vector2(Constants.VIEWPORT_SIZE.x / 2.0 - CARD_SIZE.x/2.0, 425.0)
 const POSITION_CURVE = preload("res://ui/cards/position_curve.tres")
-
-const BASE_Z_INDEX = 0
-const HOVER_Z_INDEX = 1
 
 const DRAWN_MAX = 8
 
@@ -16,6 +14,7 @@ const card_prefab = preload("res://ui/cards/card_view.tscn")
 @onready var discard_pile_label : Label = %DiscardPileLabel
 @onready var deck_view = %DeckView
 @onready var deck_view_popup : Popup = %DeckViewPopup
+@onready var draw_pile_deck : Control
 
 var card_played : Callable
 
@@ -49,8 +48,6 @@ func draw(amount: int):
 			await Utils.wait(0.1)
 
 func add_card(card):
-	card.mouse_entered.connect(func(): try_hover(card))
-	card.mouse_exited.connect(func(): try_unhover(card))
 	card.disconnect_picked()
 	card.picked.connect(func(card): card_played.call(card))
 	self.play_pile.append(card)
@@ -61,6 +58,7 @@ func add_card(card):
 func place_all():
 	for i in range(self.play_pile.size()):
 		var card_placement = place_card(self.play_pile[i])
+		self.play_pile[i].base_position = card_placement[0]
 		self.play_pile[i].set_position(card_placement[0])
 		#self.play_pile[i].rotation_degrees = card_placement[1]
 
@@ -98,41 +96,10 @@ func place_card(card):
 		to_sample = 00
 	else:
 		to_sample = id / (total - 1.0)
-	var y = CENTER.y# - POSITION_CURVE.sample(to_sample)
+	var y = CENTER.y - POSITION_CURVE.sample(to_sample)
 	# print("x: ", x, "y: ", y, "to_sample: ", to_sample)
-	return [Vector2(x, y), 0]#2 * num]
+	return [Vector2(x, y), 2 * num]
 	
-
-
-func try_hover(card):
-	if card.state == CardView.State.Base:
-		hover(card)
-		#print("Start hovering ", card_id, " at ", card.position, " with mouse position : ", get_global_mouse_position())
-		
-
-func hover(card):
-	for i in range(self.play_pile.size()):
-		if self.play_pile[i] != card:
-			unhover(self.play_pile[i])
-	var new_pos = card.position
-	new_pos.y -= 100
-	card.animate(new_pos, 0, HOVER_Z_INDEX)
-	card.state = CardView.State.Hovering
-
-
-func try_unhover(card):
-	if card.state == CardView.State.Hovering:
-		# check that the mouse is not just caught in a child
-		if not card.mouse_inside():
-			unhover(card)
-			# print("Start unhovering ", card_id, " at ", card.position, " with mouse position : ", get_global_mouse_position())
-			
-
-func unhover(card):
-	card.z_index = BASE_Z_INDEX
-	var card_placement = self.place_card(card)
-	card.animate(card_placement[0], card_placement[1], BASE_Z_INDEX)
-	card.state = CardView.State.Base
 
 func update_faith(new_faith):
 	for card in self.play_pile:

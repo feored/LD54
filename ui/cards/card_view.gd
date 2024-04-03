@@ -3,10 +3,12 @@ class_name CardView
 
 signal picked(card : CardView)
 
-enum State {Base, Hovering}
+enum State { Idle, Hovered, Selected}
 
 const COLOR_INVALID = Color(1, 0.5, 0.5)
 const COLOR_VALID = Color(1, 1, 1)
+const BASE_Z_INDEX = 0
+const HOVER_Z_INDEX = 1
 const ANIMATION_TIMER = 0.15
 
 @onready var card_icon : TextureRect = %PowerIcon
@@ -14,13 +16,23 @@ const ANIMATION_TIMER = 0.15
 @onready var card_description : RichTextLabel = %PowerDescription
 @onready var card_cost : Label = %PowerCost
 @onready var shape_gui = %ShapeGUI
+@onready var front : Control = %Front
+@onready var back : Control = %Back
 
 var shape_prefab = preload("res://ui/shapes/shape_gui.tscn")
 
 var buyable: bool = true
 var tweens = []
 var card : Card
-var state : State = State.Base
+var state : State = State.Idle
+var card_ready : bool = true
+var base_position : Vector2
+
+func check_finished():
+	for t in self.tweens:
+		if t.is_valid() and t.is_running():
+			return
+	self.clear_tweens()
 
 func set_buyable(b : bool):
 	self.buyable = b
@@ -29,11 +41,14 @@ func set_buyable(b : bool):
 func clear_tweens():
 	for tween in self.tweens:
 		tween.kill()
-	tweens.clear()
+	self.tweens.clear()
+	self.card_ready = true
 
 func animate(new_pos, new_rotation, new_z_index):
+	self.card_ready = false
 	if self.tweens.size() > 0:
 		clear_tweens()
+
 	var tween_pos = self.create_tween().set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN)
 	tween_pos.tween_property(self, "position", new_pos, ANIMATION_TIMER)
 	
@@ -43,15 +58,35 @@ func animate(new_pos, new_rotation, new_z_index):
 	var tween_z_index = self.create_tween().set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN)
 	tween_z_index.tween_property(self, "z_index", new_z_index, ANIMATION_TIMER)
 
-	tweens = [tween_pos, tween_rotation, tween_z_index]
+	self.tweens = [tween_pos, tween_rotation, tween_z_index]
+
+	for t in self.tweens:
+		t.connect("finished", Callable(self, "check_finished"))
 	# Utils.log("Animating card to " + str(new_pos) + " " + str(new_rotation) + " " + str(new_z_index))
 
+func move(new_pos, flip = false):
+	if self.tweens.size() > 0:
+		clear_tweens()
+	var tween_pos = self.create_tween().set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN)
+	tween_pos.tween_property(self, "position", new_pos, ANIMATION_TIMER)
+	tweens = [tween_pos]
+
+
+func flip():
+	if self.front.visible:
+		self.front.hide()
+		self.back.show()
+	else:
+		self.front.show()
+		self.back.hide()
 
 func mouse_inside():
 	return Rect2(Vector2(), self.size).has_point(get_local_mouse_position())
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
+	self.mouse_entered.connect(Callable(self, "_on_mouse_entered"))
+	self.mouse_exited.connect(Callable(self, "_on_mouse_exited"))
 	self.config()
 
 func config():
@@ -88,3 +123,19 @@ func disconnect_picked():
 
 func highlight(to_highlight):
 	self.self_modulate = Color(0.5, 1, 0.5) if to_highlight else Color(1, 1, 1)
+
+func _on_mouse_entered():
+	print(self.card_ready)
+	if self.state == State.Idle and self.card_ready:
+		if not self.card_ready:
+			self.clear_tweens()
+		self.animate(Vector2(self.position.x, self.position.y - 100), 0, HOVER_Z_INDEX)
+		self.state = CardView.State.Hovered
+
+func _on_mouse_exited():
+		## Mouse actually exited
+		if self.state == State.Hovered:
+			if not self.card_ready:
+				self.clear_tweens()
+			self.animate(base_position, 0, BASE_Z_INDEX)
+			self.state = CardView.State.Idle
