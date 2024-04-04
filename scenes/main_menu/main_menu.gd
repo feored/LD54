@@ -1,7 +1,7 @@
 extends Node2D
 
 
-var scenarioPrefab = preload("res://ui/scenario/scenario.tscn")
+var scenarioPrefab = preload("res://scenes/scenario/scenario.tscn")
 
 @onready var world = $World
 @onready var allScenarios = %AllScenarios

@@ -1,0 +1,41 @@
+[gd_scene load_steps=7 format=3 uid="uid://btigklvjjr03x"]
+
+[ext_resource type="Script" path="res://scenes/end/end_game.gd" id="1_cjoyp"]
+[ext_resource type="Theme" uid="uid://3t61g0061mea" path="res://assets/theme.tres" id="1_cly16"]
+[ext_resource type="PackedScene" uid="uid://pu46mkcjdswb" path="res://scenes/esc_menu/esc_menu.tscn" id="2_f528p"]
+[ext_resource type="PackedScene" uid="uid://b8opucxucl032" path="res://world/world.tscn" id="3_d4uvc"]
+[ext_resource type="Texture2D" uid="uid://bqb71yil7a6l7" path="res://scenes/end/neptune.jpg" id="5_s45ej"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_1f8yt"]
+bg_color = Color(0, 0, 0, 0.360784)
+
+[node name="EndGame2" type="Node2D"]
+script = ExtResource("1_cjoyp")
+
+[node name="EscMenu" parent="." instance=ExtResource("2_f528p")]
+
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
+
+[node name="PanelContainer" type="PanelContainer" parent="CanvasLayer"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("1_cly16")
+theme_override_styles/panel = SubResource("StyleBoxFlat_1f8yt")
+
+[node name="TextureRect" type="TextureRect" parent="CanvasLayer/PanelContainer"]
+visible = false
+layout_mode = 2
+texture = ExtResource("5_s45ej")
+expand_mode = 3
+stretch_mode = 5
+
+[node name="Label" type="Label" parent="CanvasLayer/PanelContainer"]
+layout_mode = 2
+text = "Victory!"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="World" parent="." instance=ExtResource("3_d4uvc")]

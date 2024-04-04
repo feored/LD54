@@ -22,16 +22,16 @@ boot_splash/minimum_display_time=250
 
 [audio]
 
-buses/default_bus_layout="res://assets/music/audio_bus_layout.tres"
+buses/default_bus_layout="res://audio/music/audio_bus_layout.tres"
 
 [autoload]
 
 Constants="*res://scripts/constants.gd"
 Utils="*res://scenes/utils.tscn"
 Settings="*res://scripts/settings.gd"
-SceneTransition="*res://scenes/scene_transition.tscn"
-Music="*res://scenes/music/music.tscn"
-Sfx="*res://scenes/music/sfx.gd"
+SceneTransition="*res://scenes/scene_transition/scene_transition.tscn"
+Music="*res://audio/music.tscn"
+Sfx="*res://audio/sfx.gd"
 Personalities="*res://bots/personalities.gd"
 Info="*res://scripts/info.gd"
 Cards="*res://cards/cards.gd"

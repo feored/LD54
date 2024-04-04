@@ -88,9 +88,9 @@ func evaluate_state(world_state, world):
 				max_dist = world.path_lengths[r][y]
 	# Utils.log("Average distance: ", avg_dist, "max distance", max_dist)
 	var minus_dist = (avg_dist/(max_dist))
-	Utils.log("minust_dist", minus_dist)
+	# Utils.log("minust_dist", minus_dist)
 	score -= minus_dist * self.personality.distance
-	Utils.log("Final score: ", score)
+	# Utils.log("Final score: ", score)
 	return score
 		
 

@@ -7,9 +7,9 @@ signal deleted
 var NEUTRAL_COLOR = Color.hex(0x55d981ff)
 
 const SINK_ANIMATION = preload("res://world/tiles/sinking_animation.tscn")
-const NEUTRAL_TEXTURE = preload("res://assets/tiles/grass_neutral.png")
-const TEAM_TEXTURE = preload("res://assets/tiles/grass.png")
-const CRACKED_TEXTURE = preload("res://assets/tiles/grass_cracked_2.png")
+const NEUTRAL_TEXTURE = preload("res://world/tiles/images/grass_neutral.png")
+const TEAM_TEXTURE = preload("res://world/tiles/images/grass.png")
+const CRACKED_TEXTURE = preload("res://world/tiles/images/grass_cracked_2.png")
 
 @onready var animation_player = $AnimationPlayer
 @onready var border_objects = {

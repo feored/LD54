@@ -1,15 +1,15 @@
 [gd_scene load_steps=20 format=3 uid="uid://d2tu4itgwxsmx"]
 
 [ext_resource type="Shader" path="res://world/tiles/dissolve.gdshader" id="1_n7qej"]
-[ext_resource type="Texture2D" uid="uid://cat4q0bmpcct" path="res://assets/tiles/grass.png" id="1_ritjv"]
+[ext_resource type="Texture2D" uid="uid://cat4q0bmpcct" path="res://world/tiles/images/grass.png" id="2_2eho4"]
 [ext_resource type="Script" path="res://world/tiles/tile.gd" id="2_m7fn7"]
-[ext_resource type="Texture2D" uid="uid://bvs77v2s4itrk" path="res://assets/tiles/southeast.png" id="3_7ni8f"]
-[ext_resource type="Texture2D" uid="uid://b7hnvo0cyyf8t" path="res://assets/tiles/southwest.png" id="4_mnixl"]
-[ext_resource type="Texture2D" uid="uid://ce2xmckrhuymw" path="res://assets/tiles/east.png" id="5_fyxxv"]
-[ext_resource type="Texture2D" uid="uid://dskvw8n0ialxq" path="res://assets/tiles/northeast.png" id="6_krmdv"]
-[ext_resource type="Texture2D" uid="uid://bgixgnfsvo7b8" path="res://assets/tiles/west.png" id="7_j7cmw"]
-[ext_resource type="Texture2D" uid="uid://lscvgckqsnqh" path="res://assets/tiles/northwest.png" id="8_rltnp"]
-[ext_resource type="Texture2D" uid="uid://cp2ykpdtmxnwf" path="res://assets/tiles/barred_2.png" id="9_220g0"]
+[ext_resource type="Texture2D" uid="uid://bvs77v2s4itrk" path="res://world/tiles/images/southeast.png" id="4_85s1c"]
+[ext_resource type="Texture2D" uid="uid://b7hnvo0cyyf8t" path="res://world/tiles/images/southwest.png" id="5_ov1sp"]
+[ext_resource type="Texture2D" uid="uid://ce2xmckrhuymw" path="res://world/tiles/images/east.png" id="6_rbqqo"]
+[ext_resource type="Texture2D" uid="uid://dskvw8n0ialxq" path="res://world/tiles/images/northeast.png" id="7_kwenw"]
+[ext_resource type="Texture2D" uid="uid://bgixgnfsvo7b8" path="res://world/tiles/images/west.png" id="8_7x4mp"]
+[ext_resource type="Texture2D" uid="uid://lscvgckqsnqh" path="res://world/tiles/images/northwest.png" id="9_qm1lb"]
+[ext_resource type="Texture2D" uid="uid://cp2ykpdtmxnwf" path="res://world/tiles/images/barred_2.png" id="10_n8dup"]
 [ext_resource type="Texture2D" uid="uid://b5ytemdsbmim0" path="res://assets/icons/person.png" id="11_6lm02"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_6h2i5"]
@@ -87,31 +87,31 @@ turbulence_noise_strength = 2.65
 
 [node name="tile" type="Sprite2D"]
 material = SubResource("ShaderMaterial_6h2i5")
-texture = ExtResource("1_ritjv")
+texture = ExtResource("2_2eho4")
 script = ExtResource("2_m7fn7")
 
 [node name="southeast" type="Sprite2D" parent="."]
-texture = ExtResource("3_7ni8f")
+texture = ExtResource("4_85s1c")
 
 [node name="southwest" type="Sprite2D" parent="."]
-texture = ExtResource("4_mnixl")
+texture = ExtResource("5_ov1sp")
 
 [node name="east" type="Sprite2D" parent="."]
-texture = ExtResource("5_fyxxv")
+texture = ExtResource("6_rbqqo")
 
 [node name="northeast" type="Sprite2D" parent="."]
-texture = ExtResource("6_krmdv")
+texture = ExtResource("7_kwenw")
 
 [node name="west" type="Sprite2D" parent="."]
-texture = ExtResource("7_j7cmw")
+texture = ExtResource("8_7x4mp")
 
 [node name="northwest" type="Sprite2D" parent="."]
-texture = ExtResource("8_rltnp")
+texture = ExtResource("9_qm1lb")
 
 [node name="barred" type="Sprite2D" parent="."]
 visible = false
 self_modulate = Color(0, 0, 0, 0.501961)
-texture = ExtResource("9_220g0")
+texture = ExtResource("10_n8dup")
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
 libraries = {

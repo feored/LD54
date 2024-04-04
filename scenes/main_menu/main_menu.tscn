@@ -4,7 +4,7 @@
 [ext_resource type="PackedScene" uid="uid://b8opucxucl032" path="res://world/world.tscn" id="2_lh8t0"]
 [ext_resource type="Texture2D" uid="uid://vor8jw7uss6n" path="res://assets/logo.png" id="4_4x6ya"]
 [ext_resource type="Theme" uid="uid://3t61g0061mea" path="res://assets/theme.tres" id="4_qy1gp"]
-[ext_resource type="PackedScene" uid="uid://dj8sjte3quqjh" path="res://ui/settings_menu/settings_menu.tscn" id="5_xiaj1"]
+[ext_resource type="PackedScene" uid="uid://dj8sjte3quqjh" path="res://scenes/settings_menu/settings_menu.tscn" id="5_xiaj1"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ers1e"]
 bg_color = Color(1, 1, 1, 1)

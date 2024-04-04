@@ -1,6 +1,6 @@
 extends Node2D
 
-const gameOverScreenPrefab = preload("res://ui/game_over_menu/game_over_screen.tscn")
+const gameOverScreenPrefab = preload("res://scenes/game_over_menu/game_over_screen.tscn")
 const shapePrefab = preload("res://world/tiles/highlight/shape.tscn")
 
 @onready var world = $"World"

@@ -1,0 +1,45 @@
+[gd_scene load_steps=5 format=3 uid="uid://bfqpt3brj7bkv"]
+
+[ext_resource type="Theme" uid="uid://3t61g0061mea" path="res://assets/theme.tres" id="1_x7d3o"]
+[ext_resource type="Script" path="res://scenes/shapes/shape_gui_box.gd" id="2_dnaqr"]
+[ext_resource type="Texture2D" uid="uid://bxqvi5615lj3b" path="res://assets/icons/trident.png" id="2_ptp3o"]
+[ext_resource type="PackedScene" uid="uid://r53ogglkfpl1" path="res://scenes/shapes/shape_gui.tscn" id="3_v7aas"]
+
+[node name="ShapeGUIBox" type="PanelContainer"]
+size_flags_horizontal = 3
+theme = ExtResource("1_x7d3o")
+theme_type_variation = &"GoldPanel"
+script = ExtResource("2_dnaqr")
+
+[node name="HBoxContainer" type="HBoxContainer" parent="."]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="SacrificeButton" type="Button" parent="HBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+tooltip_text = "Pick this shape to sacrifice."
+text = "0"
+icon = ExtResource("2_ptp3o")
+icon_alignment = 2
+
+[node name="PanelContainer" type="PanelContainer" parent="HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="CenterContainer" type="CenterContainer" parent="HBoxContainer/PanelContainer"]
+layout_mode = 2
+
+[node name="ShapeGUI" parent="HBoxContainer/PanelContainer/CenterContainer" instance=ExtResource("3_v7aas")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="RerollButton" type="Button" parent="HBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+tooltip_text = "Reroll this shape (Costs 1 faith)."
+text = "Reroll"
+icon_alignment = 2
+
+[connection signal="pressed" from="HBoxContainer/SacrificeButton" to="." method="_on_sacrifice_button_pressed"]
+[connection signal="pressed" from="HBoxContainer/RerollButton" to="." method="_on_reroll_button_pressed"]

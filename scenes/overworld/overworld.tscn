@@ -1,11 +1,11 @@
 [gd_scene load_steps=8 format=3 uid="uid://cmlu6ehuwhuq6"]
 
 [ext_resource type="Script" path="res://scenes/overworld/overworld.gd" id="1_jmjyb"]
-[ext_resource type="PackedScene" uid="uid://pu46mkcjdswb" path="res://ui/esc_menu/esc_menu.tscn" id="3_3h7bd"]
+[ext_resource type="PackedScene" uid="uid://pu46mkcjdswb" path="res://scenes/esc_menu/esc_menu.tscn" id="3_3h7bd"]
 [ext_resource type="Theme" uid="uid://3t61g0061mea" path="res://assets/theme.tres" id="3_5sf0l"]
 [ext_resource type="Script" path="res://scenes/overworld/lines.gd" id="3_6xbs0"]
-[ext_resource type="PackedScene" uid="uid://drjdjumbfief5" path="res://ui/cards/deck_view.tscn" id="5_j7lb7"]
-[ext_resource type="Texture2D" uid="uid://b8pyinlxgl1t2" path="res://assets/tiles/grass_neutral.png" id="6_fdkno"]
+[ext_resource type="PackedScene" uid="uid://drjdjumbfief5" path="res://cards/cards/deck_view.tscn" id="5_j7lb7"]
+[ext_resource type="Texture2D" uid="uid://b8pyinlxgl1t2" path="res://world/tiles/images/grass_neutral.png" id="6_wy7hk"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_nfs5d"]
 bg_color = Color(0.788235, 0.705882, 0.592157, 1)
@@ -90,7 +90,7 @@ offset_left = 231.0
 offset_top = 168.0
 offset_right = 271.0
 offset_bottom = 200.0
-icon = ExtResource("6_fdkno")
+icon = ExtResource("6_wy7hk")
 
 [node name="TextureButton" type="TextureButton" parent="."]
 visible = false
@@ -99,6 +99,6 @@ offset_left = 135.0
 offset_top = 126.0
 offset_right = 175.0
 offset_bottom = 166.0
-texture_normal = ExtResource("6_fdkno")
+texture_normal = ExtResource("6_wy7hk")
 
 [connection signal="pressed" from="VBoxContainer/PanelContainer2/HBoxContainer/DeckViewBtn" to="." method="_on_deck_view_btn_pressed"]

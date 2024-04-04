@@ -2,14 +2,14 @@ extends Node2D
 var cloudPrefab = preload("res://world/clouds/cloud.tscn")
 
 const cloud_textures = [
-	preload("res://assets/clouds/cloud_1.png"),
-	preload("res://assets/clouds/cloud_2.png"),
-	preload("res://assets/clouds/cloud_3.png"),
-	preload("res://assets/clouds/cloud_3.png"),
-	preload("res://assets/clouds/cloud_3.png"),
-	preload("res://assets/clouds/cloud_3.png"),
-	preload("res://assets/clouds/cloud_4.png")
-]
+	preload("res://world/clouds/images/cloud_1.png"),
+	preload("res://world/clouds/images/cloud_2.png"),
+	preload("res://world/clouds/images/cloud_3.png"),
+	preload("res://world/clouds/images/cloud_3.png"),
+	preload("res://world/clouds/images/cloud_3.png"),
+	preload("res://world/clouds/images/cloud_3.png"),
+	preload("res://world/clouds/images/cloud_4.png")
+
 
 var cloud_chance = 0.1
 var elapsed = 0

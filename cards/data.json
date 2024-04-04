@@ -12,7 +12,7 @@
 		"description": "Make an offering to Neptune and gain 1 faith.",
 		"cost": 0,
 		"requirements": [],
-		"icon": "res://ui/cards/images/tridentsun.png"
+		"icon": "res://cards/images/tridentsun.png"
 	},
 	"Seal": {
 		"name": "Seal",
@@ -27,7 +27,7 @@
 		"description": "Seal a region to make it resist one of Neptune's Marks.",
 		"cost": 1,
 		"requirements": [],
-		"icon": "res://ui/cards/images/seal.png"
+		"icon": "res://cards/images/seal.png"
 	},
 	"Prayer": {
 		"name": "Prayer",
@@ -48,7 +48,7 @@
 		"description": "Gain 2 faith and discard up to 2 randomly chosen cards.",
 		"cost": 0,
 		"requirements": [],
-		"icon": "res://ui/cards/images/prayer.png"
+		"icon": "res://cards/images/prayer.png"
 	},
 	"Hoplites": {
 		"name": "Hoplites",
@@ -63,7 +63,7 @@
 		"description": "Summon 15 troops to the selected region.",
 		"cost": 3,
 		"requirements": [],
-		"icon": "res://ui/cards/images/warrior.png"
+		"icon": "res://cards/images/warrior.png"
 	},
 	"CretanArchers": {
 		"name": "Cretan Archers",
@@ -78,7 +78,7 @@
 		"description": "Summon 5 troops to the selected region.",
 		"cost": 1,
 		"requirements": [],
-		"icon": "res://ui/cards/images/warrior.png"
+		"icon": "res://cards/images/warrior.png"
 	},
 	"LuckOfTheDraw": {
 		"name": "Luck of the Draw",
@@ -93,7 +93,7 @@
 		"description": "Draw 1 card.",
 		"cost": 1,
 		"requirements": [],
-		"icon": "res://ui/cards/images/questionmark.png"
+		"icon": "res://cards/images/questionmark.png"
 	},
 	"Sacrifice": {
 		"name": "Sacrifice",
@@ -114,7 +114,7 @@
 		"description": "Sacrifice a region to draw 2 ",
 		"cost": 0,
 		"requirements": [],
-		"icon": "res://ui/cards/images/skull.png"
+		"icon": "res://cards/images/skull.png"
 	},
 	"SmallFlood": {
 		"name": "Small Flood",
@@ -132,7 +132,7 @@
 			}
 		],
 		"description": "Sink a single tile. The affected region will lose units in proportion.",
-		"icon": "res://ui/cards/images/wave.png",
+		"icon": "res://cards/images/wave.png",
 		"cost": 1,
 		"requirements": []
 	},
@@ -180,7 +180,7 @@
 		],
 		"description": "Emerge a single tile from the sea.",
 		"cost": 1,
-		"icon": "res://ui/cards/images/landemerge.png",
+		"icon": "res://cards/images/landemerge.png",
 		"requirements": []
 	}
 }
