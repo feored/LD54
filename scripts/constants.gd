@@ -1,5 +1,7 @@
 extends Node
 
+const VERSION = "0.1.0"
+
 ## World constants
 const VIEWPORT_SIZE = Vector2(960, 540)
 const TILE_SIZE = 24

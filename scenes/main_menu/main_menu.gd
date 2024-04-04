@@ -4,12 +4,13 @@ extends Node2D
 var scenarioPrefab = preload("res://ui/scenario/scenario.tscn")
 
 @onready var world = $World
-@onready var allScenarios = $"%AllScenarios"
-@onready var buttonContainer = $"%ButtonContainer"
-@onready var scenariosContainer = $"%ScenariosContainer"
-@onready var returnButton =	$"%ReturnButton"
-@onready var settingsContainer = $"%SettingsContainer"
-@onready var logo = $"%Logo"
+@onready var allScenarios = %AllScenarios
+@onready var buttonContainer = %ButtonContainer
+@onready var scenariosContainer = %ScenariosContainer
+@onready var returnButton =	%ReturnButton
+@onready var settingsContainer = %SettingsContainer
+@onready var logo = %Logo
+@onready var versionLabel = %VersionLabel
 
 enum State{
 	Main,
@@ -20,6 +21,8 @@ enum State{
 var elapsed = 0
 
 func _ready():
+	versionLabel.text = "v" + Constants.VERSION
+
 	self.show_state(State.Main)
 	Music.play_track(Music.Track.Menu)
 	Sfx.disable_track(Sfx.Track.Boom)
