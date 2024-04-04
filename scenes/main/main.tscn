@@ -1,4 +1,4 @@
-[gd_scene load_steps=21 format=3 uid="uid://ceoqtlfuehsvd"]
+[gd_scene load_steps=19 format=3 uid="uid://ceoqtlfuehsvd"]
 
 [ext_resource type="Script" path="res://scenes/main/main.gd" id="1_osaxm"]
 [ext_resource type="PackedScene" uid="uid://pu46mkcjdswb" path="res://ui/esc_menu/esc_menu.tscn" id="2_pam5e"]
@@ -29,16 +29,6 @@ corner_detail = 4
 anti_aliasing = false
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_xvcwb"]
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_njb02"]
-bg_color = Color(0.6, 0.6, 0.6, 0)
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_5wp5q"]
-bg_color = Color(0, 0, 0, 0.580392)
-corner_radius_top_left = 10
-corner_radius_top_right = 10
-corner_radius_bottom_right = 10
-corner_radius_bottom_left = 10
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_7ox3a"]
 
@@ -343,27 +333,10 @@ grow_vertical = 2
 text = "0"
 vertical_alignment = 1
 
-[node name="DeckViewPopup" type="PopupPanel" parent="UI/Deck"]
+[node name="DeckView" parent="UI/Deck" instance=ExtResource("6_7d42u")]
 unique_name_in_owner = true
-position = Vector2i(60, 30)
-size = Vector2i(840, 400)
-transparent = true
-theme = ExtResource("5_5yrco")
-theme_override_styles/panel = SubResource("StyleBoxFlat_njb02")
-
-[node name="DeckViewContainer" type="PanelContainer" parent="UI/Deck/DeckViewPopup"]
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_right = 840.0
-offset_bottom = 400.0
-grow_horizontal = 2
-grow_vertical = 2
-theme_override_styles/panel = SubResource("StyleBoxFlat_5wp5q")
-
-[node name="DeckView" parent="UI/Deck/DeckViewPopup/DeckViewContainer" instance=ExtResource("6_7d42u")]
-unique_name_in_owner = true
-layout_mode = 2
+visible = false
+layout_mode = 1
 
 [node name="Bar" type="PanelContainer" parent="UI"]
 anchors_preset = 12

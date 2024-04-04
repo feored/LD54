@@ -27,6 +27,7 @@ var card : Card
 var state : State = State.Idle
 var card_ready : bool = true
 var base_position : Vector2
+var is_static : bool = false
 
 func check_finished():
 	for t in self.tweens:
@@ -85,8 +86,6 @@ func mouse_inside():
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
-	self.mouse_entered.connect(Callable(self, "_on_mouse_entered"))
-	self.mouse_exited.connect(Callable(self, "_on_mouse_exited"))
 	self.config()
 
 func config():
@@ -107,6 +106,9 @@ func config():
 	# self.btn.tooltip_text = self.power.description
 	self.card_description.text = "[center]" + self.card.description + "[/center]"
 	self.card_cost.text = str(self.card.cost)
+	if not self.is_static:
+		self.mouse_entered.connect(Callable(self, "_on_mouse_entered"))
+		self.mouse_exited.connect(Callable(self, "_on_mouse_exited"))
 
 func init(c : Card):
 	self.card = c

@@ -5,7 +5,6 @@ const btnPrefab = preload("res://scenes/overworld/button.tscn")
 
 @onready var lines_panel = %LinesPanel
 @onready var deck_view = %DeckView
-@onready var deck_view_popup : Popup = %DeckViewPopup
 @onready var floor_label = %FloorLabel
 @onready var btns = {}
 
@@ -49,4 +48,4 @@ func _process(delta):
 
 func _on_deck_view_btn_pressed():
 	self.deck_view.init(Info.run.deck)
-	self.deck_view_popup.show()
+	self.deck_view.show()

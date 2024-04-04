@@ -16,6 +16,12 @@ func _process(delta):
 	pass
 
 
+func _gui_input(event):
+	if event is InputEventMouseButton:
+		if event.button_index == MOUSE_BUTTON_LEFT and event.pressed:
+			self.hide()
+
+
 func clean_up():
 	for card in self.card_container.get_children():
 		card.queue_free()
@@ -25,5 +31,6 @@ func init(cards: Array):
 	self.clean_up()
 	for c in cards:
 		var cardView = card_prefab.instantiate()
+		cardView.is_static = true
 		cardView.card = c
 		self.card_container.add_child(cardView)

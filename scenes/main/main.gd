@@ -12,7 +12,10 @@ const shapePrefab = preload("res://world/tiles/highlight/shape.tscn")
 @onready var faith_label = %FaithLabel
 
 var used_card = null
-var current_building = Constants.Building.None
+var current = {
+	"building": Constants.Building.None,
+	"reinforcements": 0
+}
 
 enum MouseState {
 	None,
@@ -137,8 +140,8 @@ func handle_building(event):
 			clear_mouse_state()
 			return
 		var region_built = self.world.tiles[coords_hovered].data.region
-		var action = Action.new(self.game.human.team, Action.Type.Build, region_built, Constants.NULL_REGION, [coords_hovered], self.current_building)
-		current_building = Constants.Building.None
+		var action = Action.new(self.game.human.team, Action.Type.Build, region_built, Constants.NULL_REGION, [coords_hovered], self.current.building)
+		current.building = Constants.Building.None
 		self.game.actions_history.append(action)
 		self.apply_action(action)
 		card_used(self.used_card)
@@ -163,7 +166,7 @@ func handle_plus(event):
 			clear_mouse_state()
 			return
 		var region_reinforced = self.world.tiles[coords_hovered].data.region
-		var action = Action.new(self.game.human.team, Action.Type.Reinforce, region_reinforced)
+		var action = Action.new(self.game.human.team, Action.Type.Reinforce, region_reinforced, 0, [], self.current.reinforcements)
 		self.game.actions_history.append(action)
 		self.apply_action(action)
 		if self.used_card != null:
@@ -303,7 +306,7 @@ func use_card(cardView):
 		var play_power = play_powers[0]
 		match play_power.power:
 			"reinforcements":
-				set_reinforcements()
+				set_reinforcements(play_power["value"])
 			"sacrifice":
 				set_sacrifice()
 			"build":
@@ -501,7 +504,7 @@ func apply_action(action : Action):
 		Action.Type.Build:
 			self.world.tiles[action.tiles[0]].set_building(action.misc)
 		Action.Type.Reinforce:
-			self.world.regions[action.region_from].data.units += 10
+			self.world.regions[action.region_from].data.units += action.misc
 			self.world.regions[action.region_from].update()
 		Action.Type.None:
 			pass
@@ -532,9 +535,10 @@ func set_sacrifice():
 	self.mouse_item.global_position = get_viewport().get_mouse_position()
 	self.mouse_state = MouseState.Sacrifice
 
-func set_reinforcements():
+func set_reinforcements(new_reinforcements):
 	self.mouse_item = Sprite2D.new()
 	self.mouse_item.texture = load("res://assets/icons/Plus.png")
+	self.current.reinforcements = new_reinforcements
 	self.world.add_child(mouse_item)
 	self.mouse_item.global_position = get_viewport().get_mouse_position()
 	self.mouse_state = MouseState.Reinforce
@@ -542,7 +546,7 @@ func set_reinforcements():
 func set_building(building):
 	self.mouse_item = Sprite2D.new()
 	self.mouse_item.texture = Constants.BUILDINGS[building].texture
-	self.current_building = building
+	self.current.building = building
 	self.world.add_child(mouse_item)
 	self.mouse_item.global_position = get_viewport().get_mouse_position()
 	self.mouse_state = MouseState.Build

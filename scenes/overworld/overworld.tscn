@@ -1,4 +1,4 @@
-[gd_scene load_steps=10 format=3 uid="uid://cmlu6ehuwhuq6"]
+[gd_scene load_steps=8 format=3 uid="uid://cmlu6ehuwhuq6"]
 
 [ext_resource type="Script" path="res://scenes/overworld/overworld.gd" id="1_jmjyb"]
 [ext_resource type="PackedScene" uid="uid://pu46mkcjdswb" path="res://ui/esc_menu/esc_menu.tscn" id="3_3h7bd"]
@@ -9,16 +9,6 @@
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_nfs5d"]
 bg_color = Color(0.788235, 0.705882, 0.592157, 1)
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_rxt7w"]
-bg_color = Color(0.6, 0.6, 0.6, 0)
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_67ue3"]
-bg_color = Color(0, 0, 0, 0.580392)
-corner_radius_top_left = 10
-corner_radius_top_right = 10
-corner_radius_bottom_right = 10
-corner_radius_bottom_left = 10
 
 [node name="Overworld" type="Control"]
 layout_mode = 3
@@ -88,26 +78,9 @@ text = "Floor 0"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="DeckViewPopup" type="PopupPanel" parent="VBoxContainer/PanelContainer2"]
+[node name="DeckView" parent="VBoxContainer/PanelContainer2" instance=ExtResource("5_j7lb7")]
 unique_name_in_owner = true
-position = Vector2i(60, 30)
-size = Vector2i(840, 400)
-transparent = true
-theme = ExtResource("3_5sf0l")
-theme_override_styles/panel = SubResource("StyleBoxFlat_rxt7w")
-
-[node name="DeckViewContainer" type="PanelContainer" parent="VBoxContainer/PanelContainer2/DeckViewPopup"]
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_right = 840.0
-offset_bottom = 400.0
-grow_horizontal = 2
-grow_vertical = 2
-theme_override_styles/panel = SubResource("StyleBoxFlat_67ue3")
-
-[node name="DeckView" parent="VBoxContainer/PanelContainer2/DeckViewPopup/DeckViewContainer" instance=ExtResource("5_j7lb7")]
-unique_name_in_owner = true
+visible = false
 layout_mode = 2
 
 [node name="Button" type="Button" parent="."]
@@ -118,5 +91,14 @@ offset_top = 168.0
 offset_right = 271.0
 offset_bottom = 200.0
 icon = ExtResource("6_fdkno")
+
+[node name="TextureButton" type="TextureButton" parent="."]
+visible = false
+layout_mode = 0
+offset_left = 135.0
+offset_top = 126.0
+offset_right = 175.0
+offset_bottom = 166.0
+texture_normal = ExtResource("6_fdkno")
 
 [connection signal="pressed" from="VBoxContainer/PanelContainer2/HBoxContainer/DeckViewBtn" to="." method="_on_deck_view_btn_pressed"]

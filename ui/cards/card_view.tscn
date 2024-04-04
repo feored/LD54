@@ -24,7 +24,7 @@ anti_aliasing = false
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_xvcwb"]
 
 [node name="PowerCard" type="PanelContainer"]
-custom_minimum_size = Vector2(125, 0)
+custom_minimum_size = Vector2(125, 165)
 offset_right = 125.0
 offset_bottom = 165.0
 pivot_offset = Vector2(62.5, 82.5)

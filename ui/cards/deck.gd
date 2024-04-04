@@ -13,7 +13,6 @@ const card_prefab = preload("res://ui/cards/card_view.tscn")
 @onready var draw_pile_label : Label = %DrawPileLabel
 @onready var discard_pile_label : Label = %DiscardPileLabel
 @onready var deck_view = %DeckView
-@onready var deck_view_popup : Popup = %DeckViewPopup
 @onready var draw_pile_deck : Control
 
 var card_played : Callable
@@ -96,9 +95,9 @@ func place_card(card):
 		to_sample = 00
 	else:
 		to_sample = id / (total - 1.0)
-	var y = CENTER.y - POSITION_CURVE.sample(to_sample)
+	var y = CENTER.y #- POSITION_CURVE.sample(to_sample)
 	# print("x: ", x, "y: ", y, "to_sample: ", to_sample)
-	return [Vector2(x, y), 2 * num]
+	return [Vector2(x, y), 0]#2 * num]
 	
 
 func update_faith(new_faith):
@@ -112,8 +111,8 @@ func update_display():
 
 func _on_discard_pile_button_pressed():
 	self.deck_view.init(self.discard_pile)
-	self.deck_view_popup.show()
+	self.deck_view.show()
 
 func _on_draw_pile_button_pressed():
 	self.deck_view.init(self.draw_pile)
-	self.deck_view_popup.show()
+	self.deck_view.show()
