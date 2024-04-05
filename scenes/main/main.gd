@@ -323,37 +323,6 @@ func use_card(cardView):
 		self.card_used(cardView)
 
 	
-	# match c.power.id:
-	# 	Power.Type.Offering:
-	# 		self.add_faith(self.game.human.team, 1)
-	# 		self.card_used(c)
-	# 	Power.Type.Sink:
-	# 		set_shape(c.power.shape.coords.keys(), MouseState.Sink)
-	# 	Power.Type.Emerge:
-	# 		set_shape(c.power.shape.coords.keys(), MouseState.Emerge)
-	# 	Power.Type.Sacrifice:
-	# 		set_sacrifice()
-	# 	Power.Type.Reinforcements:
-	# 		set_reinforcements()
-	# 	Power.Type.Prayer:
-	# 		self.add_faith(self.game.human.team, 1)
-	# 		self.card_used(c)
-	# 		self.deck.discard_random(2)f
-	# 	Power.Type.Barracks:
-	# 		set_building(c.power.get_building())
-	# 	Power.Type.Temple:
-	# 		set_building(c.power.get_building())
-	# 	Power.Type.Fort:
-	# 		set_building(c.power.get_building())
-	# 	Power.Type.Oracle:
-	# 		set_building(c.power.get_building())
-	# 	Power.Type.Seal:
-	# 		set_building(c.power.get_building())
-	# 	_:
-	# 		Utils.log("Unknown power type: %s, %s" % [c.power.id, c.power.name])
-	# 		self.card_used(c)
-			
-	
 func card_used(c):
 	for effect in c.card.effects.filter(func(e): return e.event == "play" and e.type != "power"):
 		await apply_effect(effect)
@@ -544,9 +513,10 @@ func set_reinforcements(new_reinforcements):
 	self.mouse_state = MouseState.Reinforce
 
 func set_building(building):
+	var b = Constants.BUILDING_ENUM[building]
 	self.mouse_item = Sprite2D.new()
-	self.mouse_item.texture = Constants.BUILDINGS[building].texture
-	self.current.building = building
+	self.mouse_item.texture = Constants.BUILDINGS[b].texture
+	self.current.building = b
 	self.world.add_child(mouse_item)
 	self.mouse_item.global_position = get_viewport().get_mouse_position()
 	self.mouse_state = MouseState.Build

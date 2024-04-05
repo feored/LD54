@@ -116,6 +116,15 @@ const MENU_WAIT_TIME = 1
 ## Buildings
 enum Building { None, Barracks, Temple, Fort, Oracle, Seal }
 
+const BUILDING_ENUM = {
+	"None": Building.None,
+	"Barracks": Building.Barracks,
+	"Temple": Building.Temple,
+	"Fort": Building.Fort,
+	"Oracle": Building.Oracle,
+	"Seal": Building.Seal,
+}
+
 const BUILDINGS = {
 	Building.Barracks:
 	{
@@ -155,39 +164,6 @@ const BUILDINGS = {
 		"If this territory is marked by Neptune, it will resist sinking. The seal will be destroyed.",
 	},
 }
-
-## Scenarios
-const SCENARIOS = [
-	{"title": "Confrontation", "description": "One on one.", "path": "confrontation.json"},
-	# {"title": "Flower", "description": "The Flower", "path": "flower.json"},
-	{"title": "The Blob", "description": "All paths lead into the blob.", "path": "blob.json"},
-	# {"title": "The Wheel", "description": "wheel", "path": "wheel.json"},
-	{"title": "Triangles", "description": "Triangles", "path": "triangles.json"},
-	{
-		"title": "The Fortress",
-		"description":
-		"You are outnumbered, surrounded by powerful enemies. Only by the grace of the gods may you survive this trial.",
-		"path": "fortress.json"
-	},
-	{
-		"title": "The Pretzel",
-		"description": "A free for all, but every kingdom starts with an established base.",
-		"path": "homebase.json"
-	},
-	{"title": "Rings", "description": "Ring around the rosie", "path": "rings.json"},
-	{
-		"title": "Triforce",
-		"description": "Power is concentrated and all vye for it.",
-		"path": "triforce.json"
-	},
-	{
-		"title": "Tarp",
-		"description":
-		"This is a land of borg, worm, and love for nergkun. Isn't this a hidden map?",
-		"path": "tarp.json"
-	},
-	{"title": "Santa", "description": "This is a hidden map. Go away.", "path": "santa.json"}
-]
 
 ## Events
 

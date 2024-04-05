@@ -39,10 +39,26 @@
 				"event": "play",
 				"type": "power",
 				"power": "build",
-				"building": "seal"
+				"building": "Seal"
 			}
 		],
 		"description": "Seal a region to make it resist one of Neptune's Marks.",
+		"cost": 1,
+		"requirements": [],
+		"icon": "res://cards/images/seal.png"
+	},
+	"Barracks": {
+		"id": "Barracks",
+		"name": "Barracks",
+		"effects": [
+			{
+				"event": "play",
+				"type": "power",
+				"power": "build",
+				"building": "Barracks"
+			}
+		],
+		"description": "Build a Barracks in a region. Will generate 3 troops per turn.",
 		"cost": 1,
 		"requirements": [],
 		"icon": "res://cards/images/seal.png"

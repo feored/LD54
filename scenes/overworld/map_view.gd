@@ -41,11 +41,20 @@ func draw_map():
 	for k in Info.run.map.map.keys():
 		for end in Info.run.map.map[k].next:
 			lines_panel.coords.push_back([btns[k].position + Vector2(20, 16), btns[end].position + Vector2(20, 16)])
-	lines_panel.queue_redraw()
+
+	## draw boss
+	# var bossBtn = btnPrefab.instantiate()
+	# bossBtn.position = coords_to_btnpos(Info.run.map.boss.info.coords)
+	# lines_panel.add_child(bossBtn)
+	# btns[Info.run.map.boss.info.coords] = bossBtn
+	# bossBtn.pressed.connect(func (): choose_location(Info.run.map.boss))
+	# lines_panel.coords.push_back([boss.position + Vector2(20, 16), btns[Info.run.map.boss].position + Vector2(20, 16)])
+	# lines_panel.queue_redraw()
 
 
 func _ready():
 	draw_map()
+
 
 func choose_location(k):
 	Info.run.coords = k

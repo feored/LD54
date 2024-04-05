@@ -4,7 +4,7 @@
 [ext_resource type="PackedScene" uid="uid://pu46mkcjdswb" path="res://scenes/esc_menu/esc_menu.tscn" id="3_3h7bd"]
 [ext_resource type="Theme" uid="uid://3t61g0061mea" path="res://assets/theme.tres" id="3_5sf0l"]
 [ext_resource type="Script" path="res://scenes/overworld/lines.gd" id="3_6xbs0"]
-[ext_resource type="Script" path="res://scenes/overworld/map.gd" id="4_qbcs0"]
+[ext_resource type="Script" path="res://scenes/overworld/map_view.gd" id="4_d4ra7"]
 [ext_resource type="PackedScene" uid="uid://drjdjumbfief5" path="res://cards/deck/deck_view.tscn" id="5_j7lb7"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_nfs5d"]
@@ -57,7 +57,7 @@ size_flags_vertical = 3
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_vertical = 3
-script = ExtResource("4_qbcs0")
+script = ExtResource("4_d4ra7")
 
 [node name="LinesPanel" type="Panel" parent="VBoxContainer/EventContainer/MapView"]
 unique_name_in_owner = true
