@@ -21,8 +21,8 @@ func _ready():
 
 	self.load_scenario(0)
 
-	for i in range(Constants.scenarios.size()):
-		var s = Constants.scenarios[i]
+	for i in range(Constants.SCENARIOS.size()):
+		var s = Constants.SCENARIOS[i]
 		var b = Button.new()
 		b.text = "[%s] %s" % [i+1, s.title]
 		b.alignment = HORIZONTAL_ALIGNMENT_LEFT
@@ -40,13 +40,13 @@ func _process(delta):
 	pass
 
 func load_scenario(scenario_id):
-	var save_game = FileAccess.open("res://maps/" + Constants.scenarios[scenario_id].path, FileAccess.READ)
+	var save_game = FileAccess.open("res://maps/" + Constants.SCENARIOS[scenario_id].path, FileAccess.READ)
 	var saved_state = JSON.parse_string(save_game.get_line())
 	save_game.close()
-	Settings.current_map = saved_state
+	Info.current_map = saved_state
 	self.world.clear_island()
 	self.world.load_regions(saved_state["regions"])
-	self.scenario_description.text = Constants.scenarios[scenario_id].description
+	self.scenario_description.text = Constants.SCENARIOS[scenario_id].description
 	self.old_scenario_id = scenario_id
 
 

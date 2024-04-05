@@ -1,15 +1,16 @@
 extends Node2D
 
 
-var scenarioPrefab = preload("res://ui/scenario/scenario.tscn")
+var scenarioPrefab = preload("res://scenes/scenario/scenario.tscn")
 
 @onready var world = $World
-@onready var allScenarios = $"%AllScenarios"
-@onready var buttonContainer = $"%ButtonContainer"
-@onready var scenariosContainer = $"%ScenariosContainer"
-@onready var returnButton =	$"%ReturnButton"
-@onready var settingsContainer = $"%SettingsContainer"
-@onready var logo = $"%Logo"
+@onready var allScenarios = %AllScenarios
+@onready var buttonContainer = %ButtonContainer
+@onready var scenariosContainer = %ScenariosContainer
+@onready var returnButton =	%ReturnButton
+@onready var settingsContainer = %SettingsContainer
+@onready var logo = %Logo
+@onready var versionLabel = %VersionLabel
 
 enum State{
 	Main,
@@ -20,6 +21,8 @@ enum State{
 var elapsed = 0
 
 func _ready():
+	versionLabel.text = "v" + Constants.VERSION
+
 	self.show_state(State.Main)
 	Music.play_track(Music.Track.Menu)
 	Sfx.disable_track(Sfx.Track.Boom)
@@ -35,7 +38,7 @@ func _ready():
 	settingsContainer.disappear = func():
 		self.show_state(State.Main)
 
-	for scenario in Constants.scenarios:
+	for scenario in Constants.SCENARIOS:
 		var scenario_obj = scenarioPrefab.instantiate()
 		scenario_obj.init(scenario)
 		allScenarios.add_child(scenario_obj)
@@ -97,3 +100,8 @@ func _on_quit_button_pressed():
 
 func _on_map_editor_btn_pressed():
 	await SceneTransition.change_scene(SceneTransition.SCENE_MAP_EDITOR)
+
+
+func _on_new_run_btn_pressed():
+	Info.run = Run.new()
+	await SceneTransition.change_scene(SceneTransition.SCENE_OVERWORLD)

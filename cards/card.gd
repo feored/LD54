@@ -15,4 +15,4 @@ func _init(card_json: Dictionary):
 	description = card_json["description"]
 	cost = card_json["cost"]
 	requirements = card_json["requirements"]
-	icon = load(card_json["icon"])
+	icon = load(card_json["icon"]) if card_json.has("icon") else null

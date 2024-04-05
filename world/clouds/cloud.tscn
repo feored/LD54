@@ -1,6 +1,6 @@
 [gd_scene load_steps=3 format=3 uid="uid://466mjj4wbed0"]
 
-[ext_resource type="Texture2D" uid="uid://baoq7p6das0s3" path="res://assets/clouds/cloud_2.png" id="1_hpx3l"]
+[ext_resource type="Texture2D" uid="uid://baoq7p6das0s3" path="res://world/clouds/images/cloud_2.png" id="1_hpx3l"]
 [ext_resource type="Script" path="res://world/clouds/cloud.gd" id="2_7sf5u"]
 
 [node name="Cloud" type="Sprite2D"]

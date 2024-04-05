@@ -20,7 +20,7 @@ const COLOR_INVISIBLE = Color(0, 0, 0, 0)
 const COLOR_REGION = Color(0.5, 0.5, 0.5, 0.5)
 const COLOR_DEFAULT = Color(1, 1, 1, 1)
 
-const TEXTURE_HEX = preload("res://assets/tiles/hex_shape.png")
+const TEXTURE_HEX = preload("res://world/tiles/images/hex_shape.png")
 
 enum EditStage {
 	Drawing,
@@ -315,7 +315,7 @@ func _on_center_btn_pressed():
 
 
 func _on_play_btn_pressed():
-	Settings.current_map = Utils.get_save_data(self.world, self.teams)
+	Info.current_map = Utils.get_save_data(self.world, self.teams)
 	await SceneTransition.change_scene(SceneTransition.SCENE_MAIN_GAME)
 
 

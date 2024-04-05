@@ -2,7 +2,7 @@
 
 [ext_resource type="PackedScene" uid="uid://b8opucxucl032" path="res://world/world.tscn" id="1_jtkqy"]
 [ext_resource type="Script" path="res://scenes/campaign/campaign.gd" id="1_uyg8v"]
-[ext_resource type="PackedScene" uid="uid://pu46mkcjdswb" path="res://ui/esc_menu/esc_menu.tscn" id="2_5qe7g"]
+[ext_resource type="PackedScene" uid="uid://pu46mkcjdswb" path="res://scenes/esc_menu/esc_menu.tscn" id="2_5qe7g"]
 [ext_resource type="Theme" uid="uid://3t61g0061mea" path="res://assets/theme.tres" id="3_71aav"]
 
 [node name="Campaign" type="Node2D"]

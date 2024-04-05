@@ -25,8 +25,15 @@ func reroll():
 	self.init()
 
 
-func init_with_coords(coords: Array, sink = true):
-	for coord in coords:
+func init_with_json_coords(init_coords: Array):
+	var new_coords = []
+	for coord in init_coords:
+		new_coords.push_back(Vector2i(coord[0], coord[1]))
+	self.init_with_coords(new_coords)
+
+
+func init_with_coords(init_coords: Array):
+	for coord in init_coords:
 		var new_tile = tile_prefab.instantiate()
 		self.add_child(new_tile)
 		new_tile.position = Utils.to_global(Utils.map_to_local(coord)) - HALF_TILE

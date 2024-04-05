@@ -1,6 +1,6 @@
 extends Node2D
 
-const gameOverScreenPrefab = preload("res://ui/game_over_menu/game_over_screen.tscn")
+const gameOverScreenPrefab = preload("res://scenes/game_over_menu/game_over_screen.tscn")
 const shapePrefab = preload("res://world/tiles/highlight/shape.tscn")
 
 @onready var world = $"World"
@@ -12,7 +12,10 @@ const shapePrefab = preload("res://world/tiles/highlight/shape.tscn")
 @onready var faith_label = %FaithLabel
 
 var used_card = null
-var current_building = Constants.Building.None
+var current = {
+	"building": Constants.Building.None,
+	"reinforcements": 0
+}
 
 enum MouseState {
 	None,
@@ -45,12 +48,12 @@ func _ready():
 	Music.play_track(Music.Track.World)
 	Sfx.enable_track(Sfx.Track.Boom)
 	self.card_selector.cards_picked.connect(Callable(self, "_on_cards_selected"))
-	self.load_map(Settings.current_map.teams, Settings.current_map.regions)
+	self.load_map(Info.current_map.teams, Info.current_map.regions)
 			
 	self.game.started = true
 	self.world.camera.move_instant(self.world.map_to_local(closest_player_tile_coords()))
 	self.deck.card_played = Callable(self, "use_card")
-	self.deck.draw(5)
+	await self.deck.draw(5)
 	self.deck.update_faith(self.game.human.resources.faith)
 
 
@@ -137,8 +140,8 @@ func handle_building(event):
 			clear_mouse_state()
 			return
 		var region_built = self.world.tiles[coords_hovered].data.region
-		var action = Action.new(self.game.human.team, Action.Type.Build, region_built, Constants.NULL_REGION, [coords_hovered], self.current_building)
-		current_building = Constants.Building.None
+		var action = Action.new(self.game.human.team, Action.Type.Build, region_built, Constants.NULL_REGION, [coords_hovered], self.current.building)
+		current.building = Constants.Building.None
 		self.game.actions_history.append(action)
 		self.apply_action(action)
 		card_used(self.used_card)
@@ -163,7 +166,7 @@ func handle_plus(event):
 			clear_mouse_state()
 			return
 		var region_reinforced = self.world.tiles[coords_hovered].data.region
-		var action = Action.new(self.game.human.team, Action.Type.Reinforce, region_reinforced)
+		var action = Action.new(self.game.human.team, Action.Type.Reinforce, region_reinforced, 0, [], self.current.reinforcements)
 		self.game.actions_history.append(action)
 		self.apply_action(action)
 		if self.used_card != null:
@@ -238,7 +241,7 @@ func lock_controls(val : bool):
 	self.endTurnButton.disabled = val
 
 func _on_turn_button_pressed():
-	self.deck.discard_all()
+	await self.deck.discard_all()
 	self.apply_buildings(self.game.human.team)
 	
 	lock_controls(true)
@@ -254,7 +257,8 @@ func _on_turn_button_pressed():
 	if tile_camera_move != Constants.NULL_COORDS:
 		await self.world.camera.move_smoothed(self.world.map_to_local(tile_camera_move), 5)
 
-	self.game.human.resources.faith += self.world.tiles.values().filter(func(t): return t.data.team == self.game.human.team and t.data.building == Constants.Building.Temple).size()
+	## Faith generation
+	self.game.human.resources.faith = self.game.human.resources.faith_per_turn + self.world.tiles.values().filter(func(t): return t.data.team == self.game.human.team and t.data.building == Constants.Building.Temple).size()
 	self.update_faith_player()
 	Settings.input_locked = false
 	lock_controls(false)
@@ -287,9 +291,9 @@ func apply_effect(effect):
 	elif effect.type == "action":
 		match effect.action:
 			"random_discard":
-				self.deck.discard_random(effect.value)
+				await self.deck.discard_random(effect.value)
 			"draw":
-				self.deck.draw(effect.value)
+				await self.deck.draw(effect.value)
 			
 
 func use_card(cardView):
@@ -302,11 +306,19 @@ func use_card(cardView):
 		var play_power = play_powers[0]
 		match play_power.power:
 			"reinforcements":
-				set_reinforcements()
+				set_reinforcements(play_power["value"])
 			"sacrifice":
 				set_sacrifice()
 			"build":
 				set_building(play_power["building"])
+			"sink":
+				var s = Shape.new()
+				s.init_with_json_coords(play_power["value"])
+				set_shape(s.coords.keys(), MouseState.Sink)
+			"emerge":
+				var s = Shape.new()
+				s.init_with_json_coords(play_power["value"])
+				set_shape(s.coords.keys(), MouseState.Emerge)
 	else:
 		self.card_used(cardView)
 
@@ -344,7 +356,7 @@ func use_card(cardView):
 	
 func card_used(c):
 	for effect in c.card.effects.filter(func(e): return e.event == "play" and e.type != "power"):
-		apply_effect(effect)
+		await apply_effect(effect)
 	self.game.human.resources.faith -= c.card.cost
 	self.update_faith_player()
 	self.deck.discard(c)
@@ -442,7 +454,7 @@ func play_global_turn():
 	await self.world.sink_marked()
 	check_win_condition()
 	await self.world.mark_tiles(self.game.global_turn)
-	self.deck.draw(CARDS_TO_DRAW)
+	await self.deck.draw(CARDS_TO_DRAW)
 	self.deck.update_faith(self.game.human.resources.faith)
 
 func play_turn():
@@ -492,7 +504,7 @@ func apply_action(action : Action):
 		Action.Type.Build:
 			self.world.tiles[action.tiles[0]].set_building(action.misc)
 		Action.Type.Reinforce:
-			self.world.regions[action.region_from].data.units += 10
+			self.world.regions[action.region_from].data.units += action.misc
 			self.world.regions[action.region_from].update()
 		Action.Type.None:
 			pass
@@ -523,9 +535,10 @@ func set_sacrifice():
 	self.mouse_item.global_position = get_viewport().get_mouse_position()
 	self.mouse_state = MouseState.Sacrifice
 
-func set_reinforcements():
+func set_reinforcements(new_reinforcements):
 	self.mouse_item = Sprite2D.new()
 	self.mouse_item.texture = load("res://assets/icons/Plus.png")
+	self.current.reinforcements = new_reinforcements
 	self.world.add_child(mouse_item)
 	self.mouse_item.global_position = get_viewport().get_mouse_position()
 	self.mouse_state = MouseState.Reinforce
@@ -533,7 +546,7 @@ func set_reinforcements():
 func set_building(building):
 	self.mouse_item = Sprite2D.new()
 	self.mouse_item.texture = Constants.BUILDINGS[building].texture
-	self.current_building = building
+	self.current.building = building
 	self.world.add_child(mouse_item)
 	self.mouse_item.global_position = get_viewport().get_mouse_position()
 	self.mouse_state = MouseState.Build
