@@ -4,8 +4,8 @@
 [ext_resource type="PackedScene" uid="uid://pu46mkcjdswb" path="res://scenes/esc_menu/esc_menu.tscn" id="3_3h7bd"]
 [ext_resource type="Theme" uid="uid://3t61g0061mea" path="res://assets/theme.tres" id="3_5sf0l"]
 [ext_resource type="Script" path="res://scenes/overworld/lines.gd" id="3_6xbs0"]
-[ext_resource type="PackedScene" uid="uid://drjdjumbfief5" path="res://cards/cards/deck_view.tscn" id="5_j7lb7"]
-[ext_resource type="Texture2D" uid="uid://b8pyinlxgl1t2" path="res://world/tiles/images/grass_neutral.png" id="6_wy7hk"]
+[ext_resource type="Script" path="res://scenes/overworld/map.gd" id="4_qbcs0"]
+[ext_resource type="PackedScene" uid="uid://drjdjumbfief5" path="res://cards/deck/deck_view.tscn" id="5_j7lb7"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_nfs5d"]
 bg_color = Color(0.788235, 0.705882, 0.592157, 1)
@@ -47,11 +47,18 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="ScrollContainer" type="ScrollContainer" parent="VBoxContainer"]
+[node name="EventContainer" type="PanelContainer" parent="VBoxContainer"]
+unique_name_in_owner = true
 layout_mode = 2
 size_flags_vertical = 3
 
-[node name="LinesPanel" type="Panel" parent="VBoxContainer/ScrollContainer"]
+[node name="MapView" type="ScrollContainer" parent="VBoxContainer/EventContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 3
+script = ExtResource("4_qbcs0")
+
+[node name="LinesPanel" type="Panel" parent="VBoxContainer/EventContainer/MapView"]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(0, 1200)
 layout_mode = 2
@@ -61,44 +68,32 @@ mouse_filter = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_nfs5d")
 script = ExtResource("3_6xbs0")
 
-[node name="PanelContainer2" type="PanelContainer" parent="VBoxContainer"]
-layout_mode = 2
-
-[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer/PanelContainer2"]
-layout_mode = 2
-
-[node name="DeckViewBtn" type="Button" parent="VBoxContainer/PanelContainer2/HBoxContainer"]
-layout_mode = 2
-text = "View Deck"
-
-[node name="FloorLabel" type="Label" parent="VBoxContainer/PanelContainer2/HBoxContainer"]
+[node name="FloorLabel" type="Label" parent="VBoxContainer/EventContainer/MapView/LinesPanel"]
 unique_name_in_owner = true
-layout_mode = 2
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -42.0
+offset_bottom = 16.0
+grow_horizontal = 0
 text = "Floor 0"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="DeckView" parent="VBoxContainer/PanelContainer2" instance=ExtResource("5_j7lb7")]
+[node name="Bar" type="PanelContainer" parent="VBoxContainer"]
+layout_mode = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer/Bar"]
+layout_mode = 2
+
+[node name="DeckViewBtn" type="Button" parent="VBoxContainer/Bar/HBoxContainer"]
+layout_mode = 2
+text = "View Deck"
+
+[node name="DeckView" parent="VBoxContainer/Bar" instance=ExtResource("5_j7lb7")]
 unique_name_in_owner = true
 visible = false
 layout_mode = 2
 
-[node name="Button" type="Button" parent="."]
-visible = false
-layout_mode = 0
-offset_left = 231.0
-offset_top = 168.0
-offset_right = 271.0
-offset_bottom = 200.0
-icon = ExtResource("6_wy7hk")
-
-[node name="TextureButton" type="TextureButton" parent="."]
-visible = false
-layout_mode = 0
-offset_left = 135.0
-offset_top = 126.0
-offset_right = 175.0
-offset_bottom = 166.0
-texture_normal = ExtResource("6_wy7hk")
-
-[connection signal="pressed" from="VBoxContainer/PanelContainer2/HBoxContainer/DeckViewBtn" to="." method="_on_deck_view_btn_pressed"]
+[connection signal="pressed" from="VBoxContainer/Bar/HBoxContainer/DeckViewBtn" to="." method="_on_deck_view_btn_pressed"]

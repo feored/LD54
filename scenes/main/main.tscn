@@ -3,7 +3,7 @@
 [ext_resource type="Script" path="res://scenes/main/main.gd" id="1_osaxm"]
 [ext_resource type="PackedScene" uid="uid://pu46mkcjdswb" path="res://scenes/esc_menu/esc_menu.tscn" id="2_pam5e"]
 [ext_resource type="PackedScene" uid="uid://b8opucxucl032" path="res://world/world.tscn" id="2_unfjm"]
-[ext_resource type="Script" path="res://cards/deck.gd" id="4_nj60x"]
+[ext_resource type="Script" path="res://cards/deck/deck.gd" id="4_nj60x"]
 [ext_resource type="Theme" uid="uid://3t61g0061mea" path="res://assets/theme.tres" id="5_5yrco"]
 [ext_resource type="PackedScene" uid="uid://drjdjumbfief5" path="res://cards/cards/deck_view.tscn" id="6_7d42u"]
 [ext_resource type="Texture2D" uid="uid://vv0nl83x0ldq" path="res://assets/icons/forward.png" id="6_7usvn"]

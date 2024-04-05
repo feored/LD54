@@ -14,8 +14,10 @@ layer = 99
 script = ExtResource("1_m4juf")
 
 [node name="EscButton" type="Button" parent="."]
-offset_right = 30.0
-offset_bottom = 22.0
+offset_left = 5.0
+offset_top = 5.0
+offset_right = 35.0
+offset_bottom = 27.0
 theme = ExtResource("2_pn4ld")
 icon = ExtResource("4_wntpm")
 icon_alignment = 1

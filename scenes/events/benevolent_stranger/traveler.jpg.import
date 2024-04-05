@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://b6h415hplqqhh"
-path="res://.godot/imported/gikobox.png-97011165fc100fe95ed6f95a4ecce1ea.ctex"
+uid="uid://wy2ci8a7leom"
+path="res://.godot/imported/traveler.jpg-b57afa416a21010d2c39ef33f946d2a2.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/gikobox.png"
-dest_files=["res://.godot/imported/gikobox.png-97011165fc100fe95ed6f95a4ecce1ea.ctex"]
+source_file="res://scenes/events/benevolent_stranger/traveler.jpg"
+dest_files=["res://.godot/imported/traveler.jpg-b57afa416a21010d2c39ef33f946d2a2.ctex"]
 
 [params]
 

@@ -38,7 +38,7 @@ func _ready():
 	settingsContainer.disappear = func():
 		self.show_state(State.Main)
 
-	for scenario in Constants.scenarios:
+	for scenario in Constants.SCENARIOS:
 		var scenario_obj = scenarioPrefab.instantiate()
 		scenario_obj.init(scenario)
 		allScenarios.add_child(scenario_obj)

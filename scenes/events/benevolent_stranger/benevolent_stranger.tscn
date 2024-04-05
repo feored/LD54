@@ -1,0 +1,82 @@
+[gd_scene load_steps=5 format=3 uid="uid://b6qt48hfnik21"]
+
+[ext_resource type="Theme" uid="uid://3t61g0061mea" path="res://assets/theme.tres" id="1_jg8ru"]
+[ext_resource type="Script" path="res://scenes/events/benevolent_stranger/benevolent_stranger.gd" id="2_7axsa"]
+[ext_resource type="Texture2D" uid="uid://wy2ci8a7leom" path="res://scenes/events/benevolent_stranger/traveler.jpg" id="2_co164"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_1m6mu"]
+bg_color = Color(0.0980392, 0.0862745, 0.113725, 1)
+
+[node name="BenevolentStranger" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("1_jg8ru")
+script = ExtResource("2_7axsa")
+
+[node name="PanelContainer" type="PanelContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_1m6mu")
+
+[node name="MarginContainer" type="MarginContainer" parent="PanelContainer"]
+layout_mode = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="PanelContainer/MarginContainer"]
+layout_mode = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="PanelContainer/MarginContainer/VBoxContainer"]
+custom_minimum_size = Vector2(0, 240)
+layout_mode = 2
+
+[node name="PanelContainer2" type="PanelContainer" parent="PanelContainer/MarginContainer/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+
+[node name="TextureRect" type="TextureRect" parent="PanelContainer/MarginContainer/VBoxContainer/HBoxContainer/PanelContainer2"]
+layout_mode = 2
+texture = ExtResource("2_co164")
+expand_mode = 3
+stretch_mode = 5
+
+[node name="Label" type="Label" parent="PanelContainer/MarginContainer/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "You meet a mysterious stranger on the road to your next destination.
+
+You take an interest in their stories, and they decide to reward your attentiveness with a card they've found during their travels.
+
+Which will you choose?"
+horizontal_alignment = 1
+autowrap_mode = 3
+
+[node name="HSeparator" type="HSeparator" parent="PanelContainer/MarginContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="PanelContainer/MarginContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 6
+theme_override_constants/separation = 30
+alignment = 1
+
+[node name="CardsContainer" type="HBoxContainer" parent="PanelContainer/MarginContainer/VBoxContainer/VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 6
+theme_override_constants/separation = 20
+alignment = 1
+
+[node name="SkipButton" type="Button" parent="PanelContainer/MarginContainer/VBoxContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 6
+text = "Skip"
+
+[connection signal="pressed" from="PanelContainer/MarginContainer/VBoxContainer/VBoxContainer/SkipButton" to="." method="_on_skip_button_pressed"]

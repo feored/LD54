@@ -7,11 +7,13 @@ enum Location {
 	Map,
 	Event
 }
+	
 
 class Island:
 	var location : Location
 	var visited: bool = false
 	var next : Array
+	var info : Dictionary
 	
 	func _init():
 		self.location = Location.Map
@@ -30,8 +32,14 @@ func get_entrances():
 func layout_to_map (layout):
 	var new_map : Dictionary = {}
 	for coords in layout:
-		new_map[coords] = Island.new()
-		new_map[coords].next = layout[coords]
+		var island = Island.new()
+		island.location = Location.Map if Utils.rng.randi()%2 == 0 else Location.Event
+		if island.location == Location.Map:
+			island.info["path"] = Constants.SCENARIOS[Utils.rng.randi()%Constants.SCENARIOS.size()].path
+		else:
+			island.info["event"] = Constants.EVENTS.keys()[Utils.rng.randi()%Constants.EVENTS.keys().size()]
+		island.next = layout[coords]
+		new_map[coords] = island
 	return new_map
 
 

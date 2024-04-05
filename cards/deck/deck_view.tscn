@@ -1,7 +1,7 @@
 [gd_scene load_steps=3 format=3 uid="uid://drjdjumbfief5"]
 
-[ext_resource type="Theme" uid="uid://3t61g0061mea" path="res://assets/theme.tres" id="1_shkvq"]
-[ext_resource type="Script" path="res://cards/cards/deck_view.gd" id="2_n7bh3"]
+[ext_resource type="Theme" uid="uid://3t61g0061mea" path="res://assets/theme.tres" id="1_jqps1"]
+[ext_resource type="Script" path="res://cards/deck/deck_view.gd" id="2_n3hco"]
 
 [node name="DeckView" type="ColorRect"]
 top_level = true
@@ -10,9 +10,9 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-theme = ExtResource("1_shkvq")
+theme = ExtResource("1_jqps1")
 color = Color(0, 0, 0, 0.498039)
-script = ExtResource("2_n7bh3")
+script = ExtResource("2_n3hco")
 
 [node name="PanelContainer" type="PanelContainer" parent="."]
 layout_mode = 1

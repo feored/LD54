@@ -157,7 +157,7 @@ const BUILDINGS = {
 }
 
 ## Scenarios
-const scenarios = [
+const SCENARIOS = [
 	{"title": "Confrontation", "description": "One on one.", "path": "confrontation.json"},
 	# {"title": "Flower", "description": "The Flower", "path": "flower.json"},
 	{"title": "The Blob", "description": "All paths lead into the blob.", "path": "blob.json"},
@@ -188,3 +188,7 @@ const scenarios = [
 	},
 	{"title": "Santa", "description": "This is a hidden map. Go away.", "path": "santa.json"}
 ]
+
+## Events
+
+const EVENTS = {"stranger": "res://scenes/events/benevolent_stranger/benevolent_stranger.tscn"}
