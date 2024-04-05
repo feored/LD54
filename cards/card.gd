@@ -1,6 +1,7 @@
 extends RefCounted
 class_name Card
 
+var id: String
 var name: String
 var effects: Array
 var description: String
@@ -10,6 +11,7 @@ var icon: Texture
 
 
 func _init(card_json: Dictionary):
+	id = card_json["id"]
 	name = card_json["name"]
 	effects = card_json["effects"]
 	description = card_json["description"]

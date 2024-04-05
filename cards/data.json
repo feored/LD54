@@ -1,5 +1,6 @@
 {
 	"Offering": {
+		"id": "Offering",
 		"name": "Offering",
 		"effects": [
 			{
@@ -15,6 +16,7 @@
 		"icon": "res://cards/images/tridentsun.png"
 	},
 	"LargeOffering": {
+		"id": "LargeOffering",
 		"name": "Large Offering",
 		"effects": [
 			{
@@ -30,6 +32,7 @@
 		"icon": "res://cards/images/tridentsun.png"
 	},
 	"Seal": {
+		"id": "Seal",
 		"name": "Seal",
 		"effects": [
 			{
@@ -45,6 +48,7 @@
 		"icon": "res://cards/images/seal.png"
 	},
 	"Prayer": {
+		"id": "Prayer",
 		"name": "Prayer",
 		"effects": [
 			{
@@ -66,6 +70,7 @@
 		"icon": "res://cards/images/prayer.png"
 	},
 	"Hoplites": {
+		"id": "Hoplites",
 		"name": "Hoplites",
 		"effects": [
 			{
@@ -81,6 +86,7 @@
 		"icon": "res://cards/images/warrior.png"
 	},
 	"CretanArchers": {
+		"id": "CretanArchers",
 		"name": "Cretan Archers",
 		"effects": [
 			{
@@ -96,6 +102,7 @@
 		"icon": "res://cards/images/warrior.png"
 	},
 	"LuckOfTheDraw": {
+		"id": "LuckOfTheDraw",
 		"name": "Luck of the Draw",
 		"effects": [
 			{
@@ -111,6 +118,7 @@
 		"icon": "res://cards/images/questionmark.png"
 	},
 	"Sacrifice": {
+		"id": "Sacrifice",
 		"name": "Sacrifice",
 		"effects": [
 			{
@@ -126,13 +134,14 @@
 				"value": 2
 			}
 		],
-		"description": "Sacrifice a region to draw 2 ",
+		"description": "Sacrifice a region to draw 2 cards.",
 		"cost": 0,
 		"requirements": [],
 		"icon": "res://cards/images/skull.png"
 	},
-	"SmallFlood": {
-		"name": "Small Flood",
+	"Flood": {
+		"id": "Flood",
+		"name": "Flood",
 		"effects": [
 			{
 				"event": "play",
@@ -152,6 +161,7 @@
 		"requirements": []
 	},
 	"PrimevalFlood": {
+		"id": "PrimevalFlood",
 		"name": "Primeval Flood",
 		"effects": [
 			{
@@ -175,10 +185,11 @@
 			}
 		],
 		"description": "Sink three tiles. The affected region(s) will lose units in proportion.",
-		"cost": 3,
+		"cost": 2,
 		"requirements": []
 	},
 	"Creation": {
+		"id": "Creation",
 		"name": "Creation",
 		"effects": [
 			{
@@ -196,6 +207,34 @@
 		"description": "Emerge a single tile from the sea.",
 		"cost": 1,
 		"icon": "res://cards/images/landemerge.png",
+		"requirements": []
+	},
+	"PrimevalCreation": {
+		"id": "PrimevalCreation",
+		"name": "Primeval Creation",
+		"effects": [
+			{
+				"event": "play",
+				"type": "power",
+				"power": "emerge",
+				"value": [
+					[
+						0,
+						0
+					],
+					[
+						0,
+						1
+					],
+					[
+						0,
+						-1
+					]
+				]
+			}
+		],
+		"description": "Emerge three tiles. The affected region(s) will lose units in proportion.",
+		"cost": 2,
 		"requirements": []
 	}
 }
