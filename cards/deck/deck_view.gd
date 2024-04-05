@@ -1,29 +1,20 @@
-extends Control
-class_name DeckView
+extends CanvasLayer
 
 const card_prefab = preload("res://cards/card_view/card_view.tscn")
 
 @onready var card_container = %CardContainer
+@onready var outside = %PopupOutside
+
+var card_views = []
 
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
-	pass  # Replace with function body.
-
-
-# Called every frame. 'delta' is the elapsed time since the previous frame.
-func _process(delta):
-	pass
-
-
-func _gui_input(event):
-	if event is InputEventMouseButton:
-		if event.button_index == MOUSE_BUTTON_LEFT and event.pressed:
-			self.hide()
+	outside.clicked.connect(Callable(self, "hide"))
 
 
 func clean_up():
-	for card in self.card_container.get_children():
+	for card in self.card_views:
 		card.queue_free()
 
 
@@ -33,4 +24,5 @@ func init(cards: Array):
 		var cardView = card_prefab.instantiate()
 		cardView.is_static = true
 		cardView.card = c
+		self.card_views.push_back(cardView)
 		self.card_container.add_child(cardView)

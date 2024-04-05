@@ -191,4 +191,8 @@ const SCENARIOS = [
 
 ## Events
 
-const EVENTS = {"stranger": "res://scenes/events/benevolent_stranger/benevolent_stranger.tscn"}
+const EVENTS = {
+	"stranger": "res://scenes/events/benevolent_stranger/benevolent_stranger.tscn",
+	"oracle": "res://scenes/events/oracle/oracle.tscn",
+	"shrine": "res://scenes/events/shrine/shrine.tscn",
+}

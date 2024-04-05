@@ -14,6 +14,21 @@
 		"requirements": [],
 		"icon": "res://cards/images/tridentsun.png"
 	},
+	"LargeOffering": {
+		"name": "Large Offering",
+		"effects": [
+			{
+				"event": "play",
+				"type": "resource",
+				"resource": "faith",
+				"value": "faith + 2"
+			}
+		],
+		"description": "Make an offering to Neptune and gain 2 faith.",
+		"cost": 0,
+		"requirements": [],
+		"icon": "res://cards/images/tridentsun.png"
+	},
 	"Seal": {
 		"name": "Seal",
 		"effects": [
