@@ -27,7 +27,7 @@ func _on_option_1_btn_pressed():
 		var is_modified = false
 		for effect in card.effects:
 			if effect.type == "power" and effect.power == "reinforcements":
-				effect.value = effect.value * 2
+				effect.value = effect.value + 10
 				is_modified = true
 		if is_modified:
 			card.cost += 1

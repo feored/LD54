@@ -61,7 +61,7 @@
 		"description": "Build a Barracks in a region. Will generate 3 troops per turn.",
 		"cost": 1,
 		"requirements": [],
-		"icon": "res://cards/images/seal.png"
+		"icon": "res://cards/images/barracks.png"
 	},
 	"Prayer": {
 		"id": "Prayer",
@@ -115,7 +115,7 @@
 		"description": "Summon 5 troops to the selected region.",
 		"cost": 1,
 		"requirements": [],
-		"icon": "res://cards/images/warrior.png"
+		"icon": "res://cards/images/archer.png"
 	},
 	"LuckOfTheDraw": {
 		"id": "LuckOfTheDraw",
@@ -251,6 +251,7 @@
 		],
 		"description": "Emerge three tiles. The affected region(s) will lose units in proportion.",
 		"cost": 2,
+		"icon": "res://cards/images/largecreation.png",
 		"requirements": []
 	}
 }

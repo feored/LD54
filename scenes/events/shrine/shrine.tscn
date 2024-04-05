@@ -78,7 +78,7 @@ layout_mode = 2
 
 [node name="Label" type="Label" parent="PanelContainer/MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer/VBoxContainer/PanelContainer"]
 layout_mode = 2
-text = "Double the reinforcements value of all unit cards in your deck, but raise their cost by 1."
+text = "Increase the reinforcements value of all unit cards in your deck by 10, but raise their cost by 1."
 
 [node name="PanelContainer2" type="PanelContainer" parent="PanelContainer/MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer/VBoxContainer"]
 layout_mode = 2

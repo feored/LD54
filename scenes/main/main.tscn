@@ -385,19 +385,6 @@ theme_override_styles/panel = SubResource("StyleBoxEmpty_bwln7")
 [node name="HBoxContainer" type="HBoxContainer" parent="UI/Bar/MarginContainer/HBoxContainer/HBoxContainer/ResContainer"]
 layout_mode = 2
 
-[node name="HBoxContainer2" type="HBoxContainer" parent="UI/Bar/MarginContainer/HBoxContainer/HBoxContainer/ResContainer/HBoxContainer"]
-layout_mode = 2
-
-[node name="FaithLabel" type="Label" parent="UI/Bar/MarginContainer/HBoxContainer/HBoxContainer/ResContainer/HBoxContainer/HBoxContainer2"]
-unique_name_in_owner = true
-layout_mode = 2
-text = "0"
-
-[node name="TextureRect" type="TextureRect" parent="UI/Bar/MarginContainer/HBoxContainer/HBoxContainer/ResContainer/HBoxContainer/HBoxContainer2"]
-layout_mode = 2
-texture = ExtResource("6_mkg7a")
-stretch_mode = 5
-
 [node name="TurnButton" type="Button" parent="UI/Bar/MarginContainer/HBoxContainer"]
 unique_name_in_owner = true
 layout_mode = 2
@@ -408,6 +395,49 @@ text = "End Turn"
 [node name="CardSelector" parent="UI" instance=ExtResource("8_1lhgu")]
 unique_name_in_owner = true
 visible = false
+
+[node name="Faith" type="TextureRect" parent="UI"]
+offset_left = 154.0
+offset_top = 359.0
+offset_right = 194.0
+offset_bottom = 399.0
+theme = ExtResource("5_5yrco")
+texture = ExtResource("10_6jeae")
+
+[node name="TextureRect" type="TextureRect" parent="UI/Faith"]
+modulate = Color(1, 1, 1, 0.376471)
+custom_minimum_size = Vector2(24, 24)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -8.0
+offset_top = -8.0
+offset_right = 8.0
+offset_bottom = 8.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("6_mkg7a")
+expand_mode = 3
+stretch_mode = 5
+
+[node name="FaithLabel" type="Label" parent="UI/Faith"]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(0.0507813, 0.289063, 0.535156, 1)
+theme_override_colors/font_outline_color = Color(1, 1, 1, 1)
+theme_override_constants/outline_size = 8
+theme_override_font_sizes/font_size = 32
+text = "0/3"
+horizontal_alignment = 1
+vertical_alignment = 1
 
 [connection signal="pressed" from="UI/Deck/DiscardPile/MarginContainer/Back/VBoxContainer/DiscardPileButton" to="UI/Deck" method="_on_discard_pile_button_pressed"]
 [connection signal="pressed" from="UI/Deck/DrawPile/MarginContainer/Back/VBoxContainer/DrawPileButton" to="UI/Deck" method="_on_draw_pile_button_pressed"]

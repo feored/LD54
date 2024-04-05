@@ -53,8 +53,12 @@ func _ready():
 	self.game.started = true
 	self.world.camera.move_instant(self.world.map_to_local(closest_player_tile_coords()))
 	self.deck.card_played = Callable(self, "use_card")
-	await self.deck.draw(5)
-	self.deck.update_faith(self.game.human.resources.faith)
+	
+	self.game.human.resources.faith = self.game.human.resources.faith_per_turn
+	update_faith_player()
+	for i in range(self.game.human.resources.cards_per_turn):
+		await self.deck.draw(1)
+		self.deck.update_faith(self.game.human.resources.faith)
 
 
 func clear_mouse_state():
@@ -483,7 +487,7 @@ func apply_action(action : Action):
 
 func update_faith_player():
 	self.deck.update_faith(self.game.human.resources.faith)
-	self.faith_label.set_text(str(self.game.human.resources.faith))
+	self.faith_label.set_text(str(self.game.human.resources.faith) + "/" + str(self.game.human.resources.faith_per_turn))
 
 func load_map(map_teams, map_regions):
 	self.world.clear_island()
