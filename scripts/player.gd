@@ -8,4 +8,4 @@ var cards_in_use: Array = []
 var is_bot: bool = false
 var bot: Bot = null
 
-const DEFAULT_RESOURCES = {"faith": 0, "faith_per_turn": 2, "cards_per_turn": 5}
+const DEFAULT_RESOURCES = {"faith": 0, "faith_per_turn": 2, "cards_per_turn": 10}

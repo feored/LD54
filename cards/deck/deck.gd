@@ -2,7 +2,7 @@ extends Control
 
 
 const CARD_SIZE = Vector2(125, 165)
-const CARD_SPACING = 100
+const CARD_SPACING : float = 100
 const CENTER = Vector2(Constants.VIEWPORT_SIZE.x / 2.0 - CARD_SIZE.x/2.0, 425.0)
 const POSITION_CURVE = preload("res://cards/card_view/position_curve.tres")
 
@@ -89,7 +89,8 @@ func place_card(card):
 	var total = self.play_pile.size()
 	var middle = floor(total / 2.0)
 	var num = id - middle
-	var x = CENTER.x + num * CARD_SPACING
+	var spacing = CARD_SPACING if play_pile.size() <= 3 else (CARD_SPACING - 12.5 * (play_pile.size() - 3))
+	var x = CENTER.x + num * spacing
 	var to_sample
 	if total <= 1:
 		to_sample = 00
