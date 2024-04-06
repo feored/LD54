@@ -19,9 +19,15 @@ func clear():
 	btns.clear()
 	lines_panel.coords = []
 	lines_panel.visited = []
-	
 
-# Called when the node enters the scene tree for the first time.
+func scroll_to_floor():
+	var tween_pos = self.create_tween().set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN)
+	var new_y =  coords_to_btnpos(Vector2(Info.run.get_floor(), 0)).y - Constants.VIEWPORT_SIZE.y/2
+	print( coords_to_btnpos(Vector2(Info.run.get_floor(), 0)))
+	tween_pos.tween_property(self, "scroll_vertical", new_y, 0.25)
+	
+	
+	
 func draw_map():
 	floor_label.set_text("Floor " + str(Info.run.get_floor() + 1))
 	var open = Info.run.get_open_nodes()
@@ -54,6 +60,7 @@ func draw_map():
 
 func _ready():
 	draw_map()
+	call_deferred("scroll_to_floor")
 
 
 func choose_location(k):

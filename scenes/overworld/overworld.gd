@@ -23,6 +23,7 @@ func end_event():
 	self.map_view.clear()
 	self.map_view.draw_map()
 	self.map_view.show()
+	self.map_view.scroll_to_floor()
 	self.current_event.queue_free()
 
 
