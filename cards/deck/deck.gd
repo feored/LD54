@@ -2,11 +2,9 @@ extends Control
 
 
 const CARD_SIZE = Vector2(125, 165)
-const CARD_SPACING : float = 100
+const CARD_SPACING : float = 125
 const CENTER = Vector2(Constants.VIEWPORT_SIZE.x / 2.0 - CARD_SIZE.x/2.0, 425.0)
 const POSITION_CURVE = preload("res://cards/card_view/position_curve.tres")
-
-const DRAWN_MAX = 8
 
 const card_prefab = preload("res://cards/card_view/card_view.tscn")
 
@@ -20,6 +18,7 @@ var card_played : Callable
 var draw_pile = []
 var discard_pile = []
 var play_pile = []
+var exhausted = []
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
@@ -27,24 +26,27 @@ func _ready():
 		self.draw_pile.push_back(c)
 	self.draw_pile.shuffle()
 
-func draw(amount: int):
-	var to_draw = min(amount, DRAWN_MAX - self.play_pile.size())
-	var can_draw = min(to_draw, self.draw_pile.size())
-	for i in range(can_draw):
-		var cardView = card_prefab.instantiate()
-		cardView.card = self.draw_pile.pop_front()
-		self.add_card(cardView)
+func draw_multiple(amount: int):
+	for i in range(amount):
+		draw()
+		Effects.trigger(Effect.Trigger.CardDrawn)
 		await Utils.wait(0.1)
-	if to_draw > can_draw:
-		for c in self.discard_pile:
-			self.draw_pile.push_back(c)
-		self.discard_pile.clear()
-		var can_still_draw = min(to_draw - can_draw, self.draw_pile.size())
-		for i in range(can_still_draw):
-			var cardView = card_prefab.instantiate()
-			cardView.card = self.draw_pile.pop_front()
-			self.add_card(cardView)
-			await Utils.wait(0.1)
+
+func discard_to_draw():
+	for c in self.discard_pile:
+		self.draw_pile.push_back(c)
+	self.discard_pile.clear()
+	self.draw_pile.shuffle()
+
+func draw():
+	if self.draw_pile.size() == 0:
+		discard_to_draw()
+		if self.draw_pile.size() == 0:
+			return
+	var cardView = card_prefab.instantiate()
+	cardView.card = self.draw_pile.pop_front()
+	self.add_card(cardView)
+	
 
 func add_card(card):
 	card.disconnect_picked()
@@ -66,6 +68,16 @@ func discard(cardView):
 	if card_id != -1:
 		self.play_pile.remove_at(card_id)
 		self.discard_pile.push_back(cardView.card)
+		cardView.queue_free()
+		self.place_all()
+	await Utils.wait(0.1)
+	update_display()
+
+func exhaust(cardView):
+	var card_id = self.play_pile.find(cardView)
+	if card_id != -1:
+		self.play_pile.remove_at(card_id)
+		self.exhausted.push_back(cardView.card)
 		cardView.queue_free()
 		self.place_all()
 	await Utils.wait(0.1)

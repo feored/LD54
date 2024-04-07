@@ -26,7 +26,7 @@ func _on_option_1_btn_pressed():
 	for card in Info.run.deck:
 		var is_modified = false
 		for effect in card.effects:
-			if effect.type == "power" and effect.power == "reinforcements":
+			if effect.type == Effect.Type.Power and effect.name == "reinforcements":
 				effect.value = effect.value + 10
 				is_modified = true
 		if is_modified:

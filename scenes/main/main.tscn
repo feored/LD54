@@ -1,4 +1,4 @@
-[gd_scene load_steps=19 format=3 uid="uid://ceoqtlfuehsvd"]
+[gd_scene load_steps=18 format=3 uid="uid://ceoqtlfuehsvd"]
 
 [ext_resource type="Script" path="res://scenes/main/main.gd" id="1_osaxm"]
 [ext_resource type="PackedScene" uid="uid://pu46mkcjdswb" path="res://scenes/esc_menu/esc_menu.tscn" id="2_pam5e"]
@@ -10,7 +10,6 @@
 [ext_resource type="Texture2D" uid="uid://bxqvi5615lj3b" path="res://assets/icons/trident.png" id="6_mkg7a"]
 [ext_resource type="Script" path="res://scenes/main/Message.gd" id="7_y3mfw"]
 [ext_resource type="Texture2D" uid="uid://cndgawjlwcsaq" path="res://cards/images/wave.png" id="7_yuoj0"]
-[ext_resource type="PackedScene" uid="uid://bcmyj6p1buj71" path="res://cards/selector/card_selector.tscn" id="8_1lhgu"]
 [ext_resource type="PackedScene" uid="uid://r53ogglkfpl1" path="res://scenes/shapes/shape_gui.tscn" id="8_wwglj"]
 [ext_resource type="Texture2D" uid="uid://cat4q0bmpcct" path="res://world/tiles/images/grass.png" id="10_6jeae"]
 
@@ -391,10 +390,6 @@ layout_mode = 2
 size_flags_horizontal = 0
 theme_override_styles/focus = SubResource("StyleBoxEmpty_u2eju")
 text = "End Turn"
-
-[node name="CardSelector" parent="UI" instance=ExtResource("8_1lhgu")]
-unique_name_in_owner = true
-visible = false
 
 [node name="Faith" type="TextureRect" parent="UI"]
 offset_left = 154.0

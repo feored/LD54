@@ -1,168 +1,184 @@
 {
+	"LuckyDeal": {
+		"id": "LuckyDeal",
+		"name": "Lucky Deal",
+		"effects": [
+			{
+				"trigger": "card_drawn",
+				"type": "resource",
+				"name": "faith",
+				"value": "faith + 1"
+			}
+		],
+		"description": "Gain 1 faith every time you draw a card.",
+		"cost": 0,
+		"icon": "res://cards/images/tridentsun.png",
+		"exhaust": true
+	},
 	"Offering": {
 		"id": "Offering",
 		"name": "Offering",
 		"effects": [
 			{
-				"event": "play",
+				"trigger": "instant",
 				"type": "resource",
-				"resource": "faith",
+				"name": "faith",
 				"value": "faith + 1"
 			}
 		],
 		"description": "Make an offering to Neptune and gain 1 faith.",
 		"cost": 0,
-		"requirements": [],
-		"icon": "res://cards/images/tridentsun.png"
+		"icon": "res://cards/images/tridentsun.png",
+		"exhaust": false
 	},
 	"LargeOffering": {
 		"id": "LargeOffering",
 		"name": "Large Offering",
 		"effects": [
 			{
-				"event": "play",
+				"trigger": "instant",
 				"type": "resource",
-				"resource": "faith",
+				"name": "faith",
 				"value": "faith + 2"
 			}
 		],
 		"description": "Make an offering to Neptune and gain 2 faith.",
 		"cost": 0,
-		"requirements": [],
-		"icon": "res://cards/images/tridentsun.png"
+		"icon": "res://cards/images/tridentsun.png",
+		"exhaust": false
 	},
 	"Seal": {
 		"id": "Seal",
 		"name": "Seal",
 		"effects": [
 			{
-				"event": "play",
+				"trigger": "instant",
 				"type": "power",
-				"power": "build",
-				"building": "Seal"
+				"name": "build",
+				"value": "Seal"
 			}
 		],
 		"description": "Seal a region to make it resist one of Neptune's Marks.",
 		"cost": 1,
-		"requirements": [],
-		"icon": "res://cards/images/seal.png"
+		"icon": "res://cards/images/seal.png",
+		"exhaust": false
 	},
 	"Barracks": {
 		"id": "Barracks",
 		"name": "Barracks",
 		"effects": [
 			{
-				"event": "play",
+				"trigger": "instant",
 				"type": "power",
-				"power": "build",
-				"building": "Barracks"
+				"name": "build",
+				"value": "Barracks"
 			}
 		],
 		"description": "Build a Barracks in a region. Will generate 3 troops per turn.",
 		"cost": 1,
-		"requirements": [],
-		"icon": "res://cards/images/barracks.png"
+		"icon": "res://cards/images/barracks.png",
+		"exhaust": false
 	},
 	"Prayer": {
 		"id": "Prayer",
 		"name": "Prayer",
 		"effects": [
 			{
-				"event": "play",
+				"trigger": "instant",
 				"type": "resource",
-				"resource": "faith",
+				"name": "faith",
 				"value": "faith + 2"
 			},
 			{
-				"event": "play",
+				"trigger": "instant",
 				"type": "action",
-				"action": "random_discard",
+				"name": "random_discard",
 				"value": 2
 			}
 		],
 		"description": "Gain 2 faith and discard up to 2 randomly chosen cards.",
 		"cost": 0,
-		"requirements": [],
-		"icon": "res://cards/images/prayer.png"
+		"icon": "res://cards/images/prayer.png",
+		"exhaust": false
 	},
 	"Hoplites": {
 		"id": "Hoplites",
 		"name": "Hoplites",
 		"effects": [
 			{
-				"event": "play",
+				"trigger": "instant",
 				"type": "power",
-				"power": "reinforcements",
+				"name": "reinforcements",
 				"value": 15
 			}
 		],
 		"description": "Summon 15 troops to the selected region.",
 		"cost": 3,
-		"requirements": [],
-		"icon": "res://cards/images/warrior.png"
+		"icon": "res://cards/images/warrior.png",
+		"exhaust": false
 	},
 	"CretanArchers": {
 		"id": "CretanArchers",
 		"name": "Cretan Archers",
 		"effects": [
 			{
-				"event": "play",
+				"trigger": "instant",
 				"type": "power",
-				"power": "reinforcements",
+				"name": "reinforcements",
 				"value": 5
 			}
 		],
 		"description": "Summon 5 troops to the selected region.",
 		"cost": 1,
-		"requirements": [],
-		"icon": "res://cards/images/archer.png"
+		"icon": "res://cards/images/archer.png",
+		"exhaust": false
 	},
 	"LuckOfTheDraw": {
 		"id": "LuckOfTheDraw",
 		"name": "Luck of the Draw",
 		"effects": [
 			{
-				"event": "play",
+				"trigger": "instant",
 				"type": "action",
-				"action": "draw",
+				"name": "draw",
 				"value": 1
 			}
 		],
 		"description": "Draw 1 card.",
 		"cost": 1,
-		"requirements": [],
-		"icon": "res://cards/images/questionmark.png"
+		"icon": "res://cards/images/questionmark.png",
+		"exhaust": false
 	},
 	"Sacrifice": {
 		"id": "Sacrifice",
 		"name": "Sacrifice",
 		"effects": [
 			{
-				"event": "play",
+				"trigger": "instant",
 				"type": "power",
-				"power": "sacrifice",
+				"name": "sacrifice",
 				"value": 0
 			},
 			{
-				"event": "play",
+				"trigger": "instant",
 				"type": "action",
-				"action": "draw",
+				"name": "draw",
 				"value": 2
 			}
 		],
 		"description": "Sacrifice a region to draw 2 cards.",
 		"cost": 0,
-		"requirements": [],
-		"icon": "res://cards/images/skull.png"
+		"icon": "res://cards/images/skull.png",
+		"exhaust": false
 	},
 	"Flood": {
 		"id": "Flood",
 		"name": "Flood",
 		"effects": [
 			{
-				"event": "play",
+				"trigger": "instant",
 				"type": "power",
-				"power": "sink",
+				"name": "sink",
 				"value": [
 					[
 						0,
@@ -174,16 +190,16 @@
 		"description": "Sink a single tile. The affected region will lose units in proportion.",
 		"icon": "res://cards/images/wave.png",
 		"cost": 1,
-		"requirements": []
+		"exhaust": false
 	},
 	"PrimevalFlood": {
 		"id": "PrimevalFlood",
 		"name": "Primeval Flood",
 		"effects": [
 			{
-				"event": "play",
+				"trigger": "instant",
 				"type": "power",
-				"power": "sink",
+				"name": "sink",
 				"value": [
 					[
 						0,
@@ -202,16 +218,16 @@
 		],
 		"description": "Sink three tiles. The affected region(s) will lose units in proportion.",
 		"cost": 2,
-		"requirements": []
+		"exhaust": false
 	},
 	"Creation": {
 		"id": "Creation",
 		"name": "Creation",
 		"effects": [
 			{
-				"event": "play",
+				"trigger": "instant",
 				"type": "power",
-				"power": "emerge",
+				"name": "emerge",
 				"value": [
 					[
 						0,
@@ -223,16 +239,16 @@
 		"description": "Emerge a single tile from the sea.",
 		"cost": 1,
 		"icon": "res://cards/images/landemerge.png",
-		"requirements": []
+		"exhaust": false
 	},
 	"PrimevalCreation": {
 		"id": "PrimevalCreation",
 		"name": "Primeval Creation",
 		"effects": [
 			{
-				"event": "play",
+				"trigger": "instant",
 				"type": "power",
-				"power": "emerge",
+				"name": "emerge",
 				"value": [
 					[
 						0,
@@ -252,6 +268,6 @@
 		"description": "Emerge three tiles. The affected region(s) will lose units in proportion.",
 		"cost": 2,
 		"icon": "res://cards/images/largecreation.png",
-		"requirements": []
+		"exhaust": false
 	}
 }

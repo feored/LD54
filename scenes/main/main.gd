@@ -7,7 +7,6 @@ const shapePrefab = preload("res://world/tiles/highlight/shape.tscn")
 @onready var messenger = %Message
 @onready var endTurnButton = %TurnButton
 @onready var fastForwardButton = %FastForwardButton
-@onready var card_selector = %CardSelector
 @onready var deck = %Deck
 @onready var faith_label = %FaithLabel
 
@@ -36,8 +35,6 @@ var spectating : bool = false
 
 var cards_to_pick = 1
 
-const CARDS_TO_DRAW = 5
-
 var game : Game
 
 # Called when the node enters the scene tree for the first time.
@@ -47,18 +44,14 @@ func _ready():
 	self.world.init(Callable(self.messenger, "set_message"))
 	Music.play_track(Music.Track.World)
 	Sfx.enable_track(Sfx.Track.Boom)
-	self.card_selector.cards_picked.connect(Callable(self, "_on_cards_selected"))
 	self.load_map(Info.current_map.teams, Info.current_map.regions)
+	Effects.init(self.game.players, Callable(self, "apply_effect"), Callable(self.game, "get_current_player"))
 			
 	self.game.started = true
 	self.world.camera.move_instant(self.world.map_to_local(closest_player_tile_coords()))
 	self.deck.card_played = Callable(self, "use_card")
 	
-	self.game.human.resources.faith = self.game.human.resources.faith_per_turn
-	update_faith_player()
-	for i in range(self.game.human.resources.cards_per_turn):
-		await self.deck.draw(1)
-		self.deck.update_faith(self.game.human.resources.faith)
+	prepare_turn()
 
 
 func clear_mouse_state():
@@ -262,16 +255,9 @@ func _on_turn_button_pressed():
 		await self.world.camera.move_smoothed(self.world.map_to_local(tile_camera_move), 5)
 
 	## Faith generation
-	self.game.human.resources.faith = self.game.human.resources.faith_per_turn + self.world.tiles.values().filter(func(t): return t.data.team == self.game.human.team and t.data.building == Constants.Building.Temple).size()
-	self.update_faith_player()
+	self.prepare_turn()
 	Settings.input_locked = false
 	lock_controls(false)
-
-
-func pick_cards():
-	return
-	var cards_to_generate = 3 + self.world.tiles.values().filter(func(t): return t.data.team == self.game.human.team and t.data.building == Constants.Building.Oracle).size()
-	# add_cards(cards_to_generate)
 
 func _on_cards_selected(cards):
 	for card in cards:
@@ -284,20 +270,20 @@ func _on_cards_selected(cards):
 	
 
 func apply_effect(effect):
-	if effect.type == "resource":
+	if effect.type == Effect.Type.Resource:
 		var expression = Expression.new()
 		expression.parse(effect.value, self.game.current_player.resources.keys())
 		var result = expression.execute(self.game.current_player.resources.values())
-		self.game.current_player.resources[effect.resource] = result
-		Utils.log("Resource %s changed to %s" % [effect.resource, result])
-		if effect.resource == "faith" and !self.game.current_player.is_bot:
+		self.game.current_player.resources[effect.name] = result
+		Utils.log("Resource %s changed to %s" % [effect.name, result])
+		if effect.name == "faith" and !self.game.current_player.is_bot:
 			update_faith_player()
-	elif effect.type == "action":
-		match effect.action:
+	elif effect.type == Effect.Type.Action:
+		match effect.name:
 			"random_discard":
 				await self.deck.discard_random(effect.value)
 			"draw":
-				await self.deck.draw(effect.value)
+				await self.deck.draw_multiple(effect.value)
 			
 
 func use_card(cardView):
@@ -305,34 +291,39 @@ func use_card(cardView):
 	cardView.highlight(true)
 	
 	Utils.log("Card %s used" % cardView.card.name)
-	var play_powers = cardView.card.effects.filter(func(e): return e.event == "play" and e.type == "power")
+	var play_powers = cardView.card.effects.filter(func(e): return e.trigger == Effect.Trigger.Instant and e.type == Effect.Type.Power)
 	if play_powers.size() > 0:
 		var play_power = play_powers[0]
-		match play_power.power:
+		match play_power.name:
 			"reinforcements":
-				set_reinforcements(play_power["value"])
+				set_reinforcements(play_power.value)
 			"sacrifice":
 				set_sacrifice()
 			"build":
-				set_building(play_power["building"])
+				set_building(play_power.value)
 			"sink":
 				var s = Shape.new()
-				s.init_with_json_coords(play_power["value"])
+				s.init_with_json_coords(play_power.value)
 				set_shape(s.coords.keys(), MouseState.Sink)
 			"emerge":
 				var s = Shape.new()
-				s.init_with_json_coords(play_power["value"])
+				s.init_with_json_coords(play_power.value)
 				set_shape(s.coords.keys(), MouseState.Emerge)
 	else:
 		self.card_used(cardView)
 
 	
-func card_used(c):
-	for effect in c.card.effects.filter(func(e): return e.event == "play" and e.type != "power"):
+func card_used(cv):
+	for effect in cv.card.effects.filter(func(e): return e.trigger == Effect.Trigger.Instant and e.type != Effect.Type.Power):
 		await apply_effect(effect)
-	self.game.human.resources.faith -= c.card.cost
+	for effect in cv.card.effects.filter(func(e): return e.trigger != Effect.Trigger.Instant):
+		Effects.add(effect)
+	self.game.human.resources.faith -= cv.card.cost
 	self.update_faith_player()
-	self.deck.discard(c)
+	if cv.card.exhaust:
+		self.deck.exhaust(cv)
+	else:
+		self.deck.discard(cv)
 	self.used_card = null
 
 func closest_player_tile_coords():
@@ -348,9 +339,6 @@ func closest_player_tile_coords():
 				closest_tile_distance = distance
 	return closest_player_tile
 	
-	
-func check_global_turn_over():
-	return self.turn == self.teams.size() - 1
 
 func check_win_condition():
 	for player in self.game.players:
@@ -427,7 +415,12 @@ func play_global_turn():
 	await self.world.sink_marked()
 	check_win_condition()
 	await self.world.mark_tiles(self.game.global_turn)
-	await self.deck.draw(CARDS_TO_DRAW)
+	
+
+func prepare_turn():
+	self.game.human.resources.faith = self.game.human.resources.faith_per_turn + self.world.tiles.values().filter(func(t): return t.data.team == self.game.human.team and t.data.building == Constants.Building.Temple).size()
+	self.update_faith_player()
+	await self.deck.draw_multiple(self.game.human.resources.cards_per_turn)
 	self.deck.update_faith(self.game.human.resources.faith)
 
 func play_turn():
