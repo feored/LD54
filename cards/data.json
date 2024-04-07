@@ -4,8 +4,8 @@
 		"name": "Lucky Deal",
 		"effects": [
 			{
-				"trigger": "card_drawn",
-				"type": "resource",
+				"active_trigger": "card_drawn",
+				"type": "active",
 				"name": "faith",
 				"value": "faith + 1",
 				"duration": 2,
@@ -22,8 +22,8 @@
 		"name": "Offering",
 		"effects": [
 			{
-				"trigger": "instant",
-				"type": "resource",
+				"active_trigger": "instant",
+				"type": "active",
 				"name": "faith",
 				"value": "faith + 1"
 			}
@@ -38,8 +38,8 @@
 		"name": "Large Offering",
 		"effects": [
 			{
-				"trigger": "instant",
-				"type": "resource",
+				"active_trigger": "instant",
+				"type": "active",
 				"name": "faith",
 				"value": "faith + 2"
 			}
@@ -54,7 +54,6 @@
 		"name": "Seal",
 		"effects": [
 			{
-				"trigger": "instant",
 				"type": "power",
 				"name": "build",
 				"value": "Seal"
@@ -70,7 +69,6 @@
 		"name": "Barracks",
 		"effects": [
 			{
-				"trigger": "instant",
 				"type": "power",
 				"name": "build",
 				"value": "Barracks"
@@ -86,14 +84,14 @@
 		"name": "Prayer",
 		"effects": [
 			{
-				"trigger": "instant",
-				"type": "resource",
+				"active_trigger": "instant",
+				"type": "active",
 				"name": "faith",
 				"value": "faith + 2"
 			},
 			{
-				"trigger": "instant",
-				"type": "action",
+				"active_trigger": "instant",
+				"type": "active",
 				"name": "random_discard",
 				"value": 2
 			}
@@ -108,7 +106,6 @@
 		"name": "Hoplites",
 		"effects": [
 			{
-				"trigger": "instant",
 				"type": "power",
 				"name": "reinforcements",
 				"value": 15
@@ -124,7 +121,6 @@
 		"name": "Cretan Archers",
 		"effects": [
 			{
-				"trigger": "instant",
 				"type": "power",
 				"name": "reinforcements",
 				"value": 5
@@ -140,8 +136,7 @@
 		"name": "Luck of the Draw",
 		"effects": [
 			{
-				"trigger": "instant",
-				"type": "action",
+				"type": "active",
 				"name": "draw",
 				"value": 1
 			}
@@ -156,14 +151,13 @@
 		"name": "Sacrifice",
 		"effects": [
 			{
-				"trigger": "instant",
 				"type": "power",
 				"name": "sacrifice",
 				"value": 0
 			},
 			{
-				"trigger": "instant",
-				"type": "action",
+				"active_trigger": "instant",
+				"type": "active",
 				"name": "draw",
 				"value": 2
 			}
@@ -178,7 +172,6 @@
 		"name": "Flood",
 		"effects": [
 			{
-				"trigger": "instant",
 				"type": "power",
 				"name": "sink",
 				"value": [
@@ -199,7 +192,6 @@
 		"name": "Primeval Flood",
 		"effects": [
 			{
-				"trigger": "instant",
 				"type": "power",
 				"name": "sink",
 				"value": [
@@ -227,7 +219,6 @@
 		"name": "Creation",
 		"effects": [
 			{
-				"trigger": "instant",
 				"type": "power",
 				"name": "emerge",
 				"value": [
@@ -248,7 +239,6 @@
 		"name": "Primeval Creation",
 		"effects": [
 			{
-				"trigger": "instant",
 				"type": "power",
 				"name": "emerge",
 				"value": [

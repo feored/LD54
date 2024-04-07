@@ -45,7 +45,7 @@ func _ready():
 	Music.play_track(Music.Track.World)
 	Sfx.enable_track(Sfx.Track.Boom)
 	self.load_map(Info.current_map.teams, Info.current_map.regions)
-	Effects.init(self.game.players, Callable(self, "apply_effect"), Callable(self.game, "get_current_player"))
+	Effects.init(self.game.players, Callable(self, "apply_active"), Callable(self.game, "get_current_player"))
 			
 	self.game.started = true
 	self.world.camera.move_instant(self.world.map_to_local(closest_player_tile_coords()))
@@ -270,21 +270,23 @@ func _on_cards_selected(cards):
 	lock_controls(false)
 	
 
-func apply_effect(effect):
-	if effect.type == Effect.Type.Resource:
-		var expression = Expression.new()
-		expression.parse(effect.value, self.game.current_player.resources.keys())
-		var result = expression.execute(self.game.current_player.resources.values())
-		self.game.current_player.resources[effect.name] = result
-		Utils.log("Resource %s changed to %s" % [effect.name, result])
-		if effect.name == "faith" and !self.game.current_player.is_bot:
-			update_faith_player()
-	elif effect.type == Effect.Type.Action:
+func apply_active(effect):
+	if effect.type == Effect.Type.Active:
 		match effect.name:
 			"random_discard":
 				await self.deck.discard_random(effect.value)
 			"draw":
 				await self.deck.draw_multiple(effect.value)
+			"faith":
+				var expression = Expression.new()
+				expression.parse(effect.value, self.game.current_player.resources.keys())
+				var result = expression.execute(self.game.current_player.resources.values())
+				self.game.current_player.resources.faith = result
+				if !self.game.current_player.is_bot:
+					update_faith_player()
+	else:
+		Utils.log("Effect %s is not an active effect" % effect.name)
+
 			
 
 func use_card(cardView):
@@ -292,7 +294,7 @@ func use_card(cardView):
 	cardView.highlight(true)
 	
 	Utils.log("Card %s used" % cardView.card.name)
-	var play_powers = cardView.card.effects.filter(func(e): return e.trigger == Effect.Trigger.Instant and e.type == Effect.Type.Power)
+	var play_powers = cardView.card.effects.filter(func(e): return e.type == Effect.Type.Power)
 	if play_powers.size() > 0:
 		var play_power = play_powers[0]
 		match play_power.name:
@@ -315,9 +317,9 @@ func use_card(cardView):
 
 	
 func card_used(cv):
-	for effect in cv.card.effects.filter(func(e): return e.trigger == Effect.Trigger.Instant and e.type != Effect.Type.Power):
-		await apply_effect(effect)
-	for effect in cv.card.effects.filter(func(e): return e.trigger != Effect.Trigger.Instant):
+	for effect in cv.card.effects.filter(func(e): return e.type == Effect.Type.Active and e.active_trigger == Effect.Trigger.Instant):
+		await apply_active(effect)
+	for effect in cv.card.effects.filter(func(e): return e.active_trigger != Effect.Trigger.Instant or e.type == Effect.Type.Resource):
 		Effects.add(effect)
 	self.game.human.resources.faith -= cv.card.cost
 	self.update_faith_player()

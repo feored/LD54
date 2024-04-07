@@ -11,12 +11,11 @@ enum Trigger {
 	FaithGained,
 	TurnOver
 }
-enum Type { Power, Action, Resource }
+enum Type { Power, Active, Resource }
 
 var duration: int
 var duration_trigger: Trigger
-var is_triggered: bool
-var trigger: Trigger
+var active_trigger: Trigger
 var type: Type
 var name: String
 var value: Variant
@@ -31,9 +30,7 @@ func _to_string():
 		+ " / Value: "
 		+ str(self.value)
 		+ "/ Trigger: "
-		+ str(Effect.Trigger.keys()[self.trigger])
-		+ " / Is Triggered: "
-		+ str(self.is_triggered)
+		+ str(Effect.Trigger.keys()[self.active_trigger])
 		+ " / Duration: "
 		+ str(self.duration)
 		+ " / Duration Trigger: "
@@ -47,8 +44,8 @@ func string_to_type(s: String) -> Type:
 	s = s.to_lower()
 	if s == "power":
 		return Type.Power
-	elif s == "action":
-		return Type.Action
+	elif s == "active":
+		return Type.Active
 	elif s == "resource":
 		return Type.Resource
 	else:
@@ -87,8 +84,21 @@ func _init(e):
 		if not e.has("duration_trigger")
 		else string_to_trigger(e["duration_trigger"])
 	)
-	is_triggered = false if not e.has("is_triggered") else e["is_triggered"]
-	trigger = Trigger.Instant if not e.has("trigger") else string_to_trigger(e["trigger"])
 	type = string_to_type(e["type"])
+	active_trigger = (
+		Trigger.Instant
+		if (self.type != Type.Active or not e.has("active_trigger"))
+		else string_to_trigger(e["active_trigger"])
+	)
 	name = e["name"]
 	value = e["value"]
+
+# Three types of effects: Power, Action, and Resource.
+# Powers are things that require player interaction. They are limited to one per card.
+
+# Actions are things that have an immediate effect but don't require player input. e.g drawing a card._add_constant_central_force
+
+# Resources are passives.
+
+# Powers can only be activated on playing the card. Resources don't have a trigger, they are always active. Actions are triggered by the action_trigger.
+# Duration is the number of events an effect lasts for. duratrion_trigger is the event in question (turn over, carddrawn, etc)
