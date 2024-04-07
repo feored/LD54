@@ -140,7 +140,7 @@ func sim_turn(sim_moves, world, world_sim):
 	return possible_moves
 
 func play_turn(world):
-	Utils.log("Playing turn: %s" % Constants.TEAM_NAMES[self.team])
+	# Utils.log("Playing turn: %s" % Constants.TEAM_NAMES[self.team])
 	var world_sim = WorldState.new(world)
 	var default_score = self.evaluate_state(world_sim, world)
 	var possible_moves = {[]: default_score}
@@ -151,7 +151,7 @@ func play_turn(world):
 		#Utils.log("Calculating possible moves (", i, ") , size: ", possible_moves.size())
 		var new_moves = self.prune_tree(self.sim_turn(possible_moves, world, world_sim), number_of_moves)
 		if new_moves.keys() == possible_moves.keys():
-			Utils.log("Stopping here %s" % i)
+			# Utils.log("Stopping here %s" % i)
 			break
 		possible_moves = new_moves 
 		number_of_moves -= minus_moves

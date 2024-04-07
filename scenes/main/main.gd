@@ -247,13 +247,14 @@ func _on_turn_button_pressed():
 	Settings.input_locked = true
 
 	await play_global_turn()
-	generate_units(self.game.human.team)
+	
 	
 
 	var tile_camera_move = closest_player_tile_coords()
 	if tile_camera_move != Constants.NULL_COORDS:
 		await self.world.camera.move_smoothed(self.world.map_to_local(tile_camera_move), 5)
 
+	Effects.trigger(Effect.Trigger.TurnOver)
 	## Faith generation
 	self.prepare_turn()
 	Settings.input_locked = false
@@ -418,6 +419,7 @@ func play_global_turn():
 	
 
 func prepare_turn():
+	self.generate_units(self.game.human.team)
 	self.game.human.resources.faith = self.game.human.resources.faith_per_turn + self.world.tiles.values().filter(func(t): return t.data.team == self.game.human.team and t.data.building == Constants.Building.Temple).size()
 	self.update_faith_player()
 	await self.deck.draw_multiple(self.game.human.resources.cards_per_turn)

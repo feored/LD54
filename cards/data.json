@@ -7,10 +7,12 @@
 				"trigger": "card_drawn",
 				"type": "resource",
 				"name": "faith",
-				"value": "faith + 1"
+				"value": "faith + 1",
+				"duration": 2,
+				"duration_trigger": "turn_over"
 			}
 		],
-		"description": "Gain 1 faith every time you draw a card.",
+		"description": "Gain 1 faith every time you draw a card for 2 turns.",
 		"cost": 0,
 		"icon": "res://cards/images/tridentsun.png",
 		"exhaust": true

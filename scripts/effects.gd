@@ -28,5 +28,5 @@ func trigger(t : Effect.Trigger):
 	for e in duration_affected:
 		e.duration -= 1
 		if e.duration <= 0:
-			self.active_effects.erase(e)
+			self.active_effects[p].erase(e)
 			Utils.log("Effect " + str(e) + " has expired for player " + str(p))
