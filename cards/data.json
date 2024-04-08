@@ -257,7 +257,7 @@
 				]
 			}
 		],
-		"description": "Emerge three tiles. The affected region(s) will lose units in proportion.",
+		"description": "Emerge three tiles from the sea.",
 		"cost": 2,
 		"icon": "res://cards/images/largecreation.png",
 		"exhaust": false

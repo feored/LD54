@@ -17,9 +17,10 @@ const DEFAULT_RESOURCES = {"faith": 0, "faith_per_turn": 2, "cards_per_turn": 5}
 
 func compute_resource(r):
 	var res = self.resources.duplicate()
-	for effect in Effects.active_effects[self].filter(func(e): return e.name == r):
+	for effect in Effects.effects[self].filter(func(e): return e.name == r):
 		var expression = Expression.new()
 		expression.parse(effect.value, res.keys())
 		var result = expression.execute(res.values())
 		res[effect.name] = result
+	Utils.log("Player " + str(self.team) + " has " + str(res[r]) + " " + r + " computed from " + str(self.resources[r]) + " base.")
 	return res[r]
