@@ -13,9 +13,9 @@ func _to_string():
 	return "Player " + str(team)
 
 
-const DEFAULT_RESOURCES = {"faith": 0, "faith_per_turn": 2, "cards_per_turn": 5}
+const DEFAULT_RESOURCES = {"faith": 0, "faith_per_turn": 2, "cards_per_turn": 5, "units_per_tile" : 1 }
 
-func compute_resource(r):
+func compute(r : String):
 	var res = self.resources.duplicate()
 	for effect in Effects.effects[self].filter(func(e): return e.name == r):
 		var expression = Expression.new()

@@ -360,49 +360,13 @@ func reset_regions_team():
 	for region in self.regions:
 		self.regions[region].set_team(Constants.NULL_TEAM)
 
-func load_regions(new_regions, gen_units = true):
+func load_regions(new_regions):
 	for region in new_regions:
 		var region_id = int(region.id)
 		self.spawn_region(region_id, region)
-		if gen_units && region.team != Constants.NULL_TEAM:
-			self.regions[region_id].generate_units()
 		self.regions[region_id].update()
 	for r in self.regions:
 		self.adjacencies[r] = self.adjacent_regions(r)
-
-
-# func shortest_path_length(from_id, to_id):
-# 	var length = 1
-# 	var to_visit = []
-# 	var visited = [from_id]
-# 	while to_visit.size() > 0:
-# 		for r in to_visit: 
-# 			if to_id in adjacencies[r]:
-# 				return length
-# 			length += 1
-# 			for neighbor in adjacencies[r]:
-# 				if not visited.has(neighbor):
-# 					visited.append(neighbor)
-# 					if neighbor == to_id:
-# 						return length
-# 	return Constants.NULL_PATH_LENGTH
-# 	#Utils.log("Error: no path found between %s and %s" % [from_id, to_id])
-# 	#Utils.log("Adjacencies for region ", adjacencies[from_id])
-
-# func all_path_lengths():
-# 	var lengths = {}
-# 	for r in self.regions:
-# 		lengths[r] = {}
-# 	for r in self.regions:
-# 		for r2 in self.regions:
-# 			if r != r2:
-# 				if r2 in lengths and r in lengths[r2]:
-# 					lengths[r][r2] = lengths[r2][r]
-# 				else:
-# 					lengths[r][r2] = self.shortest_path_length(r, r2)
-# 	for i in lengths:
-# 		print(i, ": ", lengths[i])
-# 	return lengths
 
 func bfs(region):
 	var lengths = {region: 0}

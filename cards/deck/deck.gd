@@ -69,6 +69,7 @@ func discard(cardView):
 		self.play_pile.remove_at(card_id)
 		self.discard_pile.push_back(cardView.card)
 		cardView.queue_free()
+		Effects.trigger(Effect.Trigger.CardDiscarded)
 		self.place_all()
 	await Utils.wait(0.1)
 	update_display()
@@ -80,6 +81,7 @@ func exhaust(cardView):
 		self.exhausted.push_back(cardView.card)
 		cardView.queue_free()
 		self.place_all()
+		Effects.trigger(Effect.Trigger.CardExhausted)
 	await Utils.wait(0.1)
 	update_display()
 

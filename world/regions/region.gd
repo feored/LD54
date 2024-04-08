@@ -155,8 +155,8 @@ func random_in_region():
 	return self.data.tiles[randi() % self.data.tiles.size()]
 
 
-func generate_units():
-	self.data.units += self.data.tiles.size()
+func generate_units(units_per_tile):
+	self.data.units += self.data.tiles.size() * units_per_tile
 	for tile in self.tile_objs.values():
 		if tile.data.building == Constants.Building.Barracks:
 			self.data.units += Constants.BARRACKS_UNITS_PER_TURN
@@ -178,6 +178,7 @@ func attack(num_attackers, team):
 	if total_attackers > self.data.units:
 		self.set_units(total_attackers - self.data.units)
 		self.set_team(team)
+		Effects.trigger(Effect.Trigger.RegionGained)
 	else:
 		self.set_units(self.data.units - total_attackers)
 	self.update()

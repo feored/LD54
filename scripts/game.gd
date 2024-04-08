@@ -36,3 +36,9 @@ func next_player():
 
 func get_current_player():
 	return self.current_player
+
+func player_from_team(team):
+	for player in players:
+		if player.team == team:
+			return player
+	return null

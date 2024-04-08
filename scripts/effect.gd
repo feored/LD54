@@ -6,9 +6,15 @@ enum Trigger {
 	CardDrawn,
 	CardPlayed,
 	CardDiscarded,
+	CardExhausted,
+	EnemyDefeated,
+	BuildingBuilt,
+	RegionSacrificed,
+	TileEmerged,
+	TileSunk,
+	RegionReinforced,
 	RegionGained,
 	RegionLost,
-	FaithGained,
 	TurnOver
 }
 enum Type { Power, Active, Resource }
@@ -68,10 +74,22 @@ func string_to_trigger(s: String) -> Trigger:
 		return Trigger.RegionGained
 	elif s == "region_lost":
 		return Trigger.RegionLost
-	elif s == "faith_gained":
-		return Trigger.FaithGained
 	elif s == "turn_over":
 		return Trigger.TurnOver
+	elif s == "card_exhausted":
+		return Trigger.CardExhausted
+	elif s == "enemy_defeated":
+		return Trigger.EnemyDefeated
+	elif s == "building_built":
+		return Trigger.BuildingBuilt
+	elif s == "region_sacrificed":
+		return Trigger.RegionSacrificed
+	elif s == "tile_emerged":
+		return Trigger.TileEmerged
+	elif s == "tile_sunk":
+		return Trigger.TileSunk
+	elif s == "region_reinforced":
+		return Trigger.RegionReinforced
 	else:
 		Utils.log("ERROR - Unknown trigger: " + s)
 		return Trigger.Instant

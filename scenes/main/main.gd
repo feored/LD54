@@ -44,8 +44,11 @@ func _ready():
 	self.world.init(Callable(self.messenger, "set_message"))
 	Music.play_track(Music.Track.World)
 	Sfx.enable_track(Sfx.Track.Boom)
-	self.load_map(Info.current_map.teams, Info.current_map.regions)
+
+	self.game = Game.new(Info.current_map.teams.map(func(t): return int(t)))
 	Effects.init(self.game.players, Callable(self, "apply_active"), Callable(self.game, "get_current_player"))
+	self.load_map(Info.current_map.regions)
+	
 			
 	self.game.started = true
 	self.world.camera.move_instant(self.world.map_to_local(closest_player_tile_coords()))
@@ -328,6 +331,7 @@ func card_used(cv):
 	else:
 		self.deck.discard(cv)
 	self.used_card = null
+	Effects.trigger(Effect.Trigger.CardPlayed)
 
 func closest_player_tile_coords():
 	var closest_player_tile = Constants.NULL_COORDS
@@ -422,9 +426,9 @@ func play_global_turn():
 
 func prepare_turn():
 	self.generate_units(self.game.human.team)
-	self.game.human.resources.faith = self.game.human.compute_resource("faith_per_turn") + self.world.tiles.values().filter(func(t): return t.data.team == self.game.human.team and t.data.building == Constants.Building.Temple).size()
+	self.game.human.resources.faith = self.game.human.compute("faith_per_turn") + self.world.tiles.values().filter(func(t): return t.data.team == self.game.human.team and t.data.building == Constants.Building.Temple).size()
 	self.update_faith_player()
-	await self.deck.draw_multiple(self.game.human.compute_resource("cards_per_turn"))
+	await self.deck.draw_multiple(self.game.human.compute("cards_per_turn"))
 	self.deck.update_faith(self.game.human.resources.faith)
 
 func play_turn():
@@ -459,7 +463,7 @@ func generate_units(team):
 			Utils.log("Region %s is not valid" % region)
 			break
 		if world.regions[region].data.team == team:
-			world.regions[region].generate_units()
+			world.regions[region].generate_units(self.game.current_player.compute("units_per_tile"))
 
 func apply_action(action : Action):
 	match action.action:
@@ -467,15 +471,20 @@ func apply_action(action : Action):
 			await self.world.move_units(action.region_from, action.region_to, action.team)
 		Action.Type.Sink:
 			await self.world.sink_tiles(action.tiles)
+			Effects.trigger(Effect.Trigger.TileSunk)
 		Action.Type.Emerge:
 			await self.world.emerge_tiles(action.tiles)
+			Effects.trigger(Effect.Trigger.TileEmerged)
 		Action.Type.Sacrifice:
 			sacrifice_region(action.region_from, action.team)
+			Effects.trigger(Effect.Trigger.RegionSacrificed)
 		Action.Type.Build:
 			self.world.tiles[action.tiles[0]].set_building(action.misc)
+			Effects.trigger(Effect.Trigger.BuildingBuilt)
 		Action.Type.Reinforce:
 			self.world.regions[action.region_from].data.units += action.misc
 			self.world.regions[action.region_from].update()
+			Effects.trigger(Effect.Trigger.RegionReinforced)
 		Action.Type.None:
 			pass
 		_:
@@ -486,10 +495,12 @@ func update_faith_player():
 	self.deck.update_faith(self.game.human.resources.faith)
 	self.faith_label.set_text(str(self.game.human.resources.faith) + "/" + str(self.game.human.resources.faith_per_turn))
 
-func load_map(map_teams, map_regions):
+func load_map(map_regions):
 	self.world.clear_island()
-	self.game = Game.new(map_teams.map(func(t): return int(t)))
 	self.world.load_regions(map_regions)
+	for region in self.world.regions.values():
+		if region.data.team != Constants.NULL_TEAM and region.data.team != self.game.human.team:
+			region.generate_units(self.game.player_from_team(region.data.team).compute("units_per_tile"))
 
 func set_shape(shape_coords, mode):
 	self.mouse_item = shapePrefab.instantiate()
