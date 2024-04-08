@@ -5,8 +5,6 @@ const card_prefab = preload("res://cards/card_view/card_view.tscn")
 @onready var card_container = %CardContainer
 @onready var outside = %PopupOutside
 
-var card_views = []
-
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
@@ -14,7 +12,7 @@ func _ready():
 
 
 func clean_up():
-	for card in self.card_views:
+	for card in self.card_container.get_children():
 		card.queue_free()
 
 
@@ -24,5 +22,4 @@ func init(cards: Array):
 		var cardView = card_prefab.instantiate()
 		cardView.is_static = true
 		cardView.card = c
-		self.card_views.push_back(cardView)
 		self.card_container.add_child(cardView)
