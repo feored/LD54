@@ -10,3 +10,4 @@ offset_right = 473.0
 offset_bottom = 488.0
 theme = ExtResource("1_n0ay6")
 icon = ExtResource("2_3rwnu")
+icon_alignment = 1

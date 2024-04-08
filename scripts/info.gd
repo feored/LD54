@@ -13,8 +13,10 @@ func _ready():
 func _process(delta):
 	pass
 
+
 func set_map(map_path):
 	var save_game = FileAccess.open("res://maps/" + map_path, FileAccess.READ)
+	Utils.log("Loading map: " + map_path)
 	var saved_state = JSON.parse_string(save_game.get_line())
 	save_game.close()
 	self.current_map = saved_state

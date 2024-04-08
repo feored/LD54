@@ -3,17 +3,15 @@ class_name Map
 
 ## Maps
 
-const NORMAL_MAPS = [
-	"confrontation.json",
-	"blob.json",
-	"triangles.json",
-	"fortress.json",
-	"homebase.json",
-	"rings.json",
-	"triforce.json",
-	"tarp.json",
-	"santa.json"
-]
+const NORMAL_MAPS = {
+	"confrontation.json": 0,
+	"blob.json" : 2,
+	"triangles.json" : 1,
+	"fortress.json" : 1,
+	"homebase.json" : 2,
+	"rings.json" : 2,
+	"triforce.json" : 1,
+}
 
 const BOSS_MAPS = [
 	"star.json"
@@ -32,6 +30,7 @@ class Island:
 	var location : Location
 	var visited: bool = false
 	var next : Array
+	var level : int
 	var info : Dictionary
 	
 	func _init():
@@ -54,18 +53,23 @@ func layout_to_map (layout):
 		var island = Island.new()
 		island.location = Location.Map if Utils.rng.randi()%2 == 0 else Location.Event
 		if island.location == Location.Map:
-			island.info["path"] = NORMAL_MAPS.pick_random()
+			island.info["path"] = NORMAL_MAPS.keys().pick_random()
+			island.level = gen_level(coords.x)
 		else:
 			island.info["event"] = Constants.EVENTS.keys().pick_random()
 		island.next = layout[coords]
 		new_map[coords] = island
 	return new_map
+	
+func gen_level(current_floor):
+	return max(int(Utils.rng.randf_range(0.75,1.25)*current_floor), 0)
 
 func add_boss(new_map):
 	var boss_coords = Vector2i(MAP_HEIGHT, MAP_WIDTH/2.0)
 	var new_boss = Island.new()
 	new_boss.location = Location.Map
 	new_boss.info["path"] = BOSS_MAPS.pick_random()
+	new_boss.level = MAP_HEIGHT * 2
 	new_map[boss_coords] = new_boss
 	for i in range(MAP_WIDTH):
 		if Vector2i(MAP_HEIGHT-1, i) in new_map.keys():

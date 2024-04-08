@@ -2,6 +2,7 @@ extends Node
 signal event_started(event)
 
 const X_OFFSET = 100
+const Y_OFFSET = 100
 const btnPrefab = preload("res://scenes/overworld/button.tscn")
 
 @onready var lines_panel = %LinesPanel
@@ -10,7 +11,7 @@ const btnPrefab = preload("res://scenes/overworld/button.tscn")
 
 
 func coords_to_btnpos(coords):
-	return Vector2(X_OFFSET + coords.y * 100,  (Map.MAP_HEIGHT - coords.x) * 100) + Vector2(Utils.rng.randf_range(-20, 20), Utils.rng.randf_range(-10, 10))
+	return Vector2(X_OFFSET + coords.y * 100,  Y_OFFSET + (Map.MAP_HEIGHT - coords.x) * 100) + Vector2(Utils.rng.randf_range(-20, 20), Utils.rng.randf_range(-10, 10))
 
 
 func clear():
@@ -43,6 +44,8 @@ func draw_map():
 			lines_panel.visited.push_back(btns[k].position + Vector2(20, 16))
 		if Info.run.map.map[k].location == Map.Location.Event:
 			btn.icon = load("res://assets/icons/prayer.png")
+		else:
+			btn.set_text(str(Info.run.map.map[k].level))
 		btn.pressed.connect(func (): choose_location(k))
 	for k in Info.run.map.map.keys():
 		for end in Info.run.map.map[k].next:

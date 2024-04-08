@@ -1,4 +1,24 @@
 {
+	"CultStatue": {
+		"id": "CultStatue",
+		"name": "Cult Statue",
+		"effects": [
+			{
+				"type": "resource",
+				"name": "faith_per_turn",
+				"value": "faith_per_turn + 1"
+			},
+			{
+				"type": "resource",
+				"name": "cards_per_turn",
+				"value": "cards_per_turn - 1"
+			}
+		],
+		"description": "Gain 1 faith per turn, but draw 1 less card per turn.",
+		"cost": 2,
+		"icon": "res://cards/images/statue.png",
+		"exhaust": false
+	},
 	"LuckyDeal": {
 		"id": "LuckyDeal",
 		"name": "Lucky Deal",
