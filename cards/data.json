@@ -19,20 +19,20 @@
 		"icon": "res://cards/images/statue.png",
 		"exhaust": false
 	},
-	"LuckyDeal": {
-		"id": "LuckyDeal",
-		"name": "Lucky Deal",
+	"Abundance": {
+		"id": "Abundance",
+		"name": "Abundance",
 		"effects": [
 			{
 				"active_trigger": "card_drawn",
 				"type": "active",
 				"name": "faith",
 				"value": "faith + 1",
-				"duration": 2,
+				"duration": 1,
 				"duration_trigger": "turn_over"
 			}
 		],
-		"description": "Gain 1 faith every time you draw a card for 2 turns.",
+		"description": "Gain 1 faith every time you draw a card for this turn.",
 		"cost": 0,
 		"icon": "res://cards/images/tridentsun.png",
 		"exhaust": true
