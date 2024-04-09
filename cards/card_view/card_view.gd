@@ -9,7 +9,6 @@ const COLOR_INVALID = Color(1, 0.5, 0.5)
 const COLOR_VALID = Color(1, 1, 1)
 const BASE_Z_INDEX = 0
 const HOVER_Z_INDEX = 1
-const ANIMATION_TIMER = 0.15
 
 @onready var card_icon : TextureRect = %PowerIcon
 @onready var card_name : Label = %PowerName
@@ -25,7 +24,7 @@ var buyable: bool = true
 var tweens = []
 var card : Card
 var state : State = State.Idle
-var card_ready : bool = true
+var card_ready : bool = false
 var base_position : Vector2
 var is_static : bool = false
 
@@ -34,6 +33,7 @@ func check_finished():
 		if t.is_valid() and t.is_running():
 			return
 	self.clear_tweens()
+	self.card_ready = true
 
 func set_buyable(b : bool):
 	self.buyable = b
@@ -43,34 +43,45 @@ func clear_tweens():
 	for tween in self.tweens:
 		tween.kill()
 	self.tweens.clear()
-	self.card_ready = true
 
 func animate(new_pos, new_rotation, new_z_index):
 	self.card_ready = false
 	if self.tweens.size() > 0:
 		clear_tweens()
 
-	var tween_pos = self.create_tween().set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN)
-	tween_pos.tween_property(self, "position", new_pos, ANIMATION_TIMER)
-	
-	var tween_rotation = self.create_tween().set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN)
-	tween_rotation.tween_property(self, "rotation_degrees", new_rotation, ANIMATION_TIMER)
+	var tween = self.create_tween().set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN).set_parallel()
+	tween.tween_property(self, "position", new_pos, Constants.DECK_SHORT_TIMER)
+	tween.tween_property(self, "rotation_degrees", new_rotation, Constants.DECK_SHORT_TIMER)
+	tween.tween_property(self, "z_index", new_z_index, Constants.DECK_SHORT_TIMER)
 
-	var tween_z_index = self.create_tween().set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN)
-	tween_z_index.tween_property(self, "z_index", new_z_index, ANIMATION_TIMER)
-
-	self.tweens = [tween_pos, tween_rotation, tween_z_index]
+	self.tweens = [tween]
 
 	for t in self.tweens:
 		t.connect("finished", Callable(self, "check_finished"))
 	# Utils.log("Animating card to " + str(new_pos) + " " + str(new_rotation) + " " + str(new_z_index))
 
-func move(new_pos, flip = false):
+func move(new_pos, to_flip = false, call_when_finished = null):
 	if self.tweens.size() > 0:
 		clear_tweens()
-	var tween_pos = self.create_tween().set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN)
-	tween_pos.tween_property(self, "position", new_pos, ANIMATION_TIMER)
+	var tween_pos = self.create_tween().set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN).set_parallel()
+	tween_pos.tween_property(self, "position", new_pos, Constants.DECK_LONG_TIMER)
+	if call_when_finished != null:
+		tween_pos.chain().tween_callback(call_when_finished)
 	tweens = [tween_pos]
+
+	if to_flip:
+		var tween_flip = self.create_tween().set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN)
+		tween_flip.tween_property(self, "scale", Vector2(0, 1), Constants.DECK_LONG_TIMER/2.0)
+		tween_flip.tween_callback(flip)
+		tween_flip.tween_property(self, "scale", Vector2(1, 1), Constants.DECK_LONG_TIMER/2.0)
+		tweens.push_back(tween_flip)
+
+	for t in self.tweens:
+		t.connect("finished", Callable(self, "check_finished"))
+
+func discard(pos):
+	self.card_ready = false
+	self.move(pos, true, Callable(self, "queue_free"))
 
 
 func flip():
@@ -128,15 +139,14 @@ func highlight(to_highlight):
 
 func _on_mouse_entered():
 	if self.state == State.Idle and self.card_ready:
-		if not self.card_ready:
-			self.clear_tweens()
+		Utils.log("Mouse entered")
 		self.animate(Vector2(self.position.x, self.position.y - 100), 0, HOVER_Z_INDEX)
 		self.state = CardView.State.Hovered
 
 func _on_mouse_exited():
-		## Mouse actually exited
-		if self.state == State.Hovered:
-			if not self.card_ready:
-				self.clear_tweens()
-			self.animate(base_position, 0, BASE_Z_INDEX)
-			self.state = CardView.State.Idle
+	## Mouse actually exited
+	if self.state == State.Hovered:
+		if not self.card_ready:
+			self.clear_tweens()
+		self.animate(base_position, 0, BASE_Z_INDEX)
+		self.state = CardView.State.Idle

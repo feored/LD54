@@ -49,6 +49,8 @@ const CASTLE_UNITS_REMOVED = 10
 const BARRACKS_UNITS_PER_TURN = 3
 const DEFAULT_FAITH = 0
 const DEFAULT_DECK_SIZE = 5
+const DECK_LONG_TIMER = 0.3
+const DECK_SHORT_TIMER = 0.15
 
 ## Null values
 const NULL_COORDS = Vector2i(-9999, -9999)

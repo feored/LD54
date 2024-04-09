@@ -1,25 +1,6 @@
 extends RefCounted
 class_name Map
 
-## Maps
-
-const NORMAL_MAPS = {
-	"confrontation.json": 0,
-	"blob.json" : 2,
-	"triangles.json" : 1,
-	"fortress.json" : 1,
-	"homebase.json" : 2,
-	"rings.json" : 2,
-	"triforce.json" : 1,
-}
-
-const BOSS_MAPS = [
-	"star.json"
-]
-
-
-const START = Vector2i(-1, -999)
-
 enum Location {
 	Map,
 	Event
@@ -40,9 +21,31 @@ class Island:
 		self.visited = false
 		self.next = []
 
-const MAP_WIDTH = 7
-const MAP_HEIGHT = 3
-const MAP_PATHS = 1
+
+
+const MAP_WIDTH = 6
+const MAP_HEIGHT = 10
+const MAP_PATHS = 7
+
+## Maps
+
+const NORMAL_MAPS = {
+	"confrontation.json": 0,
+	"blob.json" : 2,
+	"triangles.json" : 1,
+	"fortress.json" : 1,
+	"homebase.json" : 2,
+	"rings.json" : 2,
+	"triforce.json" : 1,
+}
+
+const BOSS_MAPS = [
+	"star.json"
+]
+
+const START = Vector2i(-1, -999)
+
+
 
 var map : Dictionary
 var boss : Island
