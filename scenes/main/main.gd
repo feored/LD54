@@ -47,7 +47,9 @@ func _ready():
 
 	self.game = Game.new(Info.current_map.teams.map(func(t): return int(t)))
 	Effects.init(self.game.players, Callable(self, "apply_active"), Callable(self.game, "get_current_player"))
+	self.add_mods(Info.current_mods)
 	self.load_map(Info.current_map.regions)
+	
 	
 			
 	self.game.started = true
@@ -56,6 +58,24 @@ func _ready():
 	
 	prepare_turn()
 
+func add_mod_effect(e):
+	var players_to_apply = []
+	if e.target == MapMods.Target.Human:
+		players_to_apply = [self.game.human]
+	elif e.target == MapMods.Target.Enemies:
+		players_to_apply = self.game.players.filter(func(p): return p.team != self.game.human.team)
+	elif e.target == Constants.Target.All:
+		players_to_apply = self.game.players
+	for player in players_to_apply:
+		var instanced_effect = Effect.new(e.effect)
+		Effects.add(instanced_effect, player)
+
+func add_mods(mods):
+	for mod_key in mods:
+		var mod = MapMods.mods[mod_key]
+		for effect in mod.effects:
+			add_mod_effect(effect)
+		
 
 func clear_mouse_state():
 	if self.mouse_item != null:

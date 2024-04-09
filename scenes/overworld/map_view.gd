@@ -51,16 +51,6 @@ func draw_map():
 		for end in Info.run.map.map[k].next:
 			lines_panel.coords.push_back([btns[k].position + Vector2(20, 16), btns[end].position + Vector2(20, 16)])
 
-	## draw boss
-	# var bossBtn = btnPrefab.instantiate()
-	# bossBtn.position = coords_to_btnpos(Info.run.map.boss.info.coords)
-	# lines_panel.add_child(bossBtn)
-	# btns[Info.run.map.boss.info.coords] = bossBtn
-	# bossBtn.pressed.connect(func (): choose_location(Info.run.map.boss))
-	# lines_panel.coords.push_back([boss.position + Vector2(20, 16), btns[Info.run.map.boss].position + Vector2(20, 16)])
-	# lines_panel.queue_redraw()
-
-
 func _ready():
 	draw_map()
 	call_deferred("scroll_to_floor")
@@ -70,11 +60,14 @@ func choose_location(k):
 	Info.run.coords = k
 	Info.run.map.map[k].visited = true
 	if Info.run.map.map[k].location == Map.Location.Map:
-		print("Picking random map")
-		Info.set_map(Info.run.map.map[k].info.path)
+		Utils.log("Mods for selected map: ")
+		for mod in Info.run.map.map[k].mods:
+			Utils.log(MapMods.mods[mod].name)
+		Info.set_map(Info.run.map.map[k].path)
+		Info.current_mods = Info.run.map.map[k].mods
 		await SceneTransition.change_scene(SceneTransition.SCENE_MAIN_GAME)
 	else:
-		self.event_started.emit(Info.run.map.map[k].info.event)
+		self.event_started.emit(Info.run.map.map[k].event)
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):

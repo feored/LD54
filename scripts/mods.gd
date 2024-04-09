@@ -9,12 +9,13 @@ const mods = {
 	Mod.Conscription:
 	{
 		"level": 1,
-		"mods":
+		"name": "Conscription",
+		"effects":
 		[
 			{
 				"target": Target.Enemies,
 				"effect":
-				{"type": "resource", "name": "units_per_tile", "value": "units_per_tile * 2"},
+				{"type": "resource", "name": "units_per_tile", "value": "units_per_tile * 1.5"},
 			}
 		],
 		"description": "Enemy troops regenerate twice as fast."
@@ -22,12 +23,13 @@ const mods = {
 	Mod.TotalWar:
 	{
 		"level": 2,
-		"mods":
+		"name": "Total War",
+		"effects":
 		[
 			{
 				"target": Target.Enemies,
 				"effect":
-				{"type": "resource", "name": "units_per_tile", "value": "units_per_tile * 3"},
+				{"type": "resource", "name": "units_per_tile", "value": "units_per_tile * 2"},
 			}
 		],
 		"description": "Enemy troops regenerate three times as fast."
@@ -35,7 +37,8 @@ const mods = {
 	Mod.Godless:
 	{
 		"level": 2,
-		"mods":
+		"name": "Godless",
+		"effects":
 		[
 			{
 				"target": Target.Human,
@@ -48,7 +51,8 @@ const mods = {
 	Mod.GodForsaken:
 	{
 		"level": 3,
-		"mods":
+		"name": "Godforsaken",
+		"effects":
 		[
 			{
 				"target": Target.Human,
@@ -61,7 +65,8 @@ const mods = {
 	Mod.Famine:
 	{
 		"level": 1,
-		"mods":
+		"name": "Famine",
+		"effects":
 		[
 			{
 				"target": Target.Human,
@@ -74,7 +79,8 @@ const mods = {
 	Mod.Scarcity:
 	{
 		"level": 2,
-		"mods":
+		"name": "Scarcity",
+		"effects":
 		[
 			{
 				"target": Target.Human,

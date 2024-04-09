@@ -13,10 +13,12 @@ func init(players, apply_active_func, get_current_player_func):
 	for p in players:
 		self.effects[p] = []
 
-func add(e : Effect):
-	Utils.log("Adding effect: " + str(e) + " for player " + str(self.get_current_player.call()))
-	var p = self.get_current_player.call()
+func add(e : Effect, p : Player = null):
+	if p == null:
+		p = self.get_current_player.call()
+	Utils.log("Adding effect: " + str(e) + " for player " + str(p))
 	self.effects[p].push_back(e)
+	
 
 func trigger(t : Effect.Trigger):
 	var p = self.get_current_player.call()
