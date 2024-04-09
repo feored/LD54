@@ -434,6 +434,12 @@ text = "0/3"
 horizontal_alignment = 1
 vertical_alignment = 1
 
+[node name="ModsScrollContainer" type="ScrollContainer" parent="UI"]
+unique_name_in_owner = true
+offset_top = 30.0
+offset_right = 129.0
+offset_bottom = 324.0
+
 [connection signal="pressed" from="UI/Deck/DiscardPile/MarginContainer/Back/VBoxContainer/DiscardPileButton" to="UI/Deck" method="_on_discard_pile_button_pressed"]
 [connection signal="pressed" from="UI/Deck/DrawPile/MarginContainer/Back/VBoxContainer/DrawPileButton" to="UI/Deck" method="_on_draw_pile_button_pressed"]
 [connection signal="toggled" from="UI/Bar/MarginContainer/HBoxContainer/HBoxContainer/FastForwardButton" to="." method="_on_fast_forward_button_toggled"]

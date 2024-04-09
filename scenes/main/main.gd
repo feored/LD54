@@ -1,7 +1,8 @@
 extends Node2D
 
-const gameOverScreenPrefab = preload("res://scenes/game_over_menu/game_over_screen.tscn")
-const shapePrefab = preload("res://world/tiles/highlight/shape.tscn")
+const game_over_screen_prefab = preload("res://scenes/game_over_menu/game_over_screen.tscn")
+const shape_prefab = preload("res://world/tiles/highlight/shape.tscn")
+const mod_list_prefab = preload("res://scenes/overworld/mod_view/mod_list.tscn")
 
 @onready var world = $"World"
 @onready var messenger = %Message
@@ -9,6 +10,7 @@ const shapePrefab = preload("res://world/tiles/highlight/shape.tscn")
 @onready var fastForwardButton = %FastForwardButton
 @onready var deck = %Deck
 @onready var faith_label = %FaithLabel
+@onready var mods_scroll_container = %ModsScrollContainer
 
 var used_card = null
 var current = {
@@ -50,8 +52,10 @@ func _ready():
 	self.add_mods(Info.current_mods)
 	self.load_map(Info.current_map.regions)
 	
+	var mod_list = mod_list_prefab.instantiate()
+	mod_list.init(Info.current_mods)
+	self.mods_scroll_container.add_child(mod_list)
 	
-			
 	self.game.started = true
 	self.world.camera.move_instant(self.world.map_to_local(closest_player_tile_coords()))
 	self.deck.card_played = Callable(self, "use_card")
@@ -373,11 +377,11 @@ func check_win_condition():
 			player.eliminated = true
 			messenger.set_message(Constants.TEAM_NAMES[player.team] + " has been wiped from the island!")
 	if self.game.human.eliminated and not spectating:
-		var gameOverScreen = gameOverScreenPrefab.instantiate()
+		var gameOverScreen = game_over_screen_prefab.instantiate()
 		gameOverScreen.init(false, self, true)
 		self.add_child(gameOverScreen)
 	elif self.game.players.filter(func(p): return !p.eliminated).size() < 2:
-		var gameOverScreen = gameOverScreenPrefab.instantiate()
+		var gameOverScreen = game_over_screen_prefab.instantiate()
 		gameOverScreen.init(true, self, false)
 		self.add_child(gameOverScreen)
 
@@ -523,7 +527,7 @@ func load_map(map_regions):
 			region.generate_units(self.game.player_from_team(region.data.team).compute("units_per_tile"))
 
 func set_shape(shape_coords, mode):
-	self.mouse_item = shapePrefab.instantiate()
+	self.mouse_item = shape_prefab.instantiate()
 	self.mouse_item.init_with_coords(shape_coords)
 	self.world.add_child(mouse_item)
 	self.mouse_item.global_position = get_viewport().get_mouse_position()
