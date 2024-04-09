@@ -41,15 +41,15 @@ func draw_map():
 		if k not in open:
 			btn.disabled = true
 		if Info.run.map.map[k].visited:
-			lines_panel.visited.push_back(btns[k].position + Vector2(20, 16))
+			lines_panel.visited.push_back(btns[k].position + Vector2(16, 16))
 		if Info.run.map.map[k].location == Map.Location.Event:
-			btn.icon = load("res://assets/icons/prayer.png")
+			btn.icon = load("res://scenes/overworld/event_icon.png")
 		else:
 			btn.set_text(str(Info.run.map.map[k].level))
 		btn.pressed.connect(func (): choose_location(k))
 	for k in Info.run.map.map.keys():
 		for end in Info.run.map.map[k].next:
-			lines_panel.coords.push_back([btns[k].position + Vector2(20, 16), btns[end].position + Vector2(20, 16)])
+			lines_panel.coords.push_back([btns[k].position + Vector2(16, 16), btns[end].position + Vector2(16, 16)])
 
 func _ready():
 	draw_map()

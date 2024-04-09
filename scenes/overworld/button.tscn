@@ -1,13 +1,31 @@
-[gd_scene load_steps=3 format=3 uid="uid://dj28vemf8acp2"]
+[gd_scene load_steps=8 format=3 uid="uid://dj28vemf8acp2"]
 
 [ext_resource type="Theme" uid="uid://3t61g0061mea" path="res://assets/theme.tres" id="1_n0ay6"]
-[ext_resource type="Texture2D" uid="uid://b8pyinlxgl1t2" path="res://world/tiles/images/grass_neutral.png" id="2_3rwnu"]
+[ext_resource type="Texture2D" uid="uid://bonmpybeqxulp" path="res://scenes/overworld/map_icon_blank.png" id="2_8xr65"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_ftuua"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_rd2ug"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_iawlt"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_1wawp"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_8wjws"]
 
 [node name="Button" type="Button"]
+custom_minimum_size = Vector2(32, 32)
 offset_left = 451.0
 offset_top = 467.0
 offset_right = 473.0
 offset_bottom = 488.0
 theme = ExtResource("1_n0ay6")
-icon = ExtResource("2_3rwnu")
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_styles/normal = SubResource("StyleBoxEmpty_ftuua")
+theme_override_styles/hover = SubResource("StyleBoxEmpty_rd2ug")
+theme_override_styles/pressed = SubResource("StyleBoxEmpty_iawlt")
+theme_override_styles/disabled = SubResource("StyleBoxEmpty_1wawp")
+theme_override_styles/focus = SubResource("StyleBoxEmpty_8wjws")
+icon = ExtResource("2_8xr65")
 icon_alignment = 1
