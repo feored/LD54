@@ -17,7 +17,10 @@ func add(e : Effect, p : Player = null):
 	if p == null:
 		p = self.get_current_player.call()
 	Utils.log("Adding effect: " + str(e) + " for player " + str(p))
-	self.effects[p].push_back(e)
+	if e.type == Effect.Type.Active and e.active_trigger == Effect.Trigger.Instant:
+		self.apply_active.call(e)
+	else:
+		self.effects[p].push_back(e)
 	
 
 func trigger(t : Effect.Trigger):

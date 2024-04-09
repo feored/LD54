@@ -311,6 +311,16 @@ func apply_active(effect):
 				self.game.current_player.resources.faith = result
 				if !self.game.current_player.is_bot:
 					update_faith_player()
+			"sink_random_tiles":				
+				var own_tiles = self.world.tiles.values().filter(func(t): return t.data.team == self.game.current_player.team)
+				var nb = min(effect.value, own_tiles.size())
+				var selected = []
+				own_tiles.shuffle()
+				for i in range(nb):
+					selected.push_back(own_tiles.pop_front().data.coords)
+				self.sink_tiles(selected)
+				Utils.log("Sinking tiles: %s" % selected)
+
 	else:
 		Utils.log("Effect %s is not an active effect" % effect.name)
 
@@ -344,10 +354,8 @@ func use_card(cardView):
 
 	
 func card_used(cv):
-	for effect in cv.card.effects.filter(func(e): return e.type == Effect.Type.Active and e.active_trigger == Effect.Trigger.Instant):
-		await apply_active(effect)
-	for effect in cv.card.effects.filter(func(e): return e.active_trigger != Effect.Trigger.Instant or e.type == Effect.Type.Resource):
-		Effects.add(effect)
+	for effect in cv.card.effects.filter(func(e): return e.type != Effect.Type.Power):
+		await Effects.add(effect)
 	self.game.human.resources.faith -= cv.card.cost
 	self.update_faith_player()
 	if cv.card.exhaust:

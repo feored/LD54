@@ -3,9 +3,28 @@ extends RefCounted
 
 enum Target { All, Enemies, Human }
 
-enum Mod { Conscription, TotalWar, Godless, GodForsaken, Famine, Scarcity }
+enum Mod { Conscription, TotalWar, Godless, GodForsaken, Famine, Scarcity, NeptuneCurse }
 
 const mods = {
+	Mod.NeptuneCurse:
+	{
+		"level": 3,
+		"name": "Neptune's Curse",
+		"effects":
+		[
+			{
+				"target": Target.Human,
+				"effect":
+				{
+					"type": "active",
+					"name": "sink_random_tiles",
+					"value": 1,
+					"active_trigger": "card_played"
+				},
+			},
+		],
+		"description": "Every time you play a card, Neptune randomly sinks own of your tiles."
+	},
 	Mod.Conscription:
 	{
 		"level": 1,
