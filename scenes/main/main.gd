@@ -327,6 +327,11 @@ func apply_active(effect):
 			
 
 func use_card(cardView):
+	var cards_playable_per_turn = self.game.human.compute("cards_playable_per_turn")
+	Utils.log("Cards Playable per turn: %s" % cards_playable_per_turn)
+	if cards_playable_per_turn != -1 and self.game.human.resources.cards_played >= cards_playable_per_turn:
+		messenger.set_message("You cannot play any more cards this turn.")
+		return
 	self.used_card = cardView
 	cardView.highlight(true)
 	
@@ -363,6 +368,7 @@ func card_used(cv):
 	else:
 		self.deck.discard(cv)
 	self.used_card = null
+	self.game.human.resources.cards_played += 1
 	Effects.trigger(Effect.Trigger.CardPlayed)
 
 func closest_player_tile_coords():
@@ -459,6 +465,7 @@ func play_global_turn():
 func prepare_turn():
 	self.generate_units(self.game.human.team)
 	self.game.human.resources.faith = self.game.human.compute("faith_per_turn") + self.world.tiles.values().filter(func(t): return t.data.team == self.game.human.team and t.data.building == Constants.Building.Temple).size()
+	self.game.human.resources.card_played = 0
 	self.update_faith_player()
 	await self.deck.draw_multiple(self.game.human.compute("cards_per_turn"))
 	self.deck.update_faith(self.game.human.resources.faith)

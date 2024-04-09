@@ -3,9 +3,36 @@ extends RefCounted
 
 enum Target { All, Enemies, Human }
 
-enum Mod { Conscription, TotalWar, Godless, GodForsaken, Famine, Scarcity, NeptuneCurse }
+enum Mod {
+	Conscription,
+	TotalWar,
+	Godless,
+	GodForsaken,
+	Famine,
+	Scarcity,
+	NeptuneCurse,
+	NeptunePrison
+}
 
 const mods = {
+	Mod.NeptunePrison:
+	{
+		"level": 2,
+		"name": "Neptune's Prison",
+		"effects":
+		[
+			{
+				"target": Target.Human,
+				"effect":
+				{
+					"type": "resource",
+					"name": "cards_playable_per_turn",
+					"value": "3",
+				},
+			},
+		],
+		"description": "Only play up to three cards per turn."
+	},
 	Mod.NeptuneCurse:
 	{
 		"level": 3,

@@ -1,6 +1,6 @@
 extends Node
 
-const VERSION = "0.1.0"
+const VERSION = "0.1.1"
 
 ## World constants
 const VIEWPORT_SIZE = Vector2(960, 540)

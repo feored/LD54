@@ -13,7 +13,14 @@ func _to_string():
 	return "Player " + str(team)
 
 
-const DEFAULT_RESOURCES = {"faith": 0, "faith_per_turn": 2, "cards_per_turn": 5, "units_per_tile" : 1 }
+const DEFAULT_RESOURCES = {
+	"faith": 0,
+	"faith_per_turn": 2,
+	"cards_per_turn": 5,
+	"units_per_tile" : 1,
+	"cards_playable_per_turn" : -1,
+	"cards_played": 0
+	}
 
 func compute(r : String):
 	var res = self.resources.duplicate()
