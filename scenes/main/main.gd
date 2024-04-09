@@ -1,15 +1,16 @@
 extends Node2D
 
-const gameOverScreenPrefab = preload("res://scenes/game_over_menu/game_over_screen.tscn")
-const shapePrefab = preload("res://world/tiles/highlight/shape.tscn")
+const game_over_screen_prefab = preload("res://scenes/game_over_menu/game_over_screen.tscn")
+const shape_prefab = preload("res://world/tiles/highlight/shape.tscn")
+const mod_list_prefab = preload("res://scenes/overworld/mod_view/mod_list.tscn")
 
 @onready var world = $"World"
 @onready var messenger = %Message
 @onready var endTurnButton = %TurnButton
 @onready var fastForwardButton = %FastForwardButton
-@onready var card_selector = %CardSelector
 @onready var deck = %Deck
 @onready var faith_label = %FaithLabel
+@onready var mods_scroll_container = %ModsScrollContainer
 
 var used_card = null
 var current = {
@@ -36,8 +37,6 @@ var spectating : bool = false
 
 var cards_to_pick = 1
 
-const CARDS_TO_DRAW = 5
-
 var game : Game
 
 # Called when the node enters the scene tree for the first time.
@@ -47,15 +46,40 @@ func _ready():
 	self.world.init(Callable(self.messenger, "set_message"))
 	Music.play_track(Music.Track.World)
 	Sfx.enable_track(Sfx.Track.Boom)
-	self.card_selector.cards_picked.connect(Callable(self, "_on_cards_selected"))
-	self.load_map(Info.current_map.teams, Info.current_map.regions)
-			
+
+	self.game = Game.new(Info.current_map.teams.map(func(t): return int(t)))
+	Effects.init(self.game.players, Callable(self, "apply_active"), Callable(self.game, "get_current_player"))
+	self.add_mods(Info.current_mods)
+	self.load_map(Info.current_map.regions)
+	
+	var mod_list = mod_list_prefab.instantiate()
+	mod_list.init(Info.current_mods)
+	self.mods_scroll_container.add_child(mod_list)
+	
 	self.game.started = true
 	self.world.camera.move_instant(self.world.map_to_local(closest_player_tile_coords()))
 	self.deck.card_played = Callable(self, "use_card")
-	await self.deck.draw(5)
-	self.deck.update_faith(self.game.human.resources.faith)
+	
+	prepare_turn()
 
+func add_mod_effect(e):
+	var players_to_apply = []
+	if e.target == MapMods.Target.Human:
+		players_to_apply = [self.game.human]
+	elif e.target == MapMods.Target.Enemies:
+		players_to_apply = self.game.players.filter(func(p): return p.team != self.game.human.team)
+	elif e.target == Constants.Target.All:
+		players_to_apply = self.game.players
+	for player in players_to_apply:
+		var instanced_effect = Effect.new(e.effect)
+		Effects.add(instanced_effect, player)
+
+func add_mods(mods):
+	for mod_key in mods:
+		var mod = MapMods.mods[mod_key]
+		for effect in mod.effects:
+			add_mod_effect(effect)
+		
 
 func clear_mouse_state():
 	if self.mouse_item != null:
@@ -250,24 +274,18 @@ func _on_turn_button_pressed():
 	Settings.input_locked = true
 
 	await play_global_turn()
-	generate_units(self.game.human.team)
+	
 	
 
 	var tile_camera_move = closest_player_tile_coords()
 	if tile_camera_move != Constants.NULL_COORDS:
 		await self.world.camera.move_smoothed(self.world.map_to_local(tile_camera_move), 5)
 
+	Effects.trigger(Effect.Trigger.TurnOver)
 	## Faith generation
-	self.game.human.resources.faith = self.game.human.resources.faith_per_turn + self.world.tiles.values().filter(func(t): return t.data.team == self.game.human.team and t.data.building == Constants.Building.Temple).size()
-	self.update_faith_player()
+	self.prepare_turn()
 	Settings.input_locked = false
 	lock_controls(false)
-
-
-func pick_cards():
-	return
-	var cards_to_generate = 3 + self.world.tiles.values().filter(func(t): return t.data.team == self.game.human.team and t.data.building == Constants.Building.Oracle).size()
-	# add_cards(cards_to_generate)
 
 func _on_cards_selected(cards):
 	for card in cards:
@@ -279,21 +297,23 @@ func _on_cards_selected(cards):
 	lock_controls(false)
 	
 
-func apply_effect(effect):
-	if effect.type == "resource":
-		var expression = Expression.new()
-		expression.parse(effect.value, self.game.current_player.resources.keys())
-		var result = expression.execute(self.game.current_player.resources.values())
-		self.game.current_player.resources[effect.resource] = result
-		Utils.log("Resource %s changed to %s" % [effect.resource, result])
-		if effect.resource == "faith" and !self.game.current_player.is_bot:
-			update_faith_player()
-	elif effect.type == "action":
-		match effect.action:
+func apply_active(effect):
+	if effect.type == Effect.Type.Active:
+		match effect.name:
 			"random_discard":
 				await self.deck.discard_random(effect.value)
 			"draw":
-				await self.deck.draw(effect.value)
+				await self.deck.draw_multiple(effect.value)
+			"faith":
+				var expression = Expression.new()
+				expression.parse(effect.value, self.game.current_player.resources.keys())
+				var result = expression.execute(self.game.current_player.resources.values())
+				self.game.current_player.resources.faith = result
+				if !self.game.current_player.is_bot:
+					update_faith_player()
+	else:
+		Utils.log("Effect %s is not an active effect" % effect.name)
+
 			
 
 func use_card(cardView):
@@ -301,66 +321,41 @@ func use_card(cardView):
 	cardView.highlight(true)
 	
 	Utils.log("Card %s used" % cardView.card.name)
-	var play_powers = cardView.card.effects.filter(func(e): return e.event == "play" and e.type == "power")
+	var play_powers = cardView.card.effects.filter(func(e): return e.type == Effect.Type.Power)
 	if play_powers.size() > 0:
 		var play_power = play_powers[0]
-		match play_power.power:
+		match play_power.name:
 			"reinforcements":
-				set_reinforcements(play_power["value"])
+				set_reinforcements(play_power.value)
 			"sacrifice":
 				set_sacrifice()
 			"build":
-				set_building(play_power["building"])
+				set_building(play_power.value)
 			"sink":
 				var s = Shape.new()
-				s.init_with_json_coords(play_power["value"])
+				s.init_with_json_coords(play_power.value)
 				set_shape(s.coords.keys(), MouseState.Sink)
 			"emerge":
 				var s = Shape.new()
-				s.init_with_json_coords(play_power["value"])
+				s.init_with_json_coords(play_power.value)
 				set_shape(s.coords.keys(), MouseState.Emerge)
 	else:
 		self.card_used(cardView)
 
 	
-	# match c.power.id:
-	# 	Power.Type.Offering:
-	# 		self.add_faith(self.game.human.team, 1)
-	# 		self.card_used(c)
-	# 	Power.Type.Sink:
-	# 		set_shape(c.power.shape.coords.keys(), MouseState.Sink)
-	# 	Power.Type.Emerge:
-	# 		set_shape(c.power.shape.coords.keys(), MouseState.Emerge)
-	# 	Power.Type.Sacrifice:
-	# 		set_sacrifice()
-	# 	Power.Type.Reinforcements:
-	# 		set_reinforcements()
-	# 	Power.Type.Prayer:
-	# 		self.add_faith(self.game.human.team, 1)
-	# 		self.card_used(c)
-	# 		self.deck.discard_random(2)f
-	# 	Power.Type.Barracks:
-	# 		set_building(c.power.get_building())
-	# 	Power.Type.Temple:
-	# 		set_building(c.power.get_building())
-	# 	Power.Type.Fort:
-	# 		set_building(c.power.get_building())
-	# 	Power.Type.Oracle:
-	# 		set_building(c.power.get_building())
-	# 	Power.Type.Seal:
-	# 		set_building(c.power.get_building())
-	# 	_:
-	# 		Utils.log("Unknown power type: %s, %s" % [c.power.id, c.power.name])
-	# 		self.card_used(c)
-			
-	
-func card_used(c):
-	for effect in c.card.effects.filter(func(e): return e.event == "play" and e.type != "power"):
-		await apply_effect(effect)
-	self.game.human.resources.faith -= c.card.cost
+func card_used(cv):
+	for effect in cv.card.effects.filter(func(e): return e.type == Effect.Type.Active and e.active_trigger == Effect.Trigger.Instant):
+		await apply_active(effect)
+	for effect in cv.card.effects.filter(func(e): return e.active_trigger != Effect.Trigger.Instant or e.type == Effect.Type.Resource):
+		Effects.add(effect)
+	self.game.human.resources.faith -= cv.card.cost
 	self.update_faith_player()
-	self.deck.discard(c)
+	if cv.card.exhaust:
+		self.deck.exhaust(cv)
+	else:
+		self.deck.discard(cv)
 	self.used_card = null
+	Effects.trigger(Effect.Trigger.CardPlayed)
 
 func closest_player_tile_coords():
 	var closest_player_tile = Constants.NULL_COORDS
@@ -375,9 +370,6 @@ func closest_player_tile_coords():
 				closest_tile_distance = distance
 	return closest_player_tile
 	
-	
-func check_global_turn_over():
-	return self.turn == self.teams.size() - 1
 
 func check_win_condition():
 	for player in self.game.players:
@@ -385,11 +377,11 @@ func check_win_condition():
 			player.eliminated = true
 			messenger.set_message(Constants.TEAM_NAMES[player.team] + " has been wiped from the island!")
 	if self.game.human.eliminated and not spectating:
-		var gameOverScreen = gameOverScreenPrefab.instantiate()
+		var gameOverScreen = game_over_screen_prefab.instantiate()
 		gameOverScreen.init(false, self, true)
 		self.add_child(gameOverScreen)
 	elif self.game.players.filter(func(p): return !p.eliminated).size() < 2:
-		var gameOverScreen = gameOverScreenPrefab.instantiate()
+		var gameOverScreen = game_over_screen_prefab.instantiate()
 		gameOverScreen.init(true, self, false)
 		self.add_child(gameOverScreen)
 
@@ -454,7 +446,13 @@ func play_global_turn():
 	await self.world.sink_marked()
 	check_win_condition()
 	await self.world.mark_tiles(self.game.global_turn)
-	await self.deck.draw(CARDS_TO_DRAW)
+	
+
+func prepare_turn():
+	self.generate_units(self.game.human.team)
+	self.game.human.resources.faith = self.game.human.compute("faith_per_turn") + self.world.tiles.values().filter(func(t): return t.data.team == self.game.human.team and t.data.building == Constants.Building.Temple).size()
+	self.update_faith_player()
+	await self.deck.draw_multiple(self.game.human.compute("cards_per_turn"))
 	self.deck.update_faith(self.game.human.resources.faith)
 
 func play_turn():
@@ -489,7 +487,7 @@ func generate_units(team):
 			Utils.log("Region %s is not valid" % region)
 			break
 		if world.regions[region].data.team == team:
-			world.regions[region].generate_units()
+			world.regions[region].generate_units(self.game.current_player.compute("units_per_tile"))
 
 func apply_action(action : Action):
 	match action.action:
@@ -497,15 +495,20 @@ func apply_action(action : Action):
 			await self.world.move_units(action.region_from, action.region_to, action.team)
 		Action.Type.Sink:
 			await self.world.sink_tiles(action.tiles)
+			Effects.trigger(Effect.Trigger.TileSunk)
 		Action.Type.Emerge:
 			await self.world.emerge_tiles(action.tiles)
+			Effects.trigger(Effect.Trigger.TileEmerged)
 		Action.Type.Sacrifice:
 			sacrifice_region(action.region_from, action.team)
+			Effects.trigger(Effect.Trigger.RegionSacrificed)
 		Action.Type.Build:
 			self.world.tiles[action.tiles[0]].set_building(action.misc)
+			Effects.trigger(Effect.Trigger.BuildingBuilt)
 		Action.Type.Reinforce:
 			self.world.regions[action.region_from].data.units += action.misc
 			self.world.regions[action.region_from].update()
+			Effects.trigger(Effect.Trigger.RegionReinforced)
 		Action.Type.None:
 			pass
 		_:
@@ -514,15 +517,17 @@ func apply_action(action : Action):
 
 func update_faith_player():
 	self.deck.update_faith(self.game.human.resources.faith)
-	self.faith_label.set_text(str(self.game.human.resources.faith))
+	self.faith_label.set_text(str(self.game.human.resources.faith) + "/" + str(self.game.human.resources.faith_per_turn))
 
-func load_map(map_teams, map_regions):
+func load_map(map_regions):
 	self.world.clear_island()
-	self.game = Game.new(map_teams.map(func(t): return int(t)))
 	self.world.load_regions(map_regions)
+	for region in self.world.regions.values():
+		if region.data.team != Constants.NULL_TEAM and region.data.team != self.game.human.team:
+			region.generate_units(self.game.player_from_team(region.data.team).compute("units_per_tile"))
 
 func set_shape(shape_coords, mode):
-	self.mouse_item = shapePrefab.instantiate()
+	self.mouse_item = shape_prefab.instantiate()
 	self.mouse_item.init_with_coords(shape_coords)
 	self.world.add_child(mouse_item)
 	self.mouse_item.global_position = get_viewport().get_mouse_position()
@@ -544,9 +549,10 @@ func set_reinforcements(new_reinforcements):
 	self.mouse_state = MouseState.Reinforce
 
 func set_building(building):
+	var b = Constants.BUILDING_ENUM[building]
 	self.mouse_item = Sprite2D.new()
-	self.mouse_item.texture = Constants.BUILDINGS[building].texture
-	self.current.building = building
+	self.mouse_item.texture = Constants.BUILDINGS[b].texture
+	self.current.building = b
 	self.world.add_child(mouse_item)
 	self.mouse_item.global_position = get_viewport().get_mouse_position()
 	self.mouse_state = MouseState.Build

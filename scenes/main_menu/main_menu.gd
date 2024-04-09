@@ -11,6 +11,7 @@ var scenarioPrefab = preload("res://scenes/scenario/scenario.tscn")
 @onready var settingsContainer = %SettingsContainer
 @onready var logo = %Logo
 @onready var versionLabel = %VersionLabel
+@onready var deck_view = %DeckView
 
 enum State{
 	Main,
@@ -38,10 +39,10 @@ func _ready():
 	settingsContainer.disappear = func():
 		self.show_state(State.Main)
 
-	for scenario in Constants.SCENARIOS:
-		var scenario_obj = scenarioPrefab.instantiate()
-		scenario_obj.init(scenario)
-		allScenarios.add_child(scenario_obj)
+	# for scenario in Constants.SCENARIOS:
+	# 	var scenario_obj = scenarioPrefab.instantiate()
+	# 	scenario_obj.init(scenario)
+	# 	allScenarios.add_child(scenario_obj)
 
 func no_message(_message):
 	pass
@@ -105,3 +106,11 @@ func _on_map_editor_btn_pressed():
 func _on_new_run_btn_pressed():
 	Info.run = Run.new()
 	await SceneTransition.change_scene(SceneTransition.SCENE_OVERWORLD)
+
+
+func _on_card_collection_btn_pressed():
+	var all_cards = []
+	for c in Cards.data.keys():
+		all_cards.push_back(Cards.get_instance(c))
+	deck_view.init(all_cards)
+	deck_view.show()

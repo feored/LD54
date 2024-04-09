@@ -28,7 +28,17 @@ func next_turn():
 	global_turn += 1
 	turn = 1
 	current_player = players[turn]
+	Effects.trigger(Effect.Trigger.TurnOver)
 
 func next_player():
 	turn = (turn + 1) % players.size()
 	current_player = players[turn]
+
+func get_current_player():
+	return self.current_player
+
+func player_from_team(team):
+	for player in players:
+		if player.team == team:
+			return player
+	return null

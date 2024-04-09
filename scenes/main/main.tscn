@@ -1,16 +1,15 @@
-[gd_scene load_steps=19 format=3 uid="uid://ceoqtlfuehsvd"]
+[gd_scene load_steps=18 format=3 uid="uid://ceoqtlfuehsvd"]
 
 [ext_resource type="Script" path="res://scenes/main/main.gd" id="1_osaxm"]
 [ext_resource type="PackedScene" uid="uid://pu46mkcjdswb" path="res://scenes/esc_menu/esc_menu.tscn" id="2_pam5e"]
 [ext_resource type="PackedScene" uid="uid://b8opucxucl032" path="res://world/world.tscn" id="2_unfjm"]
 [ext_resource type="Script" path="res://cards/deck/deck.gd" id="4_nj60x"]
 [ext_resource type="Theme" uid="uid://3t61g0061mea" path="res://assets/theme.tres" id="5_5yrco"]
-[ext_resource type="PackedScene" uid="uid://drjdjumbfief5" path="res://cards/cards/deck_view.tscn" id="6_7d42u"]
+[ext_resource type="PackedScene" uid="uid://drjdjumbfief5" path="res://cards/deck/deck_view.tscn" id="6_7d42u"]
 [ext_resource type="Texture2D" uid="uid://vv0nl83x0ldq" path="res://assets/icons/forward.png" id="6_7usvn"]
 [ext_resource type="Texture2D" uid="uid://bxqvi5615lj3b" path="res://assets/icons/trident.png" id="6_mkg7a"]
 [ext_resource type="Script" path="res://scenes/main/Message.gd" id="7_y3mfw"]
 [ext_resource type="Texture2D" uid="uid://cndgawjlwcsaq" path="res://cards/images/wave.png" id="7_yuoj0"]
-[ext_resource type="PackedScene" uid="uid://bcmyj6p1buj71" path="res://cards/selector/card_selector.tscn" id="8_1lhgu"]
 [ext_resource type="PackedScene" uid="uid://r53ogglkfpl1" path="res://scenes/shapes/shape_gui.tscn" id="8_wwglj"]
 [ext_resource type="Texture2D" uid="uid://cat4q0bmpcct" path="res://world/tiles/images/grass.png" id="10_6jeae"]
 
@@ -335,8 +334,6 @@ vertical_alignment = 1
 
 [node name="DeckView" parent="UI/Deck" instance=ExtResource("6_7d42u")]
 unique_name_in_owner = true
-visible = false
-layout_mode = 1
 
 [node name="Bar" type="PanelContainer" parent="UI"]
 anchors_preset = 12
@@ -387,19 +384,6 @@ theme_override_styles/panel = SubResource("StyleBoxEmpty_bwln7")
 [node name="HBoxContainer" type="HBoxContainer" parent="UI/Bar/MarginContainer/HBoxContainer/HBoxContainer/ResContainer"]
 layout_mode = 2
 
-[node name="HBoxContainer2" type="HBoxContainer" parent="UI/Bar/MarginContainer/HBoxContainer/HBoxContainer/ResContainer/HBoxContainer"]
-layout_mode = 2
-
-[node name="FaithLabel" type="Label" parent="UI/Bar/MarginContainer/HBoxContainer/HBoxContainer/ResContainer/HBoxContainer/HBoxContainer2"]
-unique_name_in_owner = true
-layout_mode = 2
-text = "0"
-
-[node name="TextureRect" type="TextureRect" parent="UI/Bar/MarginContainer/HBoxContainer/HBoxContainer/ResContainer/HBoxContainer/HBoxContainer2"]
-layout_mode = 2
-texture = ExtResource("6_mkg7a")
-stretch_mode = 5
-
 [node name="TurnButton" type="Button" parent="UI/Bar/MarginContainer/HBoxContainer"]
 unique_name_in_owner = true
 layout_mode = 2
@@ -407,9 +391,54 @@ size_flags_horizontal = 0
 theme_override_styles/focus = SubResource("StyleBoxEmpty_u2eju")
 text = "End Turn"
 
-[node name="CardSelector" parent="UI" instance=ExtResource("8_1lhgu")]
+[node name="Faith" type="TextureRect" parent="UI"]
+offset_left = 154.0
+offset_top = 359.0
+offset_right = 194.0
+offset_bottom = 399.0
+theme = ExtResource("5_5yrco")
+texture = ExtResource("10_6jeae")
+
+[node name="TextureRect" type="TextureRect" parent="UI/Faith"]
+modulate = Color(1, 1, 1, 0.376471)
+custom_minimum_size = Vector2(24, 24)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -8.0
+offset_top = -8.0
+offset_right = 8.0
+offset_bottom = 8.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("6_mkg7a")
+expand_mode = 3
+stretch_mode = 5
+
+[node name="FaithLabel" type="Label" parent="UI/Faith"]
 unique_name_in_owner = true
-visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(0.0507813, 0.289063, 0.535156, 1)
+theme_override_colors/font_outline_color = Color(1, 1, 1, 1)
+theme_override_constants/outline_size = 8
+theme_override_font_sizes/font_size = 32
+text = "0/3"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="ModsScrollContainer" type="ScrollContainer" parent="UI"]
+unique_name_in_owner = true
+offset_top = 30.0
+offset_right = 129.0
+offset_bottom = 324.0
 
 [connection signal="pressed" from="UI/Deck/DiscardPile/MarginContainer/Back/VBoxContainer/DiscardPileButton" to="UI/Deck" method="_on_discard_pile_button_pressed"]
 [connection signal="pressed" from="UI/Deck/DrawPile/MarginContainer/Back/VBoxContainer/DrawPileButton" to="UI/Deck" method="_on_draw_pile_button_pressed"]

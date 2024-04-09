@@ -1,7 +1,7 @@
 extends RefCounted
 class_name Run
 
-const STARTING_DECK = ["Offering", "Sacrifice", "SmallFlood", "Creation", "Hoplites", "CretanArchers", "CretanArchers", "LuckOfTheDraw", "Seal"]
+const STARTING_DECK = ["Offering", "Sacrifice", "Flood", "Creation", "Hoplites", "CretanArchers", "CretanArchers", "LuckOfTheDraw"]
 
 var deck : Array[Card] = []
 var map : Map

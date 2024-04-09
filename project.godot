@@ -35,6 +35,7 @@ Sfx="*res://audio/sfx.gd"
 Personalities="*res://bots/personalities.gd"
 Info="*res://scripts/info.gd"
 Cards="*res://cards/cards.gd"
+Effects="*res://scripts/effects.gd"
 
 [display]
 

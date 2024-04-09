@@ -9,7 +9,7 @@ const cloud_textures = [
 	preload("res://world/clouds/images/cloud_3.png"),
 	preload("res://world/clouds/images/cloud_3.png"),
 	preload("res://world/clouds/images/cloud_4.png")
-
+]
 
 var cloud_chance = 0.1
 var elapsed = 0

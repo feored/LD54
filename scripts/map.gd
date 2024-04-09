@@ -1,6 +1,23 @@
 extends RefCounted
 class_name Map
 
+## Maps
+
+const NORMAL_MAPS = {
+	"confrontation.json": 0,
+	"blob.json" : 2,
+	"triangles.json" : 1,
+	"fortress.json" : 1,
+	"homebase.json" : 2,
+	"rings.json" : 2,
+	"triforce.json" : 1,
+}
+
+const BOSS_MAPS = [
+	"star.json"
+]
+
+
 const START = Vector2i(-1, -999)
 
 enum Location {
@@ -13,8 +30,11 @@ class Island:
 	var location : Location
 	var visited: bool = false
 	var next : Array
-	var info : Dictionary
-	
+	var level : int
+	var event : String
+	var path : String
+	var mods: Array
+
 	func _init():
 		self.location = Location.Map
 		self.visited = false
@@ -35,13 +55,47 @@ func layout_to_map (layout):
 		var island = Island.new()
 		island.location = Location.Map if Utils.rng.randi()%2 == 0 else Location.Event
 		if island.location == Location.Map:
-			island.info["path"] = Constants.SCENARIOS[Utils.rng.randi()%Constants.SCENARIOS.size()].path
+			island.path = NORMAL_MAPS.keys().pick_random()
+			island.level = self.gen_level(coords.x)
+			island.mods = self.pick_mods(island.level)
 		else:
-			island.info["event"] = Constants.EVENTS.keys()[Utils.rng.randi()%Constants.EVENTS.keys().size()]
+			island.event = Constants.EVENTS.keys().pick_random()
 		island.next = layout[coords]
 		new_map[coords] = island
 	return new_map
+	
+func gen_level(current_floor):
+	return max(int(Utils.rng.randf_range(0.75,1.25)*current_floor), 0)
 
+func get_available_mods(max_level, already_picked = []):
+	var mods = []
+	for mod in MapMods.mods.keys().filter(func (m): return m not in already_picked):
+		if MapMods.mods[mod].level <= max_level:
+			mods.push_back(mod)
+	return mods
+
+func pick_mods(level):
+	var mods_picked = []
+	var level_picked = 0
+	var mods_available = get_available_mods(level)
+	while level_picked < level and mods_available.size() > 0:
+		var mod = mods_available.pick_random()
+		mods_picked.push_back(mod)
+		level_picked += MapMods.mods[mod].level
+		mods_available = get_available_mods(level - level_picked, mods_picked)
+	return mods_picked
+
+func add_boss(new_map):
+	var boss_coords = Vector2i(MAP_HEIGHT, MAP_WIDTH/2.0)
+	var new_boss = Island.new()
+	new_boss.location = Location.Map
+	new_boss.path = BOSS_MAPS.pick_random()
+	new_boss.level = MAP_HEIGHT * 2
+	new_map[boss_coords] = new_boss
+	for i in range(MAP_WIDTH):
+		if Vector2i(MAP_HEIGHT-1, i) in new_map.keys():
+			new_map[Vector2i(MAP_HEIGHT-1, i)].next.push_back(boss_coords)
+	return new_map
 
 func gen_layout():
 	var try_map = {}
@@ -68,7 +122,7 @@ func gen_layout():
 func _init():
 	var layout = self.gen_layout()
 	print_layout(layout)
-	self.map = self.layout_to_map(layout)
+	self.map = self.add_boss(self.layout_to_map(layout))
 
 func print_layout(try_map):
 	var map_floors = []
