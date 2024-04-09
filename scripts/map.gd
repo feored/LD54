@@ -67,9 +67,9 @@ func layout_to_map (layout):
 func gen_level(current_floor):
 	return max(int(Utils.rng.randf_range(0.75,1.25)*current_floor), 0)
 
-func get_available_mods(max_level):
+func get_available_mods(max_level, already_picked = []):
 	var mods = []
-	for mod in MapMods.mods.keys():
+	for mod in MapMods.mods.keys().filter(func (m): return m not in already_picked):
 		if MapMods.mods[mod].level <= max_level:
 			mods.push_back(mod)
 	return mods
@@ -82,7 +82,7 @@ func pick_mods(level):
 		var mod = mods_available.pick_random()
 		mods_picked.push_back(mod)
 		level_picked += MapMods.mods[mod].level
-		mods_available = get_available_mods(level - level_picked)
+		mods_available = get_available_mods(level - level_picked, mods_picked)
 	return mods_picked
 
 func add_boss(new_map):
