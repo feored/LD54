@@ -7,6 +7,8 @@ var current_event : Node = null
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
+	if Info.run.is_beaten():
+		SceneTransition.change_scene(SceneTransition.SCENE_END)
 	map_view.event_started.connect(func(e): start_event(e))
 	map_view.show()
 

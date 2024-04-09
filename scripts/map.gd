@@ -41,10 +41,11 @@ class Island:
 		self.next = []
 
 const MAP_WIDTH = 7
-const MAP_HEIGHT = 10
-const MAP_PATHS = 6
+const MAP_HEIGHT = 3
+const MAP_PATHS = 1
 
 var map : Dictionary
+var boss : Island
 
 func get_entrances():
 	return map.keys().filter(func (k): return k.x == 0)
@@ -85,12 +86,16 @@ func pick_mods(level):
 		mods_available = get_available_mods(level - level_picked, mods_picked)
 	return mods_picked
 
-func add_boss(new_map):
-	var boss_coords = Vector2i(MAP_HEIGHT, MAP_WIDTH/2.0)
+func create_boss():
 	var new_boss = Island.new()
 	new_boss.location = Location.Map
 	new_boss.path = BOSS_MAPS.pick_random()
-	new_boss.level = MAP_HEIGHT * 2
+	new_boss.level = MAP_HEIGHT
+	new_boss.mods = self.pick_mods(new_boss.level)
+	return new_boss
+
+func add_boss(new_map, new_boss):
+	var boss_coords = Vector2i(MAP_HEIGHT, MAP_WIDTH/2.0)
 	new_map[boss_coords] = new_boss
 	for i in range(MAP_WIDTH):
 		if Vector2i(MAP_HEIGHT-1, i) in new_map.keys():
@@ -122,7 +127,8 @@ func gen_layout():
 func _init():
 	var layout = self.gen_layout()
 	print_layout(layout)
-	self.map = self.add_boss(self.layout_to_map(layout))
+	self.boss = self.create_boss()
+	self.map = self.add_boss(self.layout_to_map(layout), self.boss)
 
 func print_layout(try_map):
 	var map_floors = []

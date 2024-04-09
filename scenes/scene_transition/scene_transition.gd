@@ -6,16 +6,9 @@ const SCENE_MAP_GENERATOR = "res://scenes/map_generator/map_generator.tscn"
 const SCENE_MAP_EDITOR = "res://scenes/map_editor/map_editor.tscn"
 const SCENE_CAMPAIGN = "res://scenes/campaign/campaign.tscn"
 const SCENE_OVERWORLD = "res://scenes/overworld/overworld.tscn"
+const SCENE_END = "res://scenes/end/end_game.tscn"
 
 @onready var animation_player = $AnimationPlayer
-# Called when the node enters the scene tree for the first time.
-func _ready():
-	pass # Replace with function body.
-
-
-# Called every frame. 'delta' is the elapsed time since the previous frame.
-func _process(delta):
-	pass
 
 func change_scene(target: String) -> void:
 	animation_player.play("fade_out")
