@@ -3,15 +3,15 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://olrurlxf64x"
-path="res://.godot/imported/map_icon.png-0f573e789761f5c8fd935f136cb8acca.ctex"
+path="res://.godot/imported/map_icon.png-18bfa24011e41f48622f5b5117d60c27.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://scenes/overworld/map_icon.png"
-dest_files=["res://.godot/imported/map_icon.png-0f573e789761f5c8fd935f136cb8acca.ctex"]
+source_file="res://scenes/overworld/map_view/map_icon.png"
+dest_files=["res://.godot/imported/map_icon.png-18bfa24011e41f48622f5b5117d60c27.ctex"]
 
 [params]
 

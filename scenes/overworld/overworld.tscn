@@ -3,9 +3,9 @@
 [ext_resource type="Script" path="res://scenes/overworld/overworld.gd" id="1_jmjyb"]
 [ext_resource type="PackedScene" uid="uid://pu46mkcjdswb" path="res://scenes/esc_menu/esc_menu.tscn" id="3_3h7bd"]
 [ext_resource type="Theme" uid="uid://3t61g0061mea" path="res://assets/theme.tres" id="3_5sf0l"]
-[ext_resource type="Script" path="res://scenes/overworld/lines.gd" id="3_6xbs0"]
-[ext_resource type="Script" path="res://scenes/overworld/map_view.gd" id="4_d4ra7"]
+[ext_resource type="Script" path="res://scenes/overworld/map_view/map_view.gd" id="4_f2e7b"]
 [ext_resource type="PackedScene" uid="uid://drjdjumbfief5" path="res://cards/deck/deck_view.tscn" id="5_j7lb7"]
+[ext_resource type="Script" path="res://scenes/overworld/map_view/lines.gd" id="5_ocmwk"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_nfs5d"]
 bg_color = Color(0.788235, 0.705882, 0.592157, 1)
@@ -57,7 +57,7 @@ size_flags_vertical = 3
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_vertical = 3
-script = ExtResource("4_d4ra7")
+script = ExtResource("4_f2e7b")
 
 [node name="LinesPanel" type="Panel" parent="VBoxContainer/EventContainer/MapView"]
 unique_name_in_owner = true
@@ -67,7 +67,7 @@ size_flags_horizontal = 3
 size_flags_vertical = 3
 mouse_filter = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_nfs5d")
-script = ExtResource("3_6xbs0")
+script = ExtResource("5_ocmwk")
 
 [node name="FloorLabel" type="Label" parent="VBoxContainer/EventContainer/MapView/LinesPanel"]
 unique_name_in_owner = true

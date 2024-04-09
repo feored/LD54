@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://bonmpybeqxulp"
-path="res://.godot/imported/map_icon_blank.png-f8e71a777dcaf43aa8558ef3f17c493b.ctex"
+uid="uid://bhpnl7ccc45b6"
+path="res://.godot/imported/event_icon.png-f93aced9f591cfb31f4f18319a646de4.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://scenes/overworld/map_icon_blank.png"
-dest_files=["res://.godot/imported/map_icon_blank.png-f8e71a777dcaf43aa8558ef3f17c493b.ctex"]
+source_file="res://scenes/overworld/map_view/event_icon.png"
+dest_files=["res://.godot/imported/event_icon.png-f93aced9f591cfb31f4f18319a646de4.ctex"]
 
 [params]
 
