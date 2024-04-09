@@ -4,7 +4,7 @@
 [ext_resource type="Script" path="res://world/camera/Camera2D.gd" id="2_cguu5"]
 [ext_resource type="Script" path="res://world/world.gd" id="2_priir"]
 [ext_resource type="Script" path="res://world/clouds/CloudGenerator.gd" id="3_55hig"]
-[ext_resource type="Shader" path="res://rain.gdshader" id="5_orjlo"]
+[ext_resource type="Shader" path="res://assets/rain.gdshader" id="5_orjlo"]
 [ext_resource type="Shader" path="res://world/lightning.gdshader" id="6_nkaxu"]
 
 [sub_resource type="Animation" id="Animation_o4rvj"]
