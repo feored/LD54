@@ -45,43 +45,39 @@ func draw():
 		if self.draw_pile.size() == 0:
 			return
 	var cardView = card_prefab.instantiate()
+	cardView.state = CardView.State.DrawnOrDiscarded
 	cardView.card = self.draw_pile.pop_front()
 	self.add_card(cardView)
-	await Utils.wait(Constants.DECK_LONG_TIMER)
+	await Utils.wait(Constants.DECK_SHORT_TIMER)
 	cardView.card_ready = true
-	#update_display()
+	update_display()
 	
 
 func add_card(cv):
 	cv.disconnect_picked()
 	cv.picked.connect(func(cv): card_played.call(cv))
 	add_child(cv)
-	cv.flip()
 	cv.position = DRAW_POS
 	self.play_pile.append(cv)
-	place_all(self.play_pile.size() - 1)
-	#update_display()
+	place_all()
+	update_display()
 
-func place_all(new_id = -1):
+func place_all():
 	for i in range(self.play_pile.size()):
 		var card_placement = place_card(self.play_pile[i])
 		self.play_pile[i].base_position = card_placement[0]
-		self.play_pile[i].move(card_placement[0], new_id == i)
+		self.play_pile[i].move(card_placement[0])
 		#self.play_pile[i].rotation_degrees = card_placement[1]
 
 func discard(cardView):
 	var card_id = self.play_pile.find(cardView)
 	Utils.log("Discarding card: ", card_id)
 	if card_id != -1:
-		Utils.log("we doin it")
 		self.play_pile.remove_at(card_id)
 		self.discard_pile.push_back(cardView.card)
 		await cardView.discard(DISCARD_POS)
-		Utils.log("Discarded card")
 		Effects.trigger(Effect.Trigger.CardDiscarded)
-		self.place_all()
-	await Utils.wait(Constants.DECK_LONG_TIMER)
-	Utils.log("waitingo done")
+	self.place_all()
 	update_display()
 
 func exhaust(cardView):
@@ -105,8 +101,6 @@ func discard_random(amount: int):
 func discard_all():
 	while self.play_pile.size() > 0:
 		await discard(self.play_pile[0])
-		Utils.log("Discarded a card")
-		Utils.log("Play pile size: ", self.play_pile.size())
 	self.play_pile.clear()
 
 

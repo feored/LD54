@@ -1,4 +1,4 @@
-[gd_scene load_steps=19 format=3 uid="uid://ceoqtlfuehsvd"]
+[gd_scene load_steps=13 format=3 uid="uid://ceoqtlfuehsvd"]
 
 [ext_resource type="Script" path="res://scenes/main/main.gd" id="1_osaxm"]
 [ext_resource type="PackedScene" uid="uid://pu46mkcjdswb" path="res://scenes/esc_menu/esc_menu.tscn" id="2_pam5e"]
@@ -7,28 +7,8 @@
 [ext_resource type="Theme" uid="uid://3t61g0061mea" path="res://assets/theme.tres" id="5_5yrco"]
 [ext_resource type="PackedScene" uid="uid://drjdjumbfief5" path="res://cards/deck/deck_view.tscn" id="6_7d42u"]
 [ext_resource type="Texture2D" uid="uid://vv0nl83x0ldq" path="res://assets/icons/forward.png" id="6_7usvn"]
-[ext_resource type="Texture2D" uid="uid://bxqvi5615lj3b" path="res://assets/icons/trident.png" id="6_mkg7a"]
 [ext_resource type="Script" path="res://scenes/main/Message.gd" id="7_y3mfw"]
-[ext_resource type="Texture2D" uid="uid://cndgawjlwcsaq" path="res://cards/images/wave.png" id="7_yuoj0"]
-[ext_resource type="PackedScene" uid="uid://r53ogglkfpl1" path="res://scenes/shapes/shape_gui.tscn" id="8_wwglj"]
-[ext_resource type="Texture2D" uid="uid://cat4q0bmpcct" path="res://world/tiles/images/grass.png" id="10_6jeae"]
 [ext_resource type="Texture2D" uid="uid://n7uttbbffjfx" path="res://assets/icons/faith_bg.png" id="13_mjhrf"]
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_giqqo"]
-bg_color = Color(0.0756, 0.09114, 0.12, 1)
-border_width_left = 1
-border_width_top = 1
-border_width_right = 1
-border_width_bottom = 1
-border_color = Color(0.6, 0.811765, 1, 1)
-corner_radius_top_left = 5
-corner_radius_top_right = 5
-corner_radius_bottom_right = 5
-corner_radius_bottom_left = 5
-corner_detail = 4
-anti_aliasing = false
-
-[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_xvcwb"]
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_7ox3a"]
 
@@ -59,127 +39,17 @@ mouse_filter = 2
 theme = ExtResource("5_5yrco")
 script = ExtResource("4_nj60x")
 
-[node name="DiscardPile" type="PanelContainer" parent="UI/Deck"]
-custom_minimum_size = Vector2(125, 0)
+[node name="DiscardPileButton" type="Button" parent="UI/Deck"]
 layout_mode = 2
-offset_left = 828.0
-offset_top = 332.0
-offset_right = 953.0
-offset_bottom = 497.0
-pivot_offset = Vector2(62.5, 82.5)
-size_flags_horizontal = 6
-size_flags_vertical = 2
-theme = ExtResource("5_5yrco")
-theme_override_styles/panel = SubResource("StyleBoxFlat_giqqo")
-
-[node name="MarginContainer" type="MarginContainer" parent="UI/Deck/DiscardPile"]
-layout_mode = 2
-theme_override_constants/margin_left = 2
-theme_override_constants/margin_top = 2
-theme_override_constants/margin_right = 2
-theme_override_constants/margin_bottom = 2
-
-[node name="Front" type="VBoxContainer" parent="UI/Deck/DiscardPile/MarginContainer"]
-visible = false
-layout_mode = 2
-mouse_filter = 2
-
-[node name="PanelContainer" type="PanelContainer" parent="UI/Deck/DiscardPile/MarginContainer/Front"]
-layout_mode = 2
-mouse_filter = 2
-theme_override_styles/panel = SubResource("StyleBoxEmpty_xvcwb")
-
-[node name="PowerIcon" type="TextureRect" parent="UI/Deck/DiscardPile/MarginContainer/Front/PanelContainer"]
-custom_minimum_size = Vector2(85, 48)
-layout_mode = 2
-mouse_filter = 2
-texture = ExtResource("7_yuoj0")
-expand_mode = 3
-stretch_mode = 6
-
-[node name="CenterContainer" type="CenterContainer" parent="UI/Deck/DiscardPile/MarginContainer/Front/PanelContainer"]
-visible = false
-layout_mode = 2
-
-[node name="ShapeGUI" parent="UI/Deck/DiscardPile/MarginContainer/Front/PanelContainer/CenterContainer" instance=ExtResource("8_wwglj")]
-visible = false
-layout_mode = 2
-
-[node name="VBoxContainer" type="VBoxContainer" parent="UI/Deck/DiscardPile/MarginContainer/Front"]
-layout_mode = 2
-size_flags_vertical = 3
-mouse_filter = 2
-
-[node name="PowerName" type="Label" parent="UI/Deck/DiscardPile/MarginContainer/Front/VBoxContainer"]
-layout_mode = 2
-theme_override_colors/font_color = Color(0.54902, 0.721569, 1, 1)
-text = "Sink"
-horizontal_alignment = 1
-vertical_alignment = 1
-
-[node name="PowerDescription" type="RichTextLabel" parent="UI/Deck/DiscardPile/MarginContainer/Front/VBoxContainer"]
-layout_mode = 2
-size_flags_vertical = 3
-size_flags_stretch_ratio = 10.04
-bbcode_enabled = true
-text = "Build a fort. The fort defends against 20 units when attacked."
-
-[node name="MarginContainer" type="MarginContainer" parent="UI/Deck/DiscardPile/MarginContainer/Front/VBoxContainer"]
-layout_mode = 2
-mouse_filter = 2
-theme_override_constants/margin_left = 2
-theme_override_constants/margin_top = 0
-theme_override_constants/margin_right = 2
-theme_override_constants/margin_bottom = 0
-
-[node name="HBoxContainer" type="HBoxContainer" parent="UI/Deck/DiscardPile/MarginContainer/Front/VBoxContainer/MarginContainer"]
-layout_mode = 2
-size_flags_stretch_ratio = 0.95
-mouse_filter = 2
-
-[node name="Label" type="Label" parent="UI/Deck/DiscardPile/MarginContainer/Front/VBoxContainer/MarginContainer/HBoxContainer"]
-layout_mode = 2
-size_flags_horizontal = 3
-text = "Cost"
-
-[node name="PowerCost" type="Label" parent="UI/Deck/DiscardPile/MarginContainer/Front/VBoxContainer/MarginContainer/HBoxContainer"]
-layout_mode = 2
-text = "3"
-
-[node name="Faith" type="TextureRect" parent="UI/Deck/DiscardPile/MarginContainer/Front/VBoxContainer/MarginContainer/HBoxContainer"]
-custom_minimum_size = Vector2(12, 0)
-layout_mode = 2
-mouse_filter = 2
-texture = ExtResource("6_mkg7a")
-expand_mode = 5
-stretch_mode = 5
-
-[node name="Back" type="PanelContainer" parent="UI/Deck/DiscardPile/MarginContainer"]
-layout_mode = 2
-theme_type_variation = &"GoldPanel"
-
-[node name="VBoxContainer" type="VBoxContainer" parent="UI/Deck/DiscardPile/MarginContainer/Back"]
-layout_mode = 2
-
-[node name="CenterContainer" type="CenterContainer" parent="UI/Deck/DiscardPile/MarginContainer/Back/VBoxContainer"]
-layout_mode = 2
-size_flags_vertical = 3
-
-[node name="TextureRect" type="TextureRect" parent="UI/Deck/DiscardPile/MarginContainer/Back/VBoxContainer/CenterContainer"]
-layout_mode = 2
-texture = ExtResource("10_6jeae")
-
-[node name="TextureRect2" type="TextureRect" parent="UI/Deck/DiscardPile/MarginContainer/Back/VBoxContainer/CenterContainer"]
-layout_mode = 2
-texture = ExtResource("6_mkg7a")
-
-[node name="DiscardPileButton" type="Button" parent="UI/Deck/DiscardPile/MarginContainer/Back/VBoxContainer"]
-layout_mode = 2
+offset_left = 839.0
+offset_top = 465.0
+offset_right = 942.0
+offset_bottom = 486.0
 theme = ExtResource("5_5yrco")
 text = "Discard Pile"
 alignment = 2
 
-[node name="DiscardPileLabel" type="Label" parent="UI/Deck/DiscardPile/MarginContainer/Back/VBoxContainer/DiscardPileButton"]
+[node name="DiscardPileLabel" type="Label" parent="UI/Deck/DiscardPileButton"]
 unique_name_in_owner = true
 layout_mode = 1
 anchors_preset = 15
@@ -192,135 +62,17 @@ grow_vertical = 2
 text = "0"
 vertical_alignment = 1
 
-[node name="DrawPile" type="PanelContainer" parent="UI/Deck"]
-unique_name_in_owner = true
-custom_minimum_size = Vector2(125, 0)
-layout_mode = 0
-offset_left = 5.0
-offset_top = 331.0
-offset_right = 130.0
-offset_bottom = 496.0
-pivot_offset = Vector2(62.5, 82.5)
-size_flags_horizontal = 6
-size_flags_vertical = 2
-theme = ExtResource("5_5yrco")
-theme_override_styles/panel = SubResource("StyleBoxFlat_giqqo")
-
-[node name="MarginContainer" type="MarginContainer" parent="UI/Deck/DrawPile"]
+[node name="DrawPileButton" type="Button" parent="UI/Deck"]
 layout_mode = 2
-theme_override_constants/margin_left = 2
-theme_override_constants/margin_top = 2
-theme_override_constants/margin_right = 2
-theme_override_constants/margin_bottom = 2
-
-[node name="Front" type="VBoxContainer" parent="UI/Deck/DrawPile/MarginContainer"]
-unique_name_in_owner = true
-visible = false
-layout_mode = 2
-mouse_filter = 2
-
-[node name="PanelContainer" type="PanelContainer" parent="UI/Deck/DrawPile/MarginContainer/Front"]
-layout_mode = 2
-mouse_filter = 2
-theme_override_styles/panel = SubResource("StyleBoxEmpty_xvcwb")
-
-[node name="PowerIcon" type="TextureRect" parent="UI/Deck/DrawPile/MarginContainer/Front/PanelContainer"]
-unique_name_in_owner = true
-custom_minimum_size = Vector2(85, 48)
-layout_mode = 2
-mouse_filter = 2
-texture = ExtResource("7_yuoj0")
-expand_mode = 3
-stretch_mode = 6
-
-[node name="CenterContainer" type="CenterContainer" parent="UI/Deck/DrawPile/MarginContainer/Front/PanelContainer"]
-visible = false
-layout_mode = 2
-
-[node name="ShapeGUI" parent="UI/Deck/DrawPile/MarginContainer/Front/PanelContainer/CenterContainer" instance=ExtResource("8_wwglj")]
-unique_name_in_owner = true
-visible = false
-layout_mode = 2
-
-[node name="VBoxContainer" type="VBoxContainer" parent="UI/Deck/DrawPile/MarginContainer/Front"]
-layout_mode = 2
-size_flags_vertical = 3
-mouse_filter = 2
-
-[node name="PowerName" type="Label" parent="UI/Deck/DrawPile/MarginContainer/Front/VBoxContainer"]
-unique_name_in_owner = true
-layout_mode = 2
-theme_override_colors/font_color = Color(0.54902, 0.721569, 1, 1)
-text = "Sink"
-horizontal_alignment = 1
-vertical_alignment = 1
-
-[node name="PowerDescription" type="RichTextLabel" parent="UI/Deck/DrawPile/MarginContainer/Front/VBoxContainer"]
-unique_name_in_owner = true
-layout_mode = 2
-size_flags_vertical = 3
-size_flags_stretch_ratio = 10.04
-bbcode_enabled = true
-text = "Build a fort. The fort defends against 20 units when attacked."
-
-[node name="MarginContainer" type="MarginContainer" parent="UI/Deck/DrawPile/MarginContainer/Front/VBoxContainer"]
-layout_mode = 2
-mouse_filter = 2
-theme_override_constants/margin_left = 2
-theme_override_constants/margin_top = 0
-theme_override_constants/margin_right = 2
-theme_override_constants/margin_bottom = 0
-
-[node name="HBoxContainer" type="HBoxContainer" parent="UI/Deck/DrawPile/MarginContainer/Front/VBoxContainer/MarginContainer"]
-layout_mode = 2
-size_flags_stretch_ratio = 0.95
-mouse_filter = 2
-
-[node name="Label" type="Label" parent="UI/Deck/DrawPile/MarginContainer/Front/VBoxContainer/MarginContainer/HBoxContainer"]
-layout_mode = 2
-size_flags_horizontal = 3
-text = "Cost"
-
-[node name="PowerCost" type="Label" parent="UI/Deck/DrawPile/MarginContainer/Front/VBoxContainer/MarginContainer/HBoxContainer"]
-unique_name_in_owner = true
-layout_mode = 2
-text = "3"
-
-[node name="Faith" type="TextureRect" parent="UI/Deck/DrawPile/MarginContainer/Front/VBoxContainer/MarginContainer/HBoxContainer"]
-custom_minimum_size = Vector2(12, 0)
-layout_mode = 2
-mouse_filter = 2
-texture = ExtResource("6_mkg7a")
-expand_mode = 5
-stretch_mode = 5
-
-[node name="Back" type="PanelContainer" parent="UI/Deck/DrawPile/MarginContainer"]
-unique_name_in_owner = true
-layout_mode = 2
-theme_type_variation = &"GoldPanel"
-
-[node name="VBoxContainer" type="VBoxContainer" parent="UI/Deck/DrawPile/MarginContainer/Back"]
-layout_mode = 2
-
-[node name="CenterContainer" type="CenterContainer" parent="UI/Deck/DrawPile/MarginContainer/Back/VBoxContainer"]
-layout_mode = 2
-size_flags_vertical = 3
-
-[node name="TextureRect" type="TextureRect" parent="UI/Deck/DrawPile/MarginContainer/Back/VBoxContainer/CenterContainer"]
-layout_mode = 2
-texture = ExtResource("10_6jeae")
-
-[node name="TextureRect2" type="TextureRect" parent="UI/Deck/DrawPile/MarginContainer/Back/VBoxContainer/CenterContainer"]
-layout_mode = 2
-texture = ExtResource("6_mkg7a")
-
-[node name="DrawPileButton" type="Button" parent="UI/Deck/DrawPile/MarginContainer/Back/VBoxContainer"]
-layout_mode = 2
+offset_left = 16.0
+offset_top = 464.0
+offset_right = 119.0
+offset_bottom = 485.0
 theme = ExtResource("5_5yrco")
 text = "Draw Pile"
 alignment = 2
 
-[node name="DrawPileLabel" type="Label" parent="UI/Deck/DrawPile/MarginContainer/Back/VBoxContainer/DrawPileButton"]
+[node name="DrawPileLabel" type="Label" parent="UI/Deck/DrawPileButton"]
 unique_name_in_owner = true
 layout_mode = 1
 anchors_preset = 15
@@ -335,13 +87,6 @@ vertical_alignment = 1
 
 [node name="DeckView" parent="UI/Deck" instance=ExtResource("6_7d42u")]
 unique_name_in_owner = true
-
-[node name="PanelContainer" type="PanelContainer" parent="UI/Deck"]
-layout_mode = 0
-offset_left = -100.0
-offset_top = 340.0
-offset_right = -84.0
-offset_bottom = 356.0
 
 [node name="Bar" type="PanelContainer" parent="UI"]
 anchors_preset = 12
@@ -400,10 +145,10 @@ theme_override_styles/focus = SubResource("StyleBoxEmpty_u2eju")
 text = "End Turn"
 
 [node name="Faith" type="TextureRect" parent="UI"]
-offset_left = 154.0
+offset_left = 33.0
 offset_top = 359.0
-offset_right = 194.0
-offset_bottom = 399.0
+offset_right = 97.0
+offset_bottom = 423.0
 theme = ExtResource("5_5yrco")
 texture = ExtResource("13_mjhrf")
 stretch_mode = 5
@@ -436,7 +181,7 @@ theme = ExtResource("5_5yrco")
 unique_name_in_owner = true
 layout_mode = 2
 
-[connection signal="pressed" from="UI/Deck/DiscardPile/MarginContainer/Back/VBoxContainer/DiscardPileButton" to="UI/Deck" method="_on_discard_pile_button_pressed"]
-[connection signal="pressed" from="UI/Deck/DrawPile/MarginContainer/Back/VBoxContainer/DrawPileButton" to="UI/Deck" method="_on_draw_pile_button_pressed"]
+[connection signal="pressed" from="UI/Deck/DiscardPileButton" to="UI/Deck" method="_on_discard_pile_button_pressed"]
+[connection signal="pressed" from="UI/Deck/DrawPileButton" to="UI/Deck" method="_on_draw_pile_button_pressed"]
 [connection signal="toggled" from="UI/Bar/MarginContainer/HBoxContainer/HBoxContainer/FastForwardButton" to="." method="_on_fast_forward_button_toggled"]
 [connection signal="pressed" from="UI/Bar/MarginContainer/HBoxContainer/TurnButton" to="." method="_on_turn_button_pressed"]

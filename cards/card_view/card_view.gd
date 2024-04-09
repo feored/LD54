@@ -3,7 +3,7 @@ class_name CardView
 
 signal picked(card : CardView)
 
-enum State { Idle, Hovered, Selected}
+enum State { Idle, Hovered, Selected, DrawnOrDiscarded}
 
 const COLOR_INVALID = Color(1, 0.5, 0.5)
 const COLOR_VALID = Color(1, 1, 1)
@@ -33,7 +33,7 @@ func check_finished():
 		if t.is_valid() and t.is_running():
 			return
 	self.clear_tweens()
-	self.card_ready = true
+	
 
 func set_buyable(b : bool):
 	self.buyable = b
@@ -43,6 +43,7 @@ func clear_tweens():
 	for tween in self.tweens:
 		tween.kill()
 	self.tweens.clear()
+	self.card_ready = true
 
 func animate(new_pos, new_rotation, new_z_index):
 	self.card_ready = false
@@ -52,6 +53,7 @@ func animate(new_pos, new_rotation, new_z_index):
 	var tween = self.create_tween().set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN).set_parallel()
 	tween.tween_property(self, "position", new_pos, Constants.DECK_SHORT_TIMER)
 	tween.tween_property(self, "rotation_degrees", new_rotation, Constants.DECK_SHORT_TIMER)
+	tween.tween_property(self, "scale", Vector2(1,1), Constants.DECK_SHORT_TIMER)
 	tween.tween_property(self, "z_index", new_z_index, Constants.DECK_SHORT_TIMER)
 
 	self.tweens = [tween]
@@ -60,28 +62,32 @@ func animate(new_pos, new_rotation, new_z_index):
 		t.connect("finished", Callable(self, "check_finished"))
 	# Utils.log("Animating card to " + str(new_pos) + " " + str(new_rotation) + " " + str(new_z_index))
 
-func move(new_pos, to_flip = false, call_when_finished = null):
+func move(new_pos, call_when_finished = null):
+
+	## used for draw/discard
+
 	if self.tweens.size() > 0:
 		clear_tweens()
-	var tween_pos = self.create_tween().set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN).set_parallel()
+	var tween_pos = self.create_tween().set_trans(Tween.TRANS_LINEAR).set_ease(Tween.EASE_IN).set_parallel()
 	tween_pos.tween_property(self, "position", new_pos, Constants.DECK_LONG_TIMER)
 	if call_when_finished != null:
 		tween_pos.chain().tween_callback(call_when_finished)
+	tween_pos.chain().tween_callback(func(): self.state = State.Idle; card_ready = true)
 	tweens = [tween_pos]
 
-	if to_flip:
-		var tween_flip = self.create_tween().set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN)
-		tween_flip.tween_property(self, "scale", Vector2(0, 1), Constants.DECK_LONG_TIMER/2.0)
-		tween_flip.tween_callback(flip)
-		tween_flip.tween_property(self, "scale", Vector2(1, 1), Constants.DECK_LONG_TIMER/2.0)
-		tweens.push_back(tween_flip)
+	# if to_flip:
+	# 	var tween_flip = self.create_tween().set_trans(Tween.TRANS_LINEAR).set_ease(Tween.EASE_IN)
+	# 	tween_flip.tween_property(self, "scale", Vector2(0, 1), Constants.DECK_LONG_TIMER/2.0)
+	# 	tween_flip.tween_callback(flip)
+	# 	tween_flip.tween_property(self, "scale", Vector2(1, 1), Constants.DECK_LONG_TIMER/2.0)
+	# 	tweens.push_back(tween_flip)
 
 	for t in self.tweens:
 		t.connect("finished", Callable(self, "check_finished"))
 
 func discard(pos):
-	self.card_ready = false
-	self.move(pos, true, Callable(self, "queue_free"))
+	self.state = State.DrawnOrDiscarded
+	self.move(pos, Callable(self, "queue_free"))
 
 
 func flip():
@@ -139,7 +145,6 @@ func highlight(to_highlight):
 
 func _on_mouse_entered():
 	if self.state == State.Idle and self.card_ready:
-		Utils.log("Mouse entered")
 		self.animate(Vector2(self.position.x, self.position.y - 100), 0, HOVER_Z_INDEX)
 		self.state = CardView.State.Hovered
 
