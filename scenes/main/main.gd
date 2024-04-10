@@ -129,14 +129,12 @@ func handle_emerge(tile_hovered):
 		clear_mouse_state()
 
 func handle_sink(tile_hovered):
-	if self.mouse_item.placeable(tile_hovered, self.world.tiles.keys()):
-		sink_tiles(self.mouse_item.adjusted_shape_coords(tile_hovered))
-		if self.used_card != null:
-			card_used(self.used_card)
-		self.clear_mouse_state()
-	else:
-		messenger.set_message("You cannot sink that which has already sunk, my lord.")
-		clear_mouse_state()
+	var tiles_to_sink = self.mouse_item.adjusted_shape_coords(tile_hovered).filter(func(t): return self.world.tiles.has(t))
+	sink_tiles(tiles_to_sink)
+	if self.used_card != null:
+		card_used(self.used_card)
+	self.clear_mouse_state()
+
 
 func handle_building(event):
 	var coords_hovered = world.global_pos_to_coords(event.position)
