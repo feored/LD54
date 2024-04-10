@@ -14,6 +14,9 @@ func _ready():
 		cv.is_static = true
 		cv.picked.connect(Callable(self, "pick_card"))
 		cards_container.add_child(cv)
+		cv.flip()
+		cv.flip_in_place()
+		await Utils.wait(Constants.DECK_LONG_TIMER)
 
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.

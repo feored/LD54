@@ -86,10 +86,18 @@ func move(new_pos, call_when_finished = null):
 	for t in self.tweens:
 		t.connect("finished", Callable(self, "check_finished"))
 
+func flip_in_place():
+	var tween_flip = self.create_tween().set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN).chain()
+	tween_flip.tween_property(self, "scale:x", 0.0, Constants.DECK_LONG_TIMER/2.0)
+	tween_flip.tween_callback(flip)
+	tween_flip.tween_property(self, "scale:x", 1.0, Constants.DECK_LONG_TIMER/2.0)
+	tweens.push_back(tween_flip)
+	for t in self.tweens:
+		t.connect("finished", Callable(self, "check_finished"))
+
 func discard(pos):
 	self.state = State.DrawnOrDiscarded
 	self.move(pos, Callable(self, "queue_free"))
-
 
 func flip():
 	if self.front.visible:

@@ -23,3 +23,6 @@ func init(cards: Array):
 		cardView.is_static = true
 		cardView.card = c
 		self.card_container.add_child(cardView)
+		cardView.flip()
+		cardView.flip_in_place()
+		await Utils.wait(Constants.DECK_LONG_TIMER)
