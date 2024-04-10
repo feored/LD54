@@ -3,6 +3,7 @@ extends Node
 var run: Run
 var current_map = null
 var current_mods = []
+var lost: bool = false
 
 
 # Called when the node enters the scene tree for the first time.

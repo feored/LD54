@@ -7,6 +7,7 @@ const SCENE_MAP_EDITOR = "res://scenes/map_editor/map_editor.tscn"
 const SCENE_CAMPAIGN = "res://scenes/campaign/campaign.tscn"
 const SCENE_OVERWORLD = "res://scenes/overworld/overworld.tscn"
 const SCENE_END = "res://scenes/end/end_game.tscn"
+const SCENE_REWARD = "res://scenes/run_reward/run_reward.tscn"
 
 @onready var animation_player = $AnimationPlayer
 

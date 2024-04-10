@@ -1,6 +1,5 @@
 extends Node2D
 
-const game_over_screen_prefab = preload("res://scenes/game_over_menu/game_over_screen.tscn")
 const shape_prefab = preload("res://world/tiles/highlight/shape.tscn")
 const mod_list_prefab = preload("res://scenes/overworld/mod_view/mod_list.tscn")
 
@@ -32,8 +31,6 @@ var mouse_state = MouseState.None
 
 var mouse_item : Node = null
 var selected_region = null
-
-var spectating : bool = false
 
 var cards_to_pick = 1
 
@@ -437,16 +434,11 @@ func check_win_condition():
 		if not regions_left(player.team) and not player.eliminated:
 			player.eliminated = true
 			messenger.set_message(Constants.TEAM_NAMES[player.team] + " has been wiped from the island!")
-	if self.game.human.eliminated and not spectating:
-		get_tree().paused = true
-		var gameOverScreen = game_over_screen_prefab.instantiate()
-		gameOverScreen.init(false, self, true)
-		self.add_child(gameOverScreen)
+	if self.game.human.eliminated:
+		Info.lost = true
+		await SceneTransition.change_scene(SceneTransition.SCENE_REWARD)
 	elif self.game.players.filter(func(p): return !p.eliminated).size() < 2:
-		get_tree().paused = true
-		var gameOverScreen = game_over_screen_prefab.instantiate()
-		gameOverScreen.init(true, self, false)
-		self.add_child(gameOverScreen)
+		await SceneTransition.change_scene(SceneTransition.SCENE_REWARD)
 
 func apply_buildings(team):
 	self.world.tiles.values().filter(func(t): return t.data.team == team and t.data.building != Constants.Building.None).map(func(t): apply_building(t.data.coords, t.data.building))
