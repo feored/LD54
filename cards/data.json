@@ -1,4 +1,19 @@
 {
+	"OlympianBlessing": {
+		"id": "OlympianBlessing",
+		"name": "Olympian Blessing",
+		"effects": [
+			{
+				"type": "resource",
+				"name": "faith",
+				"value": "faith * 2"
+			}
+		],
+		"description": "Double your faith.",
+		"cost": 2,
+		"icon": "res://cards/images/olympianblessing.png",
+		"exhaust": false
+	},
 	"PontusRevenge": {
 		"id": "PontusRevenge",
 		"name": "Pontus' Revenge",
@@ -166,7 +181,7 @@
 		],
 		"description": "Gain 1 faith every time you draw a card for this turn.",
 		"cost": 0,
-		"icon": "res://cards/images/tridentsun.png",
+		"icon": "res://cards/images/abundance.png",
 		"exhaust": true
 	},
 	"Offering": {
