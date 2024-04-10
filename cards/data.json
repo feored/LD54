@@ -1,4 +1,36 @@
 {
+	"DivineFervor": {
+		"id": "DivineFervor",
+		"name": "Divine Fervor",
+		"effects": [
+			{
+				"type": "resource",
+				"name": "flat_reinforce_bonus",
+				"value": "flat_reinforce_bonus + 15",
+				"duration": 1,
+				"duration_trigger": "turn_over"
+			}
+		],
+		"description": "Reinforcing regions adds 15 bonus units for this turn.",
+		"cost": 2,
+		"icon": "res://cards/images/divinefervor.png",
+		"exhaust": false
+	},
+	"HighMorale": {
+		"id": "HighMorale",
+		"name": "High Morale",
+		"effects": [
+			{
+				"type": "resource",
+				"name": "flat_reinforce_bonus",
+				"value": "flat_reinforce_bonus + 5"
+			}
+		],
+		"description": "Reinforcing regions adds 5 bonus units.",
+		"cost": 1,
+		"icon": "res://cards/images/highmorale.png",
+		"exhaust": true
+	},
 	"Conversion": {
 		"id": "Conversion",
 		"name": "Conversion",
@@ -76,7 +108,7 @@
 				"name": "faith",
 				"value": "faith + 1",
 				"duration": 1,
-				"duration_trigger": "global_turn_over"
+				"duration_trigger": "globalturn_over"
 			}
 		],
 		"description": "Gain 1 faith every time you draw a card for this turn.",

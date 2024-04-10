@@ -289,7 +289,6 @@ func _on_turn_button_pressed():
 	if tile_camera_move != Constants.NULL_COORDS:
 		await self.world.camera.move_smoothed(self.world.map_to_local(tile_camera_move), 5)
 
-	Effects.trigger(Effect.Trigger.TurnOver)
 	## Faith generation
 	self.prepare_turn()
 	Settings.input_locked = false
@@ -394,13 +393,15 @@ func card_used(cv):
 		await Effects.add(effect)
 	self.game.human.resources.faith -= cv.card.cost
 	self.update_faith_player()
+	self.used_card = null
+	self.game.human.resources.cards_played += 1
+	Effects.trigger(Effect.Trigger.CardPlayed)
 	if cv.card.exhaust:
 		self.deck.exhaust(cv)
 	else:
 		self.deck.discard(cv)
-	self.used_card = null
-	self.game.human.resources.cards_played += 1
-	Effects.trigger(Effect.Trigger.CardPlayed)
+	
+	
 
 func closest_player_tile_coords():
 	var closest_player_tile = Constants.NULL_COORDS
@@ -481,7 +482,7 @@ func handle_move(clicked_region):
 			clear_mouse_state()
 
 func play_global_turn():
-	self.game.next_turn()
+	await self.game.next_turn()
 	world.path_lengths.clear()
 	world.path_lengths = world.all_path_lengths()
 	while self.game.current_player != self.game.human:
@@ -593,7 +594,7 @@ func set_sacrifice():
 func set_reinforcements(new_reinforcements):
 	self.mouse_item = Sprite2D.new()
 	self.mouse_item.texture = load("res://assets/icons/Plus.png")
-	self.current.reinforcements = new_reinforcements
+	self.current.reinforcements = new_reinforcements + self.game.current_player.compute("flat_reinforce_bonus")
 	self.world.add_child(mouse_item)
 	self.mouse_item.global_position = get_viewport().get_mouse_position()
 	self.mouse_state = MouseState.Reinforce

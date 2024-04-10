@@ -20,7 +20,8 @@ const DEFAULT_RESOURCES = {
 	"units_per_tile" : 1,
 	"cards_playable_per_turn" : -1,
 	"cards_played": 0,
-	"reinforce_neutral": 0
+	"reinforce_neutral": 0,
+	"flat_reinforce_bonus": 0
 	}
 
 func compute(r : String):

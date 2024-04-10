@@ -24,13 +24,16 @@ func add(e : Effect, p : Player = null):
 	
 
 func trigger(t : Effect.Trigger):
+	Utils.log("Triggered: " + str(Effect.Trigger.keys()[t]))
 	var p = self.get_current_player.call()
 	var duration_affected = self.effects[p].filter(func (e): return e.duration_trigger == t)
+	Utils.log("Duration affected: " + str(duration_affected.size()) + " cards")
 	var to_trigger = self.effects[p].filter(func (e): return e.active_trigger == t)
 	for e in to_trigger:
 		Utils.log("Triggering effect: " + str(e) + " for player " + str(p))
 		self.apply_active.call(e)
 	for e in duration_affected:
+		Utils.log("Lowering duration of ", str(e))
 		e.duration -= 1
 		if e.duration <= 0:
 			self.effects[p].erase(e)
