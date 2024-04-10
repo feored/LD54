@@ -34,15 +34,29 @@ func init_with_json_coords(init_coords: Array):
 
 func init_with_coords(init_coords: Array):
 	for coord in init_coords:
-		var new_tile = tile_prefab.instantiate()
-		self.add_child(new_tile)
-		new_tile.position = Utils.to_global(Utils.map_to_local(coord)) - HALF_TILE
-		self.coords[coord] = new_tile
-		if Constants.DEBUG_POSITION:
-			var label = Label.new()
-			label.text = str(coord)
-			label.position = -HALF_TILE
-			new_tile.add_child(label)
+		self.add_tile(coord)
+
+
+func add_tile(coord: Vector2i):
+	var new_tile = tile_prefab.instantiate()
+	self.add_child(new_tile)
+	new_tile.position = Utils.to_global(Utils.map_to_local(coord)) - HALF_TILE
+	self.coords[coord] = new_tile
+	if Constants.DEBUG_POSITION:
+		var label = Label.new()
+		label.text = str(coord)
+		label.position = -HALF_TILE
+		new_tile.add_child(label)
+
+
+func add_bonus(bonus):
+	for i in range(bonus):
+		var possible = []
+		for coord in self.coords.keys():
+			for c in Utils.get_surrounding_cells(coord):
+				if !self.coords.has(c):
+					possible.push_back(c)
+		self.add_tile(possible.pick_random())
 
 
 func init():

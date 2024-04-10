@@ -327,13 +327,26 @@ func apply_active(effect):
 					selected.push_back(own_tiles.pop_front().data.coords)
 				self.sink_tiles(selected)
 			"sink_random_tiles":
+				var computed_nb = effect.value + self.game.current_player.compute("flat_sink_bonus")
 				var all_tiles = self.world.tiles.values()
-				var nb = min(effect.value, all_tiles.size())
+				var nb = min(computed_nb, all_tiles.size())
 				var selected = []
 				all_tiles.shuffle()
 				for i in range(nb):
 					selected.push_back(all_tiles.pop_front().data.coords)
 				self.sink_tiles(selected)
+			"emerge_random_tiles":
+				var computed_nb = effect.value + self.game.current_player.compute("flat_emerge_bonus")
+				var all_tiles = self.world.tiles.values()
+				var empty = []
+				for tile in all_tiles:
+					for coords in Utils.get_surrounding_cells(tile.data.coords):
+						if !self.world.tiles.has(coords):
+							empty.push_back(coords)
+				var nb = min(computed_nb, all_tiles.size())
+				empty.shuffle()
+				for i in range(nb):
+					self.emerge_tiles([empty.pop_front()])
 			"treason":
 				var nb_treason = effect.value
 				var own_regions = self.world.regions.values().filter(func(r): return r.data.team == self.game.current_player.team)
@@ -379,10 +392,12 @@ func use_card(cardView):
 			"sink":
 				var s = Shape.new()
 				s.init_with_json_coords(play_power.value)
+				s.add_bonus(self.game.human.compute("flat_sink_bonus"))
 				set_shape(s.coords.keys(), MouseState.Sink)
 			"emerge":
 				var s = Shape.new()
 				s.init_with_json_coords(play_power.value)
+				s.add_bonus(self.game.human.compute("flat_emerge_bonus"))
 				set_shape(s.coords.keys(), MouseState.Emerge)
 	else:
 		self.card_used(cardView)

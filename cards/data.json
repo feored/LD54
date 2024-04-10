@@ -1,4 +1,40 @@
 {
+	"GaiasBlessing": {
+		"id": "GaiasBlessing",
+		"name": "Gaia's Blessing",
+		"effects": [
+			{
+				"type": "resource",
+				"name": "flat_sink_bonus",
+				"value": "flat_sink_bonus + 1"
+			},
+			{
+				"type": "resource",
+				"name": "flat_emerge_bonus",
+				"value": "flat_emerge_bonus + 1"
+			}
+		],
+		"description": "All sink and emerge cards gain one bonus tile.",
+		"cost": 1,
+		"icon": "res://cards/images/gaiasblessing.png",
+		"exhaust": false
+	},
+	"MiracleOfGaia": {
+		"id": "MiracleOfGaia",
+		"name": "Miracle of Gaia",
+		"effects": [
+			{
+				"type": "active",
+				"name": "emerge_random_tiles",
+				"value": 5,
+				"active_trigger": "instant"
+			}
+		],
+		"description": "Gaia emerges 5 random tiles from the sea.",
+		"cost": 2,
+		"icon": "res://cards/images/miracleofgaia.png",
+		"exhaust": false
+	},
 	"DivineFervor": {
 		"id": "DivineFervor",
 		"name": "Divine Fervor",
