@@ -29,7 +29,7 @@
 				"name": "faith",
 				"value": "faith + 1",
 				"duration": 1,
-				"duration_trigger": "turn_over"
+				"duration_trigger": "global_turn_over"
 			}
 		],
 		"description": "Gain 1 faith every time you draw a card for this turn.",

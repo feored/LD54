@@ -24,15 +24,19 @@ func _init(teams):
 		else:
 			player.bot = TerritoryBot.new(team, Personalities.AGGRESSIVE_PERSONALITY)
 
+func get_random_enemy():
+	return self.players.filter(func(p): return p.team != self.current_player.team).pick_random()
+
 func next_turn():
 	global_turn += 1
 	turn = 1
 	current_player = players[turn]
-	Effects.trigger(Effect.Trigger.TurnOver)
+	Effects.trigger(Effect.Trigger.GlobalTurnOver)
 
 func next_player():
 	turn = (turn + 1) % players.size()
 	current_player = players[turn]
+	Effects.trigger(Effect.Trigger.TurnOver)
 
 func get_current_player():
 	return self.current_player

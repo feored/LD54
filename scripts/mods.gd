@@ -11,10 +11,26 @@ enum Mod {
 	Famine,
 	Scarcity,
 	NeptuneCurse,
-	NeptunePrison
+	NeptunePrison,
+	Treason
 }
 
 const mods = {
+	Mod.Treason:
+	{
+		"level": 4,
+		"name": "Treason",
+		"effects":
+		[
+			{
+				"target": Target.Human,
+				"effect":
+				{"type": "active", "name": "treason", "value": 1, "active_trigger": "turn_over"},
+			},
+		],
+		"description":
+		"At the end of your turn, one of your regions is converted to an enemy's side."
+	},
 	Mod.NeptunePrison:
 	{
 		"level": 2,

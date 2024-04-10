@@ -319,7 +319,17 @@ func apply_active(effect):
 				for i in range(nb):
 					selected.push_back(own_tiles.pop_front().data.coords)
 				self.sink_tiles(selected)
-				Utils.log("Sinking tiles: %s" % selected)
+			"treason":
+				var nb_treason = effect.value
+				var own_regions = self.world.regions.values().filter(func(r): return r.data.team == self.game.current_player.team)
+				own_regions.shuffle()
+				for i in range(nb_treason):
+					var region = own_regions.pop_front()
+					var new_team = self.game.get_random_enemy().team
+					region.set_team(new_team)
+					region.update()
+				messenger.set_message("Regions of %s have defected to the enemy!" % Constants.TEAM_NAMES[self.game.current_player.team])
+
 
 	else:
 		Utils.log("Effect %s is not an active effect" % effect.name)

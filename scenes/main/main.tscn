@@ -1,4 +1,4 @@
-[gd_scene load_steps=13 format=3 uid="uid://ceoqtlfuehsvd"]
+[gd_scene load_steps=14 format=3 uid="uid://ceoqtlfuehsvd"]
 
 [ext_resource type="Script" path="res://scenes/main/main.gd" id="1_osaxm"]
 [ext_resource type="PackedScene" uid="uid://pu46mkcjdswb" path="res://scenes/esc_menu/esc_menu.tscn" id="2_pam5e"]
@@ -15,6 +15,8 @@
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_bwln7"]
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_u2eju"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_ensp2"]
 
 [node name="Main" type="Node2D"]
 script = ExtResource("1_osaxm")
@@ -176,6 +178,7 @@ offset_top = 50.0
 offset_right = 140.0
 offset_bottom = 320.0
 theme = ExtResource("5_5yrco")
+theme_override_styles/panel = SubResource("StyleBoxEmpty_ensp2")
 
 [node name="ModsScrollContainer" type="ScrollContainer" parent="UI/PanelContainer"]
 unique_name_in_owner = true

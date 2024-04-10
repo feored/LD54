@@ -15,7 +15,8 @@ enum Trigger {
 	RegionReinforced,
 	RegionGained,
 	RegionLost,
-	TurnOver
+	TurnOver,
+	GlobalTurnOver
 }
 enum Type { Power, Active, Resource }
 
@@ -90,6 +91,8 @@ func string_to_trigger(s: String) -> Trigger:
 		return Trigger.TileSunk
 	elif s == "region_reinforced":
 		return Trigger.RegionReinforced
+	elif s == "global_turn_over":
+		return Trigger.GlobalTurnOver
 	else:
 		Utils.log("ERROR - Unknown trigger: " + s)
 		return Trigger.Instant
