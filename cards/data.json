@@ -1,4 +1,51 @@
 {
+	"Conversion": {
+		"id": "Conversion",
+		"name": "Conversion",
+		"effects": [
+			{
+				"type": "resource",
+				"name": "reinforce_neutral",
+				"value": "1"
+			}
+		],
+		"description": "You can now reinforce neutral regions, winning them over to your side.",
+		"cost": 2,
+		"icon": "res://cards/images/conversion.png",
+		"exhaust": true
+	},
+	"Rebirth": {
+		"id": "Rebirth",
+		"name": "Rebirth",
+		"effects": [
+			{
+				"type": "active",
+				"name": "renewal",
+				"value": "",
+				"active_trigger": "instant"
+			}
+		],
+		"description": "All your regions are usable again.",
+		"cost": 2,
+		"icon": "res://cards/images/rebirth.png",
+		"exhaust": false
+	},
+	"Cataclysm": {
+		"id": "Cataclysm",
+		"name": "Cataclysm",
+		"effects": [
+			{
+				"type": "active",
+				"name": "sink_random_tiles",
+				"value": 10,
+				"active_trigger": "instant"
+			}
+		],
+		"description": "Sink 10 random tiles. The affected region(s) will lose units in proportion.",
+		"cost": 3,
+		"icon": "res://cards/images/cataclysm.png",
+		"exhaust": false
+	},
 	"CultStatue": {
 		"id": "CultStatue",
 		"name": "Cult Statue",

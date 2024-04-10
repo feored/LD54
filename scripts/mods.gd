@@ -60,7 +60,7 @@ const mods = {
 				"effect":
 				{
 					"type": "active",
-					"name": "sink_random_tiles",
+					"name": "sink_random_self_tiles",
 					"value": 1,
 					"active_trigger": "card_played"
 				},

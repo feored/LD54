@@ -173,8 +173,12 @@ func handle_building(event):
 func handle_plus(event):
 	var coords_hovered = world.global_pos_to_coords(event.position)
 	if event is InputEventMouseMotion:
-		if world.tiles.has(coords_hovered) and self.world.tiles[coords_hovered].data.team == self.game.human.team:
-			self.mouse_item.self_modulate = Color(0.5, 1, 0.5)
+		if world.tiles.has(coords_hovered):
+			if self.world.tiles[coords_hovered].data.team == self.game.human.team or (
+				self.world.tiles[coords_hovered].data.team == Constants.NULL_TEAM and self.game.human.compute("reinforce_neutral") != 0):
+				self.mouse_item.self_modulate = Color(0.5, 1, 0.5)
+			else:
+				self.mouse_item.self_modulate = Color(1, 0.5, 0.5)
 		else:
 			self.mouse_item.self_modulate = Color(1, 0.5, 0.5)
 		self.mouse_item.position = self.world.map_to_local(coords_hovered)
@@ -184,9 +188,15 @@ func handle_plus(event):
 			clear_mouse_state()
 			return
 		if self.world.tiles[coords_hovered].data.team != self.game.human.team:
-			messenger.set_message("You cannot send reinforcements to the enemy!")
-			clear_mouse_state()
-			return
+			if self.world.tiles[coords_hovered].data.team == Constants.NULL_TEAM:
+				if self.game.human.compute("reinforce_neutral") == 0:
+					messenger.set_message("You cannot send reinforcements to a neutral region!")
+					clear_mouse_state()
+					return
+			else:
+				messenger.set_message("You cannot send reinforcements to the enemy!")
+				clear_mouse_state()
+				return
 		var region_reinforced = self.world.tiles[coords_hovered].data.region
 		var action = Action.new(self.game.human.team, Action.Type.Reinforce, region_reinforced, 0, [], self.current.reinforcements)
 		self.game.actions_history.append(action)
@@ -309,13 +319,21 @@ func apply_active(effect):
 				self.game.current_player.resources.faith = result
 				if !self.game.current_player.is_bot:
 					update_faith_player()
-			"sink_random_tiles":				
+			"sink_random_self_tiles":				
 				var own_tiles = self.world.tiles.values().filter(func(t): return t.data.team == self.game.current_player.team)
 				var nb = min(effect.value, own_tiles.size())
 				var selected = []
 				own_tiles.shuffle()
 				for i in range(nb):
 					selected.push_back(own_tiles.pop_front().data.coords)
+				self.sink_tiles(selected)
+			"sink_random_tiles":
+				var all_tiles = self.world.tiles.values()
+				var nb = min(effect.value, all_tiles.size())
+				var selected = []
+				all_tiles.shuffle()
+				for i in range(nb):
+					selected.push_back(all_tiles.pop_front().data.coords)
 				self.sink_tiles(selected)
 			"treason":
 				var nb_treason = effect.value
@@ -327,6 +345,11 @@ func apply_active(effect):
 					region.set_team(new_team)
 					region.update()
 				messenger.set_message("Regions of %s have defected to the enemy!" % Constants.TEAM_NAMES[self.game.current_player.team])
+			"renewal":
+				var own_regions = self.world.regions.values().filter(func(r): return r.data.team == self.game.current_player.team)
+				for region in own_regions:
+					region.set_used(false)
+					region.update()
 
 
 	else:
@@ -399,10 +422,12 @@ func check_win_condition():
 			player.eliminated = true
 			messenger.set_message(Constants.TEAM_NAMES[player.team] + " has been wiped from the island!")
 	if self.game.human.eliminated and not spectating:
+		get_tree().paused = true
 		var gameOverScreen = game_over_screen_prefab.instantiate()
 		gameOverScreen.init(false, self, true)
 		self.add_child(gameOverScreen)
 	elif self.game.players.filter(func(p): return !p.eliminated).size() < 2:
+		get_tree().paused = true
 		var gameOverScreen = game_over_screen_prefab.instantiate()
 		gameOverScreen.init(true, self, false)
 		self.add_child(gameOverScreen)
@@ -530,6 +555,8 @@ func apply_action(action : Action):
 			Effects.trigger(Effect.Trigger.BuildingBuilt)
 		Action.Type.Reinforce:
 			self.world.regions[action.region_from].data.units += action.misc
+			if self.world.regions[action.region_from].data.team == Constants.NULL_TEAM:
+				self.world.regions[action.region_from].set_team(self.game.human.team)
 			self.world.regions[action.region_from].update()
 			Effects.trigger(Effect.Trigger.RegionReinforced)
 		Action.Type.None:
