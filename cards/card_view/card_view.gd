@@ -17,6 +17,7 @@ const HOVER_Z_INDEX = 1
 @onready var shape_gui = %ShapeGUI
 @onready var front : Control = %Front
 @onready var back : Control = %Back
+@onready var exhaust_label : Label = %ExhaustLabel
 
 var shape_prefab = preload("res://scenes/shapes/shape_gui.tscn")
 
@@ -123,6 +124,7 @@ func config():
 	# self.btn.tooltip_text = self.power.description
 	self.card_description.text = "[center]" + self.card.description + "[/center]"
 	self.card_cost.text = str(self.card.cost)
+	self.exhaust_label.visible = self.card.exhaust
 	if not self.is_static:
 		self.mouse_entered.connect(Callable(self, "_on_mouse_entered"))
 		self.mouse_exited.connect(Callable(self, "_on_mouse_exited"))

@@ -1,4 +1,21 @@
 {
+	"PontusRevenge": {
+		"id": "PontusRevenge",
+		"name": "Pontus' Revenge",
+		"effects": [
+			{
+				"type": "resource",
+				"name": "flat_sink_bonus",
+				"value": "3",
+				"duration": 1,
+				"duration_trigger": "turn_over"
+			}
+		],
+		"description": "All sink cards gain 3 bonus tiles for this turn.",
+		"cost": 1,
+		"icon": "res://cards/images/pontusrevenge.png",
+		"exhaust": false
+	},
 	"GaiasBlessing": {
 		"id": "GaiasBlessing",
 		"name": "Gaia's Blessing",
