@@ -2,6 +2,7 @@ extends Control
 signal event_over()
 
 const card_view_prefab = preload("res://cards/card_view/card_view.tscn")
+var picked : bool = false
 
 @onready var cards_container = %CardsContainer
 
@@ -15,8 +16,8 @@ func _ready():
 		cv.picked.connect(Callable(self, "pick_card"))
 		cards_container.add_child(cv)
 		cv.flip()
-		cv.flip_in_place()
-		await Utils.wait(Constants.DECK_LONG_TIMER)
+		
+		#await Utils.wait(Constants.DECK_LONG_TIMER)
 
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
@@ -24,6 +25,11 @@ func _process(delta):
 	pass
 
 func pick_card(cv):
+	if picked:
+		return
+	picked = true
+	cv.flip_in_place()
+	await Utils.wait(Constants.DECK_LONG_TIMER*10)
 	Info.run.deck.push_back(cv.card)
 	over()
 

@@ -2,7 +2,7 @@ extends Control
 signal event_over
 
 @onready var deck_view = %DeckView
-
+var picked : bool = false
 
 
 func _on_pick_card_button_pressed():
@@ -13,6 +13,9 @@ func _on_pick_card_button_pressed():
 
 
 func card_picked(card_view):
+	if picked:
+		return
+	picked = true
 	deck_view.hide()
 	Info.run.deck.erase(card_view.card)
 	over()

@@ -136,15 +136,19 @@ stretch_mode = 5
 unique_name_in_owner = true
 visible = false
 layout_mode = 2
+mouse_filter = 2
 theme_type_variation = &"GoldPanel"
 
 [node name="CenterContainer" type="CenterContainer" parent="MarginContainer/Back"]
 layout_mode = 2
+mouse_filter = 2
 
 [node name="TextureRect" type="TextureRect" parent="MarginContainer/Back/CenterContainer"]
 layout_mode = 2
+mouse_filter = 2
 texture = ExtResource("6_0afos")
 
 [node name="TextureRect2" type="TextureRect" parent="MarginContainer/Back/CenterContainer"]
 layout_mode = 2
+mouse_filter = 2
 texture = ExtResource("5_r4chv")

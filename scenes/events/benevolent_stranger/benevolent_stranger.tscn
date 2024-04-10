@@ -48,7 +48,9 @@ layout_mode = 2
 size_flags_horizontal = 3
 text = "You meet a mysterious stranger on the road to your next destination.
 
-You take an interest in their stories, and they decide to reward your attentiveness with a card they've found during their travels.
+You take an interest in their stories, and they decide to reward your attentiveness with a card they've found during their travels. 
+
+The stranger insists you cannot see the cards before you make your choice.
 
 Which will you choose?"
 horizontal_alignment = 1
