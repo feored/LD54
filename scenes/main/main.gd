@@ -299,71 +299,77 @@ func _on_cards_selected(cards):
 		self.deck.update_faith(self.game.human.resources.faith)
 	Settings.input_locked = false
 	lock_controls(false)
+
+func active_random_discard(effect):
+	await self.deck.discard_random(effect.value)
+
+func active_draw(effect):
+	await self.deck.draw_multiple(effect.value)
+
+func active_faith(effect):
+	var expression = Expression.new()
+	expression.parse(effect.value, self.game.current_player.resources.keys())
+	var result = expression.execute(self.game.current_player.resources.values())
+	self.game.current_player.resources.faith = result
+	if !self.game.current_player.is_bot:
+		update_faith_player()
+
+func active_sink_random_self_tiles(effect):
+	var own_tiles = self.world.tiles.values().filter(func(t): return t.data.team == self.game.current_player.team)
+	var nb = min(effect.value, own_tiles.size())
+	var selected = []
+	own_tiles.shuffle()
+	for i in range(nb):
+		selected.push_back(own_tiles.pop_front().data.coords)
+	self.sink_tiles(selected)
+
+func active_sink_random_tiles(effect):
+	var all_tiles = self.world.tiles.values()
+	var nb = min(effect.value, all_tiles.size())
+	var selected = []
+	all_tiles.shuffle()
+	for i in range(nb):
+		selected.push_back(all_tiles.pop_front().data.coords)
+	self.sink_tiles(selected)
+
+func active_emerge_random_tiles(effect):
+	var computed_nb = effect.value + self.game.current_player.compute("flat_emerge_bonus")
+	var all_tiles = self.world.tiles.values()
+	var empty = []
+	for tile in all_tiles:
+		for coords in Utils.get_surrounding_cells(tile.data.coords):
+			if !self.world.tiles.has(coords):
+				empty.push_back(coords)
+	var nb = min(computed_nb, all_tiles.size())
+	empty.shuffle()
+	for i in range(nb):
+		self.emerge_tiles([empty.pop_front()])
+	
+func active_treason(effect):
+	var nb_treason = effect.value
+	var own_regions = self.world.regions.values().filter(func(r): return r.data.team == self.game.current_player.team)
+	own_regions.shuffle()
+	for i in range(nb_treason):
+		var region = own_regions.pop_front()
+		var new_team = self.game.get_random_enemy().team
+		region.set_team(new_team)
+		region.update()
+	messenger.set_message("Regions of %s have defected to the enemy!" % Constants.TEAM_NAMES[self.game.current_player.team])
+
+
+func active_renewal(effect):
+	var own_regions = self.world.regions.values().filter(func(r): return r.data.team == self.game.current_player.team)
+	for region in own_regions:
+		region.set_used(false)
+		region.update()
 	
 
 func apply_active(effect):
-	if effect.type == Effect.Type.Active:
-		match effect.name:
-			"random_discard":
-				await self.deck.discard_random(effect.value)
-			"draw":
-				await self.deck.draw_multiple(effect.value)
-			"faith":
-				var expression = Expression.new()
-				expression.parse(effect.value, self.game.current_player.resources.keys())
-				var result = expression.execute(self.game.current_player.resources.values())
-				self.game.current_player.resources.faith = result
-				if !self.game.current_player.is_bot:
-					update_faith_player()
-			"sink_random_self_tiles":				
-				var own_tiles = self.world.tiles.values().filter(func(t): return t.data.team == self.game.current_player.team)
-				var nb = min(effect.value, own_tiles.size())
-				var selected = []
-				own_tiles.shuffle()
-				for i in range(nb):
-					selected.push_back(own_tiles.pop_front().data.coords)
-				self.sink_tiles(selected)
-			"sink_random_tiles":
-				var computed_nb = effect.value + self.game.current_player.compute("flat_sink_bonus")
-				var all_tiles = self.world.tiles.values()
-				var nb = min(computed_nb, all_tiles.size())
-				var selected = []
-				all_tiles.shuffle()
-				for i in range(nb):
-					selected.push_back(all_tiles.pop_front().data.coords)
-				self.sink_tiles(selected)
-			"emerge_random_tiles":
-				var computed_nb = effect.value + self.game.current_player.compute("flat_emerge_bonus")
-				var all_tiles = self.world.tiles.values()
-				var empty = []
-				for tile in all_tiles:
-					for coords in Utils.get_surrounding_cells(tile.data.coords):
-						if !self.world.tiles.has(coords):
-							empty.push_back(coords)
-				var nb = min(computed_nb, all_tiles.size())
-				empty.shuffle()
-				for i in range(nb):
-					self.emerge_tiles([empty.pop_front()])
-			"treason":
-				var nb_treason = effect.value
-				var own_regions = self.world.regions.values().filter(func(r): return r.data.team == self.game.current_player.team)
-				own_regions.shuffle()
-				for i in range(nb_treason):
-					var region = own_regions.pop_front()
-					var new_team = self.game.get_random_enemy().team
-					region.set_team(new_team)
-					region.update()
-				messenger.set_message("Regions of %s have defected to the enemy!" % Constants.TEAM_NAMES[self.game.current_player.team])
-			"renewal":
-				var own_regions = self.world.regions.values().filter(func(r): return r.data.team == self.game.current_player.team)
-				for region in own_regions:
-					region.set_used(false)
-					region.update()
-
-
-	else:
-		Utils.log("Effect %s is not an active effect" % effect.name)
-
+	var func_name = "active_" + effect.name
+	var active_func = Callable(self, func_name)
+	if not active_func.is_valid():
+		Utils.log("Effect %s is not a valid active effect" % effect.name)
+	Callable(self, func_name).call(effect) 
 			
 
 func use_card(cardView):
