@@ -2,6 +2,7 @@ extends Control
 signal event_over
 
 @onready var deck_view = %DeckView
+var picked = false
 
 
 # Called when the node enters the scene tree for the first time.
@@ -9,15 +10,17 @@ func _ready():
 	pass  # Replace with function body.
 
 
-func card_picked(card_view):
+func card_picked(card):
+	if picked:
+		return
+	picked = true
 	deck_view.hide()
-	Info.run.deck.erase(card_view.card)
+	Info.run.deck.erase(card)
 	over()
 
 func _on_pick_card_button_pressed():
+	deck_view.card_picked.connect(Callable(self, "card_picked"))
 	deck_view.init(Info.run.deck)
-	for cv in deck_view.card_container.get_children():
-		cv.picked.connect(Callable(self, "card_picked"))
 	deck_view.show()
 
 

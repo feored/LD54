@@ -114,12 +114,12 @@ func _init(e):
 	name = e["name"]
 	value = e["value"]
 
-# Three types of effects: Power, Action, and Resource.
+# Three types of effects: Power, Actve, and Resource.
 # Powers are things that require player interaction. They are limited to one per card.
 
-# Actions are things that have an immediate effect but don't require player input. e.g drawing a card._add_constant_central_force
+# Actives are things that have an immediate effect but don't require player input. e.g drawing a card._add_constant_central_force
 
 # Resources are passives.
 
-# Powers can only be activated on playing the card. Resources don't have a trigger, they are always active. Actions are triggered by the action_trigger.
+# Powers can only be activated on playing the card. Resources don't have a trigger, they are always active. Actives are triggered by the active_trigger.
 # Duration is the number of events an effect lasts for. duratrion_trigger is the event in question (turn over, carddrawn, etc)

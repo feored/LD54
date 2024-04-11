@@ -79,7 +79,7 @@
 				"duration_trigger": "turn_over"
 			}
 		],
-		"description": "Reinforcing regions adds 15 bonus units for this turn.",
+		"description": "Reinforcement cards add 15 bonus units for this turn.",
 		"cost": 2,
 		"icon": "res://cards/images/divinefervor.png",
 		"exhaust": false
@@ -94,7 +94,7 @@
 				"value": "flat_reinforce_bonus + 5"
 			}
 		],
-		"description": "Reinforcing regions adds 5 bonus units.",
+		"description": "Reinforcement cards add 5 bonus units.",
 		"cost": 1,
 		"icon": "res://cards/images/highmorale.png",
 		"exhaust": true
@@ -427,6 +427,42 @@
 		"description": "Emerge three tiles from the sea.",
 		"cost": 2,
 		"icon": "res://cards/images/largecreation.png",
+		"exhaust": false
+	},
+	"TychesFavor": {
+		"id": "TychesFavor",
+		"name": "Tyche's Favor",
+		"effects": [
+			{
+				"type": "active",
+				"name": "draw",
+				"value": 2
+			}
+		],
+		"description": "Draw 2 cards.",
+		"cost": 2,
+		"icon": "res://cards/images/questionmark.png",
+		"exhaust": false
+	},
+	"Libation": {
+		"id": "Libation",
+		"name": "Libation",
+		"effects": [
+			{
+				"type": "power",
+				"name": "sacrifice",
+				"value": 0
+			},
+			{
+				"active_trigger": "instant",
+				"type": "active",
+				"name": "faith",
+				"value": 1
+			}
+		],
+		"description": "Sacrifice a region to gain 1 faith.",
+		"cost": 0,
+		"icon": "res://cards/images/skull.png",
 		"exhaust": false
 	}
 }

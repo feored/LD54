@@ -6,18 +6,17 @@ var picked : bool = false
 
 
 func _on_pick_card_button_pressed():
+	deck_view.card_picked.connect(Callable(self, "card_picked"))
 	deck_view.init(Info.run.deck)
-	for cv in deck_view.card_container.get_children():
-		cv.picked.connect(Callable(self, "card_picked"))
 	deck_view.show()
 
 
-func card_picked(card_view):
+func card_picked(card):
 	if picked:
 		return
 	picked = true
 	deck_view.hide()
-	Info.run.deck.erase(card_view.card)
+	Info.run.deck.erase(card)
 	over()
 
 

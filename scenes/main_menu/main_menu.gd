@@ -105,6 +105,7 @@ func _on_map_editor_btn_pressed():
 
 func _on_new_run_btn_pressed():
 	Info.run = Run.new()
+	Info.lost = false
 	await SceneTransition.change_scene(SceneTransition.SCENE_OVERWORLD)
 
 

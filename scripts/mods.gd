@@ -66,7 +66,7 @@ const mods = {
 				},
 			},
 		],
-		"description": "Every time you play a card, Neptune randomly sinks own of your tiles."
+		"description": "Every time you play a card, Neptune randomly sinks one of your tiles."
 	},
 	Mod.Conscription:
 	{
