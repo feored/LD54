@@ -4,6 +4,7 @@ var apply_active : Callable
 var get_current_player : Callable
 
 var effects: Dictionary = {}
+var global = "global"
 
 
 func init(players, apply_active_func, get_current_player_func):
@@ -12,6 +13,7 @@ func init(players, apply_active_func, get_current_player_func):
 	self.get_current_player = get_current_player_func
 	for p in players:
 		self.effects[p] = []
+	self.effects[global] = []
 
 func add(e : Effect, p : Player = null):
 	if p == null:
@@ -22,6 +24,11 @@ func add(e : Effect, p : Player = null):
 	else:
 		self.effects[p].push_back(e)
 	
+func add_global(e : Effect):
+	if e.type == Effect.Type.Active and e.active_trigger == Effect.Trigger.Instant:
+		self.apply_active.call(e)
+	else:
+		self.effects[global].push_back(e)
 
 func trigger(t : Effect.Trigger):
 	Utils.log("Triggered: " + str(Effect.Trigger.keys()[t]))
